@@ -1,17 +1,27 @@
 import React from 'react';
 import Head from 'next/head';
+import awsmobile from '../src/aws-exports'
+import '@aws-amplify/ui-react/styles.css';
+
+import { Amplify } from 'aws-amplify';
+import { ThemeProvider } from '@aws-amplify/ui-react';
+import studioTheme from '../src/ui-components/studioTheme';
+import AuthenticatedHeader from '@/src/ui-components/AuthenticatedHeader';
+
+Amplify.configure(awsmobile);
 
 function NCE_Education_App({ Component, pageProps }:any) {
   return (
     <>
       <Head>
         <title>NCE Education App</title>
+        <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet" />
         <link rel="icon" href="/favicon.ico" /> {/* Favicon reference */}
-        {/* Other head elements like meta tags can also be added here */}
       </Head>
-      {/* You can add a global layout or header/footer components here */}
-      <Component {...pageProps} />
-      {/* Footer or other components that should render on every page can be added here */}
+      <ThemeProvider theme={studioTheme}>
+        <AuthenticatedHeader />
+        <Component {...pageProps} />
+      </ThemeProvider>
     </>
   );
 }

@@ -1,0 +1,23 @@
+{
+  "staging": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-nceeducationplatform-staging-212417-authRole",
+      "UnauthRoleArn": "arn:aws:iam::179682925980:role/amplify-nceeducationplatform-staging-212417-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::179682925980:role/amplify-nceeducationplatform-staging-212417-authRole",
+      "Region": "us-east-1",
+      "DeploymentBucketName": "amplify-nceeducationplatform-staging-212417-deployment",
+      "UnauthRoleName": "amplify-nceeducationplatform-staging-212417-unauthRole",
+      "StackName": "amplify-nceeducationplatform-staging-212417",
+      "StackId": "arn:aws:cloudformation:us-east-1:179682925980:stack/amplify-nceeducationplatform-staging-212417/24cc0e60-9610-11ee-acbf-0e03a3620857",
+      "AmplifyAppId": "d6fbjqkxytjd6"
+    },
+    "categories": {
+      "api": {
+        "nceeducationplatform": {}
+      },
+      "auth": {
+        "NCEEducationPlatform": {}
+      }
+    }
+  }
+}
