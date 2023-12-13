@@ -1,6 +1,6 @@
 import React from 'react';
 import Head from 'next/head';
-import awsmobile from '../src/aws-exports'
+import amplifyconfiguration from '../src/amplifyconfiguration.json'
 import '@aws-amplify/ui-react/styles.css';
 
 import { Amplify } from 'aws-amplify';
@@ -8,7 +8,8 @@ import { ThemeProvider } from '@aws-amplify/ui-react';
 import studioTheme from '../src/ui-components/studioTheme';
 import AuthenticatedHeader from '@/src/ui-components/AuthenticatedHeader';
 
-Amplify.configure(awsmobile);
+
+Amplify.configure(amplifyconfiguration, {ssr: true});
 
 function NCE_Education_App({ Component, pageProps }:any) {
   return (
