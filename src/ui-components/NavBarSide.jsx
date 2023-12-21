@@ -7,9 +7,8 @@
 /* eslint-disable */
 import * as React from "react";
 import { getOverrideProps } from "./utils";
-import LogoWithText from "./LogoWithText";
+import { Flex, Image, Text, View } from "@aws-amplify/ui-react";
 import MyIcon from "./MyIcon";
-import { Flex, Image, Text } from "@aws-amplify/ui-react";
 export default function NavBarSide(props) {
   const { overrides, ...rest } = props;
   return (
@@ -55,19 +54,11 @@ export default function NavBarSide(props) {
           padding="0px 32px 0px 32px"
           {...getOverrideProps(overrides, "Frame 32129767088")}
         >
-          <LogoWithText
+          <View
             width="127.88px"
             height="18.91px"
-            display="block"
-            gap="unset"
-            alignItems="unset"
-            justifyContent="unset"
-            shrink="0"
-            position="relative"
-            padding="0px 0px 0px 0px"
-            color="brand"
             {...getOverrideProps(overrides, "LogoWithText")}
-          ></LogoWithText>
+          ></View>
           <Flex
             gap="16px"
             direction="column"

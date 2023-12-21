@@ -8,113 +8,45 @@ type GeneratedQuery<InputType, OutputType> = string & {
   __generatedQueryOutput: OutputType;
 };
 
-export const getBlog = /* GraphQL */ `query GetBlog($id: ID!) {
-  getBlog(id: $id) {
+export const getStudentProfile = /* GraphQL */ `query GetStudentProfile($id: ID!) {
+  getStudentProfile(id: $id) {
     id
-    name
-    posts {
+    firstName
+    lastName
+    email
+    address {
+      street
+      city
+      state
+      zipCode
+      __typename
+    }
+    CourseProfiles {
       nextToken
       __typename
     }
     createdAt
     updatedAt
-    __typename
-  }
-}
-` as GeneratedQuery<APITypes.GetBlogQueryVariables, APITypes.GetBlogQuery>;
-export const listBlogs = /* GraphQL */ `query ListBlogs(
-  $filter: ModelBlogFilterInput
-  $limit: Int
-  $nextToken: String
-) {
-  listBlogs(filter: $filter, limit: $limit, nextToken: $nextToken) {
-    items {
-      id
-      name
-      createdAt
-      updatedAt
-      __typename
-    }
-    nextToken
-    __typename
-  }
-}
-` as GeneratedQuery<APITypes.ListBlogsQueryVariables, APITypes.ListBlogsQuery>;
-export const getPost = /* GraphQL */ `query GetPost($id: ID!) {
-  getPost(id: $id) {
-    id
-    title
-    blog {
-      id
-      name
-      createdAt
-      updatedAt
-      __typename
-    }
-    comments {
-      nextToken
-      __typename
-    }
-    createdAt
-    updatedAt
-    blogPostsId
-    __typename
-  }
-}
-` as GeneratedQuery<APITypes.GetPostQueryVariables, APITypes.GetPostQuery>;
-export const listPosts = /* GraphQL */ `query ListPosts(
-  $filter: ModelPostFilterInput
-  $limit: Int
-  $nextToken: String
-) {
-  listPosts(filter: $filter, limit: $limit, nextToken: $nextToken) {
-    items {
-      id
-      title
-      createdAt
-      updatedAt
-      blogPostsId
-      __typename
-    }
-    nextToken
-    __typename
-  }
-}
-` as GeneratedQuery<APITypes.ListPostsQueryVariables, APITypes.ListPostsQuery>;
-export const getComment = /* GraphQL */ `query GetComment($id: ID!) {
-  getComment(id: $id) {
-    id
-    post {
-      id
-      title
-      createdAt
-      updatedAt
-      blogPostsId
-      __typename
-    }
-    content
-    createdAt
-    updatedAt
-    postCommentsId
     __typename
   }
 }
 ` as GeneratedQuery<
-  APITypes.GetCommentQueryVariables,
-  APITypes.GetCommentQuery
+  APITypes.GetStudentProfileQueryVariables,
+  APITypes.GetStudentProfileQuery
 >;
-export const listComments = /* GraphQL */ `query ListComments(
-  $filter: ModelCommentFilterInput
+export const listStudentProfiles = /* GraphQL */ `query ListStudentProfiles(
+  $filter: ModelStudentProfileFilterInput
   $limit: Int
   $nextToken: String
 ) {
-  listComments(filter: $filter, limit: $limit, nextToken: $nextToken) {
+  listStudentProfiles(filter: $filter, limit: $limit, nextToken: $nextToken) {
     items {
       id
-      content
+      firstName
+      lastName
+      email
       createdAt
       updatedAt
-      postCommentsId
       __typename
     }
     nextToken
@@ -122,6 +54,163 @@ export const listComments = /* GraphQL */ `query ListComments(
   }
 }
 ` as GeneratedQuery<
-  APITypes.ListCommentsQueryVariables,
-  APITypes.ListCommentsQuery
+  APITypes.ListStudentProfilesQueryVariables,
+  APITypes.ListStudentProfilesQuery
+>;
+export const getCourseProfile = /* GraphQL */ `query GetCourseProfile($id: ID!) {
+  getCourseProfile(id: $id) {
+    id
+    studentprofiles {
+      nextToken
+      __typename
+    }
+    title
+    description
+    createdAt
+    updatedAt
+    __typename
+  }
+}
+` as GeneratedQuery<
+  APITypes.GetCourseProfileQueryVariables,
+  APITypes.GetCourseProfileQuery
+>;
+export const listCourseProfiles = /* GraphQL */ `query ListCourseProfiles(
+  $filter: ModelCourseProfileFilterInput
+  $limit: Int
+  $nextToken: String
+) {
+  listCourseProfiles(filter: $filter, limit: $limit, nextToken: $nextToken) {
+    items {
+      id
+      title
+      description
+      createdAt
+      updatedAt
+      __typename
+    }
+    nextToken
+    __typename
+  }
+}
+` as GeneratedQuery<
+  APITypes.ListCourseProfilesQueryVariables,
+  APITypes.ListCourseProfilesQuery
+>;
+export const getStudentProfileCourseProfile = /* GraphQL */ `query GetStudentProfileCourseProfile($id: ID!) {
+  getStudentProfileCourseProfile(id: $id) {
+    id
+    studentProfileId
+    courseProfileId
+    studentProfile {
+      id
+      firstName
+      lastName
+      email
+      createdAt
+      updatedAt
+      __typename
+    }
+    courseProfile {
+      id
+      title
+      description
+      createdAt
+      updatedAt
+      __typename
+    }
+    createdAt
+    updatedAt
+    __typename
+  }
+}
+` as GeneratedQuery<
+  APITypes.GetStudentProfileCourseProfileQueryVariables,
+  APITypes.GetStudentProfileCourseProfileQuery
+>;
+export const listStudentProfileCourseProfiles = /* GraphQL */ `query ListStudentProfileCourseProfiles(
+  $filter: ModelStudentProfileCourseProfileFilterInput
+  $limit: Int
+  $nextToken: String
+) {
+  listStudentProfileCourseProfiles(
+    filter: $filter
+    limit: $limit
+    nextToken: $nextToken
+  ) {
+    items {
+      id
+      studentProfileId
+      courseProfileId
+      createdAt
+      updatedAt
+      __typename
+    }
+    nextToken
+    __typename
+  }
+}
+` as GeneratedQuery<
+  APITypes.ListStudentProfileCourseProfilesQueryVariables,
+  APITypes.ListStudentProfileCourseProfilesQuery
+>;
+export const studentProfileCourseProfilesByStudentProfileId = /* GraphQL */ `query StudentProfileCourseProfilesByStudentProfileId(
+  $studentProfileId: ID!
+  $sortDirection: ModelSortDirection
+  $filter: ModelStudentProfileCourseProfileFilterInput
+  $limit: Int
+  $nextToken: String
+) {
+  studentProfileCourseProfilesByStudentProfileId(
+    studentProfileId: $studentProfileId
+    sortDirection: $sortDirection
+    filter: $filter
+    limit: $limit
+    nextToken: $nextToken
+  ) {
+    items {
+      id
+      studentProfileId
+      courseProfileId
+      createdAt
+      updatedAt
+      __typename
+    }
+    nextToken
+    __typename
+  }
+}
+` as GeneratedQuery<
+  APITypes.StudentProfileCourseProfilesByStudentProfileIdQueryVariables,
+  APITypes.StudentProfileCourseProfilesByStudentProfileIdQuery
+>;
+export const studentProfileCourseProfilesByCourseProfileId = /* GraphQL */ `query StudentProfileCourseProfilesByCourseProfileId(
+  $courseProfileId: ID!
+  $sortDirection: ModelSortDirection
+  $filter: ModelStudentProfileCourseProfileFilterInput
+  $limit: Int
+  $nextToken: String
+) {
+  studentProfileCourseProfilesByCourseProfileId(
+    courseProfileId: $courseProfileId
+    sortDirection: $sortDirection
+    filter: $filter
+    limit: $limit
+    nextToken: $nextToken
+  ) {
+    items {
+      id
+      studentProfileId
+      courseProfileId
+      createdAt
+      updatedAt
+      __typename
+    }
+    nextToken
+    __typename
+  }
+}
+` as GeneratedQuery<
+  APITypes.StudentProfileCourseProfilesByCourseProfileIdQueryVariables,
+  APITypes.StudentProfileCourseProfilesByCourseProfileIdQuery
 >;

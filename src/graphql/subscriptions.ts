@@ -8,11 +8,22 @@ type GeneratedSubscription<InputType, OutputType> = string & {
   __generatedSubscriptionOutput: OutputType;
 };
 
-export const onCreateBlog = /* GraphQL */ `subscription OnCreateBlog($filter: ModelSubscriptionBlogFilterInput) {
-  onCreateBlog(filter: $filter) {
+export const onCreateStudentProfile = /* GraphQL */ `subscription OnCreateStudentProfile(
+  $filter: ModelSubscriptionStudentProfileFilterInput
+) {
+  onCreateStudentProfile(filter: $filter) {
     id
-    name
-    posts {
+    firstName
+    lastName
+    email
+    address {
+      street
+      city
+      state
+      zipCode
+      __typename
+    }
+    CourseProfiles {
       nextToken
       __typename
     }
@@ -22,14 +33,25 @@ export const onCreateBlog = /* GraphQL */ `subscription OnCreateBlog($filter: Mo
   }
 }
 ` as GeneratedSubscription<
-  APITypes.OnCreateBlogSubscriptionVariables,
-  APITypes.OnCreateBlogSubscription
+  APITypes.OnCreateStudentProfileSubscriptionVariables,
+  APITypes.OnCreateStudentProfileSubscription
 >;
-export const onUpdateBlog = /* GraphQL */ `subscription OnUpdateBlog($filter: ModelSubscriptionBlogFilterInput) {
-  onUpdateBlog(filter: $filter) {
+export const onUpdateStudentProfile = /* GraphQL */ `subscription OnUpdateStudentProfile(
+  $filter: ModelSubscriptionStudentProfileFilterInput
+) {
+  onUpdateStudentProfile(filter: $filter) {
     id
-    name
-    posts {
+    firstName
+    lastName
+    email
+    address {
+      street
+      city
+      state
+      zipCode
+      __typename
+    }
+    CourseProfiles {
       nextToken
       __typename
     }
@@ -39,14 +61,25 @@ export const onUpdateBlog = /* GraphQL */ `subscription OnUpdateBlog($filter: Mo
   }
 }
 ` as GeneratedSubscription<
-  APITypes.OnUpdateBlogSubscriptionVariables,
-  APITypes.OnUpdateBlogSubscription
+  APITypes.OnUpdateStudentProfileSubscriptionVariables,
+  APITypes.OnUpdateStudentProfileSubscription
 >;
-export const onDeleteBlog = /* GraphQL */ `subscription OnDeleteBlog($filter: ModelSubscriptionBlogFilterInput) {
-  onDeleteBlog(filter: $filter) {
+export const onDeleteStudentProfile = /* GraphQL */ `subscription OnDeleteStudentProfile(
+  $filter: ModelSubscriptionStudentProfileFilterInput
+) {
+  onDeleteStudentProfile(filter: $filter) {
     id
-    name
-    posts {
+    firstName
+    lastName
+    email
+    address {
+      street
+      city
+      state
+      zipCode
+      __typename
+    }
+    CourseProfiles {
       nextToken
       __typename
     }
@@ -56,147 +89,165 @@ export const onDeleteBlog = /* GraphQL */ `subscription OnDeleteBlog($filter: Mo
   }
 }
 ` as GeneratedSubscription<
-  APITypes.OnDeleteBlogSubscriptionVariables,
-  APITypes.OnDeleteBlogSubscription
+  APITypes.OnDeleteStudentProfileSubscriptionVariables,
+  APITypes.OnDeleteStudentProfileSubscription
 >;
-export const onCreatePost = /* GraphQL */ `subscription OnCreatePost($filter: ModelSubscriptionPostFilterInput) {
-  onCreatePost(filter: $filter) {
+export const onCreateCourseProfile = /* GraphQL */ `subscription OnCreateCourseProfile(
+  $filter: ModelSubscriptionCourseProfileFilterInput
+) {
+  onCreateCourseProfile(filter: $filter) {
     id
+    studentprofiles {
+      nextToken
+      __typename
+    }
     title
-    blog {
+    description
+    createdAt
+    updatedAt
+    __typename
+  }
+}
+` as GeneratedSubscription<
+  APITypes.OnCreateCourseProfileSubscriptionVariables,
+  APITypes.OnCreateCourseProfileSubscription
+>;
+export const onUpdateCourseProfile = /* GraphQL */ `subscription OnUpdateCourseProfile(
+  $filter: ModelSubscriptionCourseProfileFilterInput
+) {
+  onUpdateCourseProfile(filter: $filter) {
+    id
+    studentprofiles {
+      nextToken
+      __typename
+    }
+    title
+    description
+    createdAt
+    updatedAt
+    __typename
+  }
+}
+` as GeneratedSubscription<
+  APITypes.OnUpdateCourseProfileSubscriptionVariables,
+  APITypes.OnUpdateCourseProfileSubscription
+>;
+export const onDeleteCourseProfile = /* GraphQL */ `subscription OnDeleteCourseProfile(
+  $filter: ModelSubscriptionCourseProfileFilterInput
+) {
+  onDeleteCourseProfile(filter: $filter) {
+    id
+    studentprofiles {
+      nextToken
+      __typename
+    }
+    title
+    description
+    createdAt
+    updatedAt
+    __typename
+  }
+}
+` as GeneratedSubscription<
+  APITypes.OnDeleteCourseProfileSubscriptionVariables,
+  APITypes.OnDeleteCourseProfileSubscription
+>;
+export const onCreateStudentProfileCourseProfile = /* GraphQL */ `subscription OnCreateStudentProfileCourseProfile(
+  $filter: ModelSubscriptionStudentProfileCourseProfileFilterInput
+) {
+  onCreateStudentProfileCourseProfile(filter: $filter) {
+    id
+    studentProfileId
+    courseProfileId
+    studentProfile {
       id
-      name
+      firstName
+      lastName
+      email
       createdAt
       updatedAt
       __typename
     }
-    comments {
-      nextToken
-      __typename
-    }
-    createdAt
-    updatedAt
-    blogPostsId
-    __typename
-  }
-}
-` as GeneratedSubscription<
-  APITypes.OnCreatePostSubscriptionVariables,
-  APITypes.OnCreatePostSubscription
->;
-export const onUpdatePost = /* GraphQL */ `subscription OnUpdatePost($filter: ModelSubscriptionPostFilterInput) {
-  onUpdatePost(filter: $filter) {
-    id
-    title
-    blog {
-      id
-      name
-      createdAt
-      updatedAt
-      __typename
-    }
-    comments {
-      nextToken
-      __typename
-    }
-    createdAt
-    updatedAt
-    blogPostsId
-    __typename
-  }
-}
-` as GeneratedSubscription<
-  APITypes.OnUpdatePostSubscriptionVariables,
-  APITypes.OnUpdatePostSubscription
->;
-export const onDeletePost = /* GraphQL */ `subscription OnDeletePost($filter: ModelSubscriptionPostFilterInput) {
-  onDeletePost(filter: $filter) {
-    id
-    title
-    blog {
-      id
-      name
-      createdAt
-      updatedAt
-      __typename
-    }
-    comments {
-      nextToken
-      __typename
-    }
-    createdAt
-    updatedAt
-    blogPostsId
-    __typename
-  }
-}
-` as GeneratedSubscription<
-  APITypes.OnDeletePostSubscriptionVariables,
-  APITypes.OnDeletePostSubscription
->;
-export const onCreateComment = /* GraphQL */ `subscription OnCreateComment($filter: ModelSubscriptionCommentFilterInput) {
-  onCreateComment(filter: $filter) {
-    id
-    post {
+    courseProfile {
       id
       title
+      description
       createdAt
       updatedAt
-      blogPostsId
       __typename
     }
-    content
     createdAt
     updatedAt
-    postCommentsId
     __typename
   }
 }
 ` as GeneratedSubscription<
-  APITypes.OnCreateCommentSubscriptionVariables,
-  APITypes.OnCreateCommentSubscription
+  APITypes.OnCreateStudentProfileCourseProfileSubscriptionVariables,
+  APITypes.OnCreateStudentProfileCourseProfileSubscription
 >;
-export const onUpdateComment = /* GraphQL */ `subscription OnUpdateComment($filter: ModelSubscriptionCommentFilterInput) {
-  onUpdateComment(filter: $filter) {
+export const onUpdateStudentProfileCourseProfile = /* GraphQL */ `subscription OnUpdateStudentProfileCourseProfile(
+  $filter: ModelSubscriptionStudentProfileCourseProfileFilterInput
+) {
+  onUpdateStudentProfileCourseProfile(filter: $filter) {
     id
-    post {
+    studentProfileId
+    courseProfileId
+    studentProfile {
+      id
+      firstName
+      lastName
+      email
+      createdAt
+      updatedAt
+      __typename
+    }
+    courseProfile {
       id
       title
+      description
       createdAt
       updatedAt
-      blogPostsId
       __typename
     }
-    content
     createdAt
     updatedAt
-    postCommentsId
     __typename
   }
 }
 ` as GeneratedSubscription<
-  APITypes.OnUpdateCommentSubscriptionVariables,
-  APITypes.OnUpdateCommentSubscription
+  APITypes.OnUpdateStudentProfileCourseProfileSubscriptionVariables,
+  APITypes.OnUpdateStudentProfileCourseProfileSubscription
 >;
-export const onDeleteComment = /* GraphQL */ `subscription OnDeleteComment($filter: ModelSubscriptionCommentFilterInput) {
-  onDeleteComment(filter: $filter) {
+export const onDeleteStudentProfileCourseProfile = /* GraphQL */ `subscription OnDeleteStudentProfileCourseProfile(
+  $filter: ModelSubscriptionStudentProfileCourseProfileFilterInput
+) {
+  onDeleteStudentProfileCourseProfile(filter: $filter) {
     id
-    post {
+    studentProfileId
+    courseProfileId
+    studentProfile {
+      id
+      firstName
+      lastName
+      email
+      createdAt
+      updatedAt
+      __typename
+    }
+    courseProfile {
       id
       title
+      description
       createdAt
       updatedAt
-      blogPostsId
       __typename
     }
-    content
     createdAt
     updatedAt
-    postCommentsId
     __typename
   }
 }
 ` as GeneratedSubscription<
-  APITypes.OnDeleteCommentSubscriptionVariables,
-  APITypes.OnDeleteCommentSubscription
+  APITypes.OnDeleteStudentProfileCourseProfileSubscriptionVariables,
+  APITypes.OnDeleteStudentProfileCourseProfileSubscription
 >;

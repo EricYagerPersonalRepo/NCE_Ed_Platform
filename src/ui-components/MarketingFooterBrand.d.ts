@@ -5,8 +5,7 @@
  **************************************************************************/
 
 import * as React from "react";
-import { ButtonProps, FlexProps, TextFieldProps, TextProps } from "@aws-amplify/ui-react";
-import { LogoWithTextProps } from "./LogoWithText";
+import { ButtonProps, FlexProps, TextFieldProps, TextProps, ViewProps } from "@aws-amplify/ui-react";
 export declare type EscapeHatchProps = {
     [elementHierarchy: string]: Record<string, unknown>;
 } | null;
@@ -46,7 +45,7 @@ export declare type MarketingFooterBrandOverridesProps = {
     Contact?: PrimitiveOverrideProps<TextProps>;
     Blog?: PrimitiveOverrideProps<TextProps>;
     "Frame 433"?: PrimitiveOverrideProps<FlexProps>;
-    LogoWithText?: LogoWithTextProps;
+    LogoWithText?: PrimitiveOverrideProps<ViewProps>;
     "\u00A9 2023 AWS Amplify UI. All rights reserved."?: PrimitiveOverrideProps<TextProps>;
 } & EscapeHatchProps;
 export declare type MarketingFooterBrandProps = React.PropsWithChildren<Partial<FlexProps> & {

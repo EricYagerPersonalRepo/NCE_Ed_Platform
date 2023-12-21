@@ -1,21 +1,9 @@
 // pages/index.tsx
-import React, { useEffect } from 'react'
-import { getCurrentUser } from 'aws-amplify/auth'
+import React, { useEffect, useState } from 'react'
 import HomepageSplash from '../src/ui-components/HomepageSplash.jsx'
+import SignUp from '../src/ui-components/SignUp.jsx';
 
-const HomePage = () => {
-  useEffect(() => {
-    checkAuthStatus();
-  }, []);
-
-  const checkAuthStatus = async () => {
-    try {
-      const user = await getCurrentUser();
-      console.log('User is signed in:', user);
-    } catch (error) {
-      console.error('User is not signed in:', error);
-    }
-  };
+const HomePage = ({ loggedIn }:any) => {
 
   // Example overrides
   const splashOverrides = {
@@ -26,10 +14,14 @@ const HomePage = () => {
 
   return (
     <div>
-      <HomepageSplash 
-        mode="Dark"
-        overrides={splashOverrides}
-      />
+        {loggedIn ? 
+            <HomepageSplash 
+                mode="Dark"
+                overrides={splashOverrides}
+            />
+            :
+            <div><SignUp /></div>
+        }
     </div>
   );
 };

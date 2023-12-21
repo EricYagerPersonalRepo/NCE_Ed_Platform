@@ -2,16 +2,28 @@
 /* eslint-disable */
 //  This file was automatically generated and should not be edited.
 
-export type CreateBlogInput = {
+export type CreateStudentProfileInput = {
   id?: string | null,
-  name: string,
+  firstName: string,
+  lastName: string,
+  email: string,
+  address: AddressInput,
 };
 
-export type ModelBlogConditionInput = {
-  name?: ModelStringInput | null,
-  and?: Array< ModelBlogConditionInput | null > | null,
-  or?: Array< ModelBlogConditionInput | null > | null,
-  not?: ModelBlogConditionInput | null,
+export type AddressInput = {
+  street: string,
+  city: string,
+  state: string,
+  zipCode: string,
+};
+
+export type ModelStudentProfileConditionInput = {
+  firstName?: ModelStringInput | null,
+  lastName?: ModelStringInput | null,
+  email?: ModelStringInput | null,
+  and?: Array< ModelStudentProfileConditionInput | null > | null,
+  or?: Array< ModelStudentProfileConditionInput | null > | null,
+  not?: ModelStudentProfileConditionInput | null,
 };
 
 export type ModelStringInput = {
@@ -54,69 +66,101 @@ export type ModelSizeInput = {
   between?: Array< number | null > | null,
 };
 
-export type Blog = {
-  __typename: "Blog",
+export type StudentProfile = {
+  __typename: "StudentProfile",
   id: string,
-  name: string,
-  posts?: ModelPostConnection | null,
+  firstName: string,
+  lastName: string,
+  email: string,
+  address: Address,
+  CourseProfiles?: ModelStudentProfileCourseProfileConnection | null,
   createdAt: string,
   updatedAt: string,
 };
 
-export type ModelPostConnection = {
-  __typename: "ModelPostConnection",
-  items:  Array<Post | null >,
+export type Address = {
+  __typename: "Address",
+  street: string,
+  city: string,
+  state: string,
+  zipCode: string,
+};
+
+export type ModelStudentProfileCourseProfileConnection = {
+  __typename: "ModelStudentProfileCourseProfileConnection",
+  items:  Array<StudentProfileCourseProfile | null >,
   nextToken?: string | null,
 };
 
-export type Post = {
-  __typename: "Post",
+export type StudentProfileCourseProfile = {
+  __typename: "StudentProfileCourseProfile",
   id: string,
-  title: string,
-  blog?: Blog | null,
-  comments?: ModelCommentConnection | null,
+  studentProfileId: string,
+  courseProfileId: string,
+  studentProfile: StudentProfile,
+  courseProfile: CourseProfile,
   createdAt: string,
   updatedAt: string,
-  blogPostsId?: string | null,
 };
 
-export type ModelCommentConnection = {
-  __typename: "ModelCommentConnection",
-  items:  Array<Comment | null >,
-  nextToken?: string | null,
-};
-
-export type Comment = {
-  __typename: "Comment",
+export type CourseProfile = {
+  __typename: "CourseProfile",
   id: string,
-  post?: Post | null,
-  content: string,
+  studentprofiles?: ModelStudentProfileCourseProfileConnection | null,
+  title?: string | null,
+  description?: string | null,
   createdAt: string,
   updatedAt: string,
-  postCommentsId?: string | null,
 };
 
-export type UpdateBlogInput = {
+export type UpdateStudentProfileInput = {
   id: string,
-  name?: string | null,
+  firstName?: string | null,
+  lastName?: string | null,
+  email?: string | null,
+  address?: AddressInput | null,
 };
 
-export type DeleteBlogInput = {
+export type DeleteStudentProfileInput = {
   id: string,
 };
 
-export type CreatePostInput = {
+export type CreateCourseProfileInput = {
   id?: string | null,
-  title: string,
-  blogPostsId?: string | null,
+  title?: string | null,
+  description?: string | null,
 };
 
-export type ModelPostConditionInput = {
+export type ModelCourseProfileConditionInput = {
   title?: ModelStringInput | null,
-  and?: Array< ModelPostConditionInput | null > | null,
-  or?: Array< ModelPostConditionInput | null > | null,
-  not?: ModelPostConditionInput | null,
-  blogPostsId?: ModelIDInput | null,
+  description?: ModelStringInput | null,
+  and?: Array< ModelCourseProfileConditionInput | null > | null,
+  or?: Array< ModelCourseProfileConditionInput | null > | null,
+  not?: ModelCourseProfileConditionInput | null,
+};
+
+export type UpdateCourseProfileInput = {
+  id: string,
+  title?: string | null,
+  description?: string | null,
+};
+
+export type DeleteCourseProfileInput = {
+  id: string,
+};
+
+export type CreateStudentProfileCourseProfileInput = {
+  id?: string | null,
+  studentProfileId: string,
+  courseProfileId: string,
+};
+
+export type ModelStudentProfileCourseProfileConditionInput = {
+  studentProfileId?: ModelIDInput | null,
+  courseProfileId?: ModelIDInput | null,
+  and?: Array< ModelStudentProfileCourseProfileConditionInput | null > | null,
+  or?: Array< ModelStudentProfileCourseProfileConditionInput | null > | null,
+  not?: ModelStudentProfileCourseProfileConditionInput | null,
 };
 
 export type ModelIDInput = {
@@ -135,77 +179,69 @@ export type ModelIDInput = {
   size?: ModelSizeInput | null,
 };
 
-export type UpdatePostInput = {
+export type UpdateStudentProfileCourseProfileInput = {
   id: string,
-  title?: string | null,
-  blogPostsId?: string | null,
+  studentProfileId?: string | null,
+  courseProfileId?: string | null,
 };
 
-export type DeletePostInput = {
-  id: string,
-};
-
-export type CreateCommentInput = {
-  id?: string | null,
-  content: string,
-  postCommentsId?: string | null,
-};
-
-export type ModelCommentConditionInput = {
-  content?: ModelStringInput | null,
-  and?: Array< ModelCommentConditionInput | null > | null,
-  or?: Array< ModelCommentConditionInput | null > | null,
-  not?: ModelCommentConditionInput | null,
-  postCommentsId?: ModelIDInput | null,
-};
-
-export type UpdateCommentInput = {
-  id: string,
-  content?: string | null,
-  postCommentsId?: string | null,
-};
-
-export type DeleteCommentInput = {
+export type DeleteStudentProfileCourseProfileInput = {
   id: string,
 };
 
-export type ModelBlogFilterInput = {
+export type ModelStudentProfileFilterInput = {
   id?: ModelIDInput | null,
-  name?: ModelStringInput | null,
-  and?: Array< ModelBlogFilterInput | null > | null,
-  or?: Array< ModelBlogFilterInput | null > | null,
-  not?: ModelBlogFilterInput | null,
+  firstName?: ModelStringInput | null,
+  lastName?: ModelStringInput | null,
+  email?: ModelStringInput | null,
+  and?: Array< ModelStudentProfileFilterInput | null > | null,
+  or?: Array< ModelStudentProfileFilterInput | null > | null,
+  not?: ModelStudentProfileFilterInput | null,
 };
 
-export type ModelBlogConnection = {
-  __typename: "ModelBlogConnection",
-  items:  Array<Blog | null >,
+export type ModelStudentProfileConnection = {
+  __typename: "ModelStudentProfileConnection",
+  items:  Array<StudentProfile | null >,
   nextToken?: string | null,
 };
 
-export type ModelPostFilterInput = {
+export type ModelCourseProfileFilterInput = {
   id?: ModelIDInput | null,
   title?: ModelStringInput | null,
-  and?: Array< ModelPostFilterInput | null > | null,
-  or?: Array< ModelPostFilterInput | null > | null,
-  not?: ModelPostFilterInput | null,
-  blogPostsId?: ModelIDInput | null,
+  description?: ModelStringInput | null,
+  and?: Array< ModelCourseProfileFilterInput | null > | null,
+  or?: Array< ModelCourseProfileFilterInput | null > | null,
+  not?: ModelCourseProfileFilterInput | null,
 };
 
-export type ModelCommentFilterInput = {
+export type ModelCourseProfileConnection = {
+  __typename: "ModelCourseProfileConnection",
+  items:  Array<CourseProfile | null >,
+  nextToken?: string | null,
+};
+
+export type ModelStudentProfileCourseProfileFilterInput = {
   id?: ModelIDInput | null,
-  content?: ModelStringInput | null,
-  and?: Array< ModelCommentFilterInput | null > | null,
-  or?: Array< ModelCommentFilterInput | null > | null,
-  not?: ModelCommentFilterInput | null,
-  postCommentsId?: ModelIDInput | null,
+  studentProfileId?: ModelIDInput | null,
+  courseProfileId?: ModelIDInput | null,
+  and?: Array< ModelStudentProfileCourseProfileFilterInput | null > | null,
+  or?: Array< ModelStudentProfileCourseProfileFilterInput | null > | null,
+  not?: ModelStudentProfileCourseProfileFilterInput | null,
 };
 
-export type ModelSubscriptionBlogFilterInput = {
+export enum ModelSortDirection {
+  ASC = "ASC",
+  DESC = "DESC",
+}
+
+
+export type ModelSubscriptionStudentProfileFilterInput = {
   id?: ModelSubscriptionIDInput | null,
-  name?: ModelSubscriptionStringInput | null,
-  and?: Array< ModelSubscriptionBlogFilterInput | null > | null,
-  or?: Array< ModelSubscriptionBlogFilterInput | null > | null,
+  firstName?: ModelSubscriptionStringInput | null,
+  lastName?: ModelSubscriptionStringInput | null,
+  email?: ModelSubscriptionStringInput | null,
+  and?: Array< ModelSubscriptionStudentProfileFilterInput | null > | null,
+  or?: Array< ModelSubscriptionStudentProfileFilterInput | null > | null,
 };
 
 export type ModelSubscriptionIDInput = {
@@ -238,32 +274,43 @@ export type ModelSubscriptionStringInput = {
   notIn?: Array< string | null > | null,
 };
 
-export type ModelSubscriptionPostFilterInput = {
+export type ModelSubscriptionCourseProfileFilterInput = {
   id?: ModelSubscriptionIDInput | null,
   title?: ModelSubscriptionStringInput | null,
-  and?: Array< ModelSubscriptionPostFilterInput | null > | null,
-  or?: Array< ModelSubscriptionPostFilterInput | null > | null,
+  description?: ModelSubscriptionStringInput | null,
+  and?: Array< ModelSubscriptionCourseProfileFilterInput | null > | null,
+  or?: Array< ModelSubscriptionCourseProfileFilterInput | null > | null,
 };
 
-export type ModelSubscriptionCommentFilterInput = {
+export type ModelSubscriptionStudentProfileCourseProfileFilterInput = {
   id?: ModelSubscriptionIDInput | null,
-  content?: ModelSubscriptionStringInput | null,
-  and?: Array< ModelSubscriptionCommentFilterInput | null > | null,
-  or?: Array< ModelSubscriptionCommentFilterInput | null > | null,
+  studentProfileId?: ModelSubscriptionIDInput | null,
+  courseProfileId?: ModelSubscriptionIDInput | null,
+  and?: Array< ModelSubscriptionStudentProfileCourseProfileFilterInput | null > | null,
+  or?: Array< ModelSubscriptionStudentProfileCourseProfileFilterInput | null > | null,
 };
 
-export type CreateBlogMutationVariables = {
-  input: CreateBlogInput,
-  condition?: ModelBlogConditionInput | null,
+export type CreateStudentProfileMutationVariables = {
+  input: CreateStudentProfileInput,
+  condition?: ModelStudentProfileConditionInput | null,
 };
 
-export type CreateBlogMutation = {
-  createBlog?:  {
-    __typename: "Blog",
+export type CreateStudentProfileMutation = {
+  createStudentProfile?:  {
+    __typename: "StudentProfile",
     id: string,
-    name: string,
-    posts?:  {
-      __typename: "ModelPostConnection",
+    firstName: string,
+    lastName: string,
+    email: string,
+    address:  {
+      __typename: "Address",
+      street: string,
+      city: string,
+      state: string,
+      zipCode: string,
+    },
+    CourseProfiles?:  {
+      __typename: "ModelStudentProfileCourseProfileConnection",
       nextToken?: string | null,
     } | null,
     createdAt: string,
@@ -271,18 +318,27 @@ export type CreateBlogMutation = {
   } | null,
 };
 
-export type UpdateBlogMutationVariables = {
-  input: UpdateBlogInput,
-  condition?: ModelBlogConditionInput | null,
+export type UpdateStudentProfileMutationVariables = {
+  input: UpdateStudentProfileInput,
+  condition?: ModelStudentProfileConditionInput | null,
 };
 
-export type UpdateBlogMutation = {
-  updateBlog?:  {
-    __typename: "Blog",
+export type UpdateStudentProfileMutation = {
+  updateStudentProfile?:  {
+    __typename: "StudentProfile",
     id: string,
-    name: string,
-    posts?:  {
-      __typename: "ModelPostConnection",
+    firstName: string,
+    lastName: string,
+    email: string,
+    address:  {
+      __typename: "Address",
+      street: string,
+      city: string,
+      state: string,
+      zipCode: string,
+    },
+    CourseProfiles?:  {
+      __typename: "ModelStudentProfileCourseProfileConnection",
       nextToken?: string | null,
     } | null,
     createdAt: string,
@@ -290,18 +346,27 @@ export type UpdateBlogMutation = {
   } | null,
 };
 
-export type DeleteBlogMutationVariables = {
-  input: DeleteBlogInput,
-  condition?: ModelBlogConditionInput | null,
+export type DeleteStudentProfileMutationVariables = {
+  input: DeleteStudentProfileInput,
+  condition?: ModelStudentProfileConditionInput | null,
 };
 
-export type DeleteBlogMutation = {
-  deleteBlog?:  {
-    __typename: "Blog",
+export type DeleteStudentProfileMutation = {
+  deleteStudentProfile?:  {
+    __typename: "StudentProfile",
     id: string,
-    name: string,
-    posts?:  {
-      __typename: "ModelPostConnection",
+    firstName: string,
+    lastName: string,
+    email: string,
+    address:  {
+      __typename: "Address",
+      street: string,
+      city: string,
+      state: string,
+      zipCode: string,
+    },
+    CourseProfiles?:  {
+      __typename: "ModelStudentProfileCourseProfileConnection",
       nextToken?: string | null,
     } | null,
     createdAt: string,
@@ -309,170 +374,185 @@ export type DeleteBlogMutation = {
   } | null,
 };
 
-export type CreatePostMutationVariables = {
-  input: CreatePostInput,
-  condition?: ModelPostConditionInput | null,
+export type CreateCourseProfileMutationVariables = {
+  input: CreateCourseProfileInput,
+  condition?: ModelCourseProfileConditionInput | null,
 };
 
-export type CreatePostMutation = {
-  createPost?:  {
-    __typename: "Post",
+export type CreateCourseProfileMutation = {
+  createCourseProfile?:  {
+    __typename: "CourseProfile",
     id: string,
-    title: string,
-    blog?:  {
-      __typename: "Blog",
-      id: string,
-      name: string,
-      createdAt: string,
-      updatedAt: string,
-    } | null,
-    comments?:  {
-      __typename: "ModelCommentConnection",
+    studentprofiles?:  {
+      __typename: "ModelStudentProfileCourseProfileConnection",
       nextToken?: string | null,
     } | null,
+    title?: string | null,
+    description?: string | null,
     createdAt: string,
     updatedAt: string,
-    blogPostsId?: string | null,
   } | null,
 };
 
-export type UpdatePostMutationVariables = {
-  input: UpdatePostInput,
-  condition?: ModelPostConditionInput | null,
+export type UpdateCourseProfileMutationVariables = {
+  input: UpdateCourseProfileInput,
+  condition?: ModelCourseProfileConditionInput | null,
 };
 
-export type UpdatePostMutation = {
-  updatePost?:  {
-    __typename: "Post",
+export type UpdateCourseProfileMutation = {
+  updateCourseProfile?:  {
+    __typename: "CourseProfile",
     id: string,
-    title: string,
-    blog?:  {
-      __typename: "Blog",
-      id: string,
-      name: string,
-      createdAt: string,
-      updatedAt: string,
-    } | null,
-    comments?:  {
-      __typename: "ModelCommentConnection",
+    studentprofiles?:  {
+      __typename: "ModelStudentProfileCourseProfileConnection",
       nextToken?: string | null,
     } | null,
+    title?: string | null,
+    description?: string | null,
     createdAt: string,
     updatedAt: string,
-    blogPostsId?: string | null,
   } | null,
 };
 
-export type DeletePostMutationVariables = {
-  input: DeletePostInput,
-  condition?: ModelPostConditionInput | null,
+export type DeleteCourseProfileMutationVariables = {
+  input: DeleteCourseProfileInput,
+  condition?: ModelCourseProfileConditionInput | null,
 };
 
-export type DeletePostMutation = {
-  deletePost?:  {
-    __typename: "Post",
+export type DeleteCourseProfileMutation = {
+  deleteCourseProfile?:  {
+    __typename: "CourseProfile",
     id: string,
-    title: string,
-    blog?:  {
-      __typename: "Blog",
-      id: string,
-      name: string,
-      createdAt: string,
-      updatedAt: string,
-    } | null,
-    comments?:  {
-      __typename: "ModelCommentConnection",
+    studentprofiles?:  {
+      __typename: "ModelStudentProfileCourseProfileConnection",
       nextToken?: string | null,
     } | null,
+    title?: string | null,
+    description?: string | null,
     createdAt: string,
     updatedAt: string,
-    blogPostsId?: string | null,
   } | null,
 };
 
-export type CreateCommentMutationVariables = {
-  input: CreateCommentInput,
-  condition?: ModelCommentConditionInput | null,
+export type CreateStudentProfileCourseProfileMutationVariables = {
+  input: CreateStudentProfileCourseProfileInput,
+  condition?: ModelStudentProfileCourseProfileConditionInput | null,
 };
 
-export type CreateCommentMutation = {
-  createComment?:  {
-    __typename: "Comment",
+export type CreateStudentProfileCourseProfileMutation = {
+  createStudentProfileCourseProfile?:  {
+    __typename: "StudentProfileCourseProfile",
     id: string,
-    post?:  {
-      __typename: "Post",
+    studentProfileId: string,
+    courseProfileId: string,
+    studentProfile:  {
+      __typename: "StudentProfile",
       id: string,
-      title: string,
+      firstName: string,
+      lastName: string,
+      email: string,
       createdAt: string,
       updatedAt: string,
-      blogPostsId?: string | null,
-    } | null,
-    content: string,
-    createdAt: string,
-    updatedAt: string,
-    postCommentsId?: string | null,
-  } | null,
-};
-
-export type UpdateCommentMutationVariables = {
-  input: UpdateCommentInput,
-  condition?: ModelCommentConditionInput | null,
-};
-
-export type UpdateCommentMutation = {
-  updateComment?:  {
-    __typename: "Comment",
-    id: string,
-    post?:  {
-      __typename: "Post",
+    },
+    courseProfile:  {
+      __typename: "CourseProfile",
       id: string,
-      title: string,
+      title?: string | null,
+      description?: string | null,
       createdAt: string,
       updatedAt: string,
-      blogPostsId?: string | null,
-    } | null,
-    content: string,
+    },
     createdAt: string,
     updatedAt: string,
-    postCommentsId?: string | null,
   } | null,
 };
 
-export type DeleteCommentMutationVariables = {
-  input: DeleteCommentInput,
-  condition?: ModelCommentConditionInput | null,
+export type UpdateStudentProfileCourseProfileMutationVariables = {
+  input: UpdateStudentProfileCourseProfileInput,
+  condition?: ModelStudentProfileCourseProfileConditionInput | null,
 };
 
-export type DeleteCommentMutation = {
-  deleteComment?:  {
-    __typename: "Comment",
+export type UpdateStudentProfileCourseProfileMutation = {
+  updateStudentProfileCourseProfile?:  {
+    __typename: "StudentProfileCourseProfile",
     id: string,
-    post?:  {
-      __typename: "Post",
+    studentProfileId: string,
+    courseProfileId: string,
+    studentProfile:  {
+      __typename: "StudentProfile",
       id: string,
-      title: string,
+      firstName: string,
+      lastName: string,
+      email: string,
       createdAt: string,
       updatedAt: string,
-      blogPostsId?: string | null,
-    } | null,
-    content: string,
+    },
+    courseProfile:  {
+      __typename: "CourseProfile",
+      id: string,
+      title?: string | null,
+      description?: string | null,
+      createdAt: string,
+      updatedAt: string,
+    },
     createdAt: string,
     updatedAt: string,
-    postCommentsId?: string | null,
   } | null,
 };
 
-export type GetBlogQueryVariables = {
+export type DeleteStudentProfileCourseProfileMutationVariables = {
+  input: DeleteStudentProfileCourseProfileInput,
+  condition?: ModelStudentProfileCourseProfileConditionInput | null,
+};
+
+export type DeleteStudentProfileCourseProfileMutation = {
+  deleteStudentProfileCourseProfile?:  {
+    __typename: "StudentProfileCourseProfile",
+    id: string,
+    studentProfileId: string,
+    courseProfileId: string,
+    studentProfile:  {
+      __typename: "StudentProfile",
+      id: string,
+      firstName: string,
+      lastName: string,
+      email: string,
+      createdAt: string,
+      updatedAt: string,
+    },
+    courseProfile:  {
+      __typename: "CourseProfile",
+      id: string,
+      title?: string | null,
+      description?: string | null,
+      createdAt: string,
+      updatedAt: string,
+    },
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type GetStudentProfileQueryVariables = {
   id: string,
 };
 
-export type GetBlogQuery = {
-  getBlog?:  {
-    __typename: "Blog",
+export type GetStudentProfileQuery = {
+  getStudentProfile?:  {
+    __typename: "StudentProfile",
     id: string,
-    name: string,
-    posts?:  {
-      __typename: "ModelPostConnection",
+    firstName: string,
+    lastName: string,
+    email: string,
+    address:  {
+      __typename: "Address",
+      street: string,
+      city: string,
+      state: string,
+      zipCode: string,
+    },
+    CourseProfiles?:  {
+      __typename: "ModelStudentProfileCourseProfileConnection",
       nextToken?: string | null,
     } | null,
     createdAt: string,
@@ -480,19 +560,21 @@ export type GetBlogQuery = {
   } | null,
 };
 
-export type ListBlogsQueryVariables = {
-  filter?: ModelBlogFilterInput | null,
+export type ListStudentProfilesQueryVariables = {
+  filter?: ModelStudentProfileFilterInput | null,
   limit?: number | null,
   nextToken?: string | null,
 };
 
-export type ListBlogsQuery = {
-  listBlogs?:  {
-    __typename: "ModelBlogConnection",
+export type ListStudentProfilesQuery = {
+  listStudentProfiles?:  {
+    __typename: "ModelStudentProfileConnection",
     items:  Array< {
-      __typename: "Blog",
+      __typename: "StudentProfile",
       id: string,
-      name: string,
+      firstName: string,
+      lastName: string,
+      email: string,
       createdAt: string,
       updatedAt: string,
     } | null >,
@@ -500,108 +582,165 @@ export type ListBlogsQuery = {
   } | null,
 };
 
-export type GetPostQueryVariables = {
+export type GetCourseProfileQueryVariables = {
   id: string,
 };
 
-export type GetPostQuery = {
-  getPost?:  {
-    __typename: "Post",
+export type GetCourseProfileQuery = {
+  getCourseProfile?:  {
+    __typename: "CourseProfile",
     id: string,
-    title: string,
-    blog?:  {
-      __typename: "Blog",
-      id: string,
-      name: string,
-      createdAt: string,
-      updatedAt: string,
-    } | null,
-    comments?:  {
-      __typename: "ModelCommentConnection",
+    studentprofiles?:  {
+      __typename: "ModelStudentProfileCourseProfileConnection",
       nextToken?: string | null,
     } | null,
+    title?: string | null,
+    description?: string | null,
     createdAt: string,
     updatedAt: string,
-    blogPostsId?: string | null,
   } | null,
 };
 
-export type ListPostsQueryVariables = {
-  filter?: ModelPostFilterInput | null,
+export type ListCourseProfilesQueryVariables = {
+  filter?: ModelCourseProfileFilterInput | null,
   limit?: number | null,
   nextToken?: string | null,
 };
 
-export type ListPostsQuery = {
-  listPosts?:  {
-    __typename: "ModelPostConnection",
+export type ListCourseProfilesQuery = {
+  listCourseProfiles?:  {
+    __typename: "ModelCourseProfileConnection",
     items:  Array< {
-      __typename: "Post",
+      __typename: "CourseProfile",
       id: string,
-      title: string,
+      title?: string | null,
+      description?: string | null,
       createdAt: string,
       updatedAt: string,
-      blogPostsId?: string | null,
     } | null >,
     nextToken?: string | null,
   } | null,
 };
 
-export type GetCommentQueryVariables = {
+export type GetStudentProfileCourseProfileQueryVariables = {
   id: string,
 };
 
-export type GetCommentQuery = {
-  getComment?:  {
-    __typename: "Comment",
+export type GetStudentProfileCourseProfileQuery = {
+  getStudentProfileCourseProfile?:  {
+    __typename: "StudentProfileCourseProfile",
     id: string,
-    post?:  {
-      __typename: "Post",
+    studentProfileId: string,
+    courseProfileId: string,
+    studentProfile:  {
+      __typename: "StudentProfile",
       id: string,
-      title: string,
+      firstName: string,
+      lastName: string,
+      email: string,
       createdAt: string,
       updatedAt: string,
-      blogPostsId?: string | null,
-    } | null,
-    content: string,
+    },
+    courseProfile:  {
+      __typename: "CourseProfile",
+      id: string,
+      title?: string | null,
+      description?: string | null,
+      createdAt: string,
+      updatedAt: string,
+    },
     createdAt: string,
     updatedAt: string,
-    postCommentsId?: string | null,
   } | null,
 };
 
-export type ListCommentsQueryVariables = {
-  filter?: ModelCommentFilterInput | null,
+export type ListStudentProfileCourseProfilesQueryVariables = {
+  filter?: ModelStudentProfileCourseProfileFilterInput | null,
   limit?: number | null,
   nextToken?: string | null,
 };
 
-export type ListCommentsQuery = {
-  listComments?:  {
-    __typename: "ModelCommentConnection",
+export type ListStudentProfileCourseProfilesQuery = {
+  listStudentProfileCourseProfiles?:  {
+    __typename: "ModelStudentProfileCourseProfileConnection",
     items:  Array< {
-      __typename: "Comment",
+      __typename: "StudentProfileCourseProfile",
       id: string,
-      content: string,
+      studentProfileId: string,
+      courseProfileId: string,
       createdAt: string,
       updatedAt: string,
-      postCommentsId?: string | null,
     } | null >,
     nextToken?: string | null,
   } | null,
 };
 
-export type OnCreateBlogSubscriptionVariables = {
-  filter?: ModelSubscriptionBlogFilterInput | null,
+export type StudentProfileCourseProfilesByStudentProfileIdQueryVariables = {
+  studentProfileId: string,
+  sortDirection?: ModelSortDirection | null,
+  filter?: ModelStudentProfileCourseProfileFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
 };
 
-export type OnCreateBlogSubscription = {
-  onCreateBlog?:  {
-    __typename: "Blog",
+export type StudentProfileCourseProfilesByStudentProfileIdQuery = {
+  studentProfileCourseProfilesByStudentProfileId?:  {
+    __typename: "ModelStudentProfileCourseProfileConnection",
+    items:  Array< {
+      __typename: "StudentProfileCourseProfile",
+      id: string,
+      studentProfileId: string,
+      courseProfileId: string,
+      createdAt: string,
+      updatedAt: string,
+    } | null >,
+    nextToken?: string | null,
+  } | null,
+};
+
+export type StudentProfileCourseProfilesByCourseProfileIdQueryVariables = {
+  courseProfileId: string,
+  sortDirection?: ModelSortDirection | null,
+  filter?: ModelStudentProfileCourseProfileFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+};
+
+export type StudentProfileCourseProfilesByCourseProfileIdQuery = {
+  studentProfileCourseProfilesByCourseProfileId?:  {
+    __typename: "ModelStudentProfileCourseProfileConnection",
+    items:  Array< {
+      __typename: "StudentProfileCourseProfile",
+      id: string,
+      studentProfileId: string,
+      courseProfileId: string,
+      createdAt: string,
+      updatedAt: string,
+    } | null >,
+    nextToken?: string | null,
+  } | null,
+};
+
+export type OnCreateStudentProfileSubscriptionVariables = {
+  filter?: ModelSubscriptionStudentProfileFilterInput | null,
+};
+
+export type OnCreateStudentProfileSubscription = {
+  onCreateStudentProfile?:  {
+    __typename: "StudentProfile",
     id: string,
-    name: string,
-    posts?:  {
-      __typename: "ModelPostConnection",
+    firstName: string,
+    lastName: string,
+    email: string,
+    address:  {
+      __typename: "Address",
+      street: string,
+      city: string,
+      state: string,
+      zipCode: string,
+    },
+    CourseProfiles?:  {
+      __typename: "ModelStudentProfileCourseProfileConnection",
       nextToken?: string | null,
     } | null,
     createdAt: string,
@@ -609,17 +748,26 @@ export type OnCreateBlogSubscription = {
   } | null,
 };
 
-export type OnUpdateBlogSubscriptionVariables = {
-  filter?: ModelSubscriptionBlogFilterInput | null,
+export type OnUpdateStudentProfileSubscriptionVariables = {
+  filter?: ModelSubscriptionStudentProfileFilterInput | null,
 };
 
-export type OnUpdateBlogSubscription = {
-  onUpdateBlog?:  {
-    __typename: "Blog",
+export type OnUpdateStudentProfileSubscription = {
+  onUpdateStudentProfile?:  {
+    __typename: "StudentProfile",
     id: string,
-    name: string,
-    posts?:  {
-      __typename: "ModelPostConnection",
+    firstName: string,
+    lastName: string,
+    email: string,
+    address:  {
+      __typename: "Address",
+      street: string,
+      city: string,
+      state: string,
+      zipCode: string,
+    },
+    CourseProfiles?:  {
+      __typename: "ModelStudentProfileCourseProfileConnection",
       nextToken?: string | null,
     } | null,
     createdAt: string,
@@ -627,17 +775,26 @@ export type OnUpdateBlogSubscription = {
   } | null,
 };
 
-export type OnDeleteBlogSubscriptionVariables = {
-  filter?: ModelSubscriptionBlogFilterInput | null,
+export type OnDeleteStudentProfileSubscriptionVariables = {
+  filter?: ModelSubscriptionStudentProfileFilterInput | null,
 };
 
-export type OnDeleteBlogSubscription = {
-  onDeleteBlog?:  {
-    __typename: "Blog",
+export type OnDeleteStudentProfileSubscription = {
+  onDeleteStudentProfile?:  {
+    __typename: "StudentProfile",
     id: string,
-    name: string,
-    posts?:  {
-      __typename: "ModelPostConnection",
+    firstName: string,
+    lastName: string,
+    email: string,
+    address:  {
+      __typename: "Address",
+      street: string,
+      city: string,
+      state: string,
+      zipCode: string,
+    },
+    CourseProfiles?:  {
+      __typename: "ModelStudentProfileCourseProfileConnection",
       nextToken?: string | null,
     } | null,
     createdAt: string,
@@ -645,149 +802,155 @@ export type OnDeleteBlogSubscription = {
   } | null,
 };
 
-export type OnCreatePostSubscriptionVariables = {
-  filter?: ModelSubscriptionPostFilterInput | null,
+export type OnCreateCourseProfileSubscriptionVariables = {
+  filter?: ModelSubscriptionCourseProfileFilterInput | null,
 };
 
-export type OnCreatePostSubscription = {
-  onCreatePost?:  {
-    __typename: "Post",
+export type OnCreateCourseProfileSubscription = {
+  onCreateCourseProfile?:  {
+    __typename: "CourseProfile",
     id: string,
-    title: string,
-    blog?:  {
-      __typename: "Blog",
-      id: string,
-      name: string,
-      createdAt: string,
-      updatedAt: string,
-    } | null,
-    comments?:  {
-      __typename: "ModelCommentConnection",
+    studentprofiles?:  {
+      __typename: "ModelStudentProfileCourseProfileConnection",
       nextToken?: string | null,
     } | null,
+    title?: string | null,
+    description?: string | null,
     createdAt: string,
     updatedAt: string,
-    blogPostsId?: string | null,
   } | null,
 };
 
-export type OnUpdatePostSubscriptionVariables = {
-  filter?: ModelSubscriptionPostFilterInput | null,
+export type OnUpdateCourseProfileSubscriptionVariables = {
+  filter?: ModelSubscriptionCourseProfileFilterInput | null,
 };
 
-export type OnUpdatePostSubscription = {
-  onUpdatePost?:  {
-    __typename: "Post",
+export type OnUpdateCourseProfileSubscription = {
+  onUpdateCourseProfile?:  {
+    __typename: "CourseProfile",
     id: string,
-    title: string,
-    blog?:  {
-      __typename: "Blog",
-      id: string,
-      name: string,
-      createdAt: string,
-      updatedAt: string,
-    } | null,
-    comments?:  {
-      __typename: "ModelCommentConnection",
+    studentprofiles?:  {
+      __typename: "ModelStudentProfileCourseProfileConnection",
       nextToken?: string | null,
     } | null,
+    title?: string | null,
+    description?: string | null,
     createdAt: string,
     updatedAt: string,
-    blogPostsId?: string | null,
   } | null,
 };
 
-export type OnDeletePostSubscriptionVariables = {
-  filter?: ModelSubscriptionPostFilterInput | null,
+export type OnDeleteCourseProfileSubscriptionVariables = {
+  filter?: ModelSubscriptionCourseProfileFilterInput | null,
 };
 
-export type OnDeletePostSubscription = {
-  onDeletePost?:  {
-    __typename: "Post",
+export type OnDeleteCourseProfileSubscription = {
+  onDeleteCourseProfile?:  {
+    __typename: "CourseProfile",
     id: string,
-    title: string,
-    blog?:  {
-      __typename: "Blog",
-      id: string,
-      name: string,
-      createdAt: string,
-      updatedAt: string,
-    } | null,
-    comments?:  {
-      __typename: "ModelCommentConnection",
+    studentprofiles?:  {
+      __typename: "ModelStudentProfileCourseProfileConnection",
       nextToken?: string | null,
     } | null,
+    title?: string | null,
+    description?: string | null,
     createdAt: string,
     updatedAt: string,
-    blogPostsId?: string | null,
   } | null,
 };
 
-export type OnCreateCommentSubscriptionVariables = {
-  filter?: ModelSubscriptionCommentFilterInput | null,
+export type OnCreateStudentProfileCourseProfileSubscriptionVariables = {
+  filter?: ModelSubscriptionStudentProfileCourseProfileFilterInput | null,
 };
 
-export type OnCreateCommentSubscription = {
-  onCreateComment?:  {
-    __typename: "Comment",
+export type OnCreateStudentProfileCourseProfileSubscription = {
+  onCreateStudentProfileCourseProfile?:  {
+    __typename: "StudentProfileCourseProfile",
     id: string,
-    post?:  {
-      __typename: "Post",
+    studentProfileId: string,
+    courseProfileId: string,
+    studentProfile:  {
+      __typename: "StudentProfile",
       id: string,
-      title: string,
+      firstName: string,
+      lastName: string,
+      email: string,
       createdAt: string,
       updatedAt: string,
-      blogPostsId?: string | null,
-    } | null,
-    content: string,
+    },
+    courseProfile:  {
+      __typename: "CourseProfile",
+      id: string,
+      title?: string | null,
+      description?: string | null,
+      createdAt: string,
+      updatedAt: string,
+    },
     createdAt: string,
     updatedAt: string,
-    postCommentsId?: string | null,
   } | null,
 };
 
-export type OnUpdateCommentSubscriptionVariables = {
-  filter?: ModelSubscriptionCommentFilterInput | null,
+export type OnUpdateStudentProfileCourseProfileSubscriptionVariables = {
+  filter?: ModelSubscriptionStudentProfileCourseProfileFilterInput | null,
 };
 
-export type OnUpdateCommentSubscription = {
-  onUpdateComment?:  {
-    __typename: "Comment",
+export type OnUpdateStudentProfileCourseProfileSubscription = {
+  onUpdateStudentProfileCourseProfile?:  {
+    __typename: "StudentProfileCourseProfile",
     id: string,
-    post?:  {
-      __typename: "Post",
+    studentProfileId: string,
+    courseProfileId: string,
+    studentProfile:  {
+      __typename: "StudentProfile",
       id: string,
-      title: string,
+      firstName: string,
+      lastName: string,
+      email: string,
       createdAt: string,
       updatedAt: string,
-      blogPostsId?: string | null,
-    } | null,
-    content: string,
+    },
+    courseProfile:  {
+      __typename: "CourseProfile",
+      id: string,
+      title?: string | null,
+      description?: string | null,
+      createdAt: string,
+      updatedAt: string,
+    },
     createdAt: string,
     updatedAt: string,
-    postCommentsId?: string | null,
   } | null,
 };
 
-export type OnDeleteCommentSubscriptionVariables = {
-  filter?: ModelSubscriptionCommentFilterInput | null,
+export type OnDeleteStudentProfileCourseProfileSubscriptionVariables = {
+  filter?: ModelSubscriptionStudentProfileCourseProfileFilterInput | null,
 };
 
-export type OnDeleteCommentSubscription = {
-  onDeleteComment?:  {
-    __typename: "Comment",
+export type OnDeleteStudentProfileCourseProfileSubscription = {
+  onDeleteStudentProfileCourseProfile?:  {
+    __typename: "StudentProfileCourseProfile",
     id: string,
-    post?:  {
-      __typename: "Post",
+    studentProfileId: string,
+    courseProfileId: string,
+    studentProfile:  {
+      __typename: "StudentProfile",
       id: string,
-      title: string,
+      firstName: string,
+      lastName: string,
+      email: string,
       createdAt: string,
       updatedAt: string,
-      blogPostsId?: string | null,
-    } | null,
-    content: string,
+    },
+    courseProfile:  {
+      __typename: "CourseProfile",
+      id: string,
+      title?: string | null,
+      description?: string | null,
+      createdAt: string,
+      updatedAt: string,
+    },
     createdAt: string,
     updatedAt: string,
-    postCommentsId?: string | null,
   } | null,
 };

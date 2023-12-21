@@ -5,9 +5,8 @@
  **************************************************************************/
 
 import * as React from "react";
-import { LogoWithTextProps } from "./LogoWithText";
+import { FlexProps, ImageProps, TextProps, ViewProps } from "@aws-amplify/ui-react";
 import { MyIconProps } from "./MyIcon";
-import { FlexProps, ImageProps, TextProps } from "@aws-amplify/ui-react";
 export declare type EscapeHatchProps = {
     [elementHierarchy: string]: Record<string, unknown>;
 } | null;
@@ -23,7 +22,7 @@ export declare type NavBarSideOverridesProps = {
     NavBarSide?: PrimitiveOverrideProps<FlexProps>;
     "Frame 32129767087"?: PrimitiveOverrideProps<FlexProps>;
     "Frame 32129767088"?: PrimitiveOverrideProps<FlexProps>;
-    LogoWithText?: LogoWithTextProps;
+    LogoWithText?: PrimitiveOverrideProps<ViewProps>;
     "Frame 414"?: PrimitiveOverrideProps<FlexProps>;
     "Frame 322"?: PrimitiveOverrideProps<FlexProps>;
     icon39443712?: PrimitiveOverrideProps<FlexProps>;

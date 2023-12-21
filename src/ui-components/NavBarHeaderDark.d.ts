@@ -5,8 +5,9 @@
  **************************************************************************/
 
 import * as React from "react";
-import { FlexProps, ImageProps, TextProps } from "@aws-amplify/ui-react";
-import { MyIconProps } from "./MyIcon";
+import { AuthenticatedHeaderProps } from "./AuthenticatedHeader";
+import { UnauthenticatedHeaderProps } from "./UnauthenticatedHeader";
+import { FlexProps } from "@aws-amplify/ui-react";
 export declare type EscapeHatchProps = {
     [elementHierarchy: string]: Record<string, unknown>;
 } | null;
@@ -18,16 +19,12 @@ export declare type Variant = {
     overrides: EscapeHatchProps;
 };
 export declare type PrimitiveOverrideProps<T> = Partial<T> & React.DOMAttributes<HTMLDivElement>;
-export declare type AuthenticatedHeaderOverridesProps = {
-    AuthenticatedHeader?: PrimitiveOverrideProps<FlexProps>;
-    "Frame 32129767076"?: PrimitiveOverrideProps<FlexProps>;
-    Home?: PrimitiveOverrideProps<TextProps>;
-    Learning?: PrimitiveOverrideProps<TextProps>;
-    "Frame 32129767081"?: PrimitiveOverrideProps<FlexProps>;
-    MyIcon?: MyIconProps;
-    image?: PrimitiveOverrideProps<ImageProps>;
+export declare type NavBarHeaderDarkOverridesProps = {
+    NavBarHeaderDark?: PrimitiveOverrideProps<FlexProps>;
+    AuthenticatedHeader?: AuthenticatedHeaderProps;
+    UnauthenticatedHeader?: UnauthenticatedHeaderProps;
 } & EscapeHatchProps;
-export declare type AuthenticatedHeaderProps = React.PropsWithChildren<Partial<FlexProps> & {
-    overrides?: AuthenticatedHeaderOverridesProps | undefined | null;
+export declare type NavBarHeaderDarkProps = React.PropsWithChildren<Partial<FlexProps> & {
+    overrides?: NavBarHeaderDarkOverridesProps | undefined | null;
 }>;
-export default function AuthenticatedHeader(props: AuthenticatedHeaderProps): React.ReactElement;
+export default function NavBarHeaderDark(props: NavBarHeaderDarkProps): React.ReactElement;

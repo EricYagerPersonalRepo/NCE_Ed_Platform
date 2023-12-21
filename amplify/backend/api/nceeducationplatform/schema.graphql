@@ -1,19 +1,23 @@
-type Blog @model @auth(rules: [{allow: public}]) {
+type StudentProfile @model @auth(rules: [{allow: public}]) {
   id: ID!
-  name: String!
-  posts: [Post] @hasMany
+  firstName: String!
+  lastName: String!
+  email: AWSEmail!
+  address: Address!
+  CourseProfiles: [CourseProfile] @manyToMany(relationName: "StudentProfileCourseProfile")
 }
 
-type Post @model @auth(rules: [{allow: public}]) {
-  id: ID!
-  title: String!
-  blog: Blog @belongsTo
-  comments: [Comment] @hasMany
+type Address {
+  street: String!
+  city: String!
+  state: String!
+  zipCode: String!
 }
 
-type Comment @model @auth(rules: [{allow: public}]) {
+type CourseProfile @model @auth(rules: [{allow: public}]) {
   id: ID!
-  post: Post @belongsTo
-  content: String!
+  studentprofiles: [StudentProfile] @manyToMany(relationName: "StudentProfileCourseProfile")
+  title: String
+  description: String
 }
  

@@ -7,8 +7,7 @@
 /* eslint-disable */
 import * as React from "react";
 import { getOverrideProps } from "./utils";
-import { Button, Flex, Text, TextField } from "@aws-amplify/ui-react";
-import LogoWithText from "./LogoWithText";
+import { Button, Flex, Text, TextField, View } from "@aws-amplify/ui-react";
 export default function MarketingFooterBrand(props) {
   const { overrides, ...rest } = props;
   return (
@@ -502,19 +501,11 @@ export default function MarketingFooterBrand(props) {
         padding="0px 0px 0px 0px"
         {...getOverrideProps(overrides, "Frame 433")}
       >
-        <LogoWithText
+        <View
           width="127.88px"
           height="18.91px"
-          display="block"
-          gap="unset"
-          alignItems="unset"
-          justifyContent="unset"
-          shrink="0"
-          position="relative"
-          padding="0px 0px 0px 0px"
-          color="brand"
           {...getOverrideProps(overrides, "LogoWithText")}
-        ></LogoWithText>
+        ></View>
         <Text
           fontFamily="Inter"
           fontSize="16px"
