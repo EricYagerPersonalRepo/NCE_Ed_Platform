@@ -8,25 +8,108 @@ type GeneratedSubscription<InputType, OutputType> = string & {
   __generatedSubscriptionOutput: OutputType;
 };
 
+export const onCreateRegistrant = /* GraphQL */ `subscription OnCreateRegistrant(
+  $filter: ModelSubscriptionRegistrantFilterInput
+) {
+  onCreateRegistrant(filter: $filter) {
+    id
+    firstName
+    lastName
+    email
+    phone
+    StudentProfiles {
+      nextToken
+      __typename
+    }
+    address {
+      city
+      state
+      zipCode
+      __typename
+    }
+    birthdate
+    createdAt
+    updatedAt
+    __typename
+  }
+}
+` as GeneratedSubscription<
+  APITypes.OnCreateRegistrantSubscriptionVariables,
+  APITypes.OnCreateRegistrantSubscription
+>;
+export const onUpdateRegistrant = /* GraphQL */ `subscription OnUpdateRegistrant(
+  $filter: ModelSubscriptionRegistrantFilterInput
+) {
+  onUpdateRegistrant(filter: $filter) {
+    id
+    firstName
+    lastName
+    email
+    phone
+    StudentProfiles {
+      nextToken
+      __typename
+    }
+    address {
+      city
+      state
+      zipCode
+      __typename
+    }
+    birthdate
+    createdAt
+    updatedAt
+    __typename
+  }
+}
+` as GeneratedSubscription<
+  APITypes.OnUpdateRegistrantSubscriptionVariables,
+  APITypes.OnUpdateRegistrantSubscription
+>;
+export const onDeleteRegistrant = /* GraphQL */ `subscription OnDeleteRegistrant(
+  $filter: ModelSubscriptionRegistrantFilterInput
+) {
+  onDeleteRegistrant(filter: $filter) {
+    id
+    firstName
+    lastName
+    email
+    phone
+    StudentProfiles {
+      nextToken
+      __typename
+    }
+    address {
+      city
+      state
+      zipCode
+      __typename
+    }
+    birthdate
+    createdAt
+    updatedAt
+    __typename
+  }
+}
+` as GeneratedSubscription<
+  APITypes.OnDeleteRegistrantSubscriptionVariables,
+  APITypes.OnDeleteRegistrantSubscription
+>;
 export const onCreateStudentProfile = /* GraphQL */ `subscription OnCreateStudentProfile(
   $filter: ModelSubscriptionStudentProfileFilterInput
 ) {
   onCreateStudentProfile(filter: $filter) {
     id
     firstName
-    lastName
     email
-    address {
-      street
-      city
-      state
-      zipCode
-      __typename
-    }
+    password
+    phone
     CourseProfiles {
       nextToken
       __typename
     }
+    birthdate
+    registrantID
     createdAt
     updatedAt
     __typename
@@ -42,19 +125,15 @@ export const onUpdateStudentProfile = /* GraphQL */ `subscription OnUpdateStuden
   onUpdateStudentProfile(filter: $filter) {
     id
     firstName
-    lastName
     email
-    address {
-      street
-      city
-      state
-      zipCode
-      __typename
-    }
+    password
+    phone
     CourseProfiles {
       nextToken
       __typename
     }
+    birthdate
+    registrantID
     createdAt
     updatedAt
     __typename
@@ -70,19 +149,15 @@ export const onDeleteStudentProfile = /* GraphQL */ `subscription OnDeleteStuden
   onDeleteStudentProfile(filter: $filter) {
     id
     firstName
-    lastName
     email
-    address {
-      street
-      city
-      state
-      zipCode
-      __typename
-    }
+    password
+    phone
     CourseProfiles {
       nextToken
       __typename
     }
+    birthdate
+    registrantID
     createdAt
     updatedAt
     __typename
@@ -162,8 +237,11 @@ export const onCreateStudentProfileCourseProfile = /* GraphQL */ `subscription O
     studentProfile {
       id
       firstName
-      lastName
       email
+      password
+      phone
+      birthdate
+      registrantID
       createdAt
       updatedAt
       __typename
@@ -195,8 +273,11 @@ export const onUpdateStudentProfileCourseProfile = /* GraphQL */ `subscription O
     studentProfile {
       id
       firstName
-      lastName
       email
+      password
+      phone
+      birthdate
+      registrantID
       createdAt
       updatedAt
       __typename
@@ -228,8 +309,11 @@ export const onDeleteStudentProfileCourseProfile = /* GraphQL */ `subscription O
     studentProfile {
       id
       firstName
-      lastName
       email
+      password
+      phone
+      birthdate
+      registrantID
       createdAt
       updatedAt
       __typename

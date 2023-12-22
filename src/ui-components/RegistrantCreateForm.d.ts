@@ -5,8 +5,8 @@
  **************************************************************************/
 
 import * as React from "react";
-import { AutocompleteProps, GridProps, TextFieldProps } from "@aws-amplify/ui-react";
-import { CourseProfile, StudentProfile } from "../API.ts";
+import { AutocompleteProps, GridProps, TextAreaFieldProps, TextFieldProps } from "@aws-amplify/ui-react";
+import { StudentProfile } from "../API.ts";
 export declare type EscapeHatchProps = {
     [elementHierarchy: string]: Record<string, unknown>;
 } | null;
@@ -22,44 +22,43 @@ export declare type ValidationResponse = {
     errorMessage?: string;
 };
 export declare type ValidationFunction<T> = (value: T, validationResponse: ValidationResponse) => ValidationResponse | Promise<ValidationResponse>;
-export declare type StudentProfileUpdateFormInputValues = {
+export declare type RegistrantCreateFormInputValues = {
     firstName?: string;
+    lastName?: string;
     email?: string;
-    password?: string;
     phone?: string;
-    CourseProfiles?: CourseProfile[];
+    StudentProfiles?: StudentProfile[];
+    address?: string;
     birthdate?: string;
-    registrantID?: string;
 };
-export declare type StudentProfileUpdateFormValidationValues = {
+export declare type RegistrantCreateFormValidationValues = {
     firstName?: ValidationFunction<string>;
+    lastName?: ValidationFunction<string>;
     email?: ValidationFunction<string>;
-    password?: ValidationFunction<string>;
     phone?: ValidationFunction<string>;
-    CourseProfiles?: ValidationFunction<CourseProfile>;
+    StudentProfiles?: ValidationFunction<StudentProfile>;
+    address?: ValidationFunction<string>;
     birthdate?: ValidationFunction<string>;
-    registrantID?: ValidationFunction<string>;
 };
 export declare type PrimitiveOverrideProps<T> = Partial<T> & React.DOMAttributes<HTMLDivElement>;
-export declare type StudentProfileUpdateFormOverridesProps = {
-    StudentProfileUpdateFormGrid?: PrimitiveOverrideProps<GridProps>;
+export declare type RegistrantCreateFormOverridesProps = {
+    RegistrantCreateFormGrid?: PrimitiveOverrideProps<GridProps>;
     firstName?: PrimitiveOverrideProps<TextFieldProps>;
+    lastName?: PrimitiveOverrideProps<TextFieldProps>;
     email?: PrimitiveOverrideProps<TextFieldProps>;
-    password?: PrimitiveOverrideProps<TextFieldProps>;
     phone?: PrimitiveOverrideProps<TextFieldProps>;
-    CourseProfiles?: PrimitiveOverrideProps<AutocompleteProps>;
+    StudentProfiles?: PrimitiveOverrideProps<AutocompleteProps>;
+    address?: PrimitiveOverrideProps<TextAreaFieldProps>;
     birthdate?: PrimitiveOverrideProps<TextFieldProps>;
-    registrantID?: PrimitiveOverrideProps<AutocompleteProps>;
 } & EscapeHatchProps;
-export declare type StudentProfileUpdateFormProps = React.PropsWithChildren<{
-    overrides?: StudentProfileUpdateFormOverridesProps | undefined | null;
+export declare type RegistrantCreateFormProps = React.PropsWithChildren<{
+    overrides?: RegistrantCreateFormOverridesProps | undefined | null;
 } & {
-    id?: string;
-    studentProfile?: StudentProfile;
-    onSubmit?: (fields: StudentProfileUpdateFormInputValues) => StudentProfileUpdateFormInputValues;
-    onSuccess?: (fields: StudentProfileUpdateFormInputValues) => void;
-    onError?: (fields: StudentProfileUpdateFormInputValues, errorMessage: string) => void;
-    onChange?: (fields: StudentProfileUpdateFormInputValues) => StudentProfileUpdateFormInputValues;
-    onValidate?: StudentProfileUpdateFormValidationValues;
+    clearOnSuccess?: boolean;
+    onSubmit?: (fields: RegistrantCreateFormInputValues) => RegistrantCreateFormInputValues;
+    onSuccess?: (fields: RegistrantCreateFormInputValues) => void;
+    onError?: (fields: RegistrantCreateFormInputValues, errorMessage: string) => void;
+    onChange?: (fields: RegistrantCreateFormInputValues) => RegistrantCreateFormInputValues;
+    onValidate?: RegistrantCreateFormValidationValues;
 } & React.CSSProperties>;
-export default function StudentProfileUpdateForm(props: StudentProfileUpdateFormProps): React.ReactElement;
+export default function RegistrantCreateForm(props: RegistrantCreateFormProps): React.ReactElement;

@@ -2,28 +2,31 @@
 /* eslint-disable */
 //  This file was automatically generated and should not be edited.
 
-export type CreateStudentProfileInput = {
+export type CreateRegistrantInput = {
   id?: string | null,
   firstName: string,
   lastName: string,
   email: string,
+  phone: string,
   address: AddressInput,
+  birthdate: string,
 };
 
 export type AddressInput = {
-  street: string,
   city: string,
   state: string,
   zipCode: string,
 };
 
-export type ModelStudentProfileConditionInput = {
+export type ModelRegistrantConditionInput = {
   firstName?: ModelStringInput | null,
   lastName?: ModelStringInput | null,
   email?: ModelStringInput | null,
-  and?: Array< ModelStudentProfileConditionInput | null > | null,
-  or?: Array< ModelStudentProfileConditionInput | null > | null,
-  not?: ModelStudentProfileConditionInput | null,
+  phone?: ModelStringInput | null,
+  birthdate?: ModelStringInput | null,
+  and?: Array< ModelRegistrantConditionInput | null > | null,
+  or?: Array< ModelRegistrantConditionInput | null > | null,
+  not?: ModelRegistrantConditionInput | null,
 };
 
 export type ModelStringInput = {
@@ -66,24 +69,38 @@ export type ModelSizeInput = {
   between?: Array< number | null > | null,
 };
 
-export type StudentProfile = {
-  __typename: "StudentProfile",
+export type Registrant = {
+  __typename: "Registrant",
   id: string,
   firstName: string,
   lastName: string,
   email: string,
+  phone: string,
+  StudentProfiles?: ModelStudentProfileConnection | null,
   address: Address,
-  CourseProfiles?: ModelStudentProfileCourseProfileConnection | null,
+  birthdate: string,
   createdAt: string,
   updatedAt: string,
 };
 
-export type Address = {
-  __typename: "Address",
-  street: string,
-  city: string,
-  state: string,
-  zipCode: string,
+export type ModelStudentProfileConnection = {
+  __typename: "ModelStudentProfileConnection",
+  items:  Array<StudentProfile | null >,
+  nextToken?: string | null,
+};
+
+export type StudentProfile = {
+  __typename: "StudentProfile",
+  id: string,
+  firstName: string,
+  email: string,
+  password: string,
+  phone: string,
+  CourseProfiles?: ModelStudentProfileCourseProfileConnection | null,
+  birthdate: string,
+  registrantID: string,
+  createdAt: string,
+  updatedAt: string,
 };
 
 export type ModelStudentProfileCourseProfileConnection = {
@@ -113,12 +130,73 @@ export type CourseProfile = {
   updatedAt: string,
 };
 
-export type UpdateStudentProfileInput = {
+export type Address = {
+  __typename: "Address",
+  city: string,
+  state: string,
+  zipCode: string,
+};
+
+export type UpdateRegistrantInput = {
   id: string,
   firstName?: string | null,
   lastName?: string | null,
   email?: string | null,
+  phone?: string | null,
   address?: AddressInput | null,
+  birthdate?: string | null,
+};
+
+export type DeleteRegistrantInput = {
+  id: string,
+};
+
+export type CreateStudentProfileInput = {
+  id?: string | null,
+  firstName: string,
+  email: string,
+  password: string,
+  phone: string,
+  birthdate: string,
+  registrantID: string,
+};
+
+export type ModelStudentProfileConditionInput = {
+  firstName?: ModelStringInput | null,
+  email?: ModelStringInput | null,
+  password?: ModelStringInput | null,
+  phone?: ModelStringInput | null,
+  birthdate?: ModelStringInput | null,
+  registrantID?: ModelIDInput | null,
+  and?: Array< ModelStudentProfileConditionInput | null > | null,
+  or?: Array< ModelStudentProfileConditionInput | null > | null,
+  not?: ModelStudentProfileConditionInput | null,
+};
+
+export type ModelIDInput = {
+  ne?: string | null,
+  eq?: string | null,
+  le?: string | null,
+  lt?: string | null,
+  ge?: string | null,
+  gt?: string | null,
+  contains?: string | null,
+  notContains?: string | null,
+  between?: Array< string | null > | null,
+  beginsWith?: string | null,
+  attributeExists?: boolean | null,
+  attributeType?: ModelAttributeTypes | null,
+  size?: ModelSizeInput | null,
+};
+
+export type UpdateStudentProfileInput = {
+  id: string,
+  firstName?: string | null,
+  email?: string | null,
+  password?: string | null,
+  phone?: string | null,
+  birthdate?: string | null,
+  registrantID?: string | null,
 };
 
 export type DeleteStudentProfileInput = {
@@ -163,22 +241,6 @@ export type ModelStudentProfileCourseProfileConditionInput = {
   not?: ModelStudentProfileCourseProfileConditionInput | null,
 };
 
-export type ModelIDInput = {
-  ne?: string | null,
-  eq?: string | null,
-  le?: string | null,
-  lt?: string | null,
-  ge?: string | null,
-  gt?: string | null,
-  contains?: string | null,
-  notContains?: string | null,
-  between?: Array< string | null > | null,
-  beginsWith?: string | null,
-  attributeExists?: boolean | null,
-  attributeType?: ModelAttributeTypes | null,
-  size?: ModelSizeInput | null,
-};
-
 export type UpdateStudentProfileCourseProfileInput = {
   id: string,
   studentProfileId?: string | null,
@@ -189,21 +251,42 @@ export type DeleteStudentProfileCourseProfileInput = {
   id: string,
 };
 
-export type ModelStudentProfileFilterInput = {
+export type ModelRegistrantFilterInput = {
   id?: ModelIDInput | null,
   firstName?: ModelStringInput | null,
   lastName?: ModelStringInput | null,
   email?: ModelStringInput | null,
+  phone?: ModelStringInput | null,
+  birthdate?: ModelStringInput | null,
+  and?: Array< ModelRegistrantFilterInput | null > | null,
+  or?: Array< ModelRegistrantFilterInput | null > | null,
+  not?: ModelRegistrantFilterInput | null,
+};
+
+export type ModelRegistrantConnection = {
+  __typename: "ModelRegistrantConnection",
+  items:  Array<Registrant | null >,
+  nextToken?: string | null,
+};
+
+export type ModelStudentProfileFilterInput = {
+  id?: ModelIDInput | null,
+  firstName?: ModelStringInput | null,
+  email?: ModelStringInput | null,
+  password?: ModelStringInput | null,
+  phone?: ModelStringInput | null,
+  birthdate?: ModelStringInput | null,
+  registrantID?: ModelIDInput | null,
   and?: Array< ModelStudentProfileFilterInput | null > | null,
   or?: Array< ModelStudentProfileFilterInput | null > | null,
   not?: ModelStudentProfileFilterInput | null,
 };
 
-export type ModelStudentProfileConnection = {
-  __typename: "ModelStudentProfileConnection",
-  items:  Array<StudentProfile | null >,
-  nextToken?: string | null,
-};
+export enum ModelSortDirection {
+  ASC = "ASC",
+  DESC = "DESC",
+}
+
 
 export type ModelCourseProfileFilterInput = {
   id?: ModelIDInput | null,
@@ -229,19 +312,15 @@ export type ModelStudentProfileCourseProfileFilterInput = {
   not?: ModelStudentProfileCourseProfileFilterInput | null,
 };
 
-export enum ModelSortDirection {
-  ASC = "ASC",
-  DESC = "DESC",
-}
-
-
-export type ModelSubscriptionStudentProfileFilterInput = {
+export type ModelSubscriptionRegistrantFilterInput = {
   id?: ModelSubscriptionIDInput | null,
   firstName?: ModelSubscriptionStringInput | null,
   lastName?: ModelSubscriptionStringInput | null,
   email?: ModelSubscriptionStringInput | null,
-  and?: Array< ModelSubscriptionStudentProfileFilterInput | null > | null,
-  or?: Array< ModelSubscriptionStudentProfileFilterInput | null > | null,
+  phone?: ModelSubscriptionStringInput | null,
+  birthdate?: ModelSubscriptionStringInput | null,
+  and?: Array< ModelSubscriptionRegistrantFilterInput | null > | null,
+  or?: Array< ModelSubscriptionRegistrantFilterInput | null > | null,
 };
 
 export type ModelSubscriptionIDInput = {
@@ -274,6 +353,18 @@ export type ModelSubscriptionStringInput = {
   notIn?: Array< string | null > | null,
 };
 
+export type ModelSubscriptionStudentProfileFilterInput = {
+  id?: ModelSubscriptionIDInput | null,
+  firstName?: ModelSubscriptionStringInput | null,
+  email?: ModelSubscriptionStringInput | null,
+  password?: ModelSubscriptionStringInput | null,
+  phone?: ModelSubscriptionStringInput | null,
+  birthdate?: ModelSubscriptionStringInput | null,
+  registrantID?: ModelSubscriptionIDInput | null,
+  and?: Array< ModelSubscriptionStudentProfileFilterInput | null > | null,
+  or?: Array< ModelSubscriptionStudentProfileFilterInput | null > | null,
+};
+
 export type ModelSubscriptionCourseProfileFilterInput = {
   id?: ModelSubscriptionIDInput | null,
   title?: ModelSubscriptionStringInput | null,
@@ -290,6 +381,93 @@ export type ModelSubscriptionStudentProfileCourseProfileFilterInput = {
   or?: Array< ModelSubscriptionStudentProfileCourseProfileFilterInput | null > | null,
 };
 
+export type CreateRegistrantMutationVariables = {
+  input: CreateRegistrantInput,
+  condition?: ModelRegistrantConditionInput | null,
+};
+
+export type CreateRegistrantMutation = {
+  createRegistrant?:  {
+    __typename: "Registrant",
+    id: string,
+    firstName: string,
+    lastName: string,
+    email: string,
+    phone: string,
+    StudentProfiles?:  {
+      __typename: "ModelStudentProfileConnection",
+      nextToken?: string | null,
+    } | null,
+    address:  {
+      __typename: "Address",
+      city: string,
+      state: string,
+      zipCode: string,
+    },
+    birthdate: string,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type UpdateRegistrantMutationVariables = {
+  input: UpdateRegistrantInput,
+  condition?: ModelRegistrantConditionInput | null,
+};
+
+export type UpdateRegistrantMutation = {
+  updateRegistrant?:  {
+    __typename: "Registrant",
+    id: string,
+    firstName: string,
+    lastName: string,
+    email: string,
+    phone: string,
+    StudentProfiles?:  {
+      __typename: "ModelStudentProfileConnection",
+      nextToken?: string | null,
+    } | null,
+    address:  {
+      __typename: "Address",
+      city: string,
+      state: string,
+      zipCode: string,
+    },
+    birthdate: string,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type DeleteRegistrantMutationVariables = {
+  input: DeleteRegistrantInput,
+  condition?: ModelRegistrantConditionInput | null,
+};
+
+export type DeleteRegistrantMutation = {
+  deleteRegistrant?:  {
+    __typename: "Registrant",
+    id: string,
+    firstName: string,
+    lastName: string,
+    email: string,
+    phone: string,
+    StudentProfiles?:  {
+      __typename: "ModelStudentProfileConnection",
+      nextToken?: string | null,
+    } | null,
+    address:  {
+      __typename: "Address",
+      city: string,
+      state: string,
+      zipCode: string,
+    },
+    birthdate: string,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
 export type CreateStudentProfileMutationVariables = {
   input: CreateStudentProfileInput,
   condition?: ModelStudentProfileConditionInput | null,
@@ -300,19 +478,15 @@ export type CreateStudentProfileMutation = {
     __typename: "StudentProfile",
     id: string,
     firstName: string,
-    lastName: string,
     email: string,
-    address:  {
-      __typename: "Address",
-      street: string,
-      city: string,
-      state: string,
-      zipCode: string,
-    },
+    password: string,
+    phone: string,
     CourseProfiles?:  {
       __typename: "ModelStudentProfileCourseProfileConnection",
       nextToken?: string | null,
     } | null,
+    birthdate: string,
+    registrantID: string,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -328,19 +502,15 @@ export type UpdateStudentProfileMutation = {
     __typename: "StudentProfile",
     id: string,
     firstName: string,
-    lastName: string,
     email: string,
-    address:  {
-      __typename: "Address",
-      street: string,
-      city: string,
-      state: string,
-      zipCode: string,
-    },
+    password: string,
+    phone: string,
     CourseProfiles?:  {
       __typename: "ModelStudentProfileCourseProfileConnection",
       nextToken?: string | null,
     } | null,
+    birthdate: string,
+    registrantID: string,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -356,19 +526,15 @@ export type DeleteStudentProfileMutation = {
     __typename: "StudentProfile",
     id: string,
     firstName: string,
-    lastName: string,
     email: string,
-    address:  {
-      __typename: "Address",
-      street: string,
-      city: string,
-      state: string,
-      zipCode: string,
-    },
+    password: string,
+    phone: string,
     CourseProfiles?:  {
       __typename: "ModelStudentProfileCourseProfileConnection",
       nextToken?: string | null,
     } | null,
+    birthdate: string,
+    registrantID: string,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -449,8 +615,11 @@ export type CreateStudentProfileCourseProfileMutation = {
       __typename: "StudentProfile",
       id: string,
       firstName: string,
-      lastName: string,
       email: string,
+      password: string,
+      phone: string,
+      birthdate: string,
+      registrantID: string,
       createdAt: string,
       updatedAt: string,
     },
@@ -482,8 +651,11 @@ export type UpdateStudentProfileCourseProfileMutation = {
       __typename: "StudentProfile",
       id: string,
       firstName: string,
-      lastName: string,
       email: string,
+      password: string,
+      phone: string,
+      birthdate: string,
+      registrantID: string,
       createdAt: string,
       updatedAt: string,
     },
@@ -515,8 +687,11 @@ export type DeleteStudentProfileCourseProfileMutation = {
       __typename: "StudentProfile",
       id: string,
       firstName: string,
-      lastName: string,
       email: string,
+      password: string,
+      phone: string,
+      birthdate: string,
+      registrantID: string,
       createdAt: string,
       updatedAt: string,
     },
@@ -533,6 +708,58 @@ export type DeleteStudentProfileCourseProfileMutation = {
   } | null,
 };
 
+export type GetRegistrantQueryVariables = {
+  id: string,
+};
+
+export type GetRegistrantQuery = {
+  getRegistrant?:  {
+    __typename: "Registrant",
+    id: string,
+    firstName: string,
+    lastName: string,
+    email: string,
+    phone: string,
+    StudentProfiles?:  {
+      __typename: "ModelStudentProfileConnection",
+      nextToken?: string | null,
+    } | null,
+    address:  {
+      __typename: "Address",
+      city: string,
+      state: string,
+      zipCode: string,
+    },
+    birthdate: string,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type ListRegistrantsQueryVariables = {
+  filter?: ModelRegistrantFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+};
+
+export type ListRegistrantsQuery = {
+  listRegistrants?:  {
+    __typename: "ModelRegistrantConnection",
+    items:  Array< {
+      __typename: "Registrant",
+      id: string,
+      firstName: string,
+      lastName: string,
+      email: string,
+      phone: string,
+      birthdate: string,
+      createdAt: string,
+      updatedAt: string,
+    } | null >,
+    nextToken?: string | null,
+  } | null,
+};
+
 export type GetStudentProfileQueryVariables = {
   id: string,
 };
@@ -542,19 +769,15 @@ export type GetStudentProfileQuery = {
     __typename: "StudentProfile",
     id: string,
     firstName: string,
-    lastName: string,
     email: string,
-    address:  {
-      __typename: "Address",
-      street: string,
-      city: string,
-      state: string,
-      zipCode: string,
-    },
+    password: string,
+    phone: string,
     CourseProfiles?:  {
       __typename: "ModelStudentProfileCourseProfileConnection",
       nextToken?: string | null,
     } | null,
+    birthdate: string,
+    registrantID: string,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -573,8 +796,38 @@ export type ListStudentProfilesQuery = {
       __typename: "StudentProfile",
       id: string,
       firstName: string,
-      lastName: string,
       email: string,
+      password: string,
+      phone: string,
+      birthdate: string,
+      registrantID: string,
+      createdAt: string,
+      updatedAt: string,
+    } | null >,
+    nextToken?: string | null,
+  } | null,
+};
+
+export type StudentProfilesByRegistrantIDQueryVariables = {
+  registrantID: string,
+  sortDirection?: ModelSortDirection | null,
+  filter?: ModelStudentProfileFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+};
+
+export type StudentProfilesByRegistrantIDQuery = {
+  studentProfilesByRegistrantID?:  {
+    __typename: "ModelStudentProfileConnection",
+    items:  Array< {
+      __typename: "StudentProfile",
+      id: string,
+      firstName: string,
+      email: string,
+      password: string,
+      phone: string,
+      birthdate: string,
+      registrantID: string,
       createdAt: string,
       updatedAt: string,
     } | null >,
@@ -636,8 +889,11 @@ export type GetStudentProfileCourseProfileQuery = {
       __typename: "StudentProfile",
       id: string,
       firstName: string,
-      lastName: string,
       email: string,
+      password: string,
+      phone: string,
+      birthdate: string,
+      registrantID: string,
       createdAt: string,
       updatedAt: string,
     },
@@ -721,6 +977,90 @@ export type StudentProfileCourseProfilesByCourseProfileIdQuery = {
   } | null,
 };
 
+export type OnCreateRegistrantSubscriptionVariables = {
+  filter?: ModelSubscriptionRegistrantFilterInput | null,
+};
+
+export type OnCreateRegistrantSubscription = {
+  onCreateRegistrant?:  {
+    __typename: "Registrant",
+    id: string,
+    firstName: string,
+    lastName: string,
+    email: string,
+    phone: string,
+    StudentProfiles?:  {
+      __typename: "ModelStudentProfileConnection",
+      nextToken?: string | null,
+    } | null,
+    address:  {
+      __typename: "Address",
+      city: string,
+      state: string,
+      zipCode: string,
+    },
+    birthdate: string,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnUpdateRegistrantSubscriptionVariables = {
+  filter?: ModelSubscriptionRegistrantFilterInput | null,
+};
+
+export type OnUpdateRegistrantSubscription = {
+  onUpdateRegistrant?:  {
+    __typename: "Registrant",
+    id: string,
+    firstName: string,
+    lastName: string,
+    email: string,
+    phone: string,
+    StudentProfiles?:  {
+      __typename: "ModelStudentProfileConnection",
+      nextToken?: string | null,
+    } | null,
+    address:  {
+      __typename: "Address",
+      city: string,
+      state: string,
+      zipCode: string,
+    },
+    birthdate: string,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnDeleteRegistrantSubscriptionVariables = {
+  filter?: ModelSubscriptionRegistrantFilterInput | null,
+};
+
+export type OnDeleteRegistrantSubscription = {
+  onDeleteRegistrant?:  {
+    __typename: "Registrant",
+    id: string,
+    firstName: string,
+    lastName: string,
+    email: string,
+    phone: string,
+    StudentProfiles?:  {
+      __typename: "ModelStudentProfileConnection",
+      nextToken?: string | null,
+    } | null,
+    address:  {
+      __typename: "Address",
+      city: string,
+      state: string,
+      zipCode: string,
+    },
+    birthdate: string,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
 export type OnCreateStudentProfileSubscriptionVariables = {
   filter?: ModelSubscriptionStudentProfileFilterInput | null,
 };
@@ -730,19 +1070,15 @@ export type OnCreateStudentProfileSubscription = {
     __typename: "StudentProfile",
     id: string,
     firstName: string,
-    lastName: string,
     email: string,
-    address:  {
-      __typename: "Address",
-      street: string,
-      city: string,
-      state: string,
-      zipCode: string,
-    },
+    password: string,
+    phone: string,
     CourseProfiles?:  {
       __typename: "ModelStudentProfileCourseProfileConnection",
       nextToken?: string | null,
     } | null,
+    birthdate: string,
+    registrantID: string,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -757,19 +1093,15 @@ export type OnUpdateStudentProfileSubscription = {
     __typename: "StudentProfile",
     id: string,
     firstName: string,
-    lastName: string,
     email: string,
-    address:  {
-      __typename: "Address",
-      street: string,
-      city: string,
-      state: string,
-      zipCode: string,
-    },
+    password: string,
+    phone: string,
     CourseProfiles?:  {
       __typename: "ModelStudentProfileCourseProfileConnection",
       nextToken?: string | null,
     } | null,
+    birthdate: string,
+    registrantID: string,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -784,19 +1116,15 @@ export type OnDeleteStudentProfileSubscription = {
     __typename: "StudentProfile",
     id: string,
     firstName: string,
-    lastName: string,
     email: string,
-    address:  {
-      __typename: "Address",
-      street: string,
-      city: string,
-      state: string,
-      zipCode: string,
-    },
+    password: string,
+    phone: string,
     CourseProfiles?:  {
       __typename: "ModelStudentProfileCourseProfileConnection",
       nextToken?: string | null,
     } | null,
+    birthdate: string,
+    registrantID: string,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -873,8 +1201,11 @@ export type OnCreateStudentProfileCourseProfileSubscription = {
       __typename: "StudentProfile",
       id: string,
       firstName: string,
-      lastName: string,
       email: string,
+      password: string,
+      phone: string,
+      birthdate: string,
+      registrantID: string,
       createdAt: string,
       updatedAt: string,
     },
@@ -905,8 +1236,11 @@ export type OnUpdateStudentProfileCourseProfileSubscription = {
       __typename: "StudentProfile",
       id: string,
       firstName: string,
-      lastName: string,
       email: string,
+      password: string,
+      phone: string,
+      birthdate: string,
+      registrantID: string,
       createdAt: string,
       updatedAt: string,
     },
@@ -937,8 +1271,11 @@ export type OnDeleteStudentProfileCourseProfileSubscription = {
       __typename: "StudentProfile",
       id: string,
       firstName: string,
-      lastName: string,
       email: string,
+      password: string,
+      phone: string,
+      birthdate: string,
+      registrantID: string,
       createdAt: string,
       updatedAt: string,
     },

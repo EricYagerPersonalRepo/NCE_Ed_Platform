@@ -1,14 +1,26 @@
-type StudentProfile @model @auth(rules: [{allow: public}]) {
+type Registrant @model @auth(rules: [{allow: public}]) {
   id: ID!
   firstName: String!
   lastName: String!
   email: AWSEmail!
+  phone: AWSPhone!
+  StudentProfiles: [StudentProfile] @hasMany(indexName: "byRegistrant", fields: ["id"])
   address: Address!
+  birthdate: AWSDate!
+}
+
+type StudentProfile @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  firstName: String!
+  email: AWSEmail!
+  password: String!
+  phone: String!
   CourseProfiles: [CourseProfile] @manyToMany(relationName: "StudentProfileCourseProfile")
+  birthdate: AWSDate!
+  registrantID: ID! @index(name: "byRegistrant")
 }
 
 type Address {
-  street: String!
   city: String!
   state: String!
   zipCode: String!

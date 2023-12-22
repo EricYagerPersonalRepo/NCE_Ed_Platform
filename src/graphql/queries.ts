@@ -8,23 +8,71 @@ type GeneratedQuery<InputType, OutputType> = string & {
   __generatedQueryOutput: OutputType;
 };
 
-export const getStudentProfile = /* GraphQL */ `query GetStudentProfile($id: ID!) {
-  getStudentProfile(id: $id) {
+export const getRegistrant = /* GraphQL */ `query GetRegistrant($id: ID!) {
+  getRegistrant(id: $id) {
     id
     firstName
     lastName
     email
+    phone
+    StudentProfiles {
+      nextToken
+      __typename
+    }
     address {
-      street
       city
       state
       zipCode
       __typename
     }
+    birthdate
+    createdAt
+    updatedAt
+    __typename
+  }
+}
+` as GeneratedQuery<
+  APITypes.GetRegistrantQueryVariables,
+  APITypes.GetRegistrantQuery
+>;
+export const listRegistrants = /* GraphQL */ `query ListRegistrants(
+  $filter: ModelRegistrantFilterInput
+  $limit: Int
+  $nextToken: String
+) {
+  listRegistrants(filter: $filter, limit: $limit, nextToken: $nextToken) {
+    items {
+      id
+      firstName
+      lastName
+      email
+      phone
+      birthdate
+      createdAt
+      updatedAt
+      __typename
+    }
+    nextToken
+    __typename
+  }
+}
+` as GeneratedQuery<
+  APITypes.ListRegistrantsQueryVariables,
+  APITypes.ListRegistrantsQuery
+>;
+export const getStudentProfile = /* GraphQL */ `query GetStudentProfile($id: ID!) {
+  getStudentProfile(id: $id) {
+    id
+    firstName
+    email
+    password
+    phone
     CourseProfiles {
       nextToken
       __typename
     }
+    birthdate
+    registrantID
     createdAt
     updatedAt
     __typename
@@ -43,8 +91,11 @@ export const listStudentProfiles = /* GraphQL */ `query ListStudentProfiles(
     items {
       id
       firstName
-      lastName
       email
+      password
+      phone
+      birthdate
+      registrantID
       createdAt
       updatedAt
       __typename
@@ -56,6 +107,40 @@ export const listStudentProfiles = /* GraphQL */ `query ListStudentProfiles(
 ` as GeneratedQuery<
   APITypes.ListStudentProfilesQueryVariables,
   APITypes.ListStudentProfilesQuery
+>;
+export const studentProfilesByRegistrantID = /* GraphQL */ `query StudentProfilesByRegistrantID(
+  $registrantID: ID!
+  $sortDirection: ModelSortDirection
+  $filter: ModelStudentProfileFilterInput
+  $limit: Int
+  $nextToken: String
+) {
+  studentProfilesByRegistrantID(
+    registrantID: $registrantID
+    sortDirection: $sortDirection
+    filter: $filter
+    limit: $limit
+    nextToken: $nextToken
+  ) {
+    items {
+      id
+      firstName
+      email
+      password
+      phone
+      birthdate
+      registrantID
+      createdAt
+      updatedAt
+      __typename
+    }
+    nextToken
+    __typename
+  }
+}
+` as GeneratedQuery<
+  APITypes.StudentProfilesByRegistrantIDQueryVariables,
+  APITypes.StudentProfilesByRegistrantIDQuery
 >;
 export const getCourseProfile = /* GraphQL */ `query GetCourseProfile($id: ID!) {
   getCourseProfile(id: $id) {
@@ -105,8 +190,11 @@ export const getStudentProfileCourseProfile = /* GraphQL */ `query GetStudentPro
     studentProfile {
       id
       firstName
-      lastName
       email
+      password
+      phone
+      birthdate
+      registrantID
       createdAt
       updatedAt
       __typename

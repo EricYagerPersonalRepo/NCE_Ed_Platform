@@ -26,6 +26,8 @@ export { default as MyIcon } from "./MyIcon";
 export { default as NavBarHeaderDark } from "./NavBarHeaderDark";
 export { default as NavBarSide } from "./NavBarSide";
 export { default as ProfileCard } from "./ProfileCard";
+export { default as RegistrantCreateForm } from "./RegistrantCreateForm";
+export { default as RegistrantUpdateForm } from "./RegistrantUpdateForm";
 export { default as SideBar } from "./SideBar";
 export { default as SignUp } from "./SignUp";
 export { default as StandardCard } from "./StandardCard";
