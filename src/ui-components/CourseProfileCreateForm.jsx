@@ -236,8 +236,7 @@ export default function CourseProfileCreateForm(props) {
       : getIDValue.studentprofiles?.(studentprofiles)
   );
   const getDisplayValue = {
-    studentprofiles: (r) =>
-      `${r?.firstName ? r?.firstName + " - " : ""}${r?.id}`,
+    studentprofiles: (r) => `${r?.name ? r?.name + " - " : ""}${r?.id}`,
   };
   const validations = {
     studentprofiles: [],
@@ -269,7 +268,7 @@ export default function CourseProfileCreateForm(props) {
       const variables = {
         limit: autocompleteLength * 5,
         filter: {
-          or: [{ firstName: { contains: value } }, { id: { contains: value } }],
+          or: [{ name: { contains: value } }, { id: { contains: value } }],
         },
       };
       if (newNext) {

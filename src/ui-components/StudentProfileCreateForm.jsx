@@ -21,7 +21,7 @@ import {
 } from "@aws-amplify/ui-react";
 import { fetchByPath, getOverrideProps, validateField } from "./utils";
 import { generateClient } from "aws-amplify/api";
-import { listCourseProfiles, listRegistrants } from "../graphql/queries";
+import { listCourseProfiles } from "../graphql/queries";
 import {
   createStudentProfile,
   createStudentProfileCourseProfile,
@@ -194,18 +194,13 @@ export default function StudentProfileCreateForm(props) {
     ...rest
   } = props;
   const initialValues = {
-    firstName: "",
+    name: "",
     email: "",
-    password: "",
-    phone: "",
     CourseProfiles: [],
     birthdate: "",
-    registrantID: undefined,
   };
-  const [firstName, setFirstName] = React.useState(initialValues.firstName);
+  const [name, setName] = React.useState(initialValues.name);
   const [email, setEmail] = React.useState(initialValues.email);
-  const [password, setPassword] = React.useState(initialValues.password);
-  const [phone, setPhone] = React.useState(initialValues.phone);
   const [CourseProfiles, setCourseProfiles] = React.useState(
     initialValues.CourseProfiles
   );
@@ -213,27 +208,15 @@ export default function StudentProfileCreateForm(props) {
     React.useState(false);
   const [courseProfilesRecords, setCourseProfilesRecords] = React.useState([]);
   const [birthdate, setBirthdate] = React.useState(initialValues.birthdate);
-  const [registrantID, setRegistrantID] = React.useState(
-    initialValues.registrantID
-  );
-  const [registrantIDLoading, setRegistrantIDLoading] = React.useState(false);
-  const [registrantIDRecords, setRegistrantIDRecords] = React.useState([]);
-  const [selectedRegistrantIDRecords, setSelectedRegistrantIDRecords] =
-    React.useState([]);
   const autocompleteLength = 10;
   const [errors, setErrors] = React.useState({});
   const resetStateValues = () => {
-    setFirstName(initialValues.firstName);
+    setName(initialValues.name);
     setEmail(initialValues.email);
-    setPassword(initialValues.password);
-    setPhone(initialValues.phone);
     setCourseProfiles(initialValues.CourseProfiles);
     setCurrentCourseProfilesValue(undefined);
     setCurrentCourseProfilesDisplayValue("");
     setBirthdate(initialValues.birthdate);
-    setRegistrantID(initialValues.registrantID);
-    setCurrentRegistrantIDValue(undefined);
-    setCurrentRegistrantIDDisplayValue("");
     setErrors({});
   };
   const [
@@ -243,11 +226,6 @@ export default function StudentProfileCreateForm(props) {
   const [currentCourseProfilesValue, setCurrentCourseProfilesValue] =
     React.useState(undefined);
   const CourseProfilesRef = React.createRef();
-  const [currentRegistrantIDDisplayValue, setCurrentRegistrantIDDisplayValue] =
-    React.useState("");
-  const [currentRegistrantIDValue, setCurrentRegistrantIDValue] =
-    React.useState(undefined);
-  const registrantIDRef = React.createRef();
   const getIDValue = {
     CourseProfiles: (r) => JSON.stringify({ id: r?.id }),
   };
@@ -258,16 +236,12 @@ export default function StudentProfileCreateForm(props) {
   );
   const getDisplayValue = {
     CourseProfiles: (r) => `${r?.title ? r?.title + " - " : ""}${r?.id}`,
-    registrantID: (r) => `${r?.firstName ? r?.firstName + " - " : ""}${r?.id}`,
   };
   const validations = {
-    firstName: [{ type: "Required" }],
+    name: [{ type: "Required" }],
     email: [{ type: "Required" }, { type: "Email" }],
-    password: [{ type: "Required" }],
-    phone: [{ type: "Required" }],
     CourseProfiles: [],
     birthdate: [{ type: "Required" }],
-    registrantID: [{ type: "Required" }],
   };
   const runValidationTasks = async (
     fieldName,
@@ -315,36 +289,8 @@ export default function StudentProfileCreateForm(props) {
     setCourseProfilesRecords(newOptions.slice(0, autocompleteLength));
     setCourseProfilesLoading(false);
   };
-  const fetchRegistrantIDRecords = async (value) => {
-    setRegistrantIDLoading(true);
-    const newOptions = [];
-    let newNext = "";
-    while (newOptions.length < autocompleteLength && newNext != null) {
-      const variables = {
-        limit: autocompleteLength * 5,
-        filter: {
-          or: [{ firstName: { contains: value } }, { id: { contains: value } }],
-        },
-      };
-      if (newNext) {
-        variables["nextToken"] = newNext;
-      }
-      const result = (
-        await client.graphql({
-          query: listRegistrants.replaceAll("__typename", ""),
-          variables,
-        })
-      )?.data?.listRegistrants?.items;
-      var loaded = result.filter((item) => registrantID !== item.id);
-      newOptions.push(...loaded);
-      newNext = result.nextToken;
-    }
-    setRegistrantIDRecords(newOptions.slice(0, autocompleteLength));
-    setRegistrantIDLoading(false);
-  };
   React.useEffect(() => {
     fetchCourseProfilesRecords("");
-    fetchRegistrantIDRecords("");
   }, []);
   return (
     <Grid
@@ -355,13 +301,10 @@ export default function StudentProfileCreateForm(props) {
       onSubmit={async (event) => {
         event.preventDefault();
         let modelFields = {
-          firstName,
+          name,
           email,
-          password,
-          phone,
           CourseProfiles,
           birthdate,
-          registrantID,
         };
         const validationResponses = await Promise.all(
           Object.keys(validations).reduce((promises, fieldName) => {
@@ -400,12 +343,9 @@ export default function StudentProfileCreateForm(props) {
             }
           });
           const modelFieldsToSave = {
-            firstName: modelFields.firstName,
+            name: modelFields.name,
             email: modelFields.email,
-            password: modelFields.password,
-            phone: modelFields.phone,
             birthdate: modelFields.birthdate,
-            registrantID: modelFields.registrantID,
           };
           const studentProfile = (
             await client.graphql({
@@ -455,34 +395,31 @@ export default function StudentProfileCreateForm(props) {
       {...rest}
     >
       <TextField
-        label="First name"
+        label="Name"
         isRequired={true}
         isReadOnly={false}
-        value={firstName}
+        value={name}
         onChange={(e) => {
           let { value } = e.target;
           if (onChange) {
             const modelFields = {
-              firstName: value,
+              name: value,
               email,
-              password,
-              phone,
               CourseProfiles,
               birthdate,
-              registrantID,
             };
             const result = onChange(modelFields);
-            value = result?.firstName ?? value;
+            value = result?.name ?? value;
           }
-          if (errors.firstName?.hasError) {
-            runValidationTasks("firstName", value);
+          if (errors.name?.hasError) {
+            runValidationTasks("name", value);
           }
-          setFirstName(value);
+          setName(value);
         }}
-        onBlur={() => runValidationTasks("firstName", firstName)}
-        errorMessage={errors.firstName?.errorMessage}
-        hasError={errors.firstName?.hasError}
-        {...getOverrideProps(overrides, "firstName")}
+        onBlur={() => runValidationTasks("name", name)}
+        errorMessage={errors.name?.errorMessage}
+        hasError={errors.name?.hasError}
+        {...getOverrideProps(overrides, "name")}
       ></TextField>
       <TextField
         label="Email"
@@ -493,13 +430,10 @@ export default function StudentProfileCreateForm(props) {
           let { value } = e.target;
           if (onChange) {
             const modelFields = {
-              firstName,
+              name,
               email: value,
-              password,
-              phone,
               CourseProfiles,
               birthdate,
-              registrantID,
             };
             const result = onChange(modelFields);
             value = result?.email ?? value;
@@ -514,78 +448,15 @@ export default function StudentProfileCreateForm(props) {
         hasError={errors.email?.hasError}
         {...getOverrideProps(overrides, "email")}
       ></TextField>
-      <TextField
-        label="Password"
-        isRequired={true}
-        isReadOnly={false}
-        value={password}
-        onChange={(e) => {
-          let { value } = e.target;
-          if (onChange) {
-            const modelFields = {
-              firstName,
-              email,
-              password: value,
-              phone,
-              CourseProfiles,
-              birthdate,
-              registrantID,
-            };
-            const result = onChange(modelFields);
-            value = result?.password ?? value;
-          }
-          if (errors.password?.hasError) {
-            runValidationTasks("password", value);
-          }
-          setPassword(value);
-        }}
-        onBlur={() => runValidationTasks("password", password)}
-        errorMessage={errors.password?.errorMessage}
-        hasError={errors.password?.hasError}
-        {...getOverrideProps(overrides, "password")}
-      ></TextField>
-      <TextField
-        label="Phone"
-        isRequired={true}
-        isReadOnly={false}
-        value={phone}
-        onChange={(e) => {
-          let { value } = e.target;
-          if (onChange) {
-            const modelFields = {
-              firstName,
-              email,
-              password,
-              phone: value,
-              CourseProfiles,
-              birthdate,
-              registrantID,
-            };
-            const result = onChange(modelFields);
-            value = result?.phone ?? value;
-          }
-          if (errors.phone?.hasError) {
-            runValidationTasks("phone", value);
-          }
-          setPhone(value);
-        }}
-        onBlur={() => runValidationTasks("phone", phone)}
-        errorMessage={errors.phone?.errorMessage}
-        hasError={errors.phone?.hasError}
-        {...getOverrideProps(overrides, "phone")}
-      ></TextField>
       <ArrayField
         onChange={async (items) => {
           let values = items;
           if (onChange) {
             const modelFields = {
-              firstName,
+              name,
               email,
-              password,
-              phone,
               CourseProfiles: values,
               birthdate,
-              registrantID,
             };
             const result = onChange(modelFields);
             values = result?.CourseProfiles ?? values;
@@ -669,13 +540,10 @@ export default function StudentProfileCreateForm(props) {
           let { value } = e.target;
           if (onChange) {
             const modelFields = {
-              firstName,
+              name,
               email,
-              password,
-              phone,
               CourseProfiles,
               birthdate: value,
-              registrantID,
             };
             const result = onChange(modelFields);
             value = result?.birthdate ?? value;
@@ -690,105 +558,6 @@ export default function StudentProfileCreateForm(props) {
         hasError={errors.birthdate?.hasError}
         {...getOverrideProps(overrides, "birthdate")}
       ></TextField>
-      <ArrayField
-        lengthLimit={1}
-        onChange={async (items) => {
-          let value = items[0];
-          if (onChange) {
-            const modelFields = {
-              firstName,
-              email,
-              password,
-              phone,
-              CourseProfiles,
-              birthdate,
-              registrantID: value,
-            };
-            const result = onChange(modelFields);
-            value = result?.registrantID ?? value;
-          }
-          setRegistrantID(value);
-          setCurrentRegistrantIDValue(undefined);
-        }}
-        currentFieldValue={currentRegistrantIDValue}
-        label={"Registrant id"}
-        items={registrantID ? [registrantID] : []}
-        hasError={errors?.registrantID?.hasError}
-        runValidationTasks={async () =>
-          await runValidationTasks("registrantID", currentRegistrantIDValue)
-        }
-        errorMessage={errors?.registrantID?.errorMessage}
-        getBadgeText={(value) =>
-          value
-            ? getDisplayValue.registrantID(
-                registrantIDRecords.find((r) => r.id === value) ??
-                  selectedRegistrantIDRecords.find((r) => r.id === value)
-              )
-            : ""
-        }
-        setFieldValue={(value) => {
-          setCurrentRegistrantIDDisplayValue(
-            value
-              ? getDisplayValue.registrantID(
-                  registrantIDRecords.find((r) => r.id === value) ??
-                    selectedRegistrantIDRecords.find((r) => r.id === value)
-                )
-              : ""
-          );
-          setCurrentRegistrantIDValue(value);
-          const selectedRecord = registrantIDRecords.find(
-            (r) => r.id === value
-          );
-          if (selectedRecord) {
-            setSelectedRegistrantIDRecords([selectedRecord]);
-          }
-        }}
-        inputFieldRef={registrantIDRef}
-        defaultFieldValue={""}
-      >
-        <Autocomplete
-          label="Registrant id"
-          isRequired={true}
-          isReadOnly={false}
-          placeholder="Search Registrant"
-          value={currentRegistrantIDDisplayValue}
-          options={registrantIDRecords
-            .filter(
-              (r, i, arr) =>
-                arr.findIndex((member) => member?.id === r?.id) === i
-            )
-            .map((r) => ({
-              id: r?.id,
-              label: getDisplayValue.registrantID?.(r),
-            }))}
-          isLoading={registrantIDLoading}
-          onSelect={({ id, label }) => {
-            setCurrentRegistrantIDValue(id);
-            setCurrentRegistrantIDDisplayValue(label);
-            runValidationTasks("registrantID", label);
-          }}
-          onClear={() => {
-            setCurrentRegistrantIDDisplayValue("");
-          }}
-          onChange={(e) => {
-            let { value } = e.target;
-            fetchRegistrantIDRecords(value);
-            if (errors.registrantID?.hasError) {
-              runValidationTasks("registrantID", value);
-            }
-            setCurrentRegistrantIDDisplayValue(value);
-            setCurrentRegistrantIDValue(undefined);
-          }}
-          onBlur={() =>
-            runValidationTasks("registrantID", currentRegistrantIDValue)
-          }
-          errorMessage={errors.registrantID?.errorMessage}
-          hasError={errors.registrantID?.hasError}
-          ref={registrantIDRef}
-          labelHidden={true}
-          {...getOverrideProps(overrides, "registrantID")}
-        ></Autocomplete>
-      </ArrayField>
       <Flex
         justifyContent="space-between"
         {...getOverrideProps(overrides, "CTAFlex")}

@@ -1,6 +1,6 @@
 projects:
   nceeducationplatform:
-    schemaPath: src/graphql/schema.json
+    schemaPath: amplify/backend/api/nceeducationplatform/build/schema.graphql
     includes:
       - src/graphql/**/*.ts
     excludes:

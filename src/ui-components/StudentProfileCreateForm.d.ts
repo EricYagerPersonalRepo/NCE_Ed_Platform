@@ -23,33 +23,24 @@ export declare type ValidationResponse = {
 };
 export declare type ValidationFunction<T> = (value: T, validationResponse: ValidationResponse) => ValidationResponse | Promise<ValidationResponse>;
 export declare type StudentProfileCreateFormInputValues = {
-    firstName?: string;
+    name?: string;
     email?: string;
-    password?: string;
-    phone?: string;
     CourseProfiles?: CourseProfile[];
     birthdate?: string;
-    registrantID?: string;
 };
 export declare type StudentProfileCreateFormValidationValues = {
-    firstName?: ValidationFunction<string>;
+    name?: ValidationFunction<string>;
     email?: ValidationFunction<string>;
-    password?: ValidationFunction<string>;
-    phone?: ValidationFunction<string>;
     CourseProfiles?: ValidationFunction<CourseProfile>;
     birthdate?: ValidationFunction<string>;
-    registrantID?: ValidationFunction<string>;
 };
 export declare type PrimitiveOverrideProps<T> = Partial<T> & React.DOMAttributes<HTMLDivElement>;
 export declare type StudentProfileCreateFormOverridesProps = {
     StudentProfileCreateFormGrid?: PrimitiveOverrideProps<GridProps>;
-    firstName?: PrimitiveOverrideProps<TextFieldProps>;
+    name?: PrimitiveOverrideProps<TextFieldProps>;
     email?: PrimitiveOverrideProps<TextFieldProps>;
-    password?: PrimitiveOverrideProps<TextFieldProps>;
-    phone?: PrimitiveOverrideProps<TextFieldProps>;
     CourseProfiles?: PrimitiveOverrideProps<AutocompleteProps>;
     birthdate?: PrimitiveOverrideProps<TextFieldProps>;
-    registrantID?: PrimitiveOverrideProps<AutocompleteProps>;
 } & EscapeHatchProps;
 export declare type StudentProfileCreateFormProps = React.PropsWithChildren<{
     overrides?: StudentProfileCreateFormOverridesProps | undefined | null;

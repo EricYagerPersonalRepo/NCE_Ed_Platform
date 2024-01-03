@@ -8,112 +8,19 @@ type GeneratedMutation<InputType, OutputType> = string & {
   __generatedMutationOutput: OutputType;
 };
 
-export const createRegistrant = /* GraphQL */ `mutation CreateRegistrant(
-  $input: CreateRegistrantInput!
-  $condition: ModelRegistrantConditionInput
-) {
-  createRegistrant(input: $input, condition: $condition) {
-    id
-    firstName
-    lastName
-    email
-    phone
-    StudentProfiles {
-      nextToken
-      __typename
-    }
-    address {
-      city
-      state
-      zipCode
-      __typename
-    }
-    birthdate
-    createdAt
-    updatedAt
-    __typename
-  }
-}
-` as GeneratedMutation<
-  APITypes.CreateRegistrantMutationVariables,
-  APITypes.CreateRegistrantMutation
->;
-export const updateRegistrant = /* GraphQL */ `mutation UpdateRegistrant(
-  $input: UpdateRegistrantInput!
-  $condition: ModelRegistrantConditionInput
-) {
-  updateRegistrant(input: $input, condition: $condition) {
-    id
-    firstName
-    lastName
-    email
-    phone
-    StudentProfiles {
-      nextToken
-      __typename
-    }
-    address {
-      city
-      state
-      zipCode
-      __typename
-    }
-    birthdate
-    createdAt
-    updatedAt
-    __typename
-  }
-}
-` as GeneratedMutation<
-  APITypes.UpdateRegistrantMutationVariables,
-  APITypes.UpdateRegistrantMutation
->;
-export const deleteRegistrant = /* GraphQL */ `mutation DeleteRegistrant(
-  $input: DeleteRegistrantInput!
-  $condition: ModelRegistrantConditionInput
-) {
-  deleteRegistrant(input: $input, condition: $condition) {
-    id
-    firstName
-    lastName
-    email
-    phone
-    StudentProfiles {
-      nextToken
-      __typename
-    }
-    address {
-      city
-      state
-      zipCode
-      __typename
-    }
-    birthdate
-    createdAt
-    updatedAt
-    __typename
-  }
-}
-` as GeneratedMutation<
-  APITypes.DeleteRegistrantMutationVariables,
-  APITypes.DeleteRegistrantMutation
->;
 export const createStudentProfile = /* GraphQL */ `mutation CreateStudentProfile(
   $input: CreateStudentProfileInput!
   $condition: ModelStudentProfileConditionInput
 ) {
   createStudentProfile(input: $input, condition: $condition) {
     id
-    firstName
+    name
     email
-    password
-    phone
     CourseProfiles {
       nextToken
       __typename
     }
     birthdate
-    registrantID
     createdAt
     updatedAt
     __typename
@@ -129,16 +36,13 @@ export const updateStudentProfile = /* GraphQL */ `mutation UpdateStudentProfile
 ) {
   updateStudentProfile(input: $input, condition: $condition) {
     id
-    firstName
+    name
     email
-    password
-    phone
     CourseProfiles {
       nextToken
       __typename
     }
     birthdate
-    registrantID
     createdAt
     updatedAt
     __typename
@@ -154,16 +58,13 @@ export const deleteStudentProfile = /* GraphQL */ `mutation DeleteStudentProfile
 ) {
   deleteStudentProfile(input: $input, condition: $condition) {
     id
-    firstName
+    name
     email
-    password
-    phone
     CourseProfiles {
       nextToken
       __typename
     }
     birthdate
-    registrantID
     createdAt
     updatedAt
     __typename
@@ -246,12 +147,9 @@ export const createStudentProfileCourseProfile = /* GraphQL */ `mutation CreateS
     courseProfileId
     studentProfile {
       id
-      firstName
+      name
       email
-      password
-      phone
       birthdate
-      registrantID
       createdAt
       updatedAt
       __typename
@@ -283,12 +181,9 @@ export const updateStudentProfileCourseProfile = /* GraphQL */ `mutation UpdateS
     courseProfileId
     studentProfile {
       id
-      firstName
+      name
       email
-      password
-      phone
       birthdate
-      registrantID
       createdAt
       updatedAt
       __typename
@@ -320,12 +215,9 @@ export const deleteStudentProfileCourseProfile = /* GraphQL */ `mutation DeleteS
     courseProfileId
     studentProfile {
       id
-      firstName
+      name
       email
-      password
-      phone
       birthdate
-      registrantID
       createdAt
       updatedAt
       __typename
