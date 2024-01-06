@@ -1,39 +1,61 @@
-import React from 'react';
-import TextField from '@mui/material/TextField';
-import MenuItem from '@mui/material/MenuItem';
-import { FormControl, InputLabel, MenuList, Select } from '@mui/material';
+import React, { useState } from 'react';
+import { TextField, Button, FormControlLabel, Checkbox, Grid, Paper, Typography } from '@mui/material';
 
-const states = [
-  'Alabama', 'Alaska', 'Arizona', 'Arkansas', 'California', 'Colorado', 'Connecticut', 'Delaware', 'Florida', 'Georgia', 
-  'Hawaii', 'Idaho', 'Illinois', 'Indiana', 'Iowa', 'Kansas', 'Kentucky', 'Louisiana', 'Maine', 'Maryland', 
-  'Massachusetts', 'Michigan', 'Minnesota', 'Mississippi', 'Missouri', 'Montana', 'Nebraska', 'Nevada', 'New Hampshire', 'New Jersey', 
-  'New Mexico', 'New York', 'North Carolina', 'North Dakota', 'Ohio', 'Oklahoma', 'Oregon', 'Pennsylvania', 'Rhode Island', 'South Carolina', 
-  'South Dakota', 'Tennessee', 'Texas', 'Utah', 'Vermont', 'Virginia', 'Washington', 'West Virginia', 'Wisconsin', 'Wyoming'
-];
+function TwoFactorAuthForm() {
+    const [password, setPassword] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState('');
+    const [usePhone, setUsePhone] = useState(false);
 
-function StateSelector({ selectedState, setSelectedState }:any) {
+    const handleSubmit = (event:any) => {
+        event.preventDefault();
+        // Form submit logic here
+        console.log({ password, confirmPassword, usePhoneFor2FA: usePhone });
+    };
 
-  const handleChange = (event:any) => {
-    setSelectedState(event.target.value);
-  };
-
-  return (
-    <FormControl fullWidth>
-        <InputLabel id="demo-simple-select-label">State</InputLabel>
-        <Select
-            fullWidth
-            label="State"
-            variant="standard"
-            value={selectedState}
-            onChange={handleChange}>
-                {states.map((state) => (
-                    <MenuItem key={state} value={state}>
-                        {state}
-                    </MenuItem>
-                ))}
-        </Select>
-    </FormControl>
-  );
+    return (
+        <Paper style={{ padding: 20 }}>
+            <Typography variant="h6">Sign Up Form</Typography>
+            <form onSubmit={handleSubmit}>
+                <Grid container spacing={2} direction="column">
+                    <Grid item>
+                        <TextField
+                            label="Password"
+                            type="password"
+                            fullWidth
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                        />
+                    </Grid>
+                    <Grid item>
+                        <TextField
+                            label="Confirm Password"
+                            type="password"
+                            fullWidth
+                            value={confirmPassword}
+                            onChange={(e) => setConfirmPassword(e.target.value)}
+                        />
+                    </Grid>
+                    <Grid item>
+                        <FormControlLabel
+                            control={
+                                <Checkbox
+                                    checked={usePhone}
+                                    onChange={(e) => setUsePhone(e.target.checked)}
+                                />
+                            }
+                            label="Opt-in for phone 2FA"
+                        />
+                    </Grid>
+                    <Grid item>
+                        <Button variant="contained" type="submit">
+                            Submit
+                        </Button>
+                    </Grid>
+                </Grid>
+            </form>
+        </Paper>
+    );
 }
 
-export default StateSelector;
+export default TwoFactorAuthForm;
+

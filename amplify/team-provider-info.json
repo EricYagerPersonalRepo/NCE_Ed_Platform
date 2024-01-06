@@ -12,11 +12,11 @@
       "AmplifyAppId": "d6fbjqkxytjd6"
     },
     "categories": {
-      "auth": {
-        "NCEEducationPlatform": {}
-      },
       "api": {
         "nceeducationplatform": {}
+      },
+      "auth": {
+        "NceEducationPlatformAuthNZ": {}
       }
     }
   }
