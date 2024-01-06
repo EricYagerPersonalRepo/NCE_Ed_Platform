@@ -119,7 +119,7 @@ function SignUp() {
     const fetchCityState = async(zip:any) => {
         if(zip.length===5){
             try {
-                const response = await fetch(`http://api.zippopotam.us/us/${zip}`)
+                const response = await fetch(`https://api.zippopotam.us/us/${zip}`)
                 if (!response.ok) throw new Error('Zip code not found')
                 const data = await response.json()
                 setCity(data.places[0]['place name'])
