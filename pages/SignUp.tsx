@@ -7,8 +7,9 @@ import { ageCaluclatedFromInputBirthday } from '@/src/functions/SignUpFunctions'
 import { ErrorOutline } from '@mui/icons-material'
 import * as mutations from '../src/API'
 import { generateClient } from 'aws-amplify/api'
-import { signUp } from 'aws-amplify/auth'
+import { ConfirmSignUpInput, ConfirmSignUpOutput, confirmSignUp, signUp } from 'aws-amplify/auth'
 import TwoFactorAuthForm from '@/src/components/SignUpComponents'
+import { SignUpOutput } from 'aws-amplify/auth'
 
 const client = generateClient()
 interface FormErrors {
@@ -79,7 +80,7 @@ function SignUp() {
     const [name, setName] = useState('')
     const [city, setCity] = useState('')
     const [zipCode, setZipCode] = useState('')
-    const [email, setEmail] = useState('')
+    const [username, setUsername] = useState('')
     const [state, setstate] = useState('')
     const [password, setPassword] = useState('')
     const [confirmPassword, setConfirmPassword] = useState('')
@@ -97,9 +98,11 @@ function SignUp() {
     const [emailWaiting, setEmailWaiting] = useState(false)
     const [signupWaiting, setSigupWaiting] = useState(false)
     const [signupComplete, setSignupComplete] = useState(false)
-    const [tfaOpen, setTfaOpen] = useState(false)
+    const [tfaOpen, setTfaOpen] = useState(true)
     const [tabValue, setTabValue] = useState(0)
     const [formComplete, setFormComplete] = useState(false)
+    const [cognitoUserID, setCognitoUserID] = useState('')
+    const [confirmationCode, setConfirmationCode] = useState('')
 
     const handleClickShowPassword = (target:number) => {
         if(target===1) setShowPassword((show) => !show)
@@ -230,7 +233,7 @@ function SignUp() {
 
     const handleEmailInput:any = () => {
         setEmailWaiting(true)
-        if (emailPattern.test(email)) {
+        if (emailPattern.test(username)) {
             setTimeout(() => {
                 setEmailComplete(true)
                 setTabValue(4)
@@ -244,18 +247,20 @@ function SignUp() {
 
     async function handleSignUp() {
         try {
-            const signUpResponse = await signUp({
-                username: email,
+            const response:SignUpOutput = await signUp({
+                username: username,
                 password: password,
             })
-            console.log('Sign up successful', signUpResponse)
-            if (signUpResponse.nextStep && signUpResponse.nextStep.signUpStep === "CONFIRM_SIGN_UP") {
+
+            if (response.nextStep && response.nextStep.signUpStep === "CONFIRM_SIGN_UP") {
+                console.log(response)
                 setTfaOpen(true)
                 console.log("tfa is open")
             }
 
-
-
+            if(response.userId){
+                setCognitoUserID(response.userId)
+            }
         } catch (e:any) {
             console.log(e.name)
             let errorMessage = ''
@@ -306,6 +311,23 @@ function SignUp() {
             console.log(error)
         }
     }
+
+    const handleTfaSubmit = async({username,confirmationCode}: ConfirmSignUpInput) => {
+        try {
+            const { isSignUpComplete, nextStep }:ConfirmSignUpOutput = await confirmSignUp({
+                username,
+                confirmationCode
+            })
+            console.log(isSignUpComplete, nextStep)
+            if(isSignUpComplete){
+                setTfaOpen(false)
+                window.location.href = '/LearningHome'
+            }
+        } catch (error) {
+            console.log('error confirming sign up', error)
+        }
+    }
+
 
     const style = {
         position: 'absolute',
@@ -465,8 +487,8 @@ function SignUp() {
                                             <InputLabel htmlFor="standard-adornment-name-noerror">Email</InputLabel>
                                             <Input
                                                 id="standard-adornment-name-noerror"
-                                                onChange={(e) => setEmail(e.target.value)}
-                                                value={email}
+                                                onChange={(e) => setUsername(e.target.value)}
+                                                value={username}
                                                 aria-describedby="component-error-text"
                                                 endAdornment={
                                                     <InputAdornment position="end">
@@ -486,8 +508,8 @@ function SignUp() {
                                             <InputLabel htmlFor="standard-adornment-name-error">Email</InputLabel>
                                             <Input
                                                 id="standard-adornment-name-error"
-                                                onChange={(e) => setEmail(e.target.value)}
-                                                value={email}
+                                                onChange={(e) => setUsername(e.target.value)}
+                                                value={username}
                                                 endAdornment={
                                                     <InputAdornment position="end">
                                                         <Button
@@ -574,9 +596,18 @@ function SignUp() {
                         Two-Factor Authentication
                     </Typography>
                     <Typography id="modal-description" sx={{ mt: 2 }}>
-                        {/* Your content for two-factor authentication */}
+                        <Grid container spacing={2}>
+                            <Grid item xs={12} sm={4}>
+                                <TextField 
+                                    fullWidth 
+                                    label="TFA Code" 
+                                    variant="standard" 
+                                    onChange={(event) => setConfirmationCode(event.target.value)}
+                                />
+                            </Grid>
+                        </Grid>
                     </Typography>
-                    {/* Add buttons or other elements as needed */}
+                    <Button onClick={()=>handleTfaSubmit({username,confirmationCode})}>Submit</Button>
                 </Box>
             </Modal>
         </Container>
