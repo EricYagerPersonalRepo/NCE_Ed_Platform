@@ -201,11 +201,15 @@ export default function StudentProfileUpdateForm(props) {
     ...rest
   } = props;
   const initialValues = {
+    cognitoUserID: "",
     name: "",
     email: "",
     CourseProfiles: [],
     birthdate: "",
   };
+  const [cognitoUserID, setCognitoUserID] = React.useState(
+    initialValues.cognitoUserID
+  );
   const [name, setName] = React.useState(initialValues.name);
   const [email, setEmail] = React.useState(initialValues.email);
   const [CourseProfiles, setCourseProfiles] = React.useState(
@@ -225,6 +229,7 @@ export default function StudentProfileUpdateForm(props) {
           CourseProfiles: linkedCourseProfiles,
         }
       : initialValues;
+    setCognitoUserID(cleanValues.cognitoUserID);
     setName(cleanValues.name);
     setEmail(cleanValues.email);
     setCourseProfiles(cleanValues.CourseProfiles ?? []);
@@ -291,6 +296,7 @@ export default function StudentProfileUpdateForm(props) {
     CourseProfiles: (r) => `${r?.title ? r?.title + " - " : ""}${r?.id}`,
   };
   const validations = {
+    cognitoUserID: [{ type: "Required" }],
     name: [{ type: "Required" }],
     email: [{ type: "Required" }, { type: "Email" }],
     CourseProfiles: [],
@@ -354,6 +360,7 @@ export default function StudentProfileUpdateForm(props) {
       onSubmit={async (event) => {
         event.preventDefault();
         let modelFields = {
+          cognitoUserID,
           name,
           email,
           CourseProfiles: CourseProfiles ?? null,
@@ -495,6 +502,7 @@ export default function StudentProfileUpdateForm(props) {
             }
           });
           const modelFieldsToSave = {
+            cognitoUserID: modelFields.cognitoUserID,
             name: modelFields.name,
             email: modelFields.email,
             birthdate: modelFields.birthdate,
@@ -525,6 +533,34 @@ export default function StudentProfileUpdateForm(props) {
       {...rest}
     >
       <TextField
+        label="Cognito user id"
+        isRequired={true}
+        isReadOnly={false}
+        value={cognitoUserID}
+        onChange={(e) => {
+          let { value } = e.target;
+          if (onChange) {
+            const modelFields = {
+              cognitoUserID: value,
+              name,
+              email,
+              CourseProfiles,
+              birthdate,
+            };
+            const result = onChange(modelFields);
+            value = result?.cognitoUserID ?? value;
+          }
+          if (errors.cognitoUserID?.hasError) {
+            runValidationTasks("cognitoUserID", value);
+          }
+          setCognitoUserID(value);
+        }}
+        onBlur={() => runValidationTasks("cognitoUserID", cognitoUserID)}
+        errorMessage={errors.cognitoUserID?.errorMessage}
+        hasError={errors.cognitoUserID?.hasError}
+        {...getOverrideProps(overrides, "cognitoUserID")}
+      ></TextField>
+      <TextField
         label="Name"
         isRequired={true}
         isReadOnly={false}
@@ -533,6 +569,7 @@ export default function StudentProfileUpdateForm(props) {
           let { value } = e.target;
           if (onChange) {
             const modelFields = {
+              cognitoUserID,
               name: value,
               email,
               CourseProfiles,
@@ -560,6 +597,7 @@ export default function StudentProfileUpdateForm(props) {
           let { value } = e.target;
           if (onChange) {
             const modelFields = {
+              cognitoUserID,
               name,
               email: value,
               CourseProfiles,
@@ -583,6 +621,7 @@ export default function StudentProfileUpdateForm(props) {
           let values = items;
           if (onChange) {
             const modelFields = {
+              cognitoUserID,
               name,
               email,
               CourseProfiles: values,
@@ -670,6 +709,7 @@ export default function StudentProfileUpdateForm(props) {
           let { value } = e.target;
           if (onChange) {
             const modelFields = {
+              cognitoUserID,
               name,
               email,
               CourseProfiles,

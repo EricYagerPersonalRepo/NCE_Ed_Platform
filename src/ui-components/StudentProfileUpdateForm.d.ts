@@ -23,12 +23,14 @@ export declare type ValidationResponse = {
 };
 export declare type ValidationFunction<T> = (value: T, validationResponse: ValidationResponse) => ValidationResponse | Promise<ValidationResponse>;
 export declare type StudentProfileUpdateFormInputValues = {
+    cognitoUserID?: string;
     name?: string;
     email?: string;
     CourseProfiles?: CourseProfile[];
     birthdate?: string;
 };
 export declare type StudentProfileUpdateFormValidationValues = {
+    cognitoUserID?: ValidationFunction<string>;
     name?: ValidationFunction<string>;
     email?: ValidationFunction<string>;
     CourseProfiles?: ValidationFunction<CourseProfile>;
@@ -37,6 +39,7 @@ export declare type StudentProfileUpdateFormValidationValues = {
 export declare type PrimitiveOverrideProps<T> = Partial<T> & React.DOMAttributes<HTMLDivElement>;
 export declare type StudentProfileUpdateFormOverridesProps = {
     StudentProfileUpdateFormGrid?: PrimitiveOverrideProps<GridProps>;
+    cognitoUserID?: PrimitiveOverrideProps<TextFieldProps>;
     name?: PrimitiveOverrideProps<TextFieldProps>;
     email?: PrimitiveOverrideProps<TextFieldProps>;
     CourseProfiles?: PrimitiveOverrideProps<AutocompleteProps>;

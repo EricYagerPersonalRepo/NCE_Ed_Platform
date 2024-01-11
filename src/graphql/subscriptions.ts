@@ -13,6 +13,7 @@ export const onCreateStudentProfile = /* GraphQL */ `subscription OnCreateStuden
 ) {
   onCreateStudentProfile(filter: $filter) {
     id
+    cognitoUserID
     name
     email
     CourseProfiles {
@@ -34,6 +35,7 @@ export const onUpdateStudentProfile = /* GraphQL */ `subscription OnUpdateStuden
 ) {
   onUpdateStudentProfile(filter: $filter) {
     id
+    cognitoUserID
     name
     email
     CourseProfiles {
@@ -55,6 +57,7 @@ export const onDeleteStudentProfile = /* GraphQL */ `subscription OnDeleteStuden
 ) {
   onDeleteStudentProfile(filter: $filter) {
     id
+    cognitoUserID
     name
     email
     CourseProfiles {
@@ -140,6 +143,7 @@ export const onCreateStudentProfileCourseProfile = /* GraphQL */ `subscription O
     courseProfileId
     studentProfile {
       id
+      cognitoUserID
       name
       email
       birthdate
@@ -173,6 +177,7 @@ export const onUpdateStudentProfileCourseProfile = /* GraphQL */ `subscription O
     courseProfileId
     studentProfile {
       id
+      cognitoUserID
       name
       email
       birthdate
@@ -206,6 +211,7 @@ export const onDeleteStudentProfileCourseProfile = /* GraphQL */ `subscription O
     courseProfileId
     studentProfile {
       id
+      cognitoUserID
       name
       email
       birthdate

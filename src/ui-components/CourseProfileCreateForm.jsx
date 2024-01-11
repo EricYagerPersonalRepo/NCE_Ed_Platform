@@ -236,7 +236,8 @@ export default function CourseProfileCreateForm(props) {
       : getIDValue.studentprofiles?.(studentprofiles)
   );
   const getDisplayValue = {
-    studentprofiles: (r) => `${r?.name ? r?.name + " - " : ""}${r?.id}`,
+    studentprofiles: (r) =>
+      `${r?.cognitoUserID ? r?.cognitoUserID + " - " : ""}${r?.id}`,
   };
   const validations = {
     studentprofiles: [],
@@ -268,7 +269,10 @@ export default function CourseProfileCreateForm(props) {
       const variables = {
         limit: autocompleteLength * 5,
         filter: {
-          or: [{ name: { contains: value } }, { id: { contains: value } }],
+          or: [
+            { cognitoUserID: { contains: value } },
+            { id: { contains: value } },
+          ],
         },
       };
       if (newNext) {

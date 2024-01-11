@@ -11,6 +11,7 @@ type GeneratedQuery<InputType, OutputType> = string & {
 export const getStudentProfile = /* GraphQL */ `query GetStudentProfile($id: ID!) {
   getStudentProfile(id: $id) {
     id
+    cognitoUserID
     name
     email
     CourseProfiles {
@@ -35,6 +36,7 @@ export const listStudentProfiles = /* GraphQL */ `query ListStudentProfiles(
   listStudentProfiles(filter: $filter, limit: $limit, nextToken: $nextToken) {
     items {
       id
+      cognitoUserID
       name
       email
       birthdate
@@ -97,6 +99,7 @@ export const getStudentProfileCourseProfile = /* GraphQL */ `query GetStudentPro
     courseProfileId
     studentProfile {
       id
+      cognitoUserID
       name
       email
       birthdate

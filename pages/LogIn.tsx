@@ -1,8 +1,12 @@
 // pages/index.tsx
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { getCurrentUser } from 'aws-amplify/auth'
+import { Box, Container, Grid, Modal, Typography } from '@mui/material';
+import { tfaModalStyle } from '@/styles/AuthStyles';
 
 const LogIn = () => {
+  const [tfaOpen, setTfaOpen] = useState(false)
+
   useEffect(() => {
     checkAuthStatus();
   }, []);
@@ -16,7 +20,6 @@ const LogIn = () => {
     }
   };
 
-  // Example overrides
   const splashOverrides = {
     Heading: { style: { color: 'blue' } },
     Body: { style: { fontSize: '16px' } },
@@ -24,9 +27,7 @@ const LogIn = () => {
   };
 
   return (
-    <div>
-      Login
-    </div>
+    <div></div>
   );
 };
 

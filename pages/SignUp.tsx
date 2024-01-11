@@ -5,77 +5,22 @@ import VisibilityOff from '@mui/icons-material/VisibilityOff'
 import CheckCircleIcon from '@mui/icons-material/CheckCircle'
 import { ageCaluclatedFromInputBirthday } from '@/src/functions/SignUpFunctions'
 import { ErrorOutline } from '@mui/icons-material'
-import * as mutations from '../src/API'
-import { generateClient } from 'aws-amplify/api'
-import { ConfirmSignUpInput, ConfirmSignUpOutput, confirmSignUp, signUp } from 'aws-amplify/auth'
-import TwoFactorAuthForm from '@/src/components/SignUpComponents'
+import { signUp } from 'aws-amplify/auth'
+import { AuthenticationHeaderImage, SignUpTabItem, SignUpTabPanel, TwoFactorAuthForm } from '@/src/components/AuthComponents'
 import { SignUpOutput } from 'aws-amplify/auth'
+import { SignUpFormErrors, SignUpTabItemProps, SignUpTabPanelProps, birthdayPattern, emailPattern, namePattern, zipCodePattern } from '@/src/types/SignUpTypes'
+import { ThrowSignUpError, fetchCityState } from '@/src/functions/AuthFunctions'
+import { SignUpImageGridStyle } from '@/src/style/SignUpComponentStyle'
 
-const client = generateClient()
-interface FormErrors {
-    birthday?: string
-    name?: string
-    streetAddress?: string
-    city?: string
-    zipCode?: string
-    email?: string
-    phone?: string
-    password?: string
-    confirmPassword?: string
-    signUp?: string
-  }
-
-  interface TabItemProps {
-    text: string
-    waiting: boolean
-    complete: boolean
-}
-
-type SignUpParameters = {
-    username: string
-    password: string
-    email: string
-    address: string
-  }
-
-  type signUpParams = {
-    username: string       // User's username for sign up
-    password: string       // Password for the account
-    email: string          // Email address of the user
-    address: string        // Address of the user
-    name: string           // Full name of the user (for the student profile)
-    birthdate: string      // Birthdate of the user (for the student profile)
-}
-
-  const allowedZipCodes = [
+const allowedZipCodes = [
     13642,
     13630,
     13617,
     13676,
     13699
-  ]
+]
 
-  function TabPanel(props:any) {
-    const { children, value, index, ...other } = props
-
-    return (
-        <div
-            role="tabpanel"
-            hidden={value !== index}
-            id={`vertical-tabpanel-${index}`}
-            aria-labelledby={`vertical-tab-${index}`}
-            {...other}
-        >
-            {value === index && (
-                <Box sx={{ p: 3 }}>
-                    {children}
-                </Box>
-            )}
-        </div>
-    )
-}
-
-function SignUp() {
+export default function SignUp() {
     const [birthday, setBirthday] = useState('')
     const [name, setName] = useState('')
     const [city, setCity] = useState('')
@@ -86,7 +31,7 @@ function SignUp() {
     const [confirmPassword, setConfirmPassword] = useState('')
     const [showPassword, setShowPassword] = useState(false)
     const [showConfirmPassword, setShowConfirmPassword] = useState(false)
-    const [error, setError] = useState<FormErrors>({})
+    const [error, setError] = useState<SignUpFormErrors>({})
     const [age, setAge] = useState(0)
     const [birthdayComplete, setBirthdayComplete] = useState(false)
     const [nameComplete, setNameComplete] = useState(false)
@@ -98,11 +43,14 @@ function SignUp() {
     const [emailWaiting, setEmailWaiting] = useState(false)
     const [signupWaiting, setSigupWaiting] = useState(false)
     const [signupComplete, setSignupComplete] = useState(false)
-    const [tfaOpen, setTfaOpen] = useState(true)
+    const [tfaOpen, setTfaOpen] = useState(false)
     const [tabValue, setTabValue] = useState(0)
     const [formComplete, setFormComplete] = useState(false)
     const [cognitoUserID, setCognitoUserID] = useState('')
     const [confirmationCode, setConfirmationCode] = useState('')
+    const [progressModalOpen, setProgressModalOpen] = useState(false)
+    const [userSignedIn, setUserSignedIn] = useState(false)
+    const [studentProfileCreated, setStudentProfileCreated] = useState(false)
 
     const handleClickShowPassword = (target:number) => {
         if(target===1) setShowPassword((show) => !show)
@@ -112,26 +60,17 @@ function SignUp() {
     const handleMouseDownPassword = (event: React.MouseEvent<HTMLButtonElement>) => {
         event.preventDefault()
     }
-
-    // Regex pattern for validation
-    const birthdayPattern = /^(19[0-9][1-9]|20[0-9]{2})-\d{2}-\d{2}$/
-    const namePattern = /^[A-Za-z]+(?: [A-Za-z]+)+$/
-    const zipCodePattern = /^\d{5}(-\d{4})?$/
-    const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/
-
-    const fetchCityState = async(zip:any) => {
+    
+    const fetchCityStateCall = async(zip:any) => {
         if(zip.length===5){
             try {
-                const response = await fetch(`https://api.zippopotam.us/us/${zip}`)
-                if (!response.ok) throw new Error('Zip code not found')
-                const data = await response.json()
-                setCity(data.places[0]['place name'])
-                setstate(data.places[0]['state'])
-                console.log(data)
+                const cityStateCall = await fetchCityState(zip)
+                setCity(cityStateCall.City)
+                setstate(cityStateCall.State)
             } catch (error) {
                 console.error('Failed to fetch city and state:', error)
-                setCity('')
-                setstate('')
+                setCity('') //Reassigs error inputs to null string
+                setstate('') //Reassigs error inputs to null string
             }
         }
     }
@@ -145,23 +84,6 @@ function SignUp() {
         setBirthday(newBirthday)
     }
     
-
-    const TabItem: React.FC<TabItemProps> = ({ text, waiting, complete }) => {
-        return (
-            <Box textAlign="left" sx={{ display: 'flex', gap: 0.5 }}>
-                <Grid container>
-                    <Grid item xs={10} container>
-                        <Typography variant="caption">{text}</Typography>
-                    </Grid>
-                    <Grid item xs={2} container justifyContent="flex-end">
-                        {waiting && <CircularProgress size={15} />}
-                        {complete && <CheckCircleIcon color="success" fontSize="small" />}
-                    </Grid>
-                </Grid>
-            </Box>
-        )
-    }
-
     useEffect(()=> {
         if(birthdayComplete && nameComplete && locationComplete && emailComplete){
             setFormComplete(true)
@@ -213,7 +135,7 @@ function SignUp() {
         if (zipCodePattern.test(zipCode)) {
             setLocationWaiting(true)
             if(allowedZipCodes.includes(parseInt(zipCode))){
-                fetchCityState(zipCode)
+                fetchCityStateCall(zipCode)
                 setError({...error, zipCode:""})
                 setTimeout(() => {
                     setLocationComplete(true)
@@ -245,7 +167,7 @@ function SignUp() {
         }
     }
 
-    async function handleSignUp() {
+    async function handleSignUp() { //We are here, just refactored a lot of the logic out and getting it to work again. TFA modal is not opening as expected
         try {
             const response:SignUpOutput = await signUp({
                 username: username,
@@ -255,108 +177,23 @@ function SignUp() {
             if (response.nextStep && response.nextStep.signUpStep === "CONFIRM_SIGN_UP") {
                 console.log(response)
                 setTfaOpen(true)
-                console.log("tfa is open")
             }
 
             if(response.userId){
                 setCognitoUserID(response.userId)
             }
         } catch (e:any) {
-            console.log(e.name)
-            let errorMessage = ''
-            switch (e.name) {
-                case 'NoUserPoolError':
-                    errorMessage = 'No user pool configured'
-                    break
-                case 'UsernameExistsException':
-                    errorMessage = 'Username already exists'
-                    break
-                case 'InvalidParameterException':
-                    errorMessage = 'Invalid parameters'
-                    break
-                case 'InvalidPasswordException':
-                    errorMessage = 'Invalid password format'
-                    break
-                case 'NotAuthorizedException':
-                    errorMessage = 'Not authorized'
-                    break
-                case 'UserNotFoundException':
-                    errorMessage = 'User not found'
-                    break
-                case 'LimitExceededException':
-                    errorMessage = 'Limit exceeded'
-                    break
-                case 'CodeMismatchException':
-                    errorMessage = 'Invalid verification code'
-                    break
-                case 'ExpiredCodeException':
-                    errorMessage = 'Verification code expired'
-                    break
-                case 'TooManyRequestsException':
-                    errorMessage = 'Too many requests, try again later'
-                    break
-                case 'TooManyFailedAttemptsException':
-                    errorMessage = 'Too many failed attempts'
-                    break
-                case 'UsernameExistsException':
-                    errorMessage = 'User exists with provided email, use a different email'
-                    break
-                case 'EmptySignUpUsername':
-                    errorMessage = 'No email address provided'
-                    break
-                default:
-                    errorMessage = 'An unknown error occurred'
-            }
+            let errorMessage = ThrowSignUpError(e.name)
             setError({ ...error, signUp: errorMessage })
-            console.log(error)
+            console.error(error)
         }
     }
-
-    const handleTfaSubmit = async({username,confirmationCode}: ConfirmSignUpInput) => {
-        try {
-            const { isSignUpComplete, nextStep }:ConfirmSignUpOutput = await confirmSignUp({
-                username,
-                confirmationCode
-            })
-            console.log(isSignUpComplete, nextStep)
-            if(isSignUpComplete){
-                setTfaOpen(false)
-                window.location.href = '/LearningHome'
-            }
-        } catch (error) {
-            console.log('error confirming sign up', error)
-        }
-    }
-
-
-    const style = {
-        position: 'absolute',
-        top: '50%',
-        left: '50%',
-        transform: 'translate(-50%, -50%)',
-        width: 400,
-        bgcolor: 'background.paper',
-        boxShadow: 24,
-        p: 4,
-        outline: 'none',
-    }
-    
 
     return (
         <Container maxWidth="lg">
             <Grid container spacing={2}>
-                <Grid item xs={3} md={12} 
-                    style={{ 
-                        display: 'flex', 
-                        justifyContent: 'center', 
-                        alignItems: 'center'
-                    }}
-                >                   
-                <img
-                    src="/NCE Schoolhouse.jpg"
-                    alt="NCE Schoolhouse"
-                    style={{ maxWidth: '15%', height: 'auto', display: 'block', margin: 'auto' }}
-                />
+                <Grid item xs={3} md={12} style={SignUpImageGridStyle()}>                   
+                    <AuthenticationHeaderImage />
                 </Grid>
                 <Grid item xs={12} container justifyContent="center">
                     <Tabs
@@ -369,25 +206,45 @@ function SignUp() {
                     >
 
                         <Tab
-                            label={<TabItem text="Age" waiting={birthdayWaiting} complete={birthdayComplete} />}
+                            label={<SignUpTabItem text="Age" 
+                                waiting={birthdayWaiting} 
+                                complete={birthdayComplete} 
+                            />}
+                            disabled
                         />
                         <Tab
-                            label={<TabItem text="Name" waiting={nameWaiting} complete={nameComplete} />}
+                            label={<SignUpTabItem text="Name" 
+                                waiting={nameWaiting} 
+                                complete={nameComplete} 
+                            />}
+                            disabled
                         />
                         <Tab
-                            label={ <TabItem text="Location" waiting={locationWaiting} complete={locationComplete} /> }
+                            label={ <SignUpTabItem text="Location" 
+                                waiting={locationWaiting} 
+                                complete={locationComplete} 
+                            /> }
+                            disabled
                         />
                         <Tab
-                            label={<TabItem text="Email" waiting={emailWaiting} complete={emailComplete} /> }
+                            label={<SignUpTabItem text="Email" 
+                                waiting={emailWaiting} 
+                                complete={emailComplete} 
+                            /> }
+                            disabled
                         />    
                         <Tab
-                            label={ <TabItem text="Create Account" waiting={signupWaiting} complete={signupComplete} /> }
+                            label={ <SignUpTabItem text="Create Account" 
+                                waiting={signupWaiting} 
+                                complete={signupComplete} 
+                            /> }
+                            disabled
                         />
                     </Tabs>
                 </Grid>
                 <Grid item xs={12} container justifyContent="center">
                     <form>
-                        <TabPanel value={tabValue} index={0}>
+                        <SignUpTabPanel value={tabValue} index={0}>
                             <TextField
                                 fullWidth
                                 type="date"
@@ -401,54 +258,32 @@ function SignUp() {
                             {error.birthday && (
                                 <FormHelperText error>{error.birthday}</FormHelperText>
                             )}
-                        </TabPanel>
-                        <TabPanel value={tabValue} index={1}>
+                        </SignUpTabPanel>
+                        <SignUpTabPanel value={tabValue} index={1}>
                             <Grid container spacing={2}>
                                 <Grid item xs={12}>
-                                    {error.name ? 
-                                        <FormControl error fullWidth variant="standard">
-                                            <InputLabel htmlFor="standard-adornment-name-noerror">Name</InputLabel>
-                                            <Input
-                                                fullWidth
-                                                id="standard-adornment-name-noerror"
-                                                onChange={(e) => setName(e.target.value)}
-                                                value={name}
-                                                aria-describedby="component-error-text"
-                                                endAdornment={
-                                                    <InputAdornment position="end">
-                                                        <Button
-                                                            onClick={handleNameInput}
-                                                        >
-                                                            Done
-                                                        </Button>
-                                                    </InputAdornment>
-                                                }
-                                            />
-                                        </FormControl>
-
-                                    :
-
-                                        <FormControl fullWidth variant="standard">
-                                            <InputLabel htmlFor="standard-adornment-name-error">Name</InputLabel>
-                                            <Input
-                                                id="standard-adornment-name-error"
-                                                onChange={(e) => setName(e.target.value)}
-                                                value={name}
-                                                endAdornment={
-                                                    <InputAdornment position="end">
-                                                        <Button
-                                                            onClick={handleNameInput}
-                                                        >Done</Button>
-                                                    </InputAdornment>
-                                                }
-                                            />
-                                        
-                                        </FormControl>
-                                    }
+                                    <FormControl error={!!error.name} fullWidth variant="standard">
+                                        <InputLabel htmlFor="standard-adornment-name">Name</InputLabel>
+                                        <Input
+                                            fullWidth
+                                            id="standard-adornment-name"
+                                            onChange={(e) => setName(e.target.value)}
+                                            value={name}
+                                            aria-describedby="component-error-text"
+                                            endAdornment={
+                                                <InputAdornment position="end">
+                                                    <Button onClick={handleNameInput}>Done</Button>
+                                                </InputAdornment>
+                                            }
+                                        />
+                                        {error.name && (
+                                            <FormHelperText id="component-error-text">{error.name}</FormHelperText>
+                                        )}
+                                    </FormControl>
                                 </Grid>
                             </Grid>
-                        </TabPanel>
-                        <TabPanel value={tabValue} index={2}>
+                        </SignUpTabPanel>
+                        <SignUpTabPanel value={tabValue} index={2}>
                             <Grid container spacing={2}>
                                 <Grid item xs={12} sm={4}>
                                     <TextField 
@@ -479,8 +314,8 @@ function SignUp() {
                                     )}
                                 </Grid>
                             </Grid>
-                        </TabPanel>
-                        <TabPanel value={tabValue} index={3}>
+                        </SignUpTabPanel>
+                        <SignUpTabPanel value={tabValue} index={3}>
                             <Grid item xs={12}>
                             {error.name ? 
                                         <FormControl error fullWidth variant="standard">
@@ -522,9 +357,9 @@ function SignUp() {
                                         </FormControl>
                                     }
                             </Grid>
-                        </TabPanel>
+                        </SignUpTabPanel>
 
-                        <TabPanel value={tabValue} index={4}>
+                        <SignUpTabPanel value={tabValue} index={4}>
                         <Grid container spacing={2}>
                             <Grid item xs={12}>
                                 <FormControl variant="standard" fullWidth>
@@ -573,69 +408,20 @@ function SignUp() {
                             </Grid>
                             <Grid item xs={12}>
                                 { formComplete ?
-                                    <Button onClick={handleSignUp} fullWidth>Test</Button>
+                                    <Button onClick={handleSignUp} fullWidth>Sign Up</Button>
                                     :
                                     <Button disabled fullWidth>Form not complete</Button>
 
                                 }
                             </Grid>
                         </Grid>
-
-                        </TabPanel>
+                        </SignUpTabPanel>
                     </form>
                 </Grid>
             </Grid>
-            <Modal
-                open={tfaOpen}
-                onClose={() => setTfaOpen(false)}
-                aria-labelledby="modal-title"
-                aria-describedby="modal-description"
-            >
-                <Box sx={style}>
-                    <Typography id="modal-title" variant="h6" component="h2">
-                        Two-Factor Authentication
-                    </Typography>
-                    <Typography id="modal-description" sx={{ mt: 2 }}>
-                        <Grid container spacing={2}>
-                            <Grid item xs={12} sm={4}>
-                                <TextField 
-                                    fullWidth 
-                                    label="TFA Code" 
-                                    variant="standard" 
-                                    onChange={(event) => setConfirmationCode(event.target.value)}
-                                />
-                            </Grid>
-                        </Grid>
-                    </Typography>
-                    <Button onClick={()=>handleTfaSubmit({username,confirmationCode})}>Submit</Button>
-                </Box>
-            </Modal>
+
+            <TwoFactorAuthForm setTfaOpen={setTfaOpen} tfaOpen={tfaOpen} username={username}/>
+
         </Container>
     )
 }
-
-export default SignUp
-
-
-/*
-
-
-<Grid item xs={12} sm={4}>
-    <TextField 
-        fullWidth 
-        label="City" 
-        variant="standard"
-        onChange={(e) => setCity(e.target.value)}
-    />
-</Grid>
-
-<Grid item xs={12} sm={4}>
-    <StateSelector 
-        state={state} 
-        setstate={setstate} 
-    />
-</Grid>
-
-
-
-*/

@@ -14,6 +14,7 @@ export const createStudentProfile = /* GraphQL */ `mutation CreateStudentProfile
 ) {
   createStudentProfile(input: $input, condition: $condition) {
     id
+    cognitoUserID
     name
     email
     CourseProfiles {
@@ -36,6 +37,7 @@ export const updateStudentProfile = /* GraphQL */ `mutation UpdateStudentProfile
 ) {
   updateStudentProfile(input: $input, condition: $condition) {
     id
+    cognitoUserID
     name
     email
     CourseProfiles {
@@ -58,6 +60,7 @@ export const deleteStudentProfile = /* GraphQL */ `mutation DeleteStudentProfile
 ) {
   deleteStudentProfile(input: $input, condition: $condition) {
     id
+    cognitoUserID
     name
     email
     CourseProfiles {
@@ -147,6 +150,7 @@ export const createStudentProfileCourseProfile = /* GraphQL */ `mutation CreateS
     courseProfileId
     studentProfile {
       id
+      cognitoUserID
       name
       email
       birthdate
@@ -181,6 +185,7 @@ export const updateStudentProfileCourseProfile = /* GraphQL */ `mutation UpdateS
     courseProfileId
     studentProfile {
       id
+      cognitoUserID
       name
       email
       birthdate
@@ -215,6 +220,7 @@ export const deleteStudentProfileCourseProfile = /* GraphQL */ `mutation DeleteS
     courseProfileId
     studentProfile {
       id
+      cognitoUserID
       name
       email
       birthdate

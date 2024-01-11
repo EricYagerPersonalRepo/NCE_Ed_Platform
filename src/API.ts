@@ -4,12 +4,14 @@
 
 export type CreateStudentProfileInput = {
   id?: string | null,
+  cognitoUserID: string,
   name: string,
   email: string,
   birthdate: string,
 };
 
 export type ModelStudentProfileConditionInput = {
+  cognitoUserID?: ModelStringInput | null,
   name?: ModelStringInput | null,
   email?: ModelStringInput | null,
   birthdate?: ModelStringInput | null,
@@ -61,6 +63,7 @@ export type ModelSizeInput = {
 export type StudentProfile = {
   __typename: "StudentProfile",
   id: string,
+  cognitoUserID: string,
   name: string,
   email: string,
   CourseProfiles?: ModelStudentProfileCourseProfileConnection | null,
@@ -98,6 +101,7 @@ export type CourseProfile = {
 
 export type UpdateStudentProfileInput = {
   id: string,
+  cognitoUserID?: string | null,
   name?: string | null,
   email?: string | null,
   birthdate?: string | null,
@@ -173,6 +177,7 @@ export type DeleteStudentProfileCourseProfileInput = {
 
 export type ModelStudentProfileFilterInput = {
   id?: ModelIDInput | null,
+  cognitoUserID?: ModelStringInput | null,
   name?: ModelStringInput | null,
   email?: ModelStringInput | null,
   birthdate?: ModelStringInput | null,
@@ -219,6 +224,7 @@ export enum ModelSortDirection {
 
 export type ModelSubscriptionStudentProfileFilterInput = {
   id?: ModelSubscriptionIDInput | null,
+  cognitoUserID?: ModelSubscriptionStringInput | null,
   name?: ModelSubscriptionStringInput | null,
   email?: ModelSubscriptionStringInput | null,
   birthdate?: ModelSubscriptionStringInput | null,
@@ -281,6 +287,7 @@ export type CreateStudentProfileMutation = {
   createStudentProfile?:  {
     __typename: "StudentProfile",
     id: string,
+    cognitoUserID: string,
     name: string,
     email: string,
     CourseProfiles?:  {
@@ -302,6 +309,7 @@ export type UpdateStudentProfileMutation = {
   updateStudentProfile?:  {
     __typename: "StudentProfile",
     id: string,
+    cognitoUserID: string,
     name: string,
     email: string,
     CourseProfiles?:  {
@@ -323,6 +331,7 @@ export type DeleteStudentProfileMutation = {
   deleteStudentProfile?:  {
     __typename: "StudentProfile",
     id: string,
+    cognitoUserID: string,
     name: string,
     email: string,
     CourseProfiles?:  {
@@ -409,6 +418,7 @@ export type CreateStudentProfileCourseProfileMutation = {
     studentProfile:  {
       __typename: "StudentProfile",
       id: string,
+      cognitoUserID: string,
       name: string,
       email: string,
       birthdate: string,
@@ -442,6 +452,7 @@ export type UpdateStudentProfileCourseProfileMutation = {
     studentProfile:  {
       __typename: "StudentProfile",
       id: string,
+      cognitoUserID: string,
       name: string,
       email: string,
       birthdate: string,
@@ -475,6 +486,7 @@ export type DeleteStudentProfileCourseProfileMutation = {
     studentProfile:  {
       __typename: "StudentProfile",
       id: string,
+      cognitoUserID: string,
       name: string,
       email: string,
       birthdate: string,
@@ -502,6 +514,7 @@ export type GetStudentProfileQuery = {
   getStudentProfile?:  {
     __typename: "StudentProfile",
     id: string,
+    cognitoUserID: string,
     name: string,
     email: string,
     CourseProfiles?:  {
@@ -526,6 +539,7 @@ export type ListStudentProfilesQuery = {
     items:  Array< {
       __typename: "StudentProfile",
       id: string,
+      cognitoUserID: string,
       name: string,
       email: string,
       birthdate: string,
@@ -589,6 +603,7 @@ export type GetStudentProfileCourseProfileQuery = {
     studentProfile:  {
       __typename: "StudentProfile",
       id: string,
+      cognitoUserID: string,
       name: string,
       email: string,
       birthdate: string,
@@ -683,6 +698,7 @@ export type OnCreateStudentProfileSubscription = {
   onCreateStudentProfile?:  {
     __typename: "StudentProfile",
     id: string,
+    cognitoUserID: string,
     name: string,
     email: string,
     CourseProfiles?:  {
@@ -703,6 +719,7 @@ export type OnUpdateStudentProfileSubscription = {
   onUpdateStudentProfile?:  {
     __typename: "StudentProfile",
     id: string,
+    cognitoUserID: string,
     name: string,
     email: string,
     CourseProfiles?:  {
@@ -723,6 +740,7 @@ export type OnDeleteStudentProfileSubscription = {
   onDeleteStudentProfile?:  {
     __typename: "StudentProfile",
     id: string,
+    cognitoUserID: string,
     name: string,
     email: string,
     CourseProfiles?:  {
@@ -805,6 +823,7 @@ export type OnCreateStudentProfileCourseProfileSubscription = {
     studentProfile:  {
       __typename: "StudentProfile",
       id: string,
+      cognitoUserID: string,
       name: string,
       email: string,
       birthdate: string,
@@ -837,6 +856,7 @@ export type OnUpdateStudentProfileCourseProfileSubscription = {
     studentProfile:  {
       __typename: "StudentProfile",
       id: string,
+      cognitoUserID: string,
       name: string,
       email: string,
       birthdate: string,
@@ -869,6 +889,7 @@ export type OnDeleteStudentProfileCourseProfileSubscription = {
     studentProfile:  {
       __typename: "StudentProfile",
       id: string,
+      cognitoUserID: string,
       name: string,
       email: string,
       birthdate: string,
