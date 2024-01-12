@@ -29,7 +29,10 @@ export const handleConfirmSignup = async (signUpInput: ConfirmSignUpInput): Prom
 
 export const handleCreateStudentProfile = async (studentProfileInput:CreateStudentProfileInput) => {
     try {
-        const profileResult = await createStudentProfileCall(studentProfileInput);
+        const profileResult = await cognitoClient.graphql({
+            query: createStudentProfile,
+            variables: { input: studentProfileInput }
+        })
         console.log('Student profile creation result:', profileResult)
         return({isSignedUp:true, userProfile:profileResult})
     } catch (signInError) {
@@ -41,6 +44,7 @@ export const handleCreateStudentProfile = async (studentProfileInput:CreateStude
 export const handleSignIn = async({ username, password }: SignInInput) => {
     try {
         const { isSignedIn, nextStep }:SignInOutput = await signIn({ username, password })
+        console.log(isSignedIn, nextStep)
         if(isSignedIn){
             console.log("signed in")
             console.log(nextStep)
@@ -52,21 +56,6 @@ export const handleSignIn = async({ username, password }: SignInInput) => {
     } catch (error) {
         console.log('error signing in', error)
         return({isSignedIn:false, nextStep:null})
-    }
-}
-
-const createStudentProfileCall = async (input: CreateStudentProfileInput) => {
-    try {
-        const result = await cognitoClient.graphql({
-            query: createStudentProfile,
-            variables: { input: input }
-        })
-
-        console.log('Student profile created:', result)
-        return({isStudentProfileCreated: true, result: result})
-    } catch (error) {
-        console.error('Error creating student profile:', error)
-        throw error
     }
 }
 

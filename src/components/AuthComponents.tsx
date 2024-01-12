@@ -5,37 +5,35 @@ import { handleConfirmSignup } from '../functions/AuthFunctions';
 import { SignUpTabItemProps, SignUpTabPanelProps } from '../types/SignUpTypes';
 import { CheckCircle } from '@mui/icons-material';
 
-export function TwoFactorAuthForm({setTfaOpen, tfaOpen, username}:any) {
+export function TwoFactorAuthForm({ username, onTfaSuccess }: { username: string, onTfaSuccess: () => void }) {
     const [confirmationCode, setConfirmationCode] = useState('')
 
+    const handleSubmit = async () => {
+        const result = await handleConfirmSignup({ username, confirmationCode });
+        if (result.signUpComplete) {
+            onTfaSuccess()
+        }
+    }
+
     return (
-        <Container maxWidth="lg">
-            <Modal
-                open={tfaOpen}
-                onClose={() => setTfaOpen(false)}
-                aria-labelledby="modal-title"
-                aria-describedby="modal-description"
-            >
-                <Box sx={tfaModalStyle}>
-                    <Typography id="modal-title" variant="h6" component="h2">
-                        Two-Factor Authentication
-                    </Typography>
-                    <Typography id="modal-description" sx={{ mt: 2 }}>
-                        <Grid container spacing={2}>
-                            <Grid item xs={12} sm={4}>
-                                <TextField 
-                                    fullWidth 
-                                    label="TFA Code" 
-                                    variant="standard" 
-                                    onChange={(event) => setConfirmationCode(event.target.value)}
-                                />
-                            </Grid>
-                        </Grid>
-                    </Typography>
-                    <Button onClick={()=>handleConfirmSignup({username,confirmationCode})}>Submit</Button>
-                </Box>
-            </Modal>
-        </Container>
+        <Box sx={tfaModalStyle}>
+            <Typography id="modal-title" variant="h6" component="h2">
+                Two-Factor Authentication
+            </Typography>
+            <Typography id="modal-description" sx={{ mt: 2 }}>
+                <Grid container spacing={2}>
+                    <Grid item xs={12} sm={4}>
+                        <TextField 
+                            fullWidth 
+                            label="TFA Code" 
+                            variant="standard" 
+                            onChange={(event) => setConfirmationCode(event.target.value)}
+                        />
+                    </Grid>
+                </Grid>
+            </Typography>
+            <Button onClick={handleSubmit}>Submit</Button>
+        </Box>
     )
 }
 

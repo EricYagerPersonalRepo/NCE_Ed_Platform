@@ -23,13 +23,13 @@
     }
   },
   "auth": {
-    "NceEducationPlatformAuthNZ": {
+    "nceeducationplatform6bfa7874": {
       "customAuth": false,
       "dependsOn": [],
       "frontendAuthConfig": {
-        "mfaConfiguration": "ON",
+        "mfaConfiguration": "OFF",
         "mfaTypes": [
-          "TOTP"
+          "SMS"
         ],
         "passwordProtectionSettings": {
           "passwordPolicyCharacters": [],

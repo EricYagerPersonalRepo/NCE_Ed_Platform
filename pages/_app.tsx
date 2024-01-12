@@ -16,6 +16,7 @@ function NCE_Education_App({ Component, pageProps }:any) {
 
     async function handleAuthStatusCheck(){
         let authStatus = await checkAuthStatus()
+        console.log("authStatus: " + authStatus)
         setLoggedIn(authStatus)
     }
 

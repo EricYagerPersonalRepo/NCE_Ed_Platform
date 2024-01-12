@@ -1,16 +1,16 @@
 {
   "version": "1",
   "cognitoConfig": {
-    "identityPoolName": "NceEducationPlatformIdentityPool",
+    "identityPoolName": "nceeducationplatform6bfa7874_identitypool_6bfa7874",
     "allowUnauthenticatedIdentities": false,
-    "resourceNameTruncated": "nceedu1d53d28f",
-    "userPoolName": "NceEducationPlatformUserPool",
+    "resourceNameTruncated": "nceedu6bfa7874",
+    "userPoolName": "nceeducationplatform6bfa7874_userpool_6bfa7874",
     "autoVerifiedAttributes": [
       "email"
     ],
-    "mfaConfiguration": "ON",
+    "mfaConfiguration": "OFF",
     "mfaTypes": [
-      "TOTP"
+      "SMS Text Message"
     ],
     "smsAuthenticationMessage": "Your authentication code is {####}",
     "smsVerificationMessage": "Your verification code is {####}",
@@ -31,21 +31,20 @@
     "userpoolClientReadAttributes": [
       "email"
     ],
-    "userpoolClientLambdaRole": "NceEdu1d53d28f_userpoolclient_lambda_role",
+    "userpoolClientLambdaRole": "nceedu6bfa7874_userpoolclient_lambda_role",
     "userpoolClientSetAttributes": false,
-    "sharedId": "1d53d28f",
-    "resourceName": "NceEducationPlatformAuthNZ",
+    "sharedId": "6bfa7874",
+    "resourceName": "nceeducationplatform6bfa7874",
     "authSelections": "identityPoolAndUserPool",
-    "useDefault": "manual",
-    "thirdPartyAuth": true,
-    "authProviders": [],
+    "useDefault": "defaultSocial",
+    "hostedUI": true,
     "usernameAttributes": [
       "email"
     ],
-    "userPoolGroups": false,
-    "adminQueries": false,
-    "triggers": {},
-    "hostedUI": false,
+    "hostedUIDomainName": "nce-ed-platform",
+    "authProvidersUserPool": [],
+    "hostedUIProviderMeta": "[]",
+    "oAuthMetadata": "{\"AllowedOAuthFlows\":[\"code\"],\"AllowedOAuthScopes\":[\"phone\",\"email\",\"openid\",\"profile\",\"aws.cognito.signin.user.admin\"],\"CallbackURLs\":[\"https://localhost:3000/\"],\"LogoutURLs\":[\"https://localhost:3000/\"]}",
     "userPoolGroupList": [],
     "serviceName": "Cognito",
     "usernameCaseSensitive": false,

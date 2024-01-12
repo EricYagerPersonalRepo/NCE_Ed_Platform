@@ -9,7 +9,7 @@ import { signUp } from 'aws-amplify/auth'
 import { AuthenticationHeaderImage, SignUpTabItem, SignUpTabPanel, TwoFactorAuthForm } from '@/src/components/AuthComponents'
 import { SignUpOutput } from 'aws-amplify/auth'
 import { SignUpFormErrors, SignUpTabItemProps, SignUpTabPanelProps, birthdayPattern, emailPattern, namePattern, zipCodePattern } from '@/src/types/SignUpTypes'
-import { ThrowSignUpError, fetchCityState } from '@/src/functions/AuthFunctions'
+import { ThrowSignUpError, fetchCityState, handleCreateStudentProfile, handleSignIn } from '@/src/functions/AuthFunctions'
 import { SignUpImageGridStyle } from '@/src/style/SignUpComponentStyle'
 
 const allowedZipCodes = [
@@ -167,7 +167,7 @@ export default function SignUp() {
         }
     }
 
-    async function handleSignUp() { //We are here, just refactored a lot of the logic out and getting it to work again. TFA modal is not opening as expected
+    async function handleSignUp() {
         try {
             const response:SignUpOutput = await signUp({
                 username: username,
@@ -186,6 +186,24 @@ export default function SignUp() {
             let errorMessage = ThrowSignUpError(e.name)
             setError({ ...error, signUp: errorMessage })
             console.error(error)
+        }
+    }
+
+    const handlePostTfaWorkflow = async () => {
+        try {
+            const signInResult = await handleSignIn({ username, password })
+            let birthdate = birthday
+            let email = username
+
+            if (signInResult.isSignedIn) {
+                const profileInput = { cognitoUserID, name, email, birthdate }
+                const profileResult = await handleCreateStudentProfile(profileInput)
+                if (profileResult.isSignedUp) {
+                    window.location.href = '/StudentProfile'
+                }
+            }
+        } catch (error) {
+            console.error('Error in post-TFA workflow:', error)
         }
     }
 
@@ -419,8 +437,16 @@ export default function SignUp() {
                     </form>
                 </Grid>
             </Grid>
-
-            <TwoFactorAuthForm setTfaOpen={setTfaOpen} tfaOpen={tfaOpen} username={username}/>
+            <Container maxWidth="lg">
+                <Modal
+                    open={tfaOpen}
+                    onClose={() => setTfaOpen(false)}
+                    aria-labelledby="modal-title"
+                    aria-describedby="modal-description"
+                >
+                    <TwoFactorAuthForm username={username} onTfaSuccess={handlePostTfaWorkflow} />
+                </Modal>
+            </Container>
 
         </Container>
     )
