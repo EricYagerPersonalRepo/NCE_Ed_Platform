@@ -9,7 +9,7 @@ import { signUp } from 'aws-amplify/auth'
 import { AuthenticationHeaderImage, SignUpTabItem, SignUpTabPanel, TwoFactorAuthForm } from '@/src/components/AuthComponents'
 import { SignUpOutput } from 'aws-amplify/auth'
 import { SignUpFormErrors, SignUpTabItemProps, SignUpTabPanelProps, birthdayPattern, emailPattern, namePattern, zipCodePattern } from '@/src/types/SignUpTypes'
-import { ThrowSignUpError, fetchCityState, handleCreateStudentProfile, handleSignIn } from '@/src/functions/AuthFunctions'
+import { ThrowSignUpError, fetchCityState, handleConfirmSignup, handleCreateStudentProfile, handleSignIn } from '@/src/functions/AuthFunctions'
 import { SignUpImageGridStyle } from '@/src/style/SignUpComponentStyle'
 
 const allowedZipCodes = [
@@ -444,7 +444,7 @@ export default function SignUp() {
                     aria-labelledby="modal-title"
                     aria-describedby="modal-description"
                 >
-                    <TwoFactorAuthForm username={username} onTfaSuccess={handlePostTfaWorkflow} />
+                    <TwoFactorAuthForm username={username} onTfaSuccess={handlePostTfaWorkflow} handleConfirmSignup={handleConfirmSignup} />
                 </Modal>
             </Container>
 

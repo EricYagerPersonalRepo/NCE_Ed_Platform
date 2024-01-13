@@ -1,17 +1,17 @@
 import React, { useState } from 'react';
 import { TextField, Button, FormControlLabel, Checkbox, Grid, Paper, Typography, Container, Modal, Box, CircularProgress } from '@mui/material'
 import { tfaModalStyle } from '@/styles/AuthStyles'
-import { handleConfirmSignup } from '../functions/AuthFunctions';
+//import { handleConfirmSignup } from '../functions/AuthFunctions';
 import { SignUpTabItemProps, SignUpTabPanelProps } from '../types/SignUpTypes';
 import { CheckCircle } from '@mui/icons-material';
 
-export function TwoFactorAuthForm({ username, onTfaSuccess }: { username: string, onTfaSuccess: () => void }) {
+export function TwoFactorAuthForm({ username, onTfaSuccess, handleConfirmSignup }: { username: string, onTfaSuccess: () => void, handleConfirmSignup:any }) { //export function TwoFactorAuthForm({ username, onTfaSuccess, handleConfirmSignup }) {
     const [confirmationCode, setConfirmationCode] = useState('')
 
     const handleSubmit = async () => {
         const result = await handleConfirmSignup({ username, confirmationCode });
         if (result.signUpComplete) {
-            onTfaSuccess()
+          onTfaSuccess();
         }
     }
 
