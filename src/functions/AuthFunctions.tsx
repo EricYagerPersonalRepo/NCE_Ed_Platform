@@ -1,4 +1,4 @@
-import { ConfirmSignUpInput, ConfirmSignUpOutput, SignInInput, SignInOutput, confirmSignUp, getCurrentUser, signIn } from "aws-amplify/auth"
+import { ConfirmSignUpInput, ConfirmSignUpOutput, SignInInput, SignInOutput, confirmSignUp, getCurrentUser, signIn, signOut } from "aws-amplify/auth"
 import { CreateStudentProfileInput } from "../API"
 import { createStudentProfile } from "../graphql/mutations"
 import { generateClient } from "aws-amplify/api"
@@ -118,6 +118,10 @@ export const fetchCityState = async(zip:string) => {
     }
 }
 
+export const signUserOut = async() => {
+    let signUserOut = await signOut()
+    console.log(signUserOut)
+}
 
 
             
