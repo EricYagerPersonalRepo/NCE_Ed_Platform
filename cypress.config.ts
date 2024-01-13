@@ -7,11 +7,17 @@ export default defineConfig({
       framework: "next",
       bundler: "webpack",
     },
+    specPattern: 'src/test/**/*.cy.{js,jsx,ts,tsx}',
   },
 
   e2e: {
-    setupNodeEvents(on, config) {
-      // implement node event listeners here
+    setupNodeEvents(on, config) {},
+    reporter: 'mochawesome',
+    reporterOptions: {
+      reportDir: 'cypress/reports/mocha',
+      overwrite: false,
+      html: false,
+      json: true,
     },
   },
 });
