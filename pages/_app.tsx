@@ -7,24 +7,29 @@ import { ThemeProvider } from '@aws-amplify/ui-react'
 import studioTheme from '../src/ui-components/studioTheme'
 import { checkAuthStatus } from '@/src/functions/AuthFunctions'
 import { AuthenticatedHeader, UnauthenticatedHeader } from '@/src/components/Header'
+import { AuthProvider } from '@/src/state/AuthGlobalState'
 
 Amplify.configure(amplifyconfiguration, {ssr: true})
 
 function NCE_Education_App({ Component, pageProps }:any) {
     const [loggedIn, setLoggedIn] = useState(false)
 
-    async function handleAuthStatusCheck(){
-        let authStatus = await checkAuthStatus()
-        console.log("authStatus: " + authStatus)
-        setLoggedIn(authStatus)
-    }
-
     useEffect(() => {
-        handleAuthStatusCheck()
+        async function checkAndSetAuthStatus() {
+            try {
+                const isUserLoggedIn = await checkAuthStatus();
+                setLoggedIn(true)//setLoggedIn(isUserLoggedIn);
+            } catch (error) {
+                console.error('Failed to check authentication status:', error);
+                setLoggedIn(false);
+            }
+        }
+    
+        checkAndSetAuthStatus();
     }, [])
 
     return (
-        <>
+        <AuthProvider>
             <Head>
                 <title>NCE Education App</title>
             </Head>
@@ -36,7 +41,7 @@ function NCE_Education_App({ Component, pageProps }:any) {
                 }
                 <Component {...pageProps} loggedIn={loggedIn}/>
             </ThemeProvider>
-        </>
+        </AuthProvider>
     )
 }
 

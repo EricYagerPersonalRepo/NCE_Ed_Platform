@@ -1,10 +1,24 @@
 // src/hooks/useSignUpHooks.tsx
 import { useState } from 'react'
 
+/**
+ * Interface for defining the error states in the sign-up form.
+ * 
+ * This interface is used to type the errors state in the sign-up form. It can hold multiple error messages,
+ * where each key corresponds to a form field and the value is the error message for that field.
+ */
 interface SignUpFormErrors {
     [key: string]: string
 }
 
+/**
+ * Custom hook to manage state in the sign-up form.
+ * 
+ * This hook centralizes the state management for the sign-up form, including user inputs and validation states.
+ * It provides a set of state variables and functions to update them, which can be used across the sign-up form components.
+ * 
+ * @returns {object} An object containing state variables and their corresponding setter functions.
+ */
 export const useSignUpHooks = () => {
     const [birthday, setBirthday] = useState('')
     const [name, setName] = useState('')

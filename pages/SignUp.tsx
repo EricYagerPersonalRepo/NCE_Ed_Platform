@@ -12,6 +12,19 @@ import { ThrowSignUpError, fetchCityState, handleConfirmSignup, handleCreateStud
 import { SignUpImageGridStyle } from '@/src/style/SignUpComponentStyle'
 import { useSignUpHooks } from '@/src/state/SignUpHooks'
 
+/**
+ * Array of allowed ZIP codes for the signup process.
+ *
+ * This array 'allowedZipCodes' contains a list of specific ZIP codes that are permitted
+ * in the signup process. It serves as a filter to restrict signups to users from
+ * certain geographical areas, defined by these ZIP codes. This can be used in the 
+ * validation process to check if a user's provided ZIP code matches one of the
+ * allowed values, thereby determining their eligibility to complete the signup process.
+ *
+ * This array is intended to be used in conjunction with other functions that handle
+ * signup data validation and processing. The specific ZIP codes listed here are examples,
+ * and can be modified or extended based on the application's requirements.
+ */
 const allowedZipCodes = [
     13642,
     13630,
@@ -20,9 +33,28 @@ const allowedZipCodes = [
     13699
 ]
 
+/**
+ * SignUp component - Manages the user sign-up process.
+ *
+ * The SignUp component handles the entire user sign-up flow. It leverages custom hooks
+ * from 'useSignUpHooks' for managing local state, including user input and form status.
+ * The component checks user authentication status on mount and renders different UIs
+ * based on whether the user is already signed in or not. It includes multiple steps
+ * for sign-up, such as birthday, name, location, email, and account creation, each
+ * managed by a separate tab. The sign-up form also features two-factor authentication
+ * and integrates with AWS Amplify's signUp service.
+ *
+ * Major functionalities include input validation, password visibility toggling, city and
+ * state fetching based on zip code, tab navigation, and handling the sign-up submission.
+ * Upon successful sign-up and confirmation through the two-factor authentication form,
+ * it redirects the user to the student profile page.
+ *
+ * @returns {JSX.Element} - The rendered sign-up form or a message if the user is already signed in.
+ */
 export default function SignUp() {
     const signUpHooks = useSignUpHooks()
 
+    // Checks if the user is already signed in on component mount.
     useEffect(()=>{
         const checkUserAuthenticationStatusOnLoad = async () => {
             let isUserSignedIn = await checkAuthStatus();
@@ -36,16 +68,18 @@ export default function SignUp() {
         })
     },[])
 
-
+    // Toggles the visibility of the password input field.
     const handleClickShowPassword = (target:number) => {
         if(target===1) signUpHooks.setShowPassword((show) => !show)
         if(target===2) signUpHooks.setShowConfirmPassword((showConfirm) => !showConfirm)
     }
 
+    // Prevents the default behavior on mousedown for password fields.
     const handleMouseDownPassword = (event: React.MouseEvent<HTMLButtonElement>) => {
         event.preventDefault()
     }
     
+    // Fetches city and state information based on the provided zip code.
     const fetchCityStateCall = async(zip:any) => {
         if(zip.length===5){
             try {
@@ -60,15 +94,18 @@ export default function SignUp() {
         }
     }
 
+    // Handles tab changes in the sign-up form.
     const handleTabChange:any = (event:any,newValue:number) => {
         signUpHooks.setTabValue(newValue)
     }
 
+    // Updates the birthday state based on user input.
     const handleBirthdayChange = (event:any) => {
         const newBirthday = event.target.value
         signUpHooks.setBirthday(newBirthday)
     }
     
+    // Updates the form's completion status based on the completion of individual steps.
     useEffect(()=> {
         if(signUpHooks.birthdayComplete && signUpHooks.nameComplete && signUpHooks.locationComplete && signUpHooks.emailComplete){
             signUpHooks.setFormComplete(true)
@@ -79,6 +116,7 @@ export default function SignUp() {
         }
     }, [signUpHooks.birthdayComplete, signUpHooks.nameComplete, signUpHooks.locationComplete, signUpHooks.emailComplete])
 
+    // Validates the birthday input and updates related states.
     useEffect(() => {
         if(birthdayPattern.test(signUpHooks.birthday)){
             console.log(signUpHooks.birthday)
@@ -102,6 +140,7 @@ export default function SignUp() {
         }
     }, [signUpHooks.birthday])
 
+    // Validates the name input and updates related states.
     const handleNameInput:any = () => {
         signUpHooks. setNameWaiting(true)
         if (namePattern.test(signUpHooks.name)) {
@@ -116,6 +155,7 @@ export default function SignUp() {
         }
     }
 
+    // Validates the zip code input and updates related states.
     useEffect(() => {
         if (zipCodePattern.test(signUpHooks.zipCode)) {
             signUpHooks.setLocationWaiting(true)
@@ -138,6 +178,7 @@ export default function SignUp() {
     }, [signUpHooks.zipCode])
 
 
+    // Validates the email input and updates related states.
     const handleEmailInput:any = () => {
         signUpHooks.setEmailWaiting(true)
         if (emailPattern.test(signUpHooks.username)) {
@@ -152,6 +193,7 @@ export default function SignUp() {
         }
     }
 
+    // Handles the sign-up submission to AWS Amplify.
     async function handleSignUp() {
         try {
             const response:SignUpOutput = await signUp({
@@ -174,6 +216,7 @@ export default function SignUp() {
         }
     }
 
+    // Manages the post-two-factor-authentication workflow.
     const handlePostTfaWorkflow = async () => {
         let {username,password} = {username:signUpHooks.username, password:signUpHooks.password}
         try {
@@ -192,6 +235,7 @@ export default function SignUp() {
             console.error('Error in post-TFA workflow:', error)
         }
     }
+    
     if(signUpHooks.userSignedIn){
         return(
             <div>
