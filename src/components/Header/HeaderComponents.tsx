@@ -40,16 +40,16 @@ export const HeaderAuthenticationButtons_Web: React.FC = () => {
  * The state and event handlers manage the opening and closing of the dropdown menu.
  */
 export const HeaderAuthenticationButtons_Mobile: React.FC = () => {
-    const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-    const open = Boolean(anchorEl);
+    const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
+    const open = Boolean(anchorEl)
 
     const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-        setAnchorEl(event.currentTarget);
-    };
+        setAnchorEl(event.currentTarget)
+    }
 
     const handleClose = () => {
-        setAnchorEl(null);
-    };
+        setAnchorEl(null)
+    }
 
     return (
         <Grid container justifyContent="flex-end" style={{ flexGrow: 1 }}>
@@ -110,16 +110,16 @@ export const UserAccountButtons_Web: React.FC = () => {
  * It handles the opening and closing of the dropdown menu for mobile layouts.
  */
 export const UserAccountButtons_Mobile: React.FC = () => {
-    const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-    const open = Boolean(anchorEl);
+    const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
+    const open = Boolean(anchorEl)
 
     const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-        setAnchorEl(event.currentTarget);
-    };
+        setAnchorEl(event.currentTarget)
+    }
 
     const handleClose = () => {
-        setAnchorEl(null);
-    };
+        setAnchorEl(null)
+    }
 
     return (
         <Grid container justifyContent="flex-end" style={{ flexGrow: 1 }}>

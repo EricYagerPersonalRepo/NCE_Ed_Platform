@@ -31,3 +31,8 @@ amplifytools.xcconfig
 .secret-*
 **.sample
 #amplify-do-not-edit-end
+
+#testing logs
+cypress/reports
+cypress/reports/mocha
+cypress/screenshots

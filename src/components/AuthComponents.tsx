@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState } from 'react'
 import { TextField, Button, FormControlLabel, Checkbox, Grid, Paper, Typography, Container, Modal, Box, CircularProgress } from '@mui/material'
 import { tfaModalStyle } from '@/styles/AuthStyles'
-//import { handleConfirmSignup } from '../functions/AuthFunctions';
-import { SignUpTabItemProps, SignUpTabPanelProps } from '../types/SignUpTypes';
-import { CheckCircle } from '@mui/icons-material';
+//import { handleConfirmSignup } from '../functions/AuthFunctions'
+import { SignUpTabItemProps, SignUpTabPanelProps } from '../types/SignUpTypes'
+import { CheckCircle } from '@mui/icons-material'
 
 /**
  * Component for handling two-factor authentication (TFA).
@@ -22,9 +22,9 @@ export function TwoFactorAuthForm({ username, onTfaSuccess, handleConfirmSignup 
     const [confirmationCode, setConfirmationCode] = useState('')
 
     const handleSubmit = async () => {
-        const result = await handleConfirmSignup({ username, confirmationCode });
+        const result = await handleConfirmSignup({ username, confirmationCode })
         if (result.signUpComplete) {
-          onTfaSuccess();
+          onTfaSuccess()
         }
     }
 

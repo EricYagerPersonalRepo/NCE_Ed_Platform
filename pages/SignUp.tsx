@@ -7,7 +7,7 @@ import { ErrorOutline } from '@mui/icons-material'
 import { signUp } from 'aws-amplify/auth'
 import { AuthenticationHeaderImage, SignUpTabItem, SignUpTabPanel, TwoFactorAuthForm } from '@/src/components/AuthComponents'
 import { SignUpOutput } from 'aws-amplify/auth'
-import { SignUpFormErrors, birthdayPattern, emailPattern, namePattern, zipCodePattern } from '@/src/types/SignUpTypes'
+import { birthdayPattern, emailPattern, namePattern, zipCodePattern } from '@/src/types/SignUpTypes'
 import { ThrowSignUpError, fetchCityState, handleConfirmSignup, handleCreateStudentProfile, handleSignIn, checkAuthStatus } from '@/src/functions/AuthFunctions'
 import { SignUpImageGridStyle } from '@/src/style/SignUpComponentStyle'
 import { useSignUpHooks } from '@/src/state/SignUpHooks'
@@ -235,7 +235,7 @@ export default function SignUp() {
             console.error('Error in post-TFA workflow:', error)
         }
     }
-    
+
     if(signUpHooks.userSignedIn){
         return(
             <div>
@@ -344,6 +344,7 @@ export default function SignUp() {
                                             fullWidth 
                                             label="Zip code" 
                                             variant="standard" 
+                                            placeholder="Zip Code"
                                             onChange={(event) => signUpHooks.setZipCode(event.target.value)}
                                         />
                                     </Grid>
@@ -370,7 +371,7 @@ export default function SignUp() {
                                 </Grid>
                             </SignUpTabPanel>
                             <SignUpTabPanel value={signUpHooks.tabValue} index={3}>
-                                <Grid item xs={12}>
+                                <Grid item xs={12} id="testID">
                                 {signUpHooks.error.name ? 
                                             <FormControl error fullWidth variant="standard">
                                                 <InputLabel htmlFor="standard-adornment-name-noerror">Email</InputLabel>
