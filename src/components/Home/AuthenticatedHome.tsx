@@ -1,5 +1,6 @@
 import React from 'react'
 import { useTheme, useMediaQuery } from '@mui/material'
+import { HomeSplash_Mobile_Authenticated, HomeSplash_Web_Authenticated } from './HomeComponents'
 
 /**
  * Component for displaying the homepage when a user is authenticated.
@@ -12,7 +13,7 @@ const AuthenticatedHome: React.FC = () => {
 
     return (
         <div>
-            {isMobile ? <div>Authenticated Mobile</div> : <div>Authenticated Web</div>}
+            {isMobile ? <HomeSplash_Mobile_Authenticated /> : <HomeSplash_Web_Authenticated/>}
         </div>
     )
 }

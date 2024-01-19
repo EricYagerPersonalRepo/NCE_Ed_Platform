@@ -1,4 +1,4 @@
-import { AuthenticatedHome, HomeSplash_Mobile, HomeSplash_Web, UnauthenticatedHome } from '@/src/components/Home'
+import { AuthenticatedHome, UnauthenticatedHome } from '@/src/components/Home'
 import { useMediaQuery, useTheme } from '@mui/material'
 import React from 'react'
 

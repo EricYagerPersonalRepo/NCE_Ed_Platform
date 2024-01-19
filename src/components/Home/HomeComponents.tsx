@@ -1,11 +1,24 @@
-export const HomeSplash_Web = () => {
+export const HomeSplash_Web_Authenticated = () => {
     return(
-        <div></div>
+        <div>Web Authenticated</div>
     )
 }
 
-export const HomeSplash_Mobile = () => {
+export const HomeSplash_Mobile_Authenticated = () => {
     return(
-        <div></div>
+        <div>Mobile Authenticated</div>
     )
 }
+
+export const HomeSplash_Web_Unauthenticated = () => {
+    return(
+        <div>Web Unauthenticated</div>
+    )
+}
+
+export const HomeSplash_Mobile_Unauthenticated = () => {
+    return(
+        <div>Mobile Unauthenticated</div>
+    )
+}
+
