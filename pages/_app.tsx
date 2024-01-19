@@ -18,7 +18,7 @@ function NCE_Education_App({ Component, pageProps }:any) {
         async function checkAndSetAuthStatus() {
             try {
                 const isUserLoggedIn = await checkAuthStatus();
-                setLoggedIn(true)//setLoggedIn(isUserLoggedIn);
+                setLoggedIn(false)//setLoggedIn(isUserLoggedIn);
             } catch (error) {
                 console.error('Failed to check authentication status:', error);
                 setLoggedIn(false);

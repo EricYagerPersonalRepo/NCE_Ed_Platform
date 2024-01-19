@@ -1,3 +1,5 @@
+import { AuthenticatedHome, HomeSplash_Mobile, HomeSplash_Web, UnauthenticatedHome } from '@/src/components/Home'
+import { useMediaQuery, useTheme } from '@mui/material'
 import React from 'react'
 
 /**
@@ -11,21 +13,15 @@ import React from 'react'
  * 
  * @returns {JSX.Element} - The rendered component.
  */
-const HomePage = ({ loggedIn }:any) => {
-
-  // Example overrides
-  const splashOverrides = {
-    Heading: { style: { color: 'blue' } },
-    Body: { style: { fontSize: '16px' } },
-    image: { style: { width: '100px' }, src: './HomePageSplashImage.png' },
-  }
+const HomePage = ({ loggedIn }: any) => {
+  const theme = useTheme()
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'))
 
   return (
     <div>
-       
+      {loggedIn ? <AuthenticatedHome/> : <UnauthenticatedHome />}
     </div>
   )
 }
 
 export default HomePage
-
