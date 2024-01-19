@@ -1,7 +1,4 @@
-// pages/index.tsx
-import React, { useEffect, useState } from 'react'
-import HomepageSplash from '../src/ui-components/HomepageSplash.jsx'
-import SignUp from '../src/ui-components/SignUp.jsx'
+import React from 'react'
 
 /**
  * HomePage component - Renders a dynamic homepage based on the user's authentication status.
@@ -25,14 +22,7 @@ const HomePage = ({ loggedIn }:any) => {
 
   return (
     <div>
-        {loggedIn ? 
-            <HomepageSplash 
-                mode="Dark"
-                overrides={splashOverrides}
-            />
-            :
-            <div><SignUp /></div>
-        }
+       
     </div>
   )
 }

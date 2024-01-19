@@ -20,7 +20,7 @@ const UnauthenticatedHeader: React.FC = () => {
     return (
         <AppBar position="static">
             <Toolbar>
-                <div>fuck you</div>
+                <div>toolbar</div>
                 <CommonHeaderComponent />
                 {isMobile ? <HeaderAuthenticationButtons_Mobile /> : <HeaderAuthenticationButtons_Web />}
             </Toolbar>
