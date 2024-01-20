@@ -18,9 +18,8 @@ const UnauthenticatedHeader: React.FC = () => {
     const isMobile = useMediaQuery(theme.breakpoints.down('sm'))
 
     return (
-        <AppBar position="static">
+        <AppBar position="static" style={{ background: 'white' }}>
             <Toolbar>
-                <div>toolbar</div>
                 <CommonHeaderComponent />
                 {isMobile ? <HeaderAuthenticationButtons_Mobile /> : <HeaderAuthenticationButtons_Web />}
             </Toolbar>

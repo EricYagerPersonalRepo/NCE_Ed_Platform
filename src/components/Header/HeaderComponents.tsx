@@ -3,12 +3,28 @@ import { Avatar, Button, Grid, IconButton, Menu, MenuItem, Typography } from '@m
 import { AccountCircle, MoreVert } from '@mui/icons-material'
 
 /**
- * Common header elements
+ * CommonHeaderComponent - Displays the brand image in the header.
+ *
+ * This component is used to render the brand image across different parts of the application
+ * where the header is present. It uses Material-UI's Typography component to maintain consistent
+ * styling and layout with other textual elements in the header, even though it's displaying an image.
+ *
+ * @returns {JSX.Element} The brand image wrapped in a Typography component for consistent header styling.
  */
 export const CommonHeaderComponent: React.FC = () => {
     return (
-        <Typography variant="h6">
-            Brand Name
+        <Typography variant="h6" component="div" style={{ lineHeight: 'inherit' }}>
+            <img
+                src="/NCE Schoolhouse.jpg"
+                alt="NCE Schoolhouse"
+                style={{
+                    maxHeight: '100px', // Adjust this value as needed
+                    maxWidth: '100%',
+                    height: 'auto',
+                    margin: 'auto', // Centers the image in the available space
+                    display: 'block' // Ensures that the image is block-level so margin:auto has effect
+                }}
+            />
         </Typography>
     )
 }
@@ -129,7 +145,7 @@ export const UserAccountButtons_Mobile: React.FC = () => {
                     aria-controls="long-menu"
                     aria-haspopup="true"
                     onClick={handleClick}
-                    color="inherit"
+                    color="default"
                 >
                     <MoreVert />
                 </IconButton>

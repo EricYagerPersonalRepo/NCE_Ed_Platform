@@ -1,5 +1,7 @@
+import { getFullHeightStyle, getHalfWidthStyle } from "@/src/style/HomeStyle"
 import { Button, Grid, Typography, useMediaQuery, useTheme } from "@mui/material"
-import { AuthenticationHeaderImage } from "../AuthComponents"
+
+
 
 export const HomeSplash_Web_Authenticated = () => {
     return(
@@ -13,55 +15,36 @@ export const HomeSplash_Mobile_Authenticated = () => {
     )
 }
 
+
+/**
+ * HomeSplash_Web_Unauthenticated component - Renders a full-screen splash for unauthenticated web users.
+ *
+ * This component uses Material-UI's `useTheme` hook to apply consistent styling and spacing
+ * according to the theme of the application. It defines a full-screen view with a vertical split layout.
+ * The content is aligned to start at the top with a slight vertical padding and centered horizontally.
+ * Each side of the split layout takes up half the width of the viewport.
+ *
+ * The left half of the split layout contains a sales pitch component, while the right half
+ * contains an image. Both halves are centered within their respective grid items and have
+ * consistent padding based on the theme settings.
+ *
+ * @returns {JSX.Element} - The rendered splash component for the unauthenticated homepage on web view.
+ */
 export const HomeSplash_Web_Unauthenticated = () => {
     const theme = useTheme()
-    const largeScreen = useMediaQuery(theme.breakpoints.up('md'))
-
-    const fullHeightStyle: React.CSSProperties = {
-        height: '100vh',
-        width: '100%',
-        display: 'flex',
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'center',
-    }
-
-    const halfWidth: React.CSSProperties = {
-        width: '50%',
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center', 
-        justifyContent: 'center', 
-        padding: theme.spacing(4),
-    }
-
-    // Conditional styles for text and buttons based on screen size
-    const textVariant = largeScreen ? 'h3' : 'h5'
-    const buttonSize = largeScreen ? 'large' : 'medium'
-
+    const fullHeightStyle = getFullHeightStyle(theme)
+    const halfWidthStyle = getHalfWidthStyle(theme)
+    
     return (
         <div style={fullHeightStyle}>
             <Grid container>
-                <Grid item md={6} style={halfWidth}>
-                <Typography variant={textVariant} gutterBottom>
-                    Learn the skills The North Country needs
-                </Typography>
-                <Typography>
-                    Embrace the digital revolution and start learning the programming skills needed to propel the NY North Country into a future rich with opportunity. With our tailored educational pathways, you can transform the local landscape into a hub for innovation and tech-driven growth. Join us in forging a vibrant digital ecosystem that nurtures talent, creativity, and community progress.
-                </Typography>
-
-                <Button variant="contained" size={buttonSize} sx={{ mt: 2 }}>
-                    Sign Up
-                </Button>
-                <Button variant="outlined" size={buttonSize} sx={{ mt: 2 }}>
-                    Learn More
-                </Button>
+                <Grid item md={6} style={halfWidthStyle}>
+                    <HomePageSalesPitch />
                 </Grid>
-                <Grid item md={6} style={halfWidth}>
-                {/* Here you would place your image */}
-                <div style={{ width: '100%', height: '100%', backgroundColor: 'lightgrey' }}>
-                    <HomePageImage_Web />
-                </div>
+                <Grid item md={6} style={halfWidthStyle}>
+                    <div style={{ width: '100%', height: '100%' }}>
+                        <HomePageImage_Web />
+                    </div>
                 </Grid>
             </Grid>
         </div>
@@ -69,11 +52,61 @@ export const HomeSplash_Web_Unauthenticated = () => {
 }
 
 export const HomeSplash_Mobile_Unauthenticated = () => {
+    const theme = useTheme()
+    const halfWidthStyle = getHalfWidthStyle(theme)
     return(
-        <div>Mobile Unauthenticated</div>
+        <div>
+            <Grid container>
+                <Grid item xs={12} md={12} style={halfWidthStyle}>
+                    <div style={{ width: '100%', height: '100%' }}>
+                        <HomePageImage_Web />
+                    </div>
+                </Grid>
+                <Grid item xs={12} md={12} style={halfWidthStyle}>
+                    <HomePageSalesPitch />
+                </Grid>
+            </Grid>
+        </div>
     )
 }
 
+/**
+ * HomePageSalesPitch component - Displays the main sales pitch on the homepage.
+ *
+ * This component dynamically adjusts the size of the text and buttons based on the screen size.
+ * It uses Material-UI's `useTheme` and `useMediaQuery` hooks to determine if the screen is medium
+ * or larger and adjusts the styles accordingly. The text content emphasizes the importance of STEM
+ * education in the New York North Country area and promotes the platform's hybrid training approach.
+ * Two buttons provide calls to action for signing up or learning more about the offered programs.
+ *
+ * @returns {JSX.Element} - The rendered component containing the sales pitch with responsive typography and buttons.
+ */
+export const HomePageSalesPitch = () => {
+
+    // Conditional styles for text and buttons based on screen size
+    const theme = useTheme()
+    const largeScreen = useMediaQuery(theme.breakpoints.up('md'))
+    const textVariant = largeScreen ? 'h4' : 'h6'
+    const buttonSize = largeScreen ? 'large' : 'medium'
+
+    return(
+        <>
+            <Typography variant={textVariant} gutterBottom>
+                We need STEM workers in NNY
+            </Typography>
+            <Typography>
+                The north country is an awesome place to live, but as investments come in to New York focused on STEM its vital that we level up as a community. Starting with basic programming, our hybrid live and virtual training is intended to take people with minimal technical skills to a basic understanding of software programming. As we build our course offerings we will branch out into additional skill fields and certification pathways.
+            </Typography>
+
+            <Button variant="contained" size={buttonSize} sx={{ mt: 2 }}>
+                Sign Up
+            </Button>
+            <Button variant="outlined" size={buttonSize} sx={{ mt: 2 }}>
+                Learn More
+            </Button>
+        </>
+    )
+}
 
 
 /**
