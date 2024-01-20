@@ -1,30 +1,31 @@
 import React, { useEffect } from 'react'
 import { WebSignUp } from '@/src/components/SignUp'
-import { useRouter } from 'next/router'
 
 /**
- * SignUp Component - Manages the user sign-up process and redirects authenticated users.
+ * SignUp Component - Manages user sign-up process and handles redirection for authenticated users.
  *
- * The SignUp component is responsible for handling the user sign-up flow. It utilizes custom
- * hooks from 'useSignUpHooks' to manage local state, including user input and form status. This
- * component checks the user's authentication status on mount. If the user is already authenticated,
- * it redirects them to the homepage. Otherwise, it renders a sign-up form, tailored to the screen size.
- * The sign-up process includes multiple steps such as entering birthday, name, location, and email,
- * each managed by separate tabs. It also incorporates two-factor authentication and integrates with
- * AWS Amplify's signUp service.
+ * This component is responsible for orchestrating the user sign-up flow. It employs custom hooks from 
+ * 'useSignUpHooks' to manage local states like user input and form statuses. On component mount, it checks 
+ * the user's authentication status. Authenticated users are immediately redirected to the homepage, 
+ * ensuring that already logged-in users do not access the sign-up form.
  *
- * Major functionalities include input validation, password visibility toggling, fetching city and state
- * based on zip code, tab navigation, and handling the sign-up submission. If the sign-up is successful
- * and confirmed through two-factor authentication, the user is redirected to their student profile page.
- * 
- * @param {any} loggedIn - Boolean indicating if the user is already authenticated.
- * @param {any} isMobile - Boolean indicating if the current screen size is mobile.
- * 
- * @returns {JSX.Element} - Renders a mobile or web version of the sign-up form, or redirects if already logged in.
+ * The component renders different UIs based on the screen size, providing tailored experiences for mobile 
+ * and web users. The sign-up process involves multiple steps, including birthday, name, location, and email
+ * entry, each managed through individual tabs. It incorporates two-factor authentication and integrates 
+ * with AWS Amplify's signUp service.
+ *
+ * Key functionalities encompass input validation, toggling password visibility, auto-fetching city and state 
+ * from zip codes, navigating through tabs, and handling the final sign-up submission. Post successful sign-up 
+ * and two-factor authentication confirmation, it redirects users to their student profile page.
+ *
+ * @param {any} loggedIn - A flag indicating whether the user is already logged in.
+ * @param {any} isMobile - A flag indicating whether the current screen size is mobile.
+ * @param {any} router - Optional router prop for navigation, primarily used for testing.
+ *
+ * @returns {JSX.Element} - The SignUp component renders either a mobile or web version of the sign-up form, 
+ * or redirects the user if already logged in.
  */
-const SignUp = ({ loggedIn, isMobile }: any)  =>{
-    const router = useRouter()
-
+const SignUp = ({ loggedIn, isMobile, router }: any)  =>{
     useEffect(() => {
         if (loggedIn) {
             router.push('/')

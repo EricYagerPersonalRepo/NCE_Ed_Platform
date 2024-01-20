@@ -1,4 +1,4 @@
-const MobileStudentProfile = ({isLoggedIn, isMobile}:any) => {
+const MobileStudentProfile = ({isLoggedIn}:any) => {
     return (
         <div>
             MobileStudentProfile

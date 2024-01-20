@@ -9,6 +9,7 @@ import { checkAuthStatus } from '@/src/functions/AuthFunctions'
 import { AuthenticatedHeader, UnauthenticatedHeader } from '@/src/components/Header'
 import { AuthProvider } from '@/src/state/AuthGlobalState'
 import { useMediaQuery, useTheme } from '@mui/material'
+import { useRouter } from 'next/router'
 
 Amplify.configure(amplifyconfiguration, {ssr: true})
 
@@ -16,6 +17,7 @@ const NCE_Education_App = ({ Component, pageProps }:any) => {
 
     const theme = useTheme()
     const isMobile = useMediaQuery(theme.breakpoints.down('sm'))
+    const router = useRouter()
 
     const [loggedIn, setLoggedIn] = useState(false)
 
@@ -44,7 +46,7 @@ const NCE_Education_App = ({ Component, pageProps }:any) => {
                     :
                     <UnauthenticatedHeader />
                 }
-                <Component {...pageProps} loggedIn={loggedIn} isMobile={isMobile} />
+                <Component {...pageProps} loggedIn={loggedIn} isMobile={isMobile} router={router}/>
             </ThemeProvider>
         </AuthProvider>
     )
