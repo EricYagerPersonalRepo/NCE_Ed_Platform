@@ -1,6 +1,7 @@
 import React from 'react'
 import { useTheme, useMediaQuery } from '@mui/material'
 import { HomeSplash_Mobile_Authenticated, HomeSplash_Web_Authenticated } from './HomeComponents'
+import { AuthenticatedHomeProps } from '@/src/types/SignUpTypes'
 
 /**
  * AuthenticatedHome component - Manages the display of the homepage for authenticated users.
@@ -19,9 +20,9 @@ import { HomeSplash_Mobile_Authenticated, HomeSplash_Web_Authenticated } from '.
  * @returns {JSX.Element} - The rendered homepage content appropriate for the screen size and 
  *                          authentication status of the user.
  */
-const AuthenticatedHome: React.FC = () => {
+const AuthenticatedHome: React.FC<AuthenticatedHomeProps> = ({ isMobile }) => {
     const theme = useTheme()
-    const isMobile = useMediaQuery(theme.breakpoints.down('sm'))
+    //const isMobile = useMediaQuery(theme.breakpoints.down('sm'))
 
     return (
         <div>

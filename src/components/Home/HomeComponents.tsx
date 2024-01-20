@@ -1,4 +1,6 @@
 import { getFullHeightStyle, getHalfWidthStyle } from "@/src/style/HomeStyle"
+import { ArrowDownward } from "@mui/icons-material"
+import { useRouter } from 'next/router'
 import { Button, Grid, Typography, useMediaQuery, useTheme } from "@mui/material"
 
 
@@ -14,7 +16,6 @@ export const HomeSplash_Mobile_Authenticated = () => {
         <div>Mobile Authenticated</div>
     )
 }
-
 
 /**
  * HomeSplash_Web_Unauthenticated component - Renders a full-screen splash for unauthenticated web users.
@@ -51,6 +52,21 @@ export const HomeSplash_Web_Unauthenticated = () => {
   )
 }
 
+/**
+ * HomeSplash_Mobile_Unauthenticated Component - Displays the unauthenticated homepage splash for mobile devices.
+ * 
+ * This component is responsible for rendering the homepage splash specifically tailored for mobile users who are not authenticated. 
+ * It uses Material-UI's Grid layout to organize the content into two sections, each occupying full width on mobile screens.
+ * The first Grid item contains the HomePageImage_Web component, representing a visual element or banner that is central to the 
+ * homepage design. This component is styled to occupy the full width and height available to it.
+ * 
+ * The second Grid item includes the HomePageSalesPitch component, which provides a persuasive or informative text about the services 
+ * or features offered. This is typically a call to action or an introductory message to engage new visitors.
+ * The halfWidthStyle, derived from the theme, ensures consistent styling and spacing as per the design requirements. 
+ * The layout adjusts dynamically to mobile screen sizes, ensuring an optimal user experience on smaller devices.
+ *
+ * @returns {JSX.Element} - The rendered mobile unauthenticated homepage splash component.
+ */
 export const HomeSplash_Mobile_Unauthenticated = () => {
     const theme = useTheme()
     const halfWidthStyle = getHalfWidthStyle(theme)
@@ -88,6 +104,11 @@ export const HomePageSalesPitch = () => {
     const largeScreen = useMediaQuery(theme.breakpoints.up('md'))
     const textVariant = largeScreen ? 'h4' : 'h6'
     const buttonSize = largeScreen ? 'large' : 'medium'
+    const router = useRouter()
+
+    const handleSignUpClick = () => {
+        router.push('/SignUp');
+    }
 
     return(
         <>
@@ -98,16 +119,20 @@ export const HomePageSalesPitch = () => {
                 The north country is an awesome place to live, but as investments come in to New York focused on STEM its vital that we level up as a community. Starting with basic programming, our hybrid live and virtual training is intended to take people with minimal technical skills to a basic understanding of software programming. As we build our course offerings we will branch out into additional skill fields and certification pathways.
             </Typography>
 
-            <Button variant="contained" size={buttonSize} sx={{ mt: 2 }}>
+            <Button 
+                variant="contained" 
+                size={buttonSize} 
+                sx={{ mt: 2, width: '100%' }}
+                onClick={handleSignUpClick}>
                 Sign Up
             </Button>
-            <Button variant="outlined" size={buttonSize} sx={{ mt: 2 }}>
+            <Button variant="outlined" size={buttonSize} sx={{ mt: 2, width: '100%' }}>
                 Learn More
+                <ArrowDownward />
             </Button>
         </>
     )
 }
-
 
 /**
  * Component for displaying the authentication header image.

@@ -16,7 +16,7 @@ import { getCurrentUser } from 'aws-amplify/auth'
  *
  * @returns {JSX.Element} - The rendered component.
  */
-const LogIn = () => {
+export default function LogIn() {
 
   useEffect(() => {
     checkAuthStatus()
@@ -41,5 +41,3 @@ const LogIn = () => {
     <div></div>
   )
 }
-
-export default LogIn

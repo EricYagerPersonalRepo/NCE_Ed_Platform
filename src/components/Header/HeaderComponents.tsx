@@ -18,7 +18,7 @@ export const CommonHeaderComponent: React.FC = () => {
                 src="/NCE Schoolhouse.jpg"
                 alt="NCE Schoolhouse"
                 style={{
-                    maxHeight: '100px', // Adjust this value as needed
+                    maxHeight: '140px', // Adjust this value as needed
                     maxWidth: '100%',
                     height: 'auto',
                     margin: 'auto', // Centers the image in the available space
@@ -36,13 +36,28 @@ export const CommonHeaderComponent: React.FC = () => {
  * It is intended for use in wider screen layouts typically found in web views.
  */
 export const HeaderAuthenticationButtons_Web: React.FC = () => {
-    return(
-        <Grid container justifyContent="flex-end" style={{ flexGrow: 1 }}>
+    // Define custom styles for the buttons
+    const signUpButtonStyle: React.CSSProperties = {
+        color: 'black', // Text color
+        backgroundColor: 'white', // Button color
+        border: '1px solid black', // Border color
+        textTransform: 'none' // Optional, keeps the text case as is
+    }
+
+    const loginButtonStyle: React.CSSProperties = {
+        color: 'white', // Text color
+        backgroundColor: 'black', // Button color
+        border: '1px solid black', // Border color
+        textTransform: 'none' // Optional, keeps the text case as is
+    }
+
+    return (
+        <Grid container justifyContent="flex-end" style={{ flexGrow: 1 }} spacing={2}>
             <Grid item>
-                <Button color="inherit">Sign Up</Button>
+                <Button style={signUpButtonStyle}>Sign Up</Button>
             </Grid>
             <Grid item>
-                <Button color="inherit">Login</Button>
+                <Button style={loginButtonStyle}>Login</Button>
             </Grid>
         </Grid>
     )
@@ -75,7 +90,7 @@ export const HeaderAuthenticationButtons_Mobile: React.FC = () => {
                     aria-controls="long-menu"
                     aria-haspopup="true"
                     onClick={handleClick}
-                    color="inherit"
+                    color="default"
                 >
                     <MoreVert />
                 </IconButton>

@@ -51,3 +51,7 @@ export interface CityStateCallProps {
     City: String
     State: String
 }
+
+export interface AuthenticatedHomeProps {
+    isMobile: boolean;
+}

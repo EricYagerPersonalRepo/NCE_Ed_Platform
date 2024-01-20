@@ -8,17 +8,22 @@ import studioTheme from '../src/ui-components/studioTheme'
 import { checkAuthStatus } from '@/src/functions/AuthFunctions'
 import { AuthenticatedHeader, UnauthenticatedHeader } from '@/src/components/Header'
 import { AuthProvider } from '@/src/state/AuthGlobalState'
+import { useMediaQuery, useTheme } from '@mui/material'
 
 Amplify.configure(amplifyconfiguration, {ssr: true})
 
-function NCE_Education_App({ Component, pageProps }:any) {
+const NCE_Education_App = ({ Component, pageProps }:any) => {
+
+    const theme = useTheme()
+    const isMobile = useMediaQuery(theme.breakpoints.down('sm'))
+
     const [loggedIn, setLoggedIn] = useState(false)
 
     useEffect(() => {
         async function checkAndSetAuthStatus() {
             try {
                 const isUserLoggedIn = await checkAuthStatus();
-                setLoggedIn(isUserLoggedIn);
+                //setLoggedIn(isUserLoggedIn);
             } catch (error) {
                 console.error('Failed to check authentication status:', error);
                 setLoggedIn(false);
@@ -39,7 +44,7 @@ function NCE_Education_App({ Component, pageProps }:any) {
                     :
                     <UnauthenticatedHeader />
                 }
-                <Component {...pageProps} loggedIn={loggedIn}/>
+                <Component {...pageProps} loggedIn={loggedIn} isMobile={isMobile} />
             </ThemeProvider>
         </AuthProvider>
     )

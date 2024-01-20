@@ -1,16 +1,18 @@
-import { useAuth } from "@/src/state/AuthGlobalState";
-import { useEffect } from "react";
 
-export default function SignUp() {
-  const { loggedIn, setLoggedIn } = useAuth()
+import { MobileStudentProfile, WebStudentProfile } from "@/src/components/StudentProfile"
+import { useRouter } from "next/router"
+import { useEffect } from "react"
+
+const StudentProfile = ({loggedIn, isMobile}:any) => {
+  const router = useRouter()
 
   useEffect(() => {
-    console.log(loggedIn)
-  }, [loggedIn])
+      if (loggedIn) {
+          router.push('/')
+      }
+  }, [loggedIn, router])
 
-  return (
-    <div>
-      <h1>Student Profile</h1>
-    </div>
-  )
+  return isMobile ? <MobileStudentProfile /> : <WebStudentProfile />
 }
+
+export default StudentProfile
