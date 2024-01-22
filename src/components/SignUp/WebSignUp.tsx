@@ -14,15 +14,12 @@ import { useSignUpHooks } from '@/src/state/SignUpHooks'
 const WebSignUp = () => {
 
     const signUpHooks = useSignUpHooks()
-
     const dateInputRef:any = useRef(null)
 
     // Handles tab changes in the sign-up form.
     const handleTabChange:any = (event:any,newValue:number) => {
         signUpHooks.setTabValue(newValue)
     }
-
-
 
 /**
  * Zip Code functions
@@ -47,29 +44,6 @@ const WebSignUp = () => {
  * Amplify/Cognito Sign Up Workflow
  * Workflow handles initial sign up, TFA, sign in, and createUser
  */
-
-    // Handles the sign-up submission to AWS Amplify.
-    async function handleSignUp() {
-        try {
-            const response:SignUpOutput = await signUp({
-                username: signUpHooks.username,
-                password: signUpHooks.password,
-            })
-
-            if (response.nextStep && response.nextStep.signUpStep === "CONFIRM_SIGN_UP") {
-                console.log(response)
-                signUpHooks.setTfaOpen(true)
-            }
-
-            if(response.userId){
-                signUpHooks.setCognitoUserID(response.userId)
-            }
-        } catch (e:any) {
-            let errorMessage = ThrowSignUpError(e.name)
-            signUpHooks.setError({ ...signUpHooks.error, signUp: errorMessage })
-            console.error(signUpHooks.error)
-        }
-    }
 
     // Manages the post-two-factor-authentication workflow.
     const handlePostTfaWorkflow = async () => {
@@ -102,29 +76,7 @@ const WebSignUp = () => {
         }
     }, [signUpHooks.tabValue])
 
-    // Validates the birthday input and updates related states.
-    useEffect(() => {
-        if(birthdayPattern.test(signUpHooks.birthday)){
-            console.log(signUpHooks.birthday)
-            let age = ageCaluclatedFromInputBirthday(signUpHooks.birthday)
-            signUpHooks.setBirthdayWaiting(true)
-            if (age < 16) {
-                signUpHooks.setError({ ...signUpHooks.error, birthday: "You must be at least 16 years old to sign up." })
-                signUpHooks.setBirthdayComplete(false)
-            } else if (age < 100) {
-                signUpHooks.setAge(age)
-                signUpHooks.setError({...signUpHooks.error, birthday: ""})
-                setTimeout(() => {
-                    signUpHooks.setBirthdayComplete(false)
-                    signUpHooks.setTabValue(1)
-                    signUpHooks.setBirthdayWaiting(false)
-                    signUpHooks.setBirthdayComplete(true)
-                }, 1000)
-            } else {
-                signUpHooks.setBirthdayComplete(false)
-            }
-        }
-    }, [signUpHooks.birthday])
+
 
     // Validates the zip code input and updates related states.
     useEffect(() => {
@@ -213,7 +165,6 @@ const WebSignUp = () => {
                 <Grid item xs={12} container justifyContent="center">
                     <BirthdayInput 
                         signUpHooks={signUpHooks} 
-                        dateInputRef={dateInputRef} 
                     />
                     <NameInput 
                         signUpHooks={signUpHooks} 
@@ -226,7 +177,6 @@ const WebSignUp = () => {
                     />
                     <PasswordInput
                         signUpHooks={signUpHooks}
-                        handleSignUp={handleSignUp}
                     /> 
                 </Grid>
             </Grid>
@@ -246,13 +196,39 @@ const WebSignUp = () => {
 
 export default WebSignUp
 
-export const BirthdayInput = ({signUpHooks, dateInputRef}:any) => {
+export const BirthdayInput = ({signUpHooks}:any) => {
+
+    const dateInputRef:any = useRef(null)
 
     // Updates the birthday state based on user input.
     const handleBirthdayInput:any = (event:any) => {
         const newBirthday = event.target.value
         signUpHooks.setBirthday(newBirthday)
     }
+
+    // Validates the birthday input and updates related states.
+    useEffect(() => {
+        if(birthdayPattern.test(signUpHooks.birthday)){
+            console.log(signUpHooks.birthday)
+            let age = ageCaluclatedFromInputBirthday(signUpHooks.birthday)
+            signUpHooks.setBirthdayWaiting(true)
+            if (age < 16) {
+                signUpHooks.setError({ ...signUpHooks.error, birthday: "You must be at least 16 years old to sign up." })
+                signUpHooks.setBirthdayComplete(false)
+            } else if (age < 100) {
+                signUpHooks.setAge(age)
+                signUpHooks.setError({...signUpHooks.error, birthday: ""})
+                setTimeout(() => {
+                    signUpHooks.setBirthdayComplete(false)
+                    signUpHooks.setTabValue(1)
+                    signUpHooks.setBirthdayWaiting(false)
+                    signUpHooks.setBirthdayComplete(true)
+                }, 1000)
+            } else {
+                signUpHooks.setBirthdayComplete(false)
+            }
+        }
+    }, [signUpHooks.birthday])
 
     return(
         <SignUpTabPanel value={signUpHooks.tabValue} index={0}>
@@ -422,7 +398,30 @@ export const EmailInput = ({signUpHooks}:any) => {
     )
 }
 
-export const PasswordInput = ({signUpHooks, handleSignUp}:any) => {
+export const PasswordInput = ({signUpHooks}:any) => {
+
+    // Handles the sign-up submission to AWS Amplify.
+    async function handleSignUp() {
+        try {
+            const response:SignUpOutput = await signUp({
+                username: signUpHooks.username,
+                password: signUpHooks.password,
+            })
+
+            if (response.nextStep && response.nextStep.signUpStep === "CONFIRM_SIGN_UP") {
+                console.log(response)
+                signUpHooks.setTfaOpen(true)
+            }
+
+            if(response.userId){
+                signUpHooks.setCognitoUserID(response.userId)
+            }
+        } catch (e:any) {
+            let errorMessage = ThrowSignUpError(e.name)
+            signUpHooks.setError({ ...signUpHooks.error, signUp: errorMessage })
+            console.error(signUpHooks.error)
+        }
+    }
     
     // Toggles the visibility of the password input field.
     const handleClickShowPassword = (target:number) => {

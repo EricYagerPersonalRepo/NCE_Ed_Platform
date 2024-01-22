@@ -1,7 +1,6 @@
 import React, { useState } from 'react'
 import { TextField, Button, FormControlLabel, Checkbox, Grid, Paper, Typography, Container, Modal, Box, CircularProgress } from '@mui/material'
 import { tfaModalStyle } from '@/styles/AuthStyles'
-//import { handleConfirmSignup } from '../functions/AuthFunctions'
 import { SignUpTabItemProps, SignUpTabPanelProps } from '../types/SignUpTypes'
 import { CheckCircle } from '@mui/icons-material'
 

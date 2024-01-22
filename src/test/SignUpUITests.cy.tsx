@@ -1,10 +1,28 @@
-import React from 'react'
+import React, { useEffect, useRef } from 'react'
 import SignUp  from '@/pages/SignUp'
 import { mount } from 'cypress/react18'
 import Router from 'next/router'
 import { SignUpTabPanel } from '../components/AuthComponents'
 import { Grid, FormControl, InputLabel, Input, TextField, FormHelperText } from '@mui/material'
 import { fetchCityState } from '../functions/AuthFunctions'
+import { BirthdayInput } from '../components/SignUp/WebSignUp'
+import { useSignUpHooks } from '../state/SignUpHooks'
+
+const WrapperComponent = ({ setError, testDate }: any) => {
+  const signUpHooks = useSignUpHooks();
+
+  // Use useEffect to set the state
+  useEffect(() => {
+    if (setError) {
+      signUpHooks.setError({ ...signUpHooks.error, birthday: setError });
+    }
+    if (testDate) {
+      signUpHooks.setBirthday(testDate);
+    }
+  }, [setError, testDate, signUpHooks]);
+
+  return <BirthdayInput signUpHooks={signUpHooks} />;
+}
 
 describe('<SignUp />', () => {
   context('`useRouter` hook stub out', () => {
@@ -28,53 +46,26 @@ describe('<SignUp />', () => {
   })
 })
 
-describe('<Birthday Input />', () => {
-  it('renders the birthday input', () => {
-    mount(
-      <SignUpTabPanel value={0} index={0}>
-        <TextField
-          fullWidth
-          type="date"
-          label="Birthday"
-          InputLabelProps={{ shrink: true }}
-        />
-      </SignUpTabPanel>
-    )
-    cy.get('input[type="date"]').should('exist')
-  })
+describe('<BirthdayInput />', () => {
 
   it('accepts birthday input', () => {
-    mount(
-      <SignUpTabPanel value={0} index={0}>
-        <TextField
-          fullWidth
-          type="date"
-          label="Birthday"
-          InputLabelProps={{ shrink: true }}
-        />
-      </SignUpTabPanel>
-    )
     const testDate = '2000-01-01'
-    cy.get('input[type="date"]').type(testDate)
+    mount(<WrapperComponent testDate={testDate} />)
     cy.get('input[type="date"]').should('have.value', testDate)
   })
 
   it('displays error message for invalid birthday', () => {
-    // Assuming that the error message is set via props or context
-    const errorMessage = 'Invalid date'
-    mount(
-      <SignUpTabPanel value={0} index={0}>
-        <TextField
-          fullWidth
-          type="date"
-          label="Birthday"
-          InputLabelProps={{ shrink: true }}
-          error
-        />
-        <FormHelperText error>{errorMessage}</FormHelperText>
-      </SignUpTabPanel>
-    )
-    cy.contains(errorMessage).should('be.visible')
+    const tempError = "Birthday error"
+    mount(<WrapperComponent setError={tempError} />)
+    cy.contains(tempError).should('be.visible')
+  })
+
+  it('displays error message for birthday < 16 YOE', () => {
+    const testDate = '2014-01-01'
+    mount(<WrapperComponent testDate={testDate} />)
+    cy.get('.MuiFormHelperText-root.Mui-error')
+      .should('contain', 'You must be at least 16 years old to sign up.')
+      .and('be.visible')
   })
 })
 
