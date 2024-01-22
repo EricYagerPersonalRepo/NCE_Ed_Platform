@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { TextField, Button, Grid, Container, FormControl, InputLabel, Input, InputAdornment, IconButton, Tabs, Tab, FormHelperText, Modal } from '@mui/material'
 import Visibility from '@mui/icons-material/Visibility'
 import VisibilityOff from '@mui/icons-material/VisibilityOff'
@@ -22,53 +22,7 @@ const WebSignUp = () => {
         signUpHooks.setTabValue(newValue)
     }
 
-/**
- * Birthday functions
- */
 
-    // Updates the birthday state based on user input.
-    const handleBirthdayInput:any = (event:any) => {
-        const newBirthday = event.target.value
-        signUpHooks.setBirthday(newBirthday)
-    }
-
-/**
- * Name functions
- */
-
-    // Validates the name input and updates related states.
-    const handleNameInput:any = () => {
-        signUpHooks. setNameWaiting(true)
-        if (namePattern.test(signUpHooks.name)) {
-            setTimeout(() => {
-                signUpHooks.setNameComplete(true)
-                signUpHooks.setTabValue(2)
-                signUpHooks.setNameWaiting(false)
-            }, 1000)
-        } else{
-            signUpHooks.setNameWaiting(false)
-            signUpHooks.setError({...signUpHooks.error, name:"Please enter full name. Example: John Doe"})
-        }
-    }
-
-/**
- * Email functions
- */
-
-    // Validates the email input and updates related states.
-    const handleEmailInput:any = () => {
-        signUpHooks.setEmailWaiting(true)
-        if (emailPattern.test(signUpHooks.username)) {
-            setTimeout(() => {
-                signUpHooks.setEmailComplete(true)
-                signUpHooks.setTabValue(4)
-                signUpHooks.setEmailWaiting(false)
-            }, 1000)
-        } else{
-            signUpHooks.setEmailWaiting(false)
-            signUpHooks.setError({...signUpHooks.error, email:"Please enter a valid email address. Example: joe@example.com"})
-        }
-    }
 
 /**
  * Zip Code functions
@@ -88,22 +42,6 @@ const WebSignUp = () => {
             }
         }
     }
-
-/**
- * Password functions
- */
-
-    // Toggles the visibility of the password input field.
-    const handleClickShowPassword = (target:number) => {
-        if(target===1) signUpHooks.setShowPassword((show) => !show)
-        if(target===2) signUpHooks.setShowConfirmPassword((showConfirm) => !showConfirm)
-    }
-
-    // Prevents the default behavior on mousedown for password fields.
-    const handleMouseDownPassword = (event: React.MouseEvent<HTMLButtonElement>) => {
-        event.preventDefault()
-    }
-
 
 /**
  * Amplify/Cognito Sign Up Workflow
@@ -160,9 +98,9 @@ const WebSignUp = () => {
     useEffect(() => {
         if (signUpHooks.tabValue === 0 && dateInputRef.current) {
             // Manually set the focus on the input field
-            dateInputRef.current.focus();
+            dateInputRef.current.focus()
         }
-    }, [signUpHooks.tabValue]);
+    }, [signUpHooks.tabValue])
 
     // Validates the birthday input and updates related states.
     useEffect(() => {
@@ -273,133 +211,23 @@ const WebSignUp = () => {
                     </Tabs>
                 </Grid>
                 <Grid item xs={12} container justifyContent="center">
-                    <form>
-                        <BirthdayInput 
-                            signUpHooks={signUpHooks} 
-                            handleBirthdayInput={handleBirthdayInput} 
-                            dateInputRef={dateInputRef} 
-                        />
-                        <NameInput 
-                            signUpHooks={signUpHooks} 
-                            handleNameInput={handleNameInput} 
-                        />
-                        <EmailInput 
-                            signUpHooks={signUpHooks} 
-                            handleEmailInput={handleEmailInput} 
-                        />
-
-
-
-
-
-
-
-
-                        
-                        <SignUpTabPanel value={signUpHooks.tabValue} index={3}>
-                            <Grid item xs={12} id="testID">
-                                {signUpHooks.error.name ? 
-                                        <FormControl error fullWidth variant="standard">
-                                            <InputLabel htmlFor="standard-adornment-name-noerror">Email</InputLabel>
-                                            <Input
-                                                id="standard-adornment-name-noerror"
-                                                onChange={(e) => signUpHooks.setUsername(e.target.value)}
-                                                value={signUpHooks.username}
-                                                aria-describedby="component-error-text"
-                                                autoFocus={signUpHooks.tabValue === 3}
-                                                endAdornment={
-                                                    <InputAdornment position="end">
-                                                        <Button
-                                                            onClick={handleEmailInput}
-                                                        >
-                                                            Done
-                                                        </Button>
-                                                    </InputAdornment>
-                                                }
-                                            />
-                                        </FormControl>
-
-                                    :
-
-                                        <FormControl fullWidth variant="standard">
-                                            <InputLabel htmlFor="standard-adornment-name-error">Email</InputLabel>
-                                            <Input
-                                                id="standard-adornment-name-error"
-                                                onChange={(e) => signUpHooks.setUsername(e.target.value)}
-                                                value={signUpHooks.username}
-                                                autoFocus={signUpHooks.tabValue === 3}
-                                                endAdornment={
-                                                    <InputAdornment position="end">
-                                                        <Button
-                                                            onClick={handleEmailInput}
-                                                        >Done</Button>
-                                                    </InputAdornment>
-                                                }
-                                            />
-                                        
-                                        </FormControl>
-                                    }
-                            </Grid>
-                        </SignUpTabPanel>
-                        <SignUpTabPanel value={signUpHooks.tabValue} index={4}>
-                        <Grid container spacing={2}>
-                            <Grid item xs={12}>
-                                <FormControl variant="standard" fullWidth>
-                                    <InputLabel htmlFor="standard-adornment-password">Password</InputLabel>
-                                    <Input
-                                        id="standard-adornment-password"
-                                        type={signUpHooks.showPassword ? 'text' : 'password'}
-                                        onChange={(e) => signUpHooks.setPassword(e.target.value)}
-                                        autoComplete="current-password"
-                                        autoFocus={signUpHooks.tabValue === 4}
-                                        endAdornment={
-                                            <InputAdornment position="end">
-                                                <IconButton
-                                                    aria-label="toggle password visibility"
-                                                    onClick={e => handleClickShowPassword(1)}
-                                                    onMouseDown={handleMouseDownPassword}
-                                                >
-                                                    {signUpHooks.showPassword ? <VisibilityOff /> : <Visibility />}
-                                                </IconButton>
-                                            </InputAdornment>
-                                        }
-                                        fullWidth
-                                    />
-                                </FormControl>
-                            </Grid>
-                            <Grid item xs={12}>
-                                <FormControl variant="standard" fullWidth>
-                                    <InputLabel htmlFor="standard-adornment-confirm-password">Confirm Password</InputLabel>
-                                    <Input
-                                        id="standard-adornment-confirm-password"
-                                        type={signUpHooks.showConfirmPassword ? 'text' : 'password'}
-                                        onChange={(e) => signUpHooks.setConfirmPassword(e.target.value)}
-                                        endAdornment={
-                                            <InputAdornment position="end">
-                                                <IconButton
-                                                    aria-label="toggle password visibility"
-                                                    onClick={e => handleClickShowPassword(2)}
-                                                    onMouseDown={handleMouseDownPassword}
-                                                >
-                                                    {signUpHooks.showConfirmPassword ? <VisibilityOff /> : <Visibility />}
-                                                </IconButton>
-                                            </InputAdornment>
-                                        }
-                                        fullWidth
-                                    />
-                                </FormControl> 
-                            </Grid>
-                            <Grid item xs={12}>
-                                { signUpHooks.formComplete ?
-                                    <Button onClick={handleSignUp} fullWidth>Sign Up</Button>
-                                    :
-                                    <Button disabled fullWidth>Form not complete</Button>
-
-                                }
-                            </Grid>
-                        </Grid>
-                        </SignUpTabPanel>
-                    </form>
+                    <BirthdayInput 
+                        signUpHooks={signUpHooks} 
+                        dateInputRef={dateInputRef} 
+                    />
+                    <NameInput 
+                        signUpHooks={signUpHooks} 
+                    />
+                    <EmailInput 
+                        signUpHooks={signUpHooks} 
+                    />
+                    <ZipInput
+                        signUpHooks={signUpHooks}
+                    />
+                    <PasswordInput
+                        signUpHooks={signUpHooks}
+                        handleSignUp={handleSignUp}
+                    /> 
                 </Grid>
             </Grid>
             <Container maxWidth="lg">
@@ -418,7 +246,14 @@ const WebSignUp = () => {
 
 export default WebSignUp
 
-export const BirthdayInput = ({signUpHooks, handleBirthdayInput, dateInputRef}:any) => {
+export const BirthdayInput = ({signUpHooks, dateInputRef}:any) => {
+
+    // Updates the birthday state based on user input.
+    const handleBirthdayInput:any = (event:any) => {
+        const newBirthday = event.target.value
+        signUpHooks.setBirthday(newBirthday)
+    }
+
     return(
         <SignUpTabPanel value={signUpHooks.tabValue} index={0}>
             <TextField
@@ -438,7 +273,23 @@ export const BirthdayInput = ({signUpHooks, handleBirthdayInput, dateInputRef}:a
     )
 }
 
-export const NameInput = ({signUpHooks, handleNameInput}:any) => {
+export const NameInput = ({signUpHooks}:any) => {
+
+    // Validates the name input and updates related states.
+    const handleNameInput:any = () => {
+        signUpHooks. setNameWaiting(true)
+        if (namePattern.test(signUpHooks.name)) {
+            setTimeout(() => {
+                signUpHooks.setNameComplete(true)
+                signUpHooks.setTabValue(2)
+                signUpHooks.setNameWaiting(false)
+            }, 1000)
+        } else{
+            signUpHooks.setNameWaiting(false)
+            signUpHooks.setError({...signUpHooks.error, name:"Please enter full name. Example: John Doe"})
+        }
+    }
+
     return(
         <SignUpTabPanel value={signUpHooks.tabValue} index={1}>
             <Grid container spacing={2}>
@@ -468,7 +319,62 @@ export const NameInput = ({signUpHooks, handleNameInput}:any) => {
     )
 }
 
-export const EmailInput = ({signUpHooks, handleEmailInput}:any) => {
+export const ZipInput = ({signUpHooks}:any) => {
+    return(
+        <SignUpTabPanel value={signUpHooks.tabValue} index={2}>
+            <Grid container spacing={2}>
+                <Grid item xs={12} sm={4}>
+                    <TextField 
+                        fullWidth 
+                        label="Zip code" 
+                        variant="standard" 
+                        placeholder="Zip Code"
+                        autoFocus={signUpHooks.tabValue === 2}
+                        onChange={(event) => signUpHooks.setZipCode(event.target.value)}
+                    />
+                </Grid>
+
+                <Grid item xs={12} sm={8}>
+                    <TextField
+                        disabled
+                        fullWidth
+                        label={signUpHooks.city+", "+signUpHooks.state}
+                        variant="standard"
+                        error={!!signUpHooks.error.zipCode}
+                        InputProps={{
+                            endAdornment: signUpHooks.error.zipCode && (
+                                <InputAdornment position="end">
+                                    <ErrorOutline color="error" />
+                                </InputAdornment>
+                            ),
+                        }}
+                    />
+                    {signUpHooks.error.zipCode && (
+                        <FormHelperText error>{signUpHooks.error.zipCode}</FormHelperText>
+                    )}
+                </Grid>
+            </Grid>
+        </SignUpTabPanel>
+    )
+}
+
+export const EmailInput = ({signUpHooks}:any) => {
+
+    // Validates the email input and updates related states.
+    const handleEmailInput:any = () => {
+        signUpHooks.setEmailWaiting(true)
+        if (emailPattern.test(signUpHooks.username)) {
+            setTimeout(() => {
+                signUpHooks.setEmailComplete(true)
+                signUpHooks.setTabValue(4)
+                signUpHooks.setEmailWaiting(false)
+            }, 1000)
+        } else{
+            signUpHooks.setEmailWaiting(false)
+            signUpHooks.setError({...signUpHooks.error, email:"Please enter a valid email address. Example: joe@example.com"})
+        }
+    }
+
     return(
         <SignUpTabPanel value={signUpHooks.tabValue} index={3}>
             <Grid item xs={12} id="testID">
@@ -511,6 +417,91 @@ export const EmailInput = ({signUpHooks, handleEmailInput}:any) => {
                         
                         </FormControl>
                     }
+            </Grid>
+        </SignUpTabPanel>
+    )
+}
+
+export const PasswordInput = ({signUpHooks, handleSignUp}:any) => {
+    
+    // Toggles the visibility of the password input field.
+    const handleClickShowPassword = (target:number) => {
+        if(target===1) signUpHooks.setShowPassword(!signUpHooks.showPassword)
+        if(target===2) signUpHooks.setShowConfirmPassword(!signUpHooks.showConfirmPassword)
+    }
+
+    const handleMouseDownPassword = (event: React.MouseEvent<HTMLButtonElement>) => {
+        event.preventDefault()
+    }
+
+    useEffect(() => {
+        if(signUpHooks.passwordComplete && signUpHooks.confirmPasswordComplete){
+            signUpHooks.setFormComplete(true)
+            console.log("Form complete")
+        }else{
+            signUpHooks.setFormComplete(false)
+            console.log("Form incomplete")
+        }
+    }, [signUpHooks.passwordComplete, signUpHooks.confirmPasswordComplete])
+    
+    
+    return(
+        <SignUpTabPanel value={signUpHooks.tabValue} index={4}>
+            <Grid container spacing={2}>
+                <Grid item xs={12}>
+                    <FormControl variant="standard" fullWidth>
+                        <InputLabel htmlFor="standard-adornment-password">Password</InputLabel>
+                        <Input
+                            id="standard-adornment-password"
+                            type={signUpHooks.showPassword ? 'text' : 'password'}
+                            onChange={(e) => signUpHooks.setPassword(e.target.value)}
+                            autoComplete="current-password"
+                            autoFocus={signUpHooks.tabValue === 4}
+                            endAdornment={
+                                <InputAdornment position="end">
+                                    <IconButton
+                                        aria-label="toggle password visibility"
+                                        onClick={e => handleClickShowPassword(1)}
+                                        onMouseDown={handleMouseDownPassword}
+                                    >
+                                        {signUpHooks.showPassword ? <VisibilityOff /> : <Visibility />}
+                                    </IconButton>
+                                </InputAdornment>
+                            }
+                            fullWidth
+                        />
+                    </FormControl>
+                </Grid>
+                <Grid item xs={12}>
+                    <FormControl variant="standard" fullWidth>
+                        <InputLabel htmlFor="standard-adornment-confirm-password">Confirm Password</InputLabel>
+                        <Input
+                            id="standard-adornment-confirm-password"
+                            type={signUpHooks.showConfirmPassword ? 'text' : 'password'}
+                            onChange={(e) => signUpHooks.setConfirmPassword(e.target.value)}
+                            endAdornment={
+                                <InputAdornment position="end">
+                                    <IconButton
+                                        aria-label="toggle password visibility"
+                                        onClick={e => handleClickShowPassword(2)}
+                                        onMouseDown={handleMouseDownPassword}
+                                    >
+                                        {signUpHooks.showConfirmPassword ? <VisibilityOff /> : <Visibility />}
+                                    </IconButton>
+                                </InputAdornment>
+                            }
+                            fullWidth
+                        />
+                    </FormControl> 
+                </Grid>
+                <Grid item xs={12}>
+                    { signUpHooks.formComplete ?
+                        <Button onClick={handleSignUp} fullWidth>Sign Up</Button>
+                        :
+                        <Button disabled fullWidth>Form not complete</Button>
+
+                    }
+                </Grid>
             </Grid>
         </SignUpTabPanel>
     )
