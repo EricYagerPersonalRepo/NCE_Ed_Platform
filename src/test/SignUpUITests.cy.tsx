@@ -8,7 +8,7 @@ import { fetchCityState } from '../functions/AuthFunctions'
 import { BirthdayInput } from '../components/SignUp/WebSignUp'
 import { useSignUpHooks } from '../state/SignUpHooks'
 
-const WrapperComponent = ({ setError, testDate }: any) => {
+const BirthdayComponentWrapper = ({ setError, testDate }: any) => {
   const signUpHooks = useSignUpHooks();
 
   // Use useEffect to set the state
@@ -50,19 +50,19 @@ describe('<BirthdayInput />', () => {
 
   it('accepts birthday input', () => {
     const testDate = '2000-01-01'
-    mount(<WrapperComponent testDate={testDate} />)
+    mount(<BirthdayComponentWrapper testDate={testDate} />)
     cy.get('input[type="date"]').should('have.value', testDate)
   })
 
   it('displays error message for invalid birthday', () => {
     const tempError = "Birthday error"
-    mount(<WrapperComponent setError={tempError} />)
+    mount(<BirthdayComponentWrapper setError={tempError} />)
     cy.contains(tempError).should('be.visible')
   })
 
   it('displays error message for birthday < 16 YOE', () => {
     const testDate = '2014-01-01'
-    mount(<WrapperComponent testDate={testDate} />)
+    mount(<BirthdayComponentWrapper testDate={testDate} />)
     cy.get('.MuiFormHelperText-root.Mui-error')
       .should('contain', 'You must be at least 16 years old to sign up.')
       .and('be.visible')

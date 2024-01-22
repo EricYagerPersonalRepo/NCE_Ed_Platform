@@ -163,21 +163,23 @@ const WebSignUp = () => {
                     </Tabs>
                 </Grid>
                 <Grid item xs={12} container justifyContent="center">
-                    <BirthdayInput 
-                        signUpHooks={signUpHooks} 
-                    />
-                    <NameInput 
-                        signUpHooks={signUpHooks} 
-                    />
-                    <EmailInput 
-                        signUpHooks={signUpHooks} 
-                    />
-                    <ZipInput
-                        signUpHooks={signUpHooks}
-                    />
-                    <PasswordInput
-                        signUpHooks={signUpHooks}
-                    /> 
+                    <form>
+                        <BirthdayInput 
+                            signUpHooks={signUpHooks} 
+                        />
+                        <NameInput 
+                            signUpHooks={signUpHooks} 
+                        />
+                        <EmailInput 
+                            signUpHooks={signUpHooks} 
+                        />
+                        <ZipInput
+                            signUpHooks={signUpHooks}
+                        />
+                        <PasswordInput
+                            signUpHooks={signUpHooks}
+                        /> 
+                    </form>
                 </Grid>
             </Grid>
             <Container maxWidth="lg">
