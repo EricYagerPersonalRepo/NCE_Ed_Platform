@@ -1,7 +1,7 @@
 const MobileSignUp = () => {
     return (
         <div>
-            <h1>WebSignUp</h1>
+            <h1>MobileSignUp</h1>
         </div>
     )
 }

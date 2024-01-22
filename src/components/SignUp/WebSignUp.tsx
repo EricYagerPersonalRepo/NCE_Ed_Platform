@@ -5,11 +5,10 @@ import VisibilityOff from '@mui/icons-material/VisibilityOff'
 import { ageCaluclatedFromInputBirthday, allowedZipCodes } from '@/src/functions/SignUpFunctions'
 import { ErrorOutline } from '@mui/icons-material'
 import { signUp } from 'aws-amplify/auth'
-import { AuthenticationHeaderImage, SignUpTabItem, SignUpTabPanel, TwoFactorAuthForm } from '@/src/components/AuthComponents'
+import { SignUpTabItem, SignUpTabPanel, TwoFactorAuthForm } from '@/src/components/AuthComponents'
 import { SignUpOutput } from 'aws-amplify/auth'
 import { birthdayPattern, emailPattern, namePattern, zipCodePattern } from '@/src/types/SignUpTypes'
-import { ThrowSignUpError, fetchCityState, handleConfirmSignup, handleCreateStudentProfile, handleSignIn, checkAuthStatus } from '@/src/functions/AuthFunctions'
-import { SignUpImageGridStyle } from '@/src/style/SignUpComponentStyle'
+import { ThrowSignUpError, fetchCityState, handleConfirmSignup, handleCreateStudentProfile, handleSignIn } from '@/src/functions/AuthFunctions'
 import { useSignUpHooks } from '@/src/state/SignUpHooks'
 
 const WebSignUp = () => {
@@ -18,77 +17,24 @@ const WebSignUp = () => {
 
     const dateInputRef:any = useRef(null)
 
-    // Toggles the visibility of the password input field.
-    const handleClickShowPassword = (target:number) => {
-        if(target===1) signUpHooks.setShowPassword((show) => !show)
-        if(target===2) signUpHooks.setShowConfirmPassword((showConfirm) => !showConfirm)
-    }
-
-    // Prevents the default behavior on mousedown for password fields.
-    const handleMouseDownPassword = (event: React.MouseEvent<HTMLButtonElement>) => {
-        event.preventDefault()
-    }
-    
-    // Fetches city and state information based on the provided zip code.
-    const fetchCityStateCall = async(zip:any) => {
-        if(zip.length===5){
-            try {
-                const cityStateCall = await fetchCityState(zip)
-                signUpHooks.setCity(cityStateCall.City)
-                signUpHooks.setState(cityStateCall.State)
-            } catch (error) {
-                console.error('Failed to fetch city and state:', error)
-                signUpHooks.setCity('') //Reassigs error inputs to null string
-                signUpHooks.setState('') //Reassigs error inputs to null string
-            }
-        }
-    }
-
     // Handles tab changes in the sign-up form.
     const handleTabChange:any = (event:any,newValue:number) => {
         signUpHooks.setTabValue(newValue)
     }
 
+/**
+ * Birthday functions
+ */
+
     // Updates the birthday state based on user input.
-    const handleBirthdayChange = (event:any) => {
+    const handleBirthdayInput:any = (event:any) => {
         const newBirthday = event.target.value
         signUpHooks.setBirthday(newBirthday)
     }
-    
-    // Updates the form's completion status based on the completion of individual steps.
-    useEffect(()=> {
-        if(signUpHooks.birthdayComplete && signUpHooks.nameComplete && signUpHooks.locationComplete && signUpHooks.emailComplete){
-            signUpHooks.setFormComplete(true)
-            console.log("Form complete")
-        }else{
-            signUpHooks.setFormComplete(false)
-            console.log("Form incomplete")
-        }
-    }, [signUpHooks.birthdayComplete, signUpHooks.nameComplete, signUpHooks.locationComplete, signUpHooks.emailComplete])
 
-    // Validates the birthday input and updates related states.
-    useEffect(() => {
-        if(birthdayPattern.test(signUpHooks.birthday)){
-            console.log(signUpHooks.birthday)
-            let age = ageCaluclatedFromInputBirthday(signUpHooks.birthday)
-            signUpHooks.setBirthdayWaiting(true)
-            if (age < 16) {
-                signUpHooks.setError({ ...signUpHooks.error, birthday: "You must be at least 16 years old to sign up." })
-                signUpHooks.setBirthdayComplete(false)
-            } else if (age < 100) {
-                signUpHooks.setAge(age)
-                signUpHooks.setError({...signUpHooks.error, birthday: ""})
-                setTimeout(() => {
-                    signUpHooks.setBirthdayComplete(false)
-                    signUpHooks.setTabValue(1)
-                    signUpHooks.setBirthdayWaiting(false)
-                    signUpHooks.setBirthdayComplete(true)
-                }, 1000)
-            } else {
-                signUpHooks.setBirthdayComplete(false)
-            }
-        }
-    }, [signUpHooks.birthday])
+/**
+ * Name functions
+ */
 
     // Validates the name input and updates related states.
     const handleNameInput:any = () => {
@@ -105,35 +51,9 @@ const WebSignUp = () => {
         }
     }
 
-    useEffect(() => {
-        if (signUpHooks.tabValue === 0 && dateInputRef.current) {
-            // Manually set the focus on the input field
-            dateInputRef.current.focus();
-        }
-    }, [signUpHooks.tabValue]);
-
-    // Validates the zip code input and updates related states.
-    useEffect(() => {
-        if (zipCodePattern.test(signUpHooks.zipCode)) {
-            signUpHooks.setLocationWaiting(true)
-            if(allowedZipCodes.includes(parseInt(signUpHooks.zipCode))){
-                fetchCityStateCall(signUpHooks.zipCode)
-                signUpHooks.setError({...signUpHooks.error, zipCode:""})
-                setTimeout(() => {
-                    signUpHooks.setLocationComplete(true)
-                    signUpHooks.setTabValue(3)
-                    signUpHooks.setLocationWaiting(false)
-                }, 1000)
-            }else{
-                signUpHooks.setLocationWaiting(false)
-                signUpHooks.setError({...signUpHooks.error, zipCode:"Zip code outside supported area. Contact info@northcountryengineer.com for more information."})
-            }
-        } else{
-            signUpHooks.setCity('')
-            signUpHooks.setState('')
-        }
-    }, [signUpHooks.zipCode])
-
+/**
+ * Email functions
+ */
 
     // Validates the email input and updates related states.
     const handleEmailInput:any = () => {
@@ -149,6 +69,46 @@ const WebSignUp = () => {
             signUpHooks.setError({...signUpHooks.error, email:"Please enter a valid email address. Example: joe@example.com"})
         }
     }
+
+/**
+ * Zip Code functions
+ */
+
+    // Fetches city and state information based on the provided zip code.
+    const fetchCityStateCall = async(zip:any) => {
+        if(zip.length===5){
+            try {
+                const cityStateCall = await fetchCityState(zip)
+                signUpHooks.setCity(cityStateCall.City)
+                signUpHooks.setState(cityStateCall.State)
+            } catch (error) {
+                console.error('Failed to fetch city and state:', error)
+                signUpHooks.setCity('') //Reassigs error inputs to null string
+                signUpHooks.setState('') //Reassigs error inputs to null string
+            }
+        }
+    }
+
+/**
+ * Password functions
+ */
+
+    // Toggles the visibility of the password input field.
+    const handleClickShowPassword = (target:number) => {
+        if(target===1) signUpHooks.setShowPassword((show) => !show)
+        if(target===2) signUpHooks.setShowConfirmPassword((showConfirm) => !showConfirm)
+    }
+
+    // Prevents the default behavior on mousedown for password fields.
+    const handleMouseDownPassword = (event: React.MouseEvent<HTMLButtonElement>) => {
+        event.preventDefault()
+    }
+
+
+/**
+ * Amplify/Cognito Sign Up Workflow
+ * Workflow handles initial sign up, TFA, sign in, and createUser
+ */
 
     // Handles the sign-up submission to AWS Amplify.
     async function handleSignUp() {
@@ -190,6 +150,78 @@ const WebSignUp = () => {
             console.error('Error in post-TFA workflow:', error)
         }
     }
+
+/**
+ * Component Side Effects
+**/
+
+    // If we're in tab zero and the current ref is the date input, focus on it.
+    // TextField inputs contain focus functionality but date doesn't
+    useEffect(() => {
+        if (signUpHooks.tabValue === 0 && dateInputRef.current) {
+            // Manually set the focus on the input field
+            dateInputRef.current.focus();
+        }
+    }, [signUpHooks.tabValue]);
+
+    // Validates the birthday input and updates related states.
+    useEffect(() => {
+        if(birthdayPattern.test(signUpHooks.birthday)){
+            console.log(signUpHooks.birthday)
+            let age = ageCaluclatedFromInputBirthday(signUpHooks.birthday)
+            signUpHooks.setBirthdayWaiting(true)
+            if (age < 16) {
+                signUpHooks.setError({ ...signUpHooks.error, birthday: "You must be at least 16 years old to sign up." })
+                signUpHooks.setBirthdayComplete(false)
+            } else if (age < 100) {
+                signUpHooks.setAge(age)
+                signUpHooks.setError({...signUpHooks.error, birthday: ""})
+                setTimeout(() => {
+                    signUpHooks.setBirthdayComplete(false)
+                    signUpHooks.setTabValue(1)
+                    signUpHooks.setBirthdayWaiting(false)
+                    signUpHooks.setBirthdayComplete(true)
+                }, 1000)
+            } else {
+                signUpHooks.setBirthdayComplete(false)
+            }
+        }
+    }, [signUpHooks.birthday])
+
+    // Validates the zip code input and updates related states.
+    useEffect(() => {
+        if (zipCodePattern.test(signUpHooks.zipCode)) {
+            signUpHooks.setLocationWaiting(true)
+            if(allowedZipCodes.includes(parseInt(signUpHooks.zipCode))){
+                fetchCityStateCall(signUpHooks.zipCode)
+                signUpHooks.setError({...signUpHooks.error, zipCode:""})
+                setTimeout(() => {
+                    signUpHooks.setLocationComplete(true)
+                    signUpHooks.setTabValue(3)
+                    signUpHooks.setLocationWaiting(false)
+                }, 1000)
+            }else{
+                signUpHooks.setLocationWaiting(false)
+                signUpHooks.setError({...signUpHooks.error, zipCode:"Zip code outside supported area. Contact info@northcountryengineer.com for more information."})
+            }
+        } else{
+            signUpHooks.setCity('')
+            signUpHooks.setState('')
+        }
+    }, [signUpHooks.zipCode])
+
+    // Updates the form's completion status based on the completion of individual steps.
+    useEffect(()=> {
+        if(signUpHooks.birthdayComplete && signUpHooks.nameComplete && signUpHooks.locationComplete && signUpHooks.emailComplete){
+            signUpHooks.setFormComplete(true)
+            console.log("Form complete")
+        }else{
+            signUpHooks.setFormComplete(false)
+            console.log("Form incomplete")
+        }
+    }, [signUpHooks.birthdayComplete, signUpHooks.nameComplete, signUpHooks.locationComplete, signUpHooks.emailComplete])
+
+
     return (
         <Container maxWidth="lg">
             <Grid container spacing={2}>
@@ -242,80 +274,28 @@ const WebSignUp = () => {
                 </Grid>
                 <Grid item xs={12} container justifyContent="center">
                     <form>
-                        <SignUpTabPanel value={signUpHooks.tabValue} index={0}>
-                            <TextField
-                                fullWidth
-                                type="date"
-                                label="Birthday"
-                                InputLabelProps={{ shrink: true }}
-                                onChange={handleBirthdayChange}
-                                value={signUpHooks.birthday}
-                                error={!!signUpHooks.error.birthday}
-                                inputRef={dateInputRef} // Assign the ref to the input
-                            />
-                                {signUpHooks.error.birthday && (
-                                <FormHelperText error>{signUpHooks.error.birthday}</FormHelperText>
-                            )}
-                        </SignUpTabPanel>
-                        <SignUpTabPanel value={signUpHooks.tabValue} index={1}>
-                            <Grid container spacing={2}>
-                                <Grid item xs={12}>
-                                    <FormControl error={!!signUpHooks.error.name} fullWidth variant="standard">
-                                        <InputLabel htmlFor="standard-adornment-name">Name</InputLabel>
-                                        <Input
-                                            fullWidth
-                                            id="standard-adornment-name"
-                                            onChange={(e) => signUpHooks.setName(e.target.value)}
-                                            value={signUpHooks.name}
-                                            aria-describedby="component-error-text"
-                                            autoFocus={signUpHooks.tabValue === 1}
-                                            endAdornment={
-                                                <InputAdornment position="end">
-                                                    <Button onClick={handleNameInput}>Done</Button>
-                                                </InputAdornment>
-                                            }
-                                        />
-                                        {signUpHooks.error.name && (
-                                            <FormHelperText id="component-error-text">{signUpHooks.error.name}</FormHelperText>
-                                        )}
-                                    </FormControl>
-                                </Grid>
-                            </Grid>
-                        </SignUpTabPanel>
-                        <SignUpTabPanel value={signUpHooks.tabValue} index={2}>
-                            <Grid container spacing={2}>
-                                <Grid item xs={12} sm={4}>
-                                    <TextField 
-                                        fullWidth 
-                                        label="Zip code" 
-                                        variant="standard" 
-                                        placeholder="Zip Code"
-                                        autoFocus={signUpHooks.tabValue === 2}
-                                        onChange={(event) => signUpHooks.setZipCode(event.target.value)}
-                                    />
-                                </Grid>
+                        <BirthdayInput 
+                            signUpHooks={signUpHooks} 
+                            handleBirthdayInput={handleBirthdayInput} 
+                            dateInputRef={dateInputRef} 
+                        />
+                        <NameInput 
+                            signUpHooks={signUpHooks} 
+                            handleNameInput={handleNameInput} 
+                        />
+                        <EmailInput 
+                            signUpHooks={signUpHooks} 
+                            handleEmailInput={handleEmailInput} 
+                        />
 
-                                <Grid item xs={12} sm={8}>
-                                    <TextField
-                                        disabled
-                                        fullWidth
-                                        label={signUpHooks.city+", "+signUpHooks.state}
-                                        variant="standard"
-                                        error={!!signUpHooks.error.zipCode}
-                                        InputProps={{
-                                            endAdornment: signUpHooks.error.zipCode && (
-                                                <InputAdornment position="end">
-                                                    <ErrorOutline color="error" />
-                                                </InputAdornment>
-                                            ),
-                                        }}
-                                    />
-                                    {signUpHooks.error.zipCode && (
-                                        <FormHelperText error>{signUpHooks.error.zipCode}</FormHelperText>
-                                    )}
-                                </Grid>
-                            </Grid>
-                        </SignUpTabPanel>
+
+
+
+
+
+
+
+                        
                         <SignUpTabPanel value={signUpHooks.tabValue} index={3}>
                             <Grid item xs={12} id="testID">
                                 {signUpHooks.error.name ? 
@@ -361,7 +341,6 @@ const WebSignUp = () => {
                                     }
                             </Grid>
                         </SignUpTabPanel>
-
                         <SignUpTabPanel value={signUpHooks.tabValue} index={4}>
                         <Grid container spacing={2}>
                             <Grid item xs={12}>
@@ -438,3 +417,101 @@ const WebSignUp = () => {
 }
 
 export default WebSignUp
+
+export const BirthdayInput = ({signUpHooks, handleBirthdayInput, dateInputRef}:any) => {
+    return(
+        <SignUpTabPanel value={signUpHooks.tabValue} index={0}>
+            <TextField
+                fullWidth
+                type="date"
+                label="Birthday"
+                InputLabelProps={{ shrink: true }}
+                onChange={handleBirthdayInput}
+                value={signUpHooks.birthday}
+                error={!!signUpHooks.error.birthday}
+                inputRef={dateInputRef} // Assign the ref to the input
+            />
+                {signUpHooks.error.birthday && (
+                <FormHelperText error>{signUpHooks.error.birthday}</FormHelperText>
+            )}
+        </SignUpTabPanel>
+    )
+}
+
+export const NameInput = ({signUpHooks, handleNameInput}:any) => {
+    return(
+        <SignUpTabPanel value={signUpHooks.tabValue} index={1}>
+            <Grid container spacing={2}>
+                <Grid item xs={12}>
+                    <FormControl error={!!signUpHooks.error.name} fullWidth variant="standard">
+                        <InputLabel htmlFor="standard-adornment-name">Name</InputLabel>
+                        <Input
+                            fullWidth
+                            id="standard-adornment-name"
+                            onChange={(e) => signUpHooks.setName(e.target.value)}
+                            value={signUpHooks.name}
+                            aria-describedby="component-error-text"
+                            autoFocus={signUpHooks.tabValue === 1}
+                            endAdornment={
+                                <InputAdornment position="end">
+                                    <Button onClick={handleNameInput}>Done</Button>
+                                </InputAdornment>
+                            }
+                        />
+                        {signUpHooks.error.name && (
+                            <FormHelperText id="component-error-text">{signUpHooks.error.name}</FormHelperText>
+                        )}
+                    </FormControl>
+                </Grid>
+            </Grid>
+        </SignUpTabPanel>
+    )
+}
+
+export const EmailInput = ({signUpHooks, handleEmailInput}:any) => {
+    return(
+        <SignUpTabPanel value={signUpHooks.tabValue} index={3}>
+            <Grid item xs={12} id="testID">
+                {signUpHooks.error.name ? 
+                        <FormControl error fullWidth variant="standard">
+                            <InputLabel htmlFor="standard-adornment-name-noerror">Email</InputLabel>
+                            <Input
+                                id="standard-adornment-name-noerror"
+                                onChange={(e) => signUpHooks.setUsername(e.target.value)}
+                                value={signUpHooks.username}
+                                aria-describedby="component-error-text"
+                                autoFocus={signUpHooks.tabValue === 3}
+                                endAdornment={
+                                    <InputAdornment position="end">
+                                        <Button
+                                            onClick={handleEmailInput}
+                                        >
+                                            Done
+                                        </Button>
+                                    </InputAdornment>
+                                }
+                            />
+                        </FormControl>
+                    :
+                        <FormControl fullWidth variant="standard">
+                            <InputLabel htmlFor="standard-adornment-name-error">Email</InputLabel>
+                            <Input
+                                id="standard-adornment-name-error"
+                                onChange={(e) => signUpHooks.setUsername(e.target.value)}
+                                value={signUpHooks.username}
+                                autoFocus={signUpHooks.tabValue === 3}
+                                endAdornment={
+                                    <InputAdornment position="end">
+                                        <Button
+                                            onClick={handleEmailInput}
+                                        >Done</Button>
+                                    </InputAdornment>
+                                }
+                            />
+                        
+                        </FormControl>
+                    }
+            </Grid>
+        </SignUpTabPanel>
+    )
+}
