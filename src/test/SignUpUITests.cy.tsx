@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react'
 import { mount } from 'cypress/react18'
 import { fetchCityState } from '../functions/AuthFunctions'
-import { BirthdayInput, EmailInput, NameInput, PasswordInput, ZipInput } from '../components/SignUp/WebSignUp'
+import { BirthdayInput, EmailInput, NameInput, PasswordInput, ZipInput } from '../components/SignUp'
 import { useSignUpHooks } from '../state/SignUpHooks'
 
 
@@ -184,55 +184,38 @@ describe('<EmailInput />', () => {
 })
 
 describe('<PasswordInput />', () => {
-  // Test to ensure the PasswordInput component renders
   it('renders the password input fields', () => {
-    mount(<PasswordInputTestWrapper testData="" />);
-    cy.get('#standard-adornment-password').should('exist');
-    cy.get('#standard-adornment-confirm-password').should('exist');
-  });
+    mount(<PasswordInputTestWrapper testData="" />)
+    cy.get('#standard-adornment-password').should('exist')
+    cy.get('#standard-adornment-confirm-password').should('exist')
+  })
 
-  // Test to toggle password visibility for both password and confirm password fields
   it('toggles password visibility', () => {
-    mount(<PasswordInputTestWrapper testData="" />);
-    // Initial state should hide the password
-    cy.get('#standard-adornment-password').should('have.attr', 'type', 'password');
-    cy.get('#standard-adornment-confirm-password').should('have.attr', 'type', 'password');
+    mount(<PasswordInputTestWrapper testData="" />)
 
-    // Click the visibility toggle button for the password field
-    cy.get('#standard-adornment-password + div button').click();
-    cy.get('#standard-adornment-password').should('have.attr', 'type', 'text');
+    cy.get('#standard-adornment-password').should('have.attr', 'type', 'password')
+    cy.get('#standard-adornment-confirm-password').should('have.attr', 'type', 'password')
+    cy.get('#standard-adornment-password + div button').click()
+    cy.get('#standard-adornment-password').should('have.attr', 'type', 'text')
+    cy.get('#standard-adornment-confirm-password + div button').click()
+    cy.get('#standard-adornment-confirm-password').should('have.attr', 'type', 'text')
+  })
 
-    // Click the visibility toggle button for the confirm password field
-    cy.get('#standard-adornment-confirm-password + div button').click();
-    cy.get('#standard-adornment-confirm-password').should('have.attr', 'type', 'text');
-  });
-
-  // Test to check if the form detects completeness based on password and confirm password inputs
   it('enables sign-up button when form is complete', () => {
-    const testData = 'ValidPassword123!';
-    mount(<PasswordInputTestWrapper testData={testData} />);
-    cy.get('#standard-adornment-password').type(testData);
-    cy.get('#standard-adornment-confirm-password').type(testData);
+    const testData = 'ValidPassword123!'
+    mount(<PasswordInputTestWrapper testData={testData} />)
+    cy.get('#standard-adornment-password').type(testData)
+    cy.get('#standard-adornment-confirm-password').type(testData)
+    cy.get('button').contains('Sign Up').should('not.be.disabled')
+  })
 
-    // Assuming your signUpHooks logic correctly sets formComplete to true when both passwords match and are valid
-    cy.get('button').contains('Sign Up').should('not.be.disabled');
-  });
-
-  // Test to simulate a sign-up attempt with valid input
   it('attempts sign-up with valid password', () => {
-    const testData = 'ValidPassword123!';
-    mount(<PasswordInputTestWrapper testData={testData} />);
-    cy.get('#standard-adornment-password').type(testData);
-    cy.get('#standard-adornment-confirm-password').type(testData);
+    const testData = 'ValidPassword123!'
+    mount(<PasswordInputTestWrapper testData={testData} />)
+    cy.get('#standard-adornment-password').type(testData)
+    cy.get('#standard-adornment-confirm-password').type(testData)
 
-    // Click the Sign Up button
-    cy.get('button').contains('Sign Up').click();
+    cy.get('button').contains('Sign Up').click()
+  })
 
-    // You might want to check for a successful sign-up indication, like a message or redirect
-    // This is highly dependent on how your application handles a successful sign-up
-    // Example:
-    // cy.contains('Sign Up Successful').should('exist');
-  });
-
-  // Add more tests as needed for error handling, invalid inputs, etc.
-});
+})
