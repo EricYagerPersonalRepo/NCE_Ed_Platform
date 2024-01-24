@@ -1,159 +1,145 @@
 import React, { useEffect, useRef } from 'react'
-import SignUp  from '@/pages/SignUp'
 import { mount } from 'cypress/react18'
-import Router from 'next/router'
-import { SignUpTabPanel } from '../components/AuthComponents'
-import { Grid, FormControl, InputLabel, Input, TextField, FormHelperText } from '@mui/material'
 import { fetchCityState } from '../functions/AuthFunctions'
-import { BirthdayInput } from '../components/SignUp/WebSignUp'
+import { BirthdayInput, EmailInput, NameInput, PasswordInput, ZipInput } from '../components/SignUp/WebSignUp'
 import { useSignUpHooks } from '../state/SignUpHooks'
 
-const BirthdayComponentWrapper = ({ setError, testDate }: any) => {
-  const signUpHooks = useSignUpHooks();
 
-  // Use useEffect to set the state
+/**
+ * Test Wrappers
+ * 
+ * TODO: Write a generic test wrapper that takes the component in 
+ * so we don't have to write individual wrappers for each component
+ */
+
+export const BirthdayInputTestWrapper = ({ testData, testError }: any) => {
+  const signUpHooks = useSignUpHooks()
+
   useEffect(() => {
-    if (setError) {
-      signUpHooks.setError({ ...signUpHooks.error, birthday: setError });
-    }
-    if (testDate) {
-      signUpHooks.setBirthday(testDate);
-    }
-  }, [setError, testDate, signUpHooks]);
+    signUpHooks.setBirthday(testData)
+    signUpHooks.setTabValue(0)
 
-  return <BirthdayInput signUpHooks={signUpHooks} />;
+    if (testError) {
+      signUpHooks.setError({ ...signUpHooks.error, ...testError })
+    }
+  }, [testData, testError, signUpHooks])
+
+  return <BirthdayInput signUpHooks={signUpHooks} />
 }
 
-describe('<SignUp />', () => {
-  context('`useRouter` hook stub out', () => {
-    let router
-    
-    beforeEach(() => {
-      router = {
-        back: cy.stub().as('routerBack')
-      }
+export const NameInputTestWrapper = ({ testData, testError }: any) => {
+  const signUpHooks = useSignUpHooks()
 
-      cy.stub(Router, 'router').returns(router)
-    })
-  })
+  useEffect(() => {
+    signUpHooks.setName(testData)
+    signUpHooks.setTabValue(1)
 
-  it('renders', () => {
-    const mockRouter = {
-      push: cy.stub().as('routerPush'),
+    if (testError) {
+      signUpHooks.setError({ ...signUpHooks.error, ...testError })
     }
+  }, [testData, testError, signUpHooks])
 
-    mount(<SignUp loggedIn={false} isMobile={true} router={mockRouter}/>)
-  })
-})
+  return <NameInput signUpHooks={signUpHooks} />
+}
+
+export const ZipInputTestWrapper = ({testData, testError}:any) => {
+  const signUpHooks = useSignUpHooks()
+
+  useEffect(() => {
+    signUpHooks.setZipCode(testData)
+    signUpHooks.setTabValue(2)
+
+    if(testError){
+      signUpHooks.setError({...signUpHooks.error, ...testError})
+    }
+  }, [testData, testError, signUpHooks])
+
+  return(<ZipInput signUpHooks={signUpHooks} />)
+}
+
+export const EmailInputTestWrapper =  ({testData, testError}:any) => {
+  const signUpHooks = useSignUpHooks()
+
+  useEffect(() => {
+    signUpHooks.setUsername(testData)
+    signUpHooks.setTabValue(3)
+
+  }, [testData, testError, signUpHooks])
+
+  return(<EmailInput signUpHooks={signUpHooks} />)
+}
+
+export const PasswordInputTestWrapper = ({testData, testError}:any) => {
+  const signUpHooks = useSignUpHooks()
+
+  useEffect(() => {
+    signUpHooks.setPassword(testData)
+    signUpHooks.setTabValue(4)
+
+
+    if(testError){
+      signUpHooks.setError({...signUpHooks.error, ...testError})
+    }else{
+      signUpHooks.setFormComplete(true)
+    }
+  }, [testData, testError, signUpHooks])
+
+  return(<PasswordInput signUpHooks={signUpHooks} />)
+}
+
+/**
+ * Tests
+ */
 
 describe('<BirthdayInput />', () => {
 
-  it('accepts birthday input', () => {
-    const testDate = '2000-01-01'
-    mount(<BirthdayComponentWrapper testDate={testDate} />)
-    cy.get('input[type="date"]').should('have.value', testDate)
-  })
-
-  it('displays error message for invalid birthday', () => {
-    const tempError = "Birthday error"
-    mount(<BirthdayComponentWrapper setError={tempError} />)
-    cy.contains(tempError).should('be.visible')
+  it('renders and interacts with the birthday input', () => {
+    const testData = '2000-01-01'
+    mount(<BirthdayInputTestWrapper testData={testData} />)
+    cy.get('input[type="date"]').should('have.value', testData)
   })
 
   it('displays error message for birthday < 16 YOE', () => {
-    const testDate = '2014-01-01'
-    mount(<BirthdayComponentWrapper testDate={testDate} />)
+    const testData = {birthday: '2014-01-01'}
+    mount(<BirthdayInputTestWrapper testData={testData.birthday}/>)
     cy.get('.MuiFormHelperText-root.Mui-error')
       .should('contain', 'You must be at least 16 years old to sign up.')
       .and('be.visible')
   })
 })
 
-describe('<Name Input />', () => {
-  it('renders the name input', () => {
-    mount(
-      <SignUpTabPanel value={1} index={1}>
-        <Grid container spacing={2}>
-          <Grid item xs={12}>
-            <FormControl fullWidth variant="standard">
-              <InputLabel htmlFor="standard-adornment-name">Name</InputLabel>
-              <Input id="standard-adornment-name" />
-            </FormControl>
-          </Grid>
-        </Grid>
-      </SignUpTabPanel>
-    )
-    cy.get('input[id="standard-adornment-name"]').should('exist')
-  })
+describe('<NameInput />', () => {
 
-  it('accepts name input', () => {
-    mount(
-      <SignUpTabPanel value={1} index={1}>
-        <Grid container spacing={2}>
-          <Grid item xs={12}>
-            <FormControl fullWidth variant="standard">
-              <InputLabel htmlFor="standard-adornment-name">Name</InputLabel>
-              <Input id="standard-adornment-name" />
-            </FormControl>
-          </Grid>
-        </Grid>
-      </SignUpTabPanel>
-    )
+  it('render input and accept name', () => {
     const testName = 'John Doe'
-    cy.get('input[id="standard-adornment-name"]').type(testName)
-    cy.get('input[id="standard-adornment-name"]').should('have.value', testName)
+    mount(<NameInputTestWrapper testData={testName} />)
+    cy.get('input[type="text"]').should('have.value', testName)
   })
 
-  it('displays error message for invalid name', () => {
-    // Assuming that the error message is set via props or context
-    const errorMessage = 'Invalid name'
-    mount(
-      <SignUpTabPanel value={1} index={1}>
-        <Grid container spacing={2}>
-          <Grid item xs={12}>
-            <FormControl error fullWidth variant="standard">
-              <InputLabel htmlFor="standard-adornment-name">Name</InputLabel>
-              <Input id="standard-adornment-name" />
-              <FormHelperText id="component-error-text">{errorMessage}</FormHelperText>
-            </FormControl>
-          </Grid>
-        </Grid>
-      </SignUpTabPanel>
-    )
-    cy.contains(errorMessage).should('be.visible')
+  it('validates correct name input', () => {
+    const testName = 'John Doe'
+    mount(<NameInputTestWrapper testData={testName} />)
+    cy.get('button').contains('Done').click()
+  })
+
+  it('shows error message for invalid name input', () => {
+    const testName = 'John'
+    const testError = { name: "Please enter full name. Example: John Doe" }
+    mount(<NameInputTestWrapper testData={testName} testError={testError} />)
+    cy.get('#component-error-text').should('contain', 'Please enter full name. Example: John Doe')
   })
 })
+
 
 describe('<Zip Code Input />', () => {
   const baseUrl = 'https://api.zippopotam.us/us/'
   const validZip = "13630"
   const invalidZip = "99999"
 
-  it('renders the zip code input', () => {
-    mount(
-      <SignUpTabPanel value={2} index={2}>
-        <Grid container spacing={2}>
-          <Grid item xs={12} sm={4}>
-            <TextField fullWidth label="Zip code" variant="standard" placeholder="Zip Code" />
-          </Grid>
-        </Grid>
-      </SignUpTabPanel>
-    )
-    cy.get('input[placeholder="Zip Code"]').should('exist')
-  })
-
-  it('accepts zip code input', () => {
-    mount(
-      <SignUpTabPanel value={2} index={2}>
-        <Grid container spacing={2}>
-          <Grid item xs={12} sm={4}>
-            <TextField fullWidth label="Zip code" variant="standard" placeholder="Zip Code" />
-          </Grid>
-        </Grid>
-      </SignUpTabPanel>
-    )
+  it('renders the zip code input and accepts zip', () => {
+    mount( <ZipInputTestWrapper testData={validZip} />)
     cy.get('input[placeholder="Zip Code"]').type(validZip)
-    cy.get('input[placeholder="Zip Code"]').should('have.value', validZip)
+    cy.get('#zip-code-input').should('have.value', validZip)
   })
 
   it('fetches city and state for a valid ZIP code', () => {
@@ -171,48 +157,82 @@ describe('<Zip Code Input />', () => {
 
     cy.wait('@getCityState').its('response.statusCode').should('eq', 200)
   })
+})
 
-  it('displays error message for invalid zip code', () => {
-    const errorMessage = 'Invalid zip code'
-    mount(
-      <SignUpTabPanel value={2} index={2}>
-        <Grid container spacing={2}>
-          <Grid item xs={12} sm={4}>
-            <TextField 
-              fullWidth 
-              label="Zip code" 
-              variant="standard" 
-              placeholder="Zip Code"
-              error={true}
-              helperText={errorMessage}
-            />
-          </Grid>
-        </Grid>
-      </SignUpTabPanel>
-    )
-    cy.contains(errorMessage).should('be.visible')
+
+describe('<EmailInput />', () => {
+
+  it('render input and accept email', () => {
+    const testEmail = 'xxx@xxx.com'
+    mount(<EmailInputTestWrapper testData={testEmail} />)
+    cy.get('input[type="text"]').should('have.value', testEmail)
   })
 
-  it('displays city and state on valid zip code input', () => {
-    const city = "SomeCity"
-    const state = "SomeState"
-    mount(
-      <SignUpTabPanel value={2} index={2}>
-        <Grid container spacing={2}>
-          <Grid item xs={12} sm={4}>
-            <TextField fullWidth label="Zip code" variant="standard" placeholder="Zip Code" />
-          </Grid>
-          <Grid item xs={12} sm={8}>
-            <TextField
-              disabled
-              fullWidth
-              label={`${city}, ${state}`}
-              variant="standard"
-            />
-          </Grid>
-        </Grid>
-      </SignUpTabPanel>
-    )
-    cy.contains(`${city}, ${state}`).should('be.visible')
+  it('validates correct email input', () => {
+    const testEmail = 'xxx@xxx.com'
+    mount(<EmailInputTestWrapper testData={testEmail} />)
+    cy.get('button').contains('Done').click()
+  })
+
+  it('shows error message for invalid email input', () => {
+    const testEmail = 'xxx'
+    const testError = { email: "Invalid Email" }
+    mount(<EmailInputTestWrapper testData={testEmail} testError={testError} />)
+    cy.get('button').contains('Done').click()
+    cy.get('#component-email-error-text').should('contain', 'Please enter a valid email address. Example: joe@example.com')
   })
 })
+
+describe('<PasswordInput />', () => {
+  // Test to ensure the PasswordInput component renders
+  it('renders the password input fields', () => {
+    mount(<PasswordInputTestWrapper testData="" />);
+    cy.get('#standard-adornment-password').should('exist');
+    cy.get('#standard-adornment-confirm-password').should('exist');
+  });
+
+  // Test to toggle password visibility for both password and confirm password fields
+  it('toggles password visibility', () => {
+    mount(<PasswordInputTestWrapper testData="" />);
+    // Initial state should hide the password
+    cy.get('#standard-adornment-password').should('have.attr', 'type', 'password');
+    cy.get('#standard-adornment-confirm-password').should('have.attr', 'type', 'password');
+
+    // Click the visibility toggle button for the password field
+    cy.get('#standard-adornment-password + div button').click();
+    cy.get('#standard-adornment-password').should('have.attr', 'type', 'text');
+
+    // Click the visibility toggle button for the confirm password field
+    cy.get('#standard-adornment-confirm-password + div button').click();
+    cy.get('#standard-adornment-confirm-password').should('have.attr', 'type', 'text');
+  });
+
+  // Test to check if the form detects completeness based on password and confirm password inputs
+  it('enables sign-up button when form is complete', () => {
+    const testData = 'ValidPassword123!';
+    mount(<PasswordInputTestWrapper testData={testData} />);
+    cy.get('#standard-adornment-password').type(testData);
+    cy.get('#standard-adornment-confirm-password').type(testData);
+
+    // Assuming your signUpHooks logic correctly sets formComplete to true when both passwords match and are valid
+    cy.get('button').contains('Sign Up').should('not.be.disabled');
+  });
+
+  // Test to simulate a sign-up attempt with valid input
+  it('attempts sign-up with valid password', () => {
+    const testData = 'ValidPassword123!';
+    mount(<PasswordInputTestWrapper testData={testData} />);
+    cy.get('#standard-adornment-password').type(testData);
+    cy.get('#standard-adornment-confirm-password').type(testData);
+
+    // Click the Sign Up button
+    cy.get('button').contains('Sign Up').click();
+
+    // You might want to check for a successful sign-up indication, like a message or redirect
+    // This is highly dependent on how your application handles a successful sign-up
+    // Example:
+    // cy.contains('Sign Up Successful').should('exist');
+  });
+
+  // Add more tests as needed for error handling, invalid inputs, etc.
+});

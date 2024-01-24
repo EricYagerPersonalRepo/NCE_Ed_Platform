@@ -242,7 +242,7 @@ export const BirthdayInput = ({signUpHooks}:any) => {
                 onChange={handleBirthdayInput}
                 value={signUpHooks.birthday}
                 error={!!signUpHooks.error.birthday}
-                inputRef={dateInputRef} // Assign the ref to the input
+                inputRef={dateInputRef}
             />
                 {signUpHooks.error.birthday && (
                 <FormHelperText error>{signUpHooks.error.birthday}</FormHelperText>
@@ -255,7 +255,7 @@ export const NameInput = ({signUpHooks}:any) => {
 
     // Validates the name input and updates related states.
     const handleNameInput:any = () => {
-        signUpHooks. setNameWaiting(true)
+        signUpHooks.setNameWaiting(true)
         if (namePattern.test(signUpHooks.name)) {
             setTimeout(() => {
                 signUpHooks.setNameComplete(true)
@@ -273,10 +273,11 @@ export const NameInput = ({signUpHooks}:any) => {
             <Grid container spacing={2}>
                 <Grid item xs={12}>
                     <FormControl error={!!signUpHooks.error.name} fullWidth variant="standard">
-                        <InputLabel htmlFor="standard-adornment-name">Name</InputLabel>
+                        <InputLabel htmlFor="name-input">Name</InputLabel>
                         <Input
+                            type="text"
                             fullWidth
-                            id="standard-adornment-name"
+                            id="name-input"
                             onChange={(e) => signUpHooks.setName(e.target.value)}
                             value={signUpHooks.name}
                             aria-describedby="component-error-text"
@@ -303,6 +304,7 @@ export const ZipInput = ({signUpHooks}:any) => {
             <Grid container spacing={2}>
                 <Grid item xs={12} sm={4}>
                     <TextField 
+                        id="zip-code-input"
                         fullWidth 
                         label="Zip code" 
                         variant="standard" 
@@ -328,7 +330,7 @@ export const ZipInput = ({signUpHooks}:any) => {
                         }}
                     />
                     {signUpHooks.error.zipCode && (
-                        <FormHelperText error>{signUpHooks.error.zipCode}</FormHelperText>
+                        <FormHelperText id="component-error-text" error>{signUpHooks.error.zipCode}</FormHelperText>
                     )}
                 </Grid>
             </Grid>
@@ -356,45 +358,28 @@ export const EmailInput = ({signUpHooks}:any) => {
     return(
         <SignUpTabPanel value={signUpHooks.tabValue} index={3}>
             <Grid item xs={12} id="testID">
-                {signUpHooks.error.name ? 
-                        <FormControl error fullWidth variant="standard">
-                            <InputLabel htmlFor="standard-adornment-name-noerror">Email</InputLabel>
-                            <Input
-                                id="standard-adornment-name-noerror"
-                                onChange={(e) => signUpHooks.setUsername(e.target.value)}
-                                value={signUpHooks.username}
-                                aria-describedby="component-error-text"
-                                autoFocus={signUpHooks.tabValue === 3}
-                                endAdornment={
-                                    <InputAdornment position="end">
-                                        <Button
-                                            onClick={handleEmailInput}
-                                        >
-                                            Done
-                                        </Button>
-                                    </InputAdornment>
-                                }
-                            />
-                        </FormControl>
-                    :
-                        <FormControl fullWidth variant="standard">
-                            <InputLabel htmlFor="standard-adornment-name-error">Email</InputLabel>
-                            <Input
-                                id="standard-adornment-name-error"
-                                onChange={(e) => signUpHooks.setUsername(e.target.value)}
-                                value={signUpHooks.username}
-                                autoFocus={signUpHooks.tabValue === 3}
-                                endAdornment={
-                                    <InputAdornment position="end">
-                                        <Button
-                                            onClick={handleEmailInput}
-                                        >Done</Button>
-                                    </InputAdornment>
-                                }
-                            />
-                        
-                        </FormControl>
-                    }
+                <FormControl error fullWidth variant="standard">
+                    <InputLabel htmlFor="standard-adornment-name-noerror">Email</InputLabel>
+                    <Input
+                        id="standard-adornment-name-noerror"
+                        onChange={(e) => signUpHooks.setUsername(e.target.value)}
+                        value={signUpHooks.username}
+                        aria-describedby="component-error-text"
+                        autoFocus={signUpHooks.tabValue === 3}
+                        endAdornment={
+                            <InputAdornment position="end">
+                                <Button
+                                    onClick={handleEmailInput}
+                                >
+                                    Done
+                                </Button>
+                            </InputAdornment>
+                        }
+                    />
+                    {signUpHooks.error.email && (
+                        <FormHelperText id="component-email-error-text">{signUpHooks.error.email}</FormHelperText>
+                    )}
+                </FormControl>
             </Grid>
         </SignUpTabPanel>
     )
