@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { WebSignUp } from '@/src/components/SignUp'
+import { MobileSignUp, WebSignUp } from '@/src/components/SignUp'
 
 /**
  * SignUp Component - Manages user sign-up process and handles redirection for authenticated users.
@@ -32,7 +32,7 @@ const SignUp = ({ loggedIn, isMobile, router }: any)  =>{
         }
     }, [loggedIn, router])
 
-    return isMobile ? <div>mobile</div> : <WebSignUp />
+    return isMobile ? <MobileSignUp /> : <WebSignUp />
 }
 
 export default SignUp

@@ -55,3 +55,60 @@ export interface CityStateCallProps {
 export interface AuthenticatedHomeProps {
     isMobile: boolean;
 }
+
+export interface SignUpHooks {
+    birthday: string;
+    setBirthday: (value: string) => void;
+    name: string;
+    setName: (value: string) => void;
+    city: string;
+    setCity: (value: string) => void;
+    zipCode: string;
+    setZipCode: (value: string) => void;
+    username: string;
+    setUsername: (value: string) => void;
+    state: string;
+    setState: (value: string) => void;
+    password: string;
+    setPassword: (value: string) => void;
+    confirmPassword: string;
+    setConfirmPassword: (value: string) => void;
+    showPassword: boolean;
+    setShowPassword: (value: boolean) => void;
+    showConfirmPassword: boolean;
+    setShowConfirmPassword: (value: boolean) => void;
+    error: SignUpFormErrors; // Assuming SignUpFormErrors is already defined elsewhere in your code
+    setError: (value: SignUpFormErrors) => void;
+    age: number;
+    setAge: (value: number) => void;
+    birthdayComplete: boolean;
+    setBirthdayComplete: (value: boolean) => void;
+    nameComplete: boolean;
+    setNameComplete: (value: boolean) => void;
+    locationComplete: boolean;
+    setLocationComplete: (value: boolean) => void;
+    emailComplete: boolean;
+    setEmailComplete: (value: boolean) => void;
+    birthdayWaiting: boolean;
+    setBirthdayWaiting: (value: boolean) => void;
+    nameWaiting: boolean;
+    setNameWaiting: (value: boolean) => void;
+    locationWaiting: boolean;
+    setLocationWaiting: (value: boolean) => void;
+    emailWaiting: boolean;
+    setEmailWaiting: (value: boolean) => void;
+    signupWaiting: boolean;
+    setSignupWaiting: (value: boolean) => void;
+    signupComplete: boolean;
+    setSignupComplete: (value: boolean) => void;
+    tfaOpen: boolean;
+    setTfaOpen: (value: boolean) => void;
+    tabValue: number;
+    setTabValue: (value: number) => void;
+    formComplete: boolean;
+    setFormComplete: (value: boolean) => void;
+    cognitoUserID: string;
+    setCognitoUserID: (value: string) => void;
+    userSignedIn: boolean;
+    setUserSignedIn: (value: boolean) => void;
+}

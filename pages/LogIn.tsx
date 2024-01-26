@@ -16,26 +16,7 @@ import { getCurrentUser } from 'aws-amplify/auth'
  *
  * @returns {JSX.Element} - The rendered component.
  */
-export default function LogIn() {
-
-  useEffect(() => {
-    checkAuthStatus()
-  }, [])
-
-  const checkAuthStatus = async () => {
-    try {
-      const user = await getCurrentUser()
-      console.log('User is signed in:', user)
-    } catch (error) {
-      console.error('User is not signed in:', error)
-    }
-  }
-
-  const splashOverrides = {
-    Heading: { style: { color: 'blue' } },
-    Body: { style: { fontSize: '16px' } },
-    image: { style: { width: '100px' }, src: './HomePageSplashImage.png' },
-  }
+export default function LogIn({loggedIn}:any) {
 
   return (
     <div></div>

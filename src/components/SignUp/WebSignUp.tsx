@@ -1,12 +1,13 @@
 import React, { useEffect, useRef } from 'react'
 import {  Grid, Container, Tabs, Tab, Modal } from '@mui/material'
 import { allowedZipCodes } from '@/src/functions/SignUpFunctions'
-import { SignUpTabItem, TwoFactorAuthForm } from '@/src/components/AuthComponents'
 import { zipCodePattern } from '@/src/types/SignUpTypes'
-import { fetchCityState, handleConfirmSignup, handleCreateStudentProfile, handleSignIn } from '@/src/functions/AuthFunctions'
+import { fetchCityState, handleConfirmSignup } from '@/src/functions/AuthFunctions'
 import { useSignUpHooks } from '@/src/state/SignUpHooks'
-import { BirthdayInput, EmailInput, NameInput, PasswordInput, ZipInput } from './Components'
+import { BirthdayInput, EmailInput, NameInput, PasswordInput, ZipInput,  SignUpTabItem, TwoFactorAuthForm } from './Components'
+import { handlePostTfaWorkflow } from './Functions'
 
+handlePostTfaWorkflow
 const WebSignUp = () => {
 
     const signUpHooks = useSignUpHooks()
@@ -15,48 +16,6 @@ const WebSignUp = () => {
     // Handles tab changes in the sign-up form.
     const handleTabChange:any = (event:any,newValue:number) => {
         signUpHooks.setTabValue(newValue)
-    }
-
-/**
- * Zip Code functions
- */
-
-    // Fetches city and state information based on the provided zip code.
-    const fetchCityStateCall = async(zip:any) => {
-        if(zip.length===5){
-            try {
-                const cityStateCall = await fetchCityState(zip)
-                signUpHooks.setCity(cityStateCall.City)
-                signUpHooks.setState(cityStateCall.State)
-            } catch (error) {
-                console.error('Failed to fetch city and state:', error)
-                signUpHooks.setCity('') //Reassigs error inputs to null string
-                signUpHooks.setState('') //Reassigs error inputs to null string
-            }
-        }
-    }
-
-/**
- * Amplify/Cognito Sign Up Workflow
- * Workflow handles initial sign up, TFA, sign in, and createUser
- */
-
-    // Manages the post-two-factor-authentication workflow.
-    const handlePostTfaWorkflow = async () => {
-        let {username,password} = {username:signUpHooks.username, password:signUpHooks.password}
-        try {
-            const signInResult = await handleSignIn({ username,password })
-
-            if (signInResult.isSignedIn) {
-                const profileInput= { cognitoUserID:signUpHooks.cognitoUserID, name:signUpHooks.name, email:signUpHooks.username, birthdate:signUpHooks.birthday }
-                const profileResult = await handleCreateStudentProfile(profileInput)
-                if (profileResult.isSignedUp) {
-                    window.location.href = '/StudentProfile'
-                }
-            }
-        } catch (error) {
-            console.error('Error in post-TFA workflow:', error)
-        }
     }
 
 /**
@@ -72,29 +31,6 @@ const WebSignUp = () => {
         }
     }, [signUpHooks.tabValue])
 
-
-
-    // Validates the zip code input and updates related states.
-    useEffect(() => {
-        if (zipCodePattern.test(signUpHooks.zipCode)) {
-            signUpHooks.setLocationWaiting(true)
-            if(allowedZipCodes.includes(parseInt(signUpHooks.zipCode))){
-                fetchCityStateCall(signUpHooks.zipCode)
-                signUpHooks.setError({...signUpHooks.error, zipCode:""})
-                setTimeout(() => {
-                    signUpHooks.setLocationComplete(true)
-                    signUpHooks.setTabValue(3)
-                    signUpHooks.setLocationWaiting(false)
-                }, 1000)
-            }else{
-                signUpHooks.setLocationWaiting(false)
-                signUpHooks.setError({...signUpHooks.error, zipCode:"Zip code outside supported area. Contact info@northcountryengineer.com for more information."})
-            }
-        } else{
-            signUpHooks.setCity('')
-            signUpHooks.setState('')
-        }
-    }, [signUpHooks.zipCode])
 
     // Updates the form's completion status based on the completion of individual steps.
     useEffect(()=> {
@@ -185,7 +121,7 @@ const WebSignUp = () => {
                     aria-labelledby="modal-title"
                     aria-describedby="modal-description"
                 >
-                    <TwoFactorAuthForm username={signUpHooks.username} onTfaSuccess={handlePostTfaWorkflow} handleConfirmSignup={handleConfirmSignup} />
+                    <TwoFactorAuthForm username={signUpHooks.username} signUpHooks={signUpHooks} handleConfirmSignup={handleConfirmSignup} />
                 </Modal>
             </Container>
         </Container>
