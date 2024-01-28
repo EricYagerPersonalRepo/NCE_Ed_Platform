@@ -17,6 +17,9 @@
       },
       "auth": {
         "nceeducationplatform6bfa7874": {}
+      },
+      "storage": {
+        "NCEEdAvatar": {}
       }
     }
   }

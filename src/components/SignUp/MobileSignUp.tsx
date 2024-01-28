@@ -22,7 +22,7 @@ const MobileSignUp = () => {
     }, [signUpHooks, signUpHooks.birthdayComplete, signUpHooks.nameComplete, signUpHooks.locationComplete, signUpHooks.emailComplete])
 
     return (
-        <Container maxWidth="lg">
+        <Container maxWidth="lg"  id="sign-up">
             <Grid container spacing={2} justifyContent="center">
                 <Grid item xs={12}>
                     {signUpHooks.tabValue === 0 && <BirthdayInput signUpHooks={signUpHooks} />}

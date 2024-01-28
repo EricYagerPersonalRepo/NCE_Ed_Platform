@@ -21,6 +21,12 @@ export const onCreateStudentProfile = /* GraphQL */ `subscription OnCreateStuden
       __typename
     }
     birthdate
+    avatar {
+      bucket
+      key
+      region
+      __typename
+    }
     createdAt
     updatedAt
     __typename
@@ -43,6 +49,12 @@ export const onUpdateStudentProfile = /* GraphQL */ `subscription OnUpdateStuden
       __typename
     }
     birthdate
+    avatar {
+      bucket
+      key
+      region
+      __typename
+    }
     createdAt
     updatedAt
     __typename
@@ -65,6 +77,12 @@ export const onDeleteStudentProfile = /* GraphQL */ `subscription OnDeleteStuden
       __typename
     }
     birthdate
+    avatar {
+      bucket
+      key
+      region
+      __typename
+    }
     createdAt
     updatedAt
     __typename

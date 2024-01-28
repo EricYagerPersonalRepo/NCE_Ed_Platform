@@ -1,0 +1,14 @@
+{
+  "resourceName": "NCEEdAvatar",
+  "policyUUID": "16052a47",
+  "bucketName": "nce-ed-avatar-bucket",
+  "storageAccess": "auth",
+  "guestAccess": [],
+  "authAccess": [
+    "CREATE_AND_UPDATE",
+    "READ",
+    "DELETE"
+  ],
+  "triggerFunction": "NONE",
+  "groupAccess": {}
+}

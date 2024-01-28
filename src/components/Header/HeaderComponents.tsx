@@ -1,6 +1,10 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Avatar, Button, Grid, IconButton, Menu, MenuItem, Typography } from '@mui/material'
 import { AccountCircle, MoreVert } from '@mui/icons-material'
+import { getUrl } from 'aws-amplify/storage';
+import { getUrlResult, validateFileExists } from '@/src/functions/AmplifyFunctions';
+import { useRouter } from 'next/router';
+import { signOut } from 'aws-amplify/auth';
 
 /**
  * CommonHeaderComponent - Displays the brand image in the header.
@@ -35,7 +39,7 @@ export const CommonHeaderComponent: React.FC = () => {
  * This component displays 'Sign Up' and 'Login' buttons aligned to the right side of the header.
  * It is intended for use in wider screen layouts typically found in web views.
  */
-export const HeaderAuthenticationButtons_Web: React.FC = () => {
+export const UnauthenticatedHeaderButtons_Web: React.FC = () => {
     // Define custom styles for the buttons
     const signUpButtonStyle: React.CSSProperties = {
         color: 'black', // Text color
@@ -70,7 +74,7 @@ export const HeaderAuthenticationButtons_Web: React.FC = () => {
  * It is designed for narrower screen layouts typically found in mobile views.
  * The state and event handlers manage the opening and closing of the dropdown menu.
  */
-export const HeaderAuthenticationButtons_Mobile: React.FC = () => {
+export const UnauthenticatedHeaderButtons_Mobile: React.FC = () => {
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
     const open = Boolean(anchorEl)
 
@@ -120,14 +124,49 @@ export const HeaderAuthenticationButtons_Mobile: React.FC = () => {
  * It is designed for web layouts and should be replaced with the user's avatar when available.
  */
 export const UserAccountButtons_Web: React.FC = () => {
+    const [avatarUrl, setAvatarUrl] = useState(null);
+    const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
+    const open = Boolean(anchorEl)
+
+    const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+        setAnchorEl(event.currentTarget)
+    }
+
+    const handleClose = () => {
+        setAnchorEl(null)
+    }
+
+    useEffect(() => {
+        const fetchAvatar = async () => {
+            try {
+                const avatarFileName = 'avatar/avatar.jpg'; 
+                const exists = await validateFileExists(avatarFileName);
+                if (exists) {
+                    const url:any = await getUrlResult(avatarFileName);
+                    setAvatarUrl(url);
+                }
+            } catch (error) {
+                console.error('Error fetching avatar:', error);
+            }
+        };
+
+        fetchAvatar();
+    }, [])
+
     return (
         <Grid container justifyContent="flex-end" style={{ flexGrow: 1 }}>
             <Grid item>
-                <IconButton>
+                <IconButton
+                    aria-label="more"
+                    aria-controls="long-menu"
+                    aria-haspopup="true"
+                    onClick={handleClick}
+                >
                     <Avatar>
-                        <AccountCircle /> {/* Placeholder icon, replace with user avatar when available */}
+                        <AccountCircle /> 
                     </Avatar>
                 </IconButton>
+                <Authenticated_UserHeaderMenu anchorEl = {anchorEl} open={open} handleClose={handleClose}/>
             </Grid>
         </Grid>
     )
@@ -164,21 +203,44 @@ export const UserAccountButtons_Mobile: React.FC = () => {
                 >
                     <MoreVert />
                 </IconButton>
-                <Menu
-                    id="long-menu"
-                    anchorEl={anchorEl}
-                    keepMounted
-                    open={open}
-                    onClose={handleClose}
-                >
-                    <MenuItem onClick={handleClose}>
-                        <Button color="inherit">Sign Up</Button>
-                    </MenuItem>
-                    <MenuItem onClick={handleClose}>
-                        <Button color="inherit">Login</Button>
-                    </MenuItem>
-                </Menu>
+                <Authenticated_UserHeaderMenu anchorEl = {anchorEl} open={open} handleClose={handleClose}/>
             </Grid>
         </Grid>
+    )
+}
+
+export const Authenticated_UserHeaderMenu = ({anchorEl, open, handleClose}:any) => {
+    const router = useRouter()
+
+    const handleMyCourses = () => {
+        handleClose(); // Close the menu
+        router.push('/Account'); // Redirect to the Account page
+    }
+
+    const handleLogout = async () => {
+        try {
+            await signOut()
+            handleClose()
+            router.push('/')
+        } catch (error) {
+            console.log('error signing out: ', error);
+        }
+    }
+
+    return(
+        <Menu
+            id="long-menu"
+            anchorEl={anchorEl}
+            keepMounted
+            open={open}
+            onClose={handleClose}
+        >
+            <MenuItem onClick={handleMyCourses}>
+                <Button color="inherit">My Courses</Button>
+            </MenuItem>
+            <MenuItem onClick={handleLogout}>
+                <Button color="inherit">Logout</Button>
+            </MenuItem>
+        </Menu>
     )
 }

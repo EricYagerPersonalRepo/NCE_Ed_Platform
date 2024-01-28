@@ -1,6 +1,6 @@
 import React from 'react'
 import { AppBar, Toolbar, useMediaQuery, useTheme } from '@mui/material'
-import { CommonHeaderComponent, HeaderAuthenticationButtons_Web, HeaderAuthenticationButtons_Mobile } from './HeaderComponents'
+import { CommonHeaderComponent, UnauthenticatedHeaderButtons_Web, UnauthenticatedHeaderButtons_Mobile } from './HeaderComponents'
 
 /**
  * Component for displaying the header when a user is not authenticated.
@@ -21,7 +21,7 @@ const UnauthenticatedHeader: React.FC = () => {
         <AppBar position="static" style={{ background: 'white' }} elevation = {0}>
             <Toolbar>
                 <CommonHeaderComponent />
-                {isMobile ? <HeaderAuthenticationButtons_Mobile /> : <HeaderAuthenticationButtons_Web />}
+                {isMobile ? <UnauthenticatedHeaderButtons_Mobile /> : <UnauthenticatedHeaderButtons_Web />}
             </Toolbar>
         </AppBar>
     )

@@ -22,6 +22,12 @@ export const createStudentProfile = /* GraphQL */ `mutation CreateStudentProfile
       __typename
     }
     birthdate
+    avatar {
+      bucket
+      key
+      region
+      __typename
+    }
     createdAt
     updatedAt
     __typename
@@ -45,6 +51,12 @@ export const updateStudentProfile = /* GraphQL */ `mutation UpdateStudentProfile
       __typename
     }
     birthdate
+    avatar {
+      bucket
+      key
+      region
+      __typename
+    }
     createdAt
     updatedAt
     __typename
@@ -68,6 +80,12 @@ export const deleteStudentProfile = /* GraphQL */ `mutation DeleteStudentProfile
       __typename
     }
     birthdate
+    avatar {
+      bucket
+      key
+      region
+      __typename
+    }
     createdAt
     updatedAt
     __typename

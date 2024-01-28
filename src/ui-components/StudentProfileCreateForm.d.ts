@@ -5,7 +5,7 @@
  **************************************************************************/
 
 import * as React from "react";
-import { AutocompleteProps, GridProps, TextFieldProps } from "@aws-amplify/ui-react";
+import { AutocompleteProps, GridProps, TextAreaFieldProps, TextFieldProps } from "@aws-amplify/ui-react";
 import { CourseProfile } from "../API.ts";
 export declare type EscapeHatchProps = {
     [elementHierarchy: string]: Record<string, unknown>;
@@ -28,6 +28,7 @@ export declare type StudentProfileCreateFormInputValues = {
     email?: string;
     CourseProfiles?: CourseProfile[];
     birthdate?: string;
+    avatar?: string;
 };
 export declare type StudentProfileCreateFormValidationValues = {
     cognitoUserID?: ValidationFunction<string>;
@@ -35,6 +36,7 @@ export declare type StudentProfileCreateFormValidationValues = {
     email?: ValidationFunction<string>;
     CourseProfiles?: ValidationFunction<CourseProfile>;
     birthdate?: ValidationFunction<string>;
+    avatar?: ValidationFunction<string>;
 };
 export declare type PrimitiveOverrideProps<T> = Partial<T> & React.DOMAttributes<HTMLDivElement>;
 export declare type StudentProfileCreateFormOverridesProps = {
@@ -44,6 +46,7 @@ export declare type StudentProfileCreateFormOverridesProps = {
     email?: PrimitiveOverrideProps<TextFieldProps>;
     CourseProfiles?: PrimitiveOverrideProps<AutocompleteProps>;
     birthdate?: PrimitiveOverrideProps<TextFieldProps>;
+    avatar?: PrimitiveOverrideProps<TextAreaFieldProps>;
 } & EscapeHatchProps;
 export declare type StudentProfileCreateFormProps = React.PropsWithChildren<{
     overrides?: StudentProfileCreateFormOverridesProps | undefined | null;

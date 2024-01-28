@@ -19,6 +19,12 @@ export const getStudentProfile = /* GraphQL */ `query GetStudentProfile($id: ID!
       __typename
     }
     birthdate
+    avatar {
+      bucket
+      key
+      region
+      __typename
+    }
     createdAt
     updatedAt
     __typename

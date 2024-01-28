@@ -8,6 +8,13 @@ export type CreateStudentProfileInput = {
   name: string,
   email: string,
   birthdate: string,
+  avatar?: AvatarObjectInput | null,
+};
+
+export type AvatarObjectInput = {
+  bucket: string,
+  key: string,
+  region: string,
 };
 
 export type ModelStudentProfileConditionInput = {
@@ -68,6 +75,7 @@ export type StudentProfile = {
   email: string,
   CourseProfiles?: ModelStudentProfileCourseProfileConnection | null,
   birthdate: string,
+  avatar?: AvatarObject | null,
   createdAt: string,
   updatedAt: string,
 };
@@ -99,12 +107,20 @@ export type CourseProfile = {
   updatedAt: string,
 };
 
+export type AvatarObject = {
+  __typename: "AvatarObject",
+  bucket: string,
+  key: string,
+  region: string,
+};
+
 export type UpdateStudentProfileInput = {
   id: string,
   cognitoUserID?: string | null,
   name?: string | null,
   email?: string | null,
   birthdate?: string | null,
+  avatar?: AvatarObjectInput | null,
 };
 
 export type DeleteStudentProfileInput = {
@@ -295,6 +311,12 @@ export type CreateStudentProfileMutation = {
       nextToken?: string | null,
     } | null,
     birthdate: string,
+    avatar?:  {
+      __typename: "AvatarObject",
+      bucket: string,
+      key: string,
+      region: string,
+    } | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -317,6 +339,12 @@ export type UpdateStudentProfileMutation = {
       nextToken?: string | null,
     } | null,
     birthdate: string,
+    avatar?:  {
+      __typename: "AvatarObject",
+      bucket: string,
+      key: string,
+      region: string,
+    } | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -339,6 +367,12 @@ export type DeleteStudentProfileMutation = {
       nextToken?: string | null,
     } | null,
     birthdate: string,
+    avatar?:  {
+      __typename: "AvatarObject",
+      bucket: string,
+      key: string,
+      region: string,
+    } | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -522,6 +556,12 @@ export type GetStudentProfileQuery = {
       nextToken?: string | null,
     } | null,
     birthdate: string,
+    avatar?:  {
+      __typename: "AvatarObject",
+      bucket: string,
+      key: string,
+      region: string,
+    } | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -706,6 +746,12 @@ export type OnCreateStudentProfileSubscription = {
       nextToken?: string | null,
     } | null,
     birthdate: string,
+    avatar?:  {
+      __typename: "AvatarObject",
+      bucket: string,
+      key: string,
+      region: string,
+    } | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -727,6 +773,12 @@ export type OnUpdateStudentProfileSubscription = {
       nextToken?: string | null,
     } | null,
     birthdate: string,
+    avatar?:  {
+      __typename: "AvatarObject",
+      bucket: string,
+      key: string,
+      region: string,
+    } | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -748,6 +800,12 @@ export type OnDeleteStudentProfileSubscription = {
       nextToken?: string | null,
     } | null,
     birthdate: string,
+    avatar?:  {
+      __typename: "AvatarObject",
+      bucket: string,
+      key: string,
+      region: string,
+    } | null,
     createdAt: string,
     updatedAt: string,
   } | null,

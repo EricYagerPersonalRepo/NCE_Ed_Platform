@@ -16,6 +16,7 @@ import {
   Icon,
   ScrollView,
   Text,
+  TextAreaField,
   TextField,
   useTheme,
 } from "@aws-amplify/ui-react";
@@ -199,6 +200,7 @@ export default function StudentProfileCreateForm(props) {
     email: "",
     CourseProfiles: [],
     birthdate: "",
+    avatar: "",
   };
   const [cognitoUserID, setCognitoUserID] = React.useState(
     initialValues.cognitoUserID
@@ -212,6 +214,7 @@ export default function StudentProfileCreateForm(props) {
     React.useState(false);
   const [courseProfilesRecords, setCourseProfilesRecords] = React.useState([]);
   const [birthdate, setBirthdate] = React.useState(initialValues.birthdate);
+  const [avatar, setAvatar] = React.useState(initialValues.avatar);
   const autocompleteLength = 10;
   const [errors, setErrors] = React.useState({});
   const resetStateValues = () => {
@@ -222,6 +225,7 @@ export default function StudentProfileCreateForm(props) {
     setCurrentCourseProfilesValue(undefined);
     setCurrentCourseProfilesDisplayValue("");
     setBirthdate(initialValues.birthdate);
+    setAvatar(initialValues.avatar);
     setErrors({});
   };
   const [
@@ -248,6 +252,7 @@ export default function StudentProfileCreateForm(props) {
     email: [{ type: "Required" }, { type: "Email" }],
     CourseProfiles: [],
     birthdate: [{ type: "Required" }],
+    avatar: [{ type: "JSON" }],
   };
   const runValidationTasks = async (
     fieldName,
@@ -312,6 +317,7 @@ export default function StudentProfileCreateForm(props) {
           email,
           CourseProfiles,
           birthdate,
+          avatar,
         };
         const validationResponses = await Promise.all(
           Object.keys(validations).reduce((promises, fieldName) => {
@@ -354,6 +360,9 @@ export default function StudentProfileCreateForm(props) {
             name: modelFields.name,
             email: modelFields.email,
             birthdate: modelFields.birthdate,
+            avatar: modelFields.avatar
+              ? JSON.parse(modelFields.avatar)
+              : modelFields.avatar,
           };
           const studentProfile = (
             await client.graphql({
@@ -416,6 +425,7 @@ export default function StudentProfileCreateForm(props) {
               email,
               CourseProfiles,
               birthdate,
+              avatar,
             };
             const result = onChange(modelFields);
             value = result?.cognitoUserID ?? value;
@@ -444,6 +454,7 @@ export default function StudentProfileCreateForm(props) {
               email,
               CourseProfiles,
               birthdate,
+              avatar,
             };
             const result = onChange(modelFields);
             value = result?.name ?? value;
@@ -472,6 +483,7 @@ export default function StudentProfileCreateForm(props) {
               email: value,
               CourseProfiles,
               birthdate,
+              avatar,
             };
             const result = onChange(modelFields);
             value = result?.email ?? value;
@@ -496,6 +508,7 @@ export default function StudentProfileCreateForm(props) {
               email,
               CourseProfiles: values,
               birthdate,
+              avatar,
             };
             const result = onChange(modelFields);
             values = result?.CourseProfiles ?? values;
@@ -584,6 +597,7 @@ export default function StudentProfileCreateForm(props) {
               email,
               CourseProfiles,
               birthdate: value,
+              avatar,
             };
             const result = onChange(modelFields);
             value = result?.birthdate ?? value;
@@ -598,6 +612,34 @@ export default function StudentProfileCreateForm(props) {
         hasError={errors.birthdate?.hasError}
         {...getOverrideProps(overrides, "birthdate")}
       ></TextField>
+      <TextAreaField
+        label="Avatar"
+        isRequired={false}
+        isReadOnly={false}
+        onChange={(e) => {
+          let { value } = e.target;
+          if (onChange) {
+            const modelFields = {
+              cognitoUserID,
+              name,
+              email,
+              CourseProfiles,
+              birthdate,
+              avatar: value,
+            };
+            const result = onChange(modelFields);
+            value = result?.avatar ?? value;
+          }
+          if (errors.avatar?.hasError) {
+            runValidationTasks("avatar", value);
+          }
+          setAvatar(value);
+        }}
+        onBlur={() => runValidationTasks("avatar", avatar)}
+        errorMessage={errors.avatar?.errorMessage}
+        hasError={errors.avatar?.hasError}
+        {...getOverrideProps(overrides, "avatar")}
+      ></TextAreaField>
       <Flex
         justifyContent="space-between"
         {...getOverrideProps(overrides, "CTAFlex")}
