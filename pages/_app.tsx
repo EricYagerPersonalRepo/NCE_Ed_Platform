@@ -10,6 +10,7 @@ import { AuthenticatedHeader, UnauthenticatedHeader } from '@/src/components/Hea
 import { AuthProvider } from '@/src/state/AuthGlobalState'
 import { useMediaQuery, useTheme } from '@mui/material'
 import { useRouter } from 'next/router'
+import { Hub } from 'aws-amplify/utils'
 
 Amplify.configure(amplifyconfiguration, {ssr: true})
 
@@ -21,6 +22,7 @@ const NCE_Education_App = ({ Component, pageProps }:any) => {
 
     const [loggedIn, setLoggedIn] = useState(false)
 
+
     useEffect(() => {
         async function checkAndSetAuthStatus() {
             try {
@@ -31,8 +33,15 @@ const NCE_Education_App = ({ Component, pageProps }:any) => {
                 setLoggedIn(false);
             }
         }
-    
-        checkAndSetAuthStatus();
+
+        checkAndSetAuthStatus()
+
+    }, [])
+
+    useEffect(()=> {
+        Hub.listen('auth', () => {
+            window.location.reload()
+        })
     }, [])
 
     return (

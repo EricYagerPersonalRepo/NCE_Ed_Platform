@@ -5,6 +5,7 @@ import { getUrl } from 'aws-amplify/storage';
 import { getUrlResult, validateFileExists } from '@/src/functions/AmplifyFunctions';
 import { useRouter } from 'next/router';
 import { signOut } from 'aws-amplify/auth';
+import { loginButtonStyle, signUpButtonStyle } from '@/src/style/HeaderStyle';
 
 /**
  * CommonHeaderComponent - Displays the brand image in the header.
@@ -33,6 +34,74 @@ export const CommonHeaderComponent: React.FC = () => {
     )
 }
 
+export const UnauthenticatedHeaderMenuOptions = ({isMobile}:any) => {
+    const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
+    const open = Boolean(anchorEl)
+    const router = useRouter()
+
+    const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+        setAnchorEl(event.currentTarget)
+    }
+
+    const handleClose = () => {
+        setAnchorEl(null)
+    }
+
+    const handleLoginClick = () => {
+        console.log("click happened")
+        router.push('/LogIn')
+    }
+
+    const handleSignUpClick = () => {
+        router.push("/SignUp")
+    }
+
+    if(isMobile) {
+        return(
+            <Grid container justifyContent="flex-end" style={{ flexGrow: 1 }}>
+                <Grid item>
+                    <IconButton
+                        aria-label="more"
+                        aria-controls="long-menu"
+                        aria-haspopup="true"
+                        onClick={handleClick}
+                        color="default"
+                    >
+                        <MoreVert />
+                    </IconButton>
+                    <Menu
+                        id="long-menu"
+                        anchorEl={anchorEl}
+                        keepMounted
+                        open={open}
+                        onClose={handleClose}
+                    >
+                        <MenuItem onClick={handleSignUpClick}>
+                            <Button color="inherit">Sign Up</Button>
+                        </MenuItem>
+                        <MenuItem onClick={handleLoginClick}>
+                            <Button color="inherit">Login</Button>
+                        </MenuItem>
+                    </Menu>
+                </Grid>
+            </Grid>
+        )
+    }
+
+    else {
+        return(
+            <Grid container justifyContent="flex-end" style={{ flexGrow: 1 }} spacing={2}>
+                <Grid item>
+                    <Button onClick={handleSignUpClick} style={signUpButtonStyle}>Sign Up</Button>
+                </Grid>
+                <Grid item>
+                    <Button onClick={handleLoginClick} style={loginButtonStyle}>Login</Button>
+                </Grid>
+            </Grid>
+        )
+    }
+}
+
 /**
  * Component for rendering authentication buttons for web view.
  * 
@@ -40,31 +109,7 @@ export const CommonHeaderComponent: React.FC = () => {
  * It is intended for use in wider screen layouts typically found in web views.
  */
 export const UnauthenticatedHeaderButtons_Web: React.FC = () => {
-    // Define custom styles for the buttons
-    const signUpButtonStyle: React.CSSProperties = {
-        color: 'black', // Text color
-        backgroundColor: 'white', // Button color
-        border: '1px solid black', // Border color
-        textTransform: 'none' // Optional, keeps the text case as is
-    }
-
-    const loginButtonStyle: React.CSSProperties = {
-        color: 'white', // Text color
-        backgroundColor: 'black', // Button color
-        border: '1px solid black', // Border color
-        textTransform: 'none' // Optional, keeps the text case as is
-    }
-
-    return (
-        <Grid container justifyContent="flex-end" style={{ flexGrow: 1 }} spacing={2}>
-            <Grid item>
-                <Button style={signUpButtonStyle}>Sign Up</Button>
-            </Grid>
-            <Grid item>
-                <Button style={loginButtonStyle}>Login</Button>
-            </Grid>
-        </Grid>
-    )
+    return ( <UnauthenticatedHeaderMenuOptions isMobile={false} />)
 }
 
 /**
@@ -75,46 +120,7 @@ export const UnauthenticatedHeaderButtons_Web: React.FC = () => {
  * The state and event handlers manage the opening and closing of the dropdown menu.
  */
 export const UnauthenticatedHeaderButtons_Mobile: React.FC = () => {
-    const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
-    const open = Boolean(anchorEl)
-
-    const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-        setAnchorEl(event.currentTarget)
-    }
-
-    const handleClose = () => {
-        setAnchorEl(null)
-    }
-
-    return (
-        <Grid container justifyContent="flex-end" style={{ flexGrow: 1 }}>
-            <Grid item>
-                <IconButton
-                    aria-label="more"
-                    aria-controls="long-menu"
-                    aria-haspopup="true"
-                    onClick={handleClick}
-                    color="default"
-                >
-                    <MoreVert />
-                </IconButton>
-                <Menu
-                    id="long-menu"
-                    anchorEl={anchorEl}
-                    keepMounted
-                    open={open}
-                    onClose={handleClose}
-                >
-                    <MenuItem onClick={handleClose}>
-                        <Button color="inherit">Sign Up</Button>
-                    </MenuItem>
-                    <MenuItem onClick={handleClose}>
-                        <Button color="inherit">Login</Button>
-                    </MenuItem>
-                </Menu>
-            </Grid>
-        </Grid>
-    )
+    return ( <UnauthenticatedHeaderMenuOptions isMobile={true} /> )
 }
 
 /**
@@ -214,7 +220,7 @@ export const Authenticated_UserHeaderMenu = ({anchorEl, open, handleClose}:any) 
 
     const handleMyCourses = () => {
         handleClose(); // Close the menu
-        router.push('/Account'); // Redirect to the Account page
+        router.push('/StudentProfile'); // Redirect to the Account page
     }
 
     const handleLogout = async () => {

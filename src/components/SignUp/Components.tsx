@@ -240,13 +240,19 @@ export const EmailInput = ({signUpHooks}:any) => {
 }
 
 export const PasswordInput = ({signUpHooks}:any) => {
+    const username = signUpHooks.username
+    const password = signUpHooks.password
 
     // Handles the sign-up submission to AWS Amplify.
     async function handleSignUp() {
         try {
             const response:SignUpOutput = await signUp({
-                username: signUpHooks.username,
-                password: signUpHooks.password,
+                username,
+                password,
+                options: {
+                    autoSignIn: true,
+                    userAttributes: {}
+                }
             })
 
             if (response.nextStep && response.nextStep.signUpStep === "CONFIRM_SIGN_UP") {

@@ -11,6 +11,8 @@ import { checkAuthStatus } from '../functions/AuthFunctions'
 interface AuthContextType {
     loggedIn: boolean
     setLoggedIn: React.Dispatch<React.SetStateAction<boolean>>
+    login: any
+    logout: any
 }
 
 /**
@@ -19,7 +21,7 @@ interface AuthContextType {
  * This context provides a way to share the user's logged-in status across the application.
  * It contains a default state with 'loggedIn' set to false and a placeholder function for 'setLoggedIn'.
  */
-const AuthContext = createContext<AuthContextType>({ loggedIn: false, setLoggedIn: () => {} })
+const AuthContext = createContext<AuthContextType>({ loggedIn: false, setLoggedIn: () => {}, login: ()=>{}, logout: ()=>{} })
 
 /**
  * Props for AuthProvider component.
@@ -42,6 +44,14 @@ interface AuthProviderProps {
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     const [loggedIn, setLoggedIn] = useState(false)
 
+    const login = () => {
+        setLoggedIn(true);
+    };
+    
+    const logout = () => {
+        setLoggedIn(false);
+    };
+
     useEffect(() => {
         async function checkAndSetAuthStatus() {
             try {
@@ -56,7 +66,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     }, [])
 
     return (
-        <AuthContext.Provider value={{ loggedIn, setLoggedIn }}>
+        <AuthContext.Provider value={{ loggedIn, setLoggedIn, login, logout }}>
             {children}
         </AuthContext.Provider>
     )
