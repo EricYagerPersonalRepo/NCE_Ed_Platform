@@ -1,24 +1,25 @@
-import React, { useState } from 'react';
-import { Button, Drawer, Grid, List, ListItem, ListItemText, Typography } from '@mui/material';
+import React, { useState } from 'react'
+import { Button, Drawer, Grid, List, ListItem, ListItemText, Typography } from '@mui/material'
+import { MyAccountView, MyCourseView } from './StudentProfileComponents'
 
-const WebStudentProfile = ({ isLoggedIn }: any) => {
-    const [activeView, setActiveView] = useState('Account');
+const WebStudentProfile = ({ isLoggedIn, userID }: any) => {
+    const [activeView, setActiveView] = useState('Account')
 
     const handleMenuClick = (view: string) => {
-        setActiveView(view);
-    };
+        setActiveView(view)
+    }
 
     const renderActiveView = () => {
         switch (activeView) {
             case 'Account':
-                return <div>Account Information</div>;
+                return <MyAccountView userID={userID}/>
             case 'My Courses':
-                return <div>My Courses Content</div>;
+                return <MyCourseView />
             // Add more cases for other views
             default:
-                return <div>Welcome to Your Dashboard</div>;
+                return <div>Welcome to Your Dashboard</div>
         }
-    };
+    }
 
     return (
         <Grid container>
@@ -50,7 +51,8 @@ const WebStudentProfile = ({ isLoggedIn }: any) => {
                 {renderActiveView()}
             </Grid>
         </Grid>
-    );
+    )
+
 }
 
-export default WebStudentProfile;
+export default WebStudentProfile

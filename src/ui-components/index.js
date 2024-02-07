@@ -7,9 +7,13 @@
 export { default as Auth } from "./Auth";
 export { default as AuthDark } from "./AuthDark";
 export { default as AuthenticatedHeader } from "./AuthenticatedHeader";
+export { default as AvatarObjectCreateForm } from "./AvatarObjectCreateForm";
+export { default as AvatarObjectUpdateForm } from "./AvatarObjectUpdateForm";
 export { default as CTASection } from "./CTASection";
 export { default as CheckoutPayment } from "./CheckoutPayment";
 export { default as ContactUs } from "./ContactUs";
+export { default as CourseEnrollmentCreateForm } from "./CourseEnrollmentCreateForm";
+export { default as CourseEnrollmentUpdateForm } from "./CourseEnrollmentUpdateForm";
 export { default as CourseProfileCreateForm } from "./CourseProfileCreateForm";
 export { default as CourseProfileUpdateForm } from "./CourseProfileUpdateForm";
 export { default as DataRow } from "./DataRow";

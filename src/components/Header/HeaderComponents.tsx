@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from 'react'
 import { Avatar, Button, Grid, IconButton, Menu, MenuItem, Typography } from '@mui/material'
 import { AccountCircle, MoreVert } from '@mui/icons-material'
-import { getUrl } from 'aws-amplify/storage';
-import { getUrlResult, validateFileExists } from '@/src/functions/AmplifyFunctions';
-import { useRouter } from 'next/router';
-import { signOut } from 'aws-amplify/auth';
-import { loginButtonStyle, signUpButtonStyle } from '@/src/style/HeaderStyle';
+import { getUrlResult, validateFileExists } from '@/src/functions/AmplifyFunctions'
+import { useRouter } from 'next/router'
+import { getCurrentUser, signOut } from 'aws-amplify/auth'
+import { loginButtonStyle, signUpButtonStyle } from '@/src/style/HeaderStyle'
 
 /**
  * CommonHeaderComponent - Displays the brand image in the header.
@@ -48,7 +47,6 @@ export const UnauthenticatedHeaderMenuOptions = ({isMobile}:any) => {
     }
 
     const handleLoginClick = () => {
-        console.log("click happened")
         router.push('/LogIn')
     }
 
@@ -129,10 +127,10 @@ export const UnauthenticatedHeaderButtons_Mobile: React.FC = () => {
  * This component shows an avatar icon button, representing the user's account.
  * It is designed for web layouts and should be replaced with the user's avatar when available.
  */
-export const UserAccountButtons_Web: React.FC = () => {
-    const [avatarUrl, setAvatarUrl] = useState(null);
-    const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
-    const open = Boolean(anchorEl)
+export const UserAccountButtons_Web = ({ userID }: any) => {
+    const [avatarUrl, setAvatarUrl] = useState<string>("");
+    const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+    const open = Boolean(anchorEl);
 
     const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
         setAnchorEl(event.currentTarget)
@@ -145,38 +143,50 @@ export const UserAccountButtons_Web: React.FC = () => {
     useEffect(() => {
         const fetchAvatar = async () => {
             try {
-                const avatarFileName = 'avatar/avatar.jpg'; 
-                const exists = await validateFileExists(avatarFileName);
-                if (exists) {
-                    const url:any = await getUrlResult(avatarFileName);
-                    setAvatarUrl(url);
+                const currentUser = await getCurrentUser();
+                if (currentUser && currentUser.userId) {
+                    const avatarFileName = `avatars/${currentUser.userId}/avatar.png`;
+                    const exists = await validateFileExists(avatarFileName);
+                    if (exists) {
+                        const urlResult:any = await getUrlResult(avatarFileName);
+                        console.log("URLRESULT: ", urlResult.url.toString())
+                        if (urlResult.url.href) {
+                            setAvatarUrl(urlResult.url.toString());
+                        }
+                    }
                 }
             } catch (error) {
-                console.error('Error fetching avatar:', error);
+                console.error("Error fetching user's avatar:", error);
             }
         };
-
         fetchAvatar();
-    }, [])
+    }, []);
 
     return (
         <Grid container justifyContent="flex-end" style={{ flexGrow: 1 }}>
             <Grid item>
                 <IconButton
-                    aria-label="more"
-                    aria-controls="long-menu"
+                    aria-label="account of current user"
+                    aria-controls="menu-appbar"
                     aria-haspopup="true"
                     onClick={handleClick}
+                    color="inherit"
                 >
-                    <Avatar>
-                        <AccountCircle /> 
-                    </Avatar>
+                    {avatarUrl ? (
+                        <Avatar src={avatarUrl} />
+                    ) : (
+                        <Avatar>
+                            <AccountCircle />
+                        </Avatar>
+                    )}
                 </IconButton>
-                <Authenticated_UserHeaderMenu anchorEl = {anchorEl} open={open} handleClose={handleClose}/>
+                <Authenticated_UserHeaderMenu anchorEl={anchorEl} open={open} handleClose={handleClose} />
+                <a href={avatarUrl} target="_blank" rel="noreferrer">click it </a>
             </Grid>
         </Grid>
-    )
-}
+    );
+};
+
 
 /**
  * Component for displaying user account options for mobile view.
@@ -219,8 +229,8 @@ export const Authenticated_UserHeaderMenu = ({anchorEl, open, handleClose}:any) 
     const router = useRouter()
 
     const handleMyCourses = () => {
-        handleClose(); // Close the menu
-        router.push('/StudentProfile'); // Redirect to the Account page
+        handleClose() // Close the menu
+        router.push('/StudentProfile') // Redirect to the Account page
     }
 
     const handleLogout = async () => {
@@ -229,7 +239,7 @@ export const Authenticated_UserHeaderMenu = ({anchorEl, open, handleClose}:any) 
             handleClose()
             router.push('/')
         } catch (error) {
-            console.log('error signing out: ', error);
+            console.log('error signing out: ', error)
         }
     }
 

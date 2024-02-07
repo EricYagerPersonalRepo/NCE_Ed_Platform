@@ -1,22 +1,45 @@
-type StudentProfile @model @auth(rules: [{allow: public}]) {
+type StudentProfile @model @auth(rules: [{ allow: public }]) {
   id: ID!
   cognitoUserID: String!
   name: String!
   email: AWSEmail!
-  CourseProfiles: [CourseProfile] @manyToMany(relationName: "StudentProfileCourseProfile")
   birthdate: AWSDate!
   avatar: AvatarObject
+  courseEnrollments: [CourseEnrollment] @hasMany(indexName: "byStudent", fields: ["id"])
 }
 
-type CourseProfile @model @auth(rules: [{allow: public}]) {
+type CourseProfile @model @auth(rules: [{ allow: public }]) {
   id: ID!
-  studentprofiles: [StudentProfile] @manyToMany(relationName: "StudentProfileCourseProfile")
-  title: String
+  title: String!
   description: String
+  courseEnrollments: [CourseEnrollment] @hasMany(indexName: "byCourse", fields: ["id"])
 }
 
-type AvatarObject {
+type CourseEnrollment @model @auth(rules: [{ allow: public }]){
+  id: ID!
+  studentProfileID: ID! @index(name: "byStudent", sortKeyFields: ["id"])
+  courseProfileID: ID! @index(name: "byCourse", sortKeyFields: ["id"])
+  studentProfile: StudentProfile! @belongsTo(fields: ["studentProfileID"])
+  courseProfile: CourseProfile! @belongsTo(fields: ["courseProfileID"])
+  enrollmentDate: AWSDateTime
+  progress: Progress
+  state: CourseState
+}
+
+type AvatarObject @model @auth(rules: [{ allow: public }]){
   bucket: String!
   key: String!
   region: String!
+}
+
+enum Progress {
+  NOT_STARTED
+  IN_PROGRESS
+  COMPLETED
+}
+
+enum CourseState {
+  ACTIVE
+  PAUSED
+  COMPLETED
 }

@@ -20,16 +20,10 @@ import {
   useTheme,
 } from "@aws-amplify/ui-react";
 import { fetchByPath, getOverrideProps, validateField } from "./utils";
-import {
-  getCourseProfile,
-  listStudentProfileCourseProfiles,
-  listStudentProfiles,
-  studentProfileCourseProfilesByCourseProfileId,
-} from "../graphql/queries";
 import { generateClient } from "aws-amplify/api";
+import { getCourseProfile, listCourseEnrollments } from "../graphql/queries";
 import {
-  createStudentProfileCourseProfile,
-  deleteStudentProfileCourseProfile,
+  updateCourseEnrollment,
   updateCourseProfile,
 } from "../graphql/mutations";
 const client = generateClient();
@@ -201,22 +195,21 @@ export default function CourseProfileUpdateForm(props) {
     ...rest
   } = props;
   const initialValues = {
-    studentprofiles: [],
     title: "",
     description: "",
+    courseEnrollments: [],
   };
-  const [studentprofiles, setStudentprofiles] = React.useState(
-    initialValues.studentprofiles
-  );
-  const [studentprofilesLoading, setStudentprofilesLoading] =
-    React.useState(false);
-  const [studentprofilesRecords, setStudentprofilesRecords] = React.useState(
-    []
-  );
   const [title, setTitle] = React.useState(initialValues.title);
   const [description, setDescription] = React.useState(
     initialValues.description
   );
+  const [courseEnrollments, setCourseEnrollments] = React.useState(
+    initialValues.courseEnrollments
+  );
+  const [courseEnrollmentsLoading, setCourseEnrollmentsLoading] =
+    React.useState(false);
+  const [courseEnrollmentsRecords, setCourseEnrollmentsRecords] =
+    React.useState([]);
   const autocompleteLength = 10;
   const [errors, setErrors] = React.useState({});
   const resetStateValues = () => {
@@ -224,21 +217,23 @@ export default function CourseProfileUpdateForm(props) {
       ? {
           ...initialValues,
           ...courseProfileRecord,
-          studentprofiles: linkedStudentprofiles,
+          courseEnrollments: linkedCourseEnrollments,
         }
       : initialValues;
-    setStudentprofiles(cleanValues.studentprofiles ?? []);
-    setCurrentStudentprofilesValue(undefined);
-    setCurrentStudentprofilesDisplayValue("");
     setTitle(cleanValues.title);
     setDescription(cleanValues.description);
+    setCourseEnrollments(cleanValues.courseEnrollments ?? []);
+    setCurrentCourseEnrollmentsValue(undefined);
+    setCurrentCourseEnrollmentsDisplayValue("");
     setErrors({});
   };
   const [courseProfileRecord, setCourseProfileRecord] = React.useState(
     courseProfileModelProp
   );
-  const [linkedStudentprofiles, setLinkedStudentprofiles] = React.useState([]);
-  const canUnlinkStudentprofiles = false;
+  const [linkedCourseEnrollments, setLinkedCourseEnrollments] = React.useState(
+    []
+  );
+  const canUnlinkCourseEnrollments = false;
   React.useEffect(() => {
     const queryData = async () => {
       const record = idProp
@@ -249,53 +244,39 @@ export default function CourseProfileUpdateForm(props) {
             })
           )?.data?.getCourseProfile
         : courseProfileModelProp;
-      const linkedStudentprofiles = record
-        ? (
-            await client.graphql({
-              query: studentProfileCourseProfilesByCourseProfileId.replaceAll(
-                "__typename",
-                ""
-              ),
-              variables: {
-                courseProfileId: record.id,
-              },
-            })
-          ).data.studentProfileCourseProfilesByCourseProfileId.items.map(
-            (t) => t.studentProfile
-          )
-        : [];
-      setLinkedStudentprofiles(linkedStudentprofiles);
+      const linkedCourseEnrollments = record?.courseEnrollments?.items ?? [];
+      setLinkedCourseEnrollments(linkedCourseEnrollments);
       setCourseProfileRecord(record);
     };
     queryData();
   }, [idProp, courseProfileModelProp]);
   React.useEffect(resetStateValues, [
     courseProfileRecord,
-    linkedStudentprofiles,
+    linkedCourseEnrollments,
   ]);
   const [
-    currentStudentprofilesDisplayValue,
-    setCurrentStudentprofilesDisplayValue,
+    currentCourseEnrollmentsDisplayValue,
+    setCurrentCourseEnrollmentsDisplayValue,
   ] = React.useState("");
-  const [currentStudentprofilesValue, setCurrentStudentprofilesValue] =
+  const [currentCourseEnrollmentsValue, setCurrentCourseEnrollmentsValue] =
     React.useState(undefined);
-  const studentprofilesRef = React.createRef();
+  const courseEnrollmentsRef = React.createRef();
   const getIDValue = {
-    studentprofiles: (r) => JSON.stringify({ id: r?.id }),
+    courseEnrollments: (r) => JSON.stringify({ id: r?.id }),
   };
-  const studentprofilesIdSet = new Set(
-    Array.isArray(studentprofiles)
-      ? studentprofiles.map((r) => getIDValue.studentprofiles?.(r))
-      : getIDValue.studentprofiles?.(studentprofiles)
+  const courseEnrollmentsIdSet = new Set(
+    Array.isArray(courseEnrollments)
+      ? courseEnrollments.map((r) => getIDValue.courseEnrollments?.(r))
+      : getIDValue.courseEnrollments?.(courseEnrollments)
   );
   const getDisplayValue = {
-    studentprofiles: (r) =>
-      `${r?.cognitoUserID ? r?.cognitoUserID + " - " : ""}${r?.id}`,
+    courseEnrollments: (r) =>
+      `${r?.progress ? r?.progress + " - " : ""}${r?.id}`,
   };
   const validations = {
-    studentprofiles: [],
-    title: [],
+    title: [{ type: "Required" }],
     description: [],
+    courseEnrollments: [],
   };
   const runValidationTasks = async (
     fieldName,
@@ -314,18 +295,15 @@ export default function CourseProfileUpdateForm(props) {
     setErrors((errors) => ({ ...errors, [fieldName]: validationResponse }));
     return validationResponse;
   };
-  const fetchStudentprofilesRecords = async (value) => {
-    setStudentprofilesLoading(true);
+  const fetchCourseEnrollmentsRecords = async (value) => {
+    setCourseEnrollmentsLoading(true);
     const newOptions = [];
     let newNext = "";
     while (newOptions.length < autocompleteLength && newNext != null) {
       const variables = {
         limit: autocompleteLength * 5,
         filter: {
-          or: [
-            { cognitoUserID: { contains: value } },
-            { id: { contains: value } },
-          ],
+          or: [{ progress: { contains: value } }, { id: { contains: value } }],
         },
       };
       if (newNext) {
@@ -333,21 +311,22 @@ export default function CourseProfileUpdateForm(props) {
       }
       const result = (
         await client.graphql({
-          query: listStudentProfiles.replaceAll("__typename", ""),
+          query: listCourseEnrollments.replaceAll("__typename", ""),
           variables,
         })
-      )?.data?.listStudentProfiles?.items;
+      )?.data?.listCourseEnrollments?.items;
       var loaded = result.filter(
-        (item) => !studentprofilesIdSet.has(getIDValue.studentprofiles?.(item))
+        (item) =>
+          !courseEnrollmentsIdSet.has(getIDValue.courseEnrollments?.(item))
       );
       newOptions.push(...loaded);
       newNext = result.nextToken;
     }
-    setStudentprofilesRecords(newOptions.slice(0, autocompleteLength));
-    setStudentprofilesLoading(false);
+    setCourseEnrollmentsRecords(newOptions.slice(0, autocompleteLength));
+    setCourseEnrollmentsLoading(false);
   };
   React.useEffect(() => {
-    fetchStudentprofilesRecords("");
+    fetchCourseEnrollmentsRecords("");
   }, []);
   return (
     <Grid
@@ -358,9 +337,9 @@ export default function CourseProfileUpdateForm(props) {
       onSubmit={async (event) => {
         event.preventDefault();
         let modelFields = {
-          studentprofiles: studentprofiles ?? null,
-          title: title ?? null,
+          title,
           description: description ?? null,
+          courseEnrollments: courseEnrollments ?? null,
         };
         const validationResponses = await Promise.all(
           Object.keys(validations).reduce((promises, fieldName) => {
@@ -399,108 +378,59 @@ export default function CourseProfileUpdateForm(props) {
             }
           });
           const promises = [];
-          const studentprofilesToLinkMap = new Map();
-          const studentprofilesToUnLinkMap = new Map();
-          const studentprofilesMap = new Map();
-          const linkedStudentprofilesMap = new Map();
-          studentprofiles.forEach((r) => {
-            const count = studentprofilesMap.get(
-              getIDValue.studentprofiles?.(r)
-            );
-            const newCount = count ? count + 1 : 1;
-            studentprofilesMap.set(getIDValue.studentprofiles?.(r), newCount);
-          });
-          linkedStudentprofiles.forEach((r) => {
-            const count = linkedStudentprofilesMap.get(
-              getIDValue.studentprofiles?.(r)
-            );
-            const newCount = count ? count + 1 : 1;
-            linkedStudentprofilesMap.set(
-              getIDValue.studentprofiles?.(r),
-              newCount
-            );
-          });
-          linkedStudentprofilesMap.forEach((count, id) => {
-            const newCount = studentprofilesMap.get(id);
-            if (newCount) {
-              const diffCount = count - newCount;
-              if (diffCount > 0) {
-                studentprofilesToUnLinkMap.set(id, diffCount);
-              }
-            } else {
-              studentprofilesToUnLinkMap.set(id, count);
+          const courseEnrollmentsToLink = [];
+          const courseEnrollmentsToUnLink = [];
+          const courseEnrollmentsSet = new Set();
+          const linkedCourseEnrollmentsSet = new Set();
+          courseEnrollments.forEach((r) =>
+            courseEnrollmentsSet.add(getIDValue.courseEnrollments?.(r))
+          );
+          linkedCourseEnrollments.forEach((r) =>
+            linkedCourseEnrollmentsSet.add(getIDValue.courseEnrollments?.(r))
+          );
+          linkedCourseEnrollments.forEach((r) => {
+            if (!courseEnrollmentsSet.has(getIDValue.courseEnrollments?.(r))) {
+              courseEnrollmentsToUnLink.push(r);
             }
           });
-          studentprofilesMap.forEach((count, id) => {
-            const originalCount = linkedStudentprofilesMap.get(id);
-            if (originalCount) {
-              const diffCount = count - originalCount;
-              if (diffCount > 0) {
-                studentprofilesToLinkMap.set(id, diffCount);
-              }
-            } else {
-              studentprofilesToLinkMap.set(id, count);
+          courseEnrollments.forEach((r) => {
+            if (
+              !linkedCourseEnrollmentsSet.has(getIDValue.courseEnrollments?.(r))
+            ) {
+              courseEnrollmentsToLink.push(r);
             }
           });
-          studentprofilesToUnLinkMap.forEach(async (count, id) => {
-            const recordKeys = JSON.parse(id);
-            const studentProfileCourseProfileRecords = (
-              await client.graphql({
-                query: listStudentProfileCourseProfiles.replaceAll(
-                  "__typename",
-                  ""
-                ),
+          courseEnrollmentsToUnLink.forEach((original) => {
+            if (!canUnlinkCourseEnrollments) {
+              throw Error(
+                `CourseEnrollment ${original.id} cannot be unlinked from CourseProfile because undefined is a required field.`
+              );
+            }
+            promises.push(
+              client.graphql({
+                query: updateCourseEnrollment.replaceAll("__typename", ""),
                 variables: {
-                  filter: {
-                    and: [
-                      { studentProfileId: { eq: recordKeys.id } },
-                      { courseProfileId: { eq: courseProfileRecord.id } },
-                    ],
+                  input: {
+                    id: original.id,
                   },
                 },
               })
-            )?.data?.listStudentProfileCourseProfiles?.items;
-            for (let i = 0; i < count; i++) {
-              promises.push(
-                client.graphql({
-                  query: deleteStudentProfileCourseProfile.replaceAll(
-                    "__typename",
-                    ""
-                  ),
-                  variables: {
-                    input: {
-                      id: studentProfileCourseProfileRecords[i].id,
-                    },
-                  },
-                })
-              );
-            }
-          });
-          studentprofilesToLinkMap.forEach((count, id) => {
-            const studentProfileToLink = studentprofilesRecords.find((r) =>
-              Object.entries(JSON.parse(id)).every(
-                ([key, value]) => r[key] === value
-              )
             );
-            for (let i = count; i > 0; i--) {
-              promises.push(
-                client.graphql({
-                  query: createStudentProfileCourseProfile.replaceAll(
-                    "__typename",
-                    ""
-                  ),
-                  variables: {
-                    input: {
-                      courseProfileId: courseProfileRecord.id,
-                      studentProfileId: studentProfileToLink.id,
-                    },
+          });
+          courseEnrollmentsToLink.forEach((original) => {
+            promises.push(
+              client.graphql({
+                query: updateCourseEnrollment.replaceAll("__typename", ""),
+                variables: {
+                  input: {
+                    id: original.id,
                   },
-                })
-              );
-            }
+                },
+              })
+            );
           });
           const modelFieldsToSave = {
-            title: modelFields.title ?? null,
+            title: modelFields.title,
             description: modelFields.description ?? null,
           };
           promises.push(
@@ -528,102 +458,18 @@ export default function CourseProfileUpdateForm(props) {
       {...getOverrideProps(overrides, "CourseProfileUpdateForm")}
       {...rest}
     >
-      <ArrayField
-        onChange={async (items) => {
-          let values = items;
-          if (onChange) {
-            const modelFields = {
-              studentprofiles: values,
-              title,
-              description,
-            };
-            const result = onChange(modelFields);
-            values = result?.studentprofiles ?? values;
-          }
-          setStudentprofiles(values);
-          setCurrentStudentprofilesValue(undefined);
-          setCurrentStudentprofilesDisplayValue("");
-        }}
-        currentFieldValue={currentStudentprofilesValue}
-        label={"Studentprofiles"}
-        items={studentprofiles}
-        hasError={errors?.studentprofiles?.hasError}
-        runValidationTasks={async () =>
-          await runValidationTasks(
-            "studentprofiles",
-            currentStudentprofilesValue
-          )
-        }
-        errorMessage={errors?.studentprofiles?.errorMessage}
-        getBadgeText={getDisplayValue.studentprofiles}
-        setFieldValue={(model) => {
-          setCurrentStudentprofilesDisplayValue(
-            model ? getDisplayValue.studentprofiles(model) : ""
-          );
-          setCurrentStudentprofilesValue(model);
-        }}
-        inputFieldRef={studentprofilesRef}
-        defaultFieldValue={""}
-      >
-        <Autocomplete
-          label="Studentprofiles"
-          isRequired={false}
-          isReadOnly={false}
-          placeholder="Search StudentProfile"
-          value={currentStudentprofilesDisplayValue}
-          options={studentprofilesRecords.map((r) => ({
-            id: getIDValue.studentprofiles?.(r),
-            label: getDisplayValue.studentprofiles?.(r),
-          }))}
-          isLoading={studentprofilesLoading}
-          onSelect={({ id, label }) => {
-            setCurrentStudentprofilesValue(
-              studentprofilesRecords.find((r) =>
-                Object.entries(JSON.parse(id)).every(
-                  ([key, value]) => r[key] === value
-                )
-              )
-            );
-            setCurrentStudentprofilesDisplayValue(label);
-            runValidationTasks("studentprofiles", label);
-          }}
-          onClear={() => {
-            setCurrentStudentprofilesDisplayValue("");
-          }}
-          onChange={(e) => {
-            let { value } = e.target;
-            fetchStudentprofilesRecords(value);
-            if (errors.studentprofiles?.hasError) {
-              runValidationTasks("studentprofiles", value);
-            }
-            setCurrentStudentprofilesDisplayValue(value);
-            setCurrentStudentprofilesValue(undefined);
-          }}
-          onBlur={() =>
-            runValidationTasks(
-              "studentprofiles",
-              currentStudentprofilesDisplayValue
-            )
-          }
-          errorMessage={errors.studentprofiles?.errorMessage}
-          hasError={errors.studentprofiles?.hasError}
-          ref={studentprofilesRef}
-          labelHidden={true}
-          {...getOverrideProps(overrides, "studentprofiles")}
-        ></Autocomplete>
-      </ArrayField>
       <TextField
         label="Title"
-        isRequired={false}
+        isRequired={true}
         isReadOnly={false}
         value={title}
         onChange={(e) => {
           let { value } = e.target;
           if (onChange) {
             const modelFields = {
-              studentprofiles,
               title: value,
               description,
+              courseEnrollments,
             };
             const result = onChange(modelFields);
             value = result?.title ?? value;
@@ -647,9 +493,9 @@ export default function CourseProfileUpdateForm(props) {
           let { value } = e.target;
           if (onChange) {
             const modelFields = {
-              studentprofiles,
               title,
               description: value,
+              courseEnrollments,
             };
             const result = onChange(modelFields);
             value = result?.description ?? value;
@@ -664,6 +510,90 @@ export default function CourseProfileUpdateForm(props) {
         hasError={errors.description?.hasError}
         {...getOverrideProps(overrides, "description")}
       ></TextField>
+      <ArrayField
+        onChange={async (items) => {
+          let values = items;
+          if (onChange) {
+            const modelFields = {
+              title,
+              description,
+              courseEnrollments: values,
+            };
+            const result = onChange(modelFields);
+            values = result?.courseEnrollments ?? values;
+          }
+          setCourseEnrollments(values);
+          setCurrentCourseEnrollmentsValue(undefined);
+          setCurrentCourseEnrollmentsDisplayValue("");
+        }}
+        currentFieldValue={currentCourseEnrollmentsValue}
+        label={"Course enrollments"}
+        items={courseEnrollments}
+        hasError={errors?.courseEnrollments?.hasError}
+        runValidationTasks={async () =>
+          await runValidationTasks(
+            "courseEnrollments",
+            currentCourseEnrollmentsValue
+          )
+        }
+        errorMessage={errors?.courseEnrollments?.errorMessage}
+        getBadgeText={getDisplayValue.courseEnrollments}
+        setFieldValue={(model) => {
+          setCurrentCourseEnrollmentsDisplayValue(
+            model ? getDisplayValue.courseEnrollments(model) : ""
+          );
+          setCurrentCourseEnrollmentsValue(model);
+        }}
+        inputFieldRef={courseEnrollmentsRef}
+        defaultFieldValue={""}
+      >
+        <Autocomplete
+          label="Course enrollments"
+          isRequired={false}
+          isReadOnly={false}
+          placeholder="Search CourseEnrollment"
+          value={currentCourseEnrollmentsDisplayValue}
+          options={courseEnrollmentsRecords.map((r) => ({
+            id: getIDValue.courseEnrollments?.(r),
+            label: getDisplayValue.courseEnrollments?.(r),
+          }))}
+          isLoading={courseEnrollmentsLoading}
+          onSelect={({ id, label }) => {
+            setCurrentCourseEnrollmentsValue(
+              courseEnrollmentsRecords.find((r) =>
+                Object.entries(JSON.parse(id)).every(
+                  ([key, value]) => r[key] === value
+                )
+              )
+            );
+            setCurrentCourseEnrollmentsDisplayValue(label);
+            runValidationTasks("courseEnrollments", label);
+          }}
+          onClear={() => {
+            setCurrentCourseEnrollmentsDisplayValue("");
+          }}
+          onChange={(e) => {
+            let { value } = e.target;
+            fetchCourseEnrollmentsRecords(value);
+            if (errors.courseEnrollments?.hasError) {
+              runValidationTasks("courseEnrollments", value);
+            }
+            setCurrentCourseEnrollmentsDisplayValue(value);
+            setCurrentCourseEnrollmentsValue(undefined);
+          }}
+          onBlur={() =>
+            runValidationTasks(
+              "courseEnrollments",
+              currentCourseEnrollmentsDisplayValue
+            )
+          }
+          errorMessage={errors.courseEnrollments?.errorMessage}
+          hasError={errors.courseEnrollments?.hasError}
+          ref={courseEnrollmentsRef}
+          labelHidden={true}
+          {...getOverrideProps(overrides, "courseEnrollments")}
+        ></Autocomplete>
+      </ArrayField>
       <Flex
         justifyContent="space-between"
         {...getOverrideProps(overrides, "CTAFlex")}

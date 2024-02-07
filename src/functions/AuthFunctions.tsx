@@ -1,10 +1,10 @@
 import { ConfirmSignUpInput, ConfirmSignUpOutput, SignInInput, SignInOutput, confirmSignUp, getCurrentUser, signIn, signOut } from "aws-amplify/auth"
 import { CreateStudentProfileInput } from "../API"
 import { createStudentProfile } from "../graphql/mutations"
-import { generateClient } from "aws-amplify/api"
 import { handleConfirmSignUpReturnType } from "../types/SignUpTypes"
+import { generateClient } from "aws-amplify/api"
 
-export const cognitoClient = generateClient()
+export const amplifyApiClient = generateClient()
 
 /**
  * Asynchronously checks the authentication status of a user.
@@ -46,7 +46,7 @@ export const handleConfirmSignup = async (signUpInput: ConfirmSignUpInput): Prom
  */
 export const handleCreateStudentProfile = async (studentProfileInput:CreateStudentProfileInput) => {
     try {
-        const profileResult = await cognitoClient.graphql({
+        const profileResult = await amplifyApiClient.graphql({
             query: createStudentProfile,
             variables: { input: studentProfileInput }
         })

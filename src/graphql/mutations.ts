@@ -17,15 +17,18 @@ export const createStudentProfile = /* GraphQL */ `mutation CreateStudentProfile
     cognitoUserID
     name
     email
-    CourseProfiles {
-      nextToken
-      __typename
-    }
     birthdate
     avatar {
       bucket
       key
       region
+      id
+      createdAt
+      updatedAt
+      __typename
+    }
+    courseEnrollments {
+      nextToken
       __typename
     }
     createdAt
@@ -46,15 +49,18 @@ export const updateStudentProfile = /* GraphQL */ `mutation UpdateStudentProfile
     cognitoUserID
     name
     email
-    CourseProfiles {
-      nextToken
-      __typename
-    }
     birthdate
     avatar {
       bucket
       key
       region
+      id
+      createdAt
+      updatedAt
+      __typename
+    }
+    courseEnrollments {
+      nextToken
       __typename
     }
     createdAt
@@ -75,15 +81,18 @@ export const deleteStudentProfile = /* GraphQL */ `mutation DeleteStudentProfile
     cognitoUserID
     name
     email
-    CourseProfiles {
-      nextToken
-      __typename
-    }
     birthdate
     avatar {
       bucket
       key
       region
+      id
+      createdAt
+      updatedAt
+      __typename
+    }
+    courseEnrollments {
+      nextToken
       __typename
     }
     createdAt
@@ -101,12 +110,12 @@ export const createCourseProfile = /* GraphQL */ `mutation CreateCourseProfile(
 ) {
   createCourseProfile(input: $input, condition: $condition) {
     id
-    studentprofiles {
+    title
+    description
+    courseEnrollments {
       nextToken
       __typename
     }
-    title
-    description
     createdAt
     updatedAt
     __typename
@@ -122,12 +131,12 @@ export const updateCourseProfile = /* GraphQL */ `mutation UpdateCourseProfile(
 ) {
   updateCourseProfile(input: $input, condition: $condition) {
     id
-    studentprofiles {
+    title
+    description
+    courseEnrollments {
       nextToken
       __typename
     }
-    title
-    description
     createdAt
     updatedAt
     __typename
@@ -143,12 +152,12 @@ export const deleteCourseProfile = /* GraphQL */ `mutation DeleteCourseProfile(
 ) {
   deleteCourseProfile(input: $input, condition: $condition) {
     id
-    studentprofiles {
+    title
+    description
+    courseEnrollments {
       nextToken
       __typename
     }
-    title
-    description
     createdAt
     updatedAt
     __typename
@@ -158,14 +167,14 @@ export const deleteCourseProfile = /* GraphQL */ `mutation DeleteCourseProfile(
   APITypes.DeleteCourseProfileMutationVariables,
   APITypes.DeleteCourseProfileMutation
 >;
-export const createStudentProfileCourseProfile = /* GraphQL */ `mutation CreateStudentProfileCourseProfile(
-  $input: CreateStudentProfileCourseProfileInput!
-  $condition: ModelStudentProfileCourseProfileConditionInput
+export const createCourseEnrollment = /* GraphQL */ `mutation CreateCourseEnrollment(
+  $input: CreateCourseEnrollmentInput!
+  $condition: ModelCourseEnrollmentConditionInput
 ) {
-  createStudentProfileCourseProfile(input: $input, condition: $condition) {
+  createCourseEnrollment(input: $input, condition: $condition) {
     id
-    studentProfileId
-    courseProfileId
+    studentProfileID
+    courseProfileID
     studentProfile {
       id
       cognitoUserID
@@ -184,23 +193,26 @@ export const createStudentProfileCourseProfile = /* GraphQL */ `mutation CreateS
       updatedAt
       __typename
     }
+    enrollmentDate
+    progress
+    state
     createdAt
     updatedAt
     __typename
   }
 }
 ` as GeneratedMutation<
-  APITypes.CreateStudentProfileCourseProfileMutationVariables,
-  APITypes.CreateStudentProfileCourseProfileMutation
+  APITypes.CreateCourseEnrollmentMutationVariables,
+  APITypes.CreateCourseEnrollmentMutation
 >;
-export const updateStudentProfileCourseProfile = /* GraphQL */ `mutation UpdateStudentProfileCourseProfile(
-  $input: UpdateStudentProfileCourseProfileInput!
-  $condition: ModelStudentProfileCourseProfileConditionInput
+export const updateCourseEnrollment = /* GraphQL */ `mutation UpdateCourseEnrollment(
+  $input: UpdateCourseEnrollmentInput!
+  $condition: ModelCourseEnrollmentConditionInput
 ) {
-  updateStudentProfileCourseProfile(input: $input, condition: $condition) {
+  updateCourseEnrollment(input: $input, condition: $condition) {
     id
-    studentProfileId
-    courseProfileId
+    studentProfileID
+    courseProfileID
     studentProfile {
       id
       cognitoUserID
@@ -219,23 +231,26 @@ export const updateStudentProfileCourseProfile = /* GraphQL */ `mutation UpdateS
       updatedAt
       __typename
     }
+    enrollmentDate
+    progress
+    state
     createdAt
     updatedAt
     __typename
   }
 }
 ` as GeneratedMutation<
-  APITypes.UpdateStudentProfileCourseProfileMutationVariables,
-  APITypes.UpdateStudentProfileCourseProfileMutation
+  APITypes.UpdateCourseEnrollmentMutationVariables,
+  APITypes.UpdateCourseEnrollmentMutation
 >;
-export const deleteStudentProfileCourseProfile = /* GraphQL */ `mutation DeleteStudentProfileCourseProfile(
-  $input: DeleteStudentProfileCourseProfileInput!
-  $condition: ModelStudentProfileCourseProfileConditionInput
+export const deleteCourseEnrollment = /* GraphQL */ `mutation DeleteCourseEnrollment(
+  $input: DeleteCourseEnrollmentInput!
+  $condition: ModelCourseEnrollmentConditionInput
 ) {
-  deleteStudentProfileCourseProfile(input: $input, condition: $condition) {
+  deleteCourseEnrollment(input: $input, condition: $condition) {
     id
-    studentProfileId
-    courseProfileId
+    studentProfileID
+    courseProfileID
     studentProfile {
       id
       cognitoUserID
@@ -254,12 +269,69 @@ export const deleteStudentProfileCourseProfile = /* GraphQL */ `mutation DeleteS
       updatedAt
       __typename
     }
+    enrollmentDate
+    progress
+    state
     createdAt
     updatedAt
     __typename
   }
 }
 ` as GeneratedMutation<
-  APITypes.DeleteStudentProfileCourseProfileMutationVariables,
-  APITypes.DeleteStudentProfileCourseProfileMutation
+  APITypes.DeleteCourseEnrollmentMutationVariables,
+  APITypes.DeleteCourseEnrollmentMutation
+>;
+export const createAvatarObject = /* GraphQL */ `mutation CreateAvatarObject(
+  $input: CreateAvatarObjectInput!
+  $condition: ModelAvatarObjectConditionInput
+) {
+  createAvatarObject(input: $input, condition: $condition) {
+    bucket
+    key
+    region
+    id
+    createdAt
+    updatedAt
+    __typename
+  }
+}
+` as GeneratedMutation<
+  APITypes.CreateAvatarObjectMutationVariables,
+  APITypes.CreateAvatarObjectMutation
+>;
+export const updateAvatarObject = /* GraphQL */ `mutation UpdateAvatarObject(
+  $input: UpdateAvatarObjectInput!
+  $condition: ModelAvatarObjectConditionInput
+) {
+  updateAvatarObject(input: $input, condition: $condition) {
+    bucket
+    key
+    region
+    id
+    createdAt
+    updatedAt
+    __typename
+  }
+}
+` as GeneratedMutation<
+  APITypes.UpdateAvatarObjectMutationVariables,
+  APITypes.UpdateAvatarObjectMutation
+>;
+export const deleteAvatarObject = /* GraphQL */ `mutation DeleteAvatarObject(
+  $input: DeleteAvatarObjectInput!
+  $condition: ModelAvatarObjectConditionInput
+) {
+  deleteAvatarObject(input: $input, condition: $condition) {
+    bucket
+    key
+    region
+    id
+    createdAt
+    updatedAt
+    __typename
+  }
+}
+` as GeneratedMutation<
+  APITypes.DeleteAvatarObjectMutationVariables,
+  APITypes.DeleteAvatarObjectMutation
 >;

@@ -16,16 +16,15 @@ import {
   Icon,
   ScrollView,
   Text,
-  TextAreaField,
   TextField,
   useTheme,
 } from "@aws-amplify/ui-react";
 import { fetchByPath, getOverrideProps, validateField } from "./utils";
 import { generateClient } from "aws-amplify/api";
-import { listCourseProfiles } from "../graphql/queries";
+import { listCourseEnrollments } from "../graphql/queries";
 import {
   createStudentProfile,
-  createStudentProfileCourseProfile,
+  updateCourseEnrollment,
 } from "../graphql/mutations";
 const client = generateClient();
 function ArrayField({
@@ -198,61 +197,59 @@ export default function StudentProfileCreateForm(props) {
     cognitoUserID: "",
     name: "",
     email: "",
-    CourseProfiles: [],
     birthdate: "",
-    avatar: "",
+    courseEnrollments: [],
   };
   const [cognitoUserID, setCognitoUserID] = React.useState(
     initialValues.cognitoUserID
   );
   const [name, setName] = React.useState(initialValues.name);
   const [email, setEmail] = React.useState(initialValues.email);
-  const [CourseProfiles, setCourseProfiles] = React.useState(
-    initialValues.CourseProfiles
-  );
-  const [CourseProfilesLoading, setCourseProfilesLoading] =
-    React.useState(false);
-  const [courseProfilesRecords, setCourseProfilesRecords] = React.useState([]);
   const [birthdate, setBirthdate] = React.useState(initialValues.birthdate);
-  const [avatar, setAvatar] = React.useState(initialValues.avatar);
+  const [courseEnrollments, setCourseEnrollments] = React.useState(
+    initialValues.courseEnrollments
+  );
+  const [courseEnrollmentsLoading, setCourseEnrollmentsLoading] =
+    React.useState(false);
+  const [courseEnrollmentsRecords, setCourseEnrollmentsRecords] =
+    React.useState([]);
   const autocompleteLength = 10;
   const [errors, setErrors] = React.useState({});
   const resetStateValues = () => {
     setCognitoUserID(initialValues.cognitoUserID);
     setName(initialValues.name);
     setEmail(initialValues.email);
-    setCourseProfiles(initialValues.CourseProfiles);
-    setCurrentCourseProfilesValue(undefined);
-    setCurrentCourseProfilesDisplayValue("");
     setBirthdate(initialValues.birthdate);
-    setAvatar(initialValues.avatar);
+    setCourseEnrollments(initialValues.courseEnrollments);
+    setCurrentCourseEnrollmentsValue(undefined);
+    setCurrentCourseEnrollmentsDisplayValue("");
     setErrors({});
   };
   const [
-    currentCourseProfilesDisplayValue,
-    setCurrentCourseProfilesDisplayValue,
+    currentCourseEnrollmentsDisplayValue,
+    setCurrentCourseEnrollmentsDisplayValue,
   ] = React.useState("");
-  const [currentCourseProfilesValue, setCurrentCourseProfilesValue] =
+  const [currentCourseEnrollmentsValue, setCurrentCourseEnrollmentsValue] =
     React.useState(undefined);
-  const CourseProfilesRef = React.createRef();
+  const courseEnrollmentsRef = React.createRef();
   const getIDValue = {
-    CourseProfiles: (r) => JSON.stringify({ id: r?.id }),
+    courseEnrollments: (r) => JSON.stringify({ id: r?.id }),
   };
-  const CourseProfilesIdSet = new Set(
-    Array.isArray(CourseProfiles)
-      ? CourseProfiles.map((r) => getIDValue.CourseProfiles?.(r))
-      : getIDValue.CourseProfiles?.(CourseProfiles)
+  const courseEnrollmentsIdSet = new Set(
+    Array.isArray(courseEnrollments)
+      ? courseEnrollments.map((r) => getIDValue.courseEnrollments?.(r))
+      : getIDValue.courseEnrollments?.(courseEnrollments)
   );
   const getDisplayValue = {
-    CourseProfiles: (r) => `${r?.title ? r?.title + " - " : ""}${r?.id}`,
+    courseEnrollments: (r) =>
+      `${r?.progress ? r?.progress + " - " : ""}${r?.id}`,
   };
   const validations = {
     cognitoUserID: [{ type: "Required" }],
     name: [{ type: "Required" }],
     email: [{ type: "Required" }, { type: "Email" }],
-    CourseProfiles: [],
     birthdate: [{ type: "Required" }],
-    avatar: [{ type: "JSON" }],
+    courseEnrollments: [],
   };
   const runValidationTasks = async (
     fieldName,
@@ -271,15 +268,15 @@ export default function StudentProfileCreateForm(props) {
     setErrors((errors) => ({ ...errors, [fieldName]: validationResponse }));
     return validationResponse;
   };
-  const fetchCourseProfilesRecords = async (value) => {
-    setCourseProfilesLoading(true);
+  const fetchCourseEnrollmentsRecords = async (value) => {
+    setCourseEnrollmentsLoading(true);
     const newOptions = [];
     let newNext = "";
     while (newOptions.length < autocompleteLength && newNext != null) {
       const variables = {
         limit: autocompleteLength * 5,
         filter: {
-          or: [{ title: { contains: value } }, { id: { contains: value } }],
+          or: [{ progress: { contains: value } }, { id: { contains: value } }],
         },
       };
       if (newNext) {
@@ -287,21 +284,22 @@ export default function StudentProfileCreateForm(props) {
       }
       const result = (
         await client.graphql({
-          query: listCourseProfiles.replaceAll("__typename", ""),
+          query: listCourseEnrollments.replaceAll("__typename", ""),
           variables,
         })
-      )?.data?.listCourseProfiles?.items;
+      )?.data?.listCourseEnrollments?.items;
       var loaded = result.filter(
-        (item) => !CourseProfilesIdSet.has(getIDValue.CourseProfiles?.(item))
+        (item) =>
+          !courseEnrollmentsIdSet.has(getIDValue.courseEnrollments?.(item))
       );
       newOptions.push(...loaded);
       newNext = result.nextToken;
     }
-    setCourseProfilesRecords(newOptions.slice(0, autocompleteLength));
-    setCourseProfilesLoading(false);
+    setCourseEnrollmentsRecords(newOptions.slice(0, autocompleteLength));
+    setCourseEnrollmentsLoading(false);
   };
   React.useEffect(() => {
-    fetchCourseProfilesRecords("");
+    fetchCourseEnrollmentsRecords("");
   }, []);
   return (
     <Grid
@@ -315,9 +313,8 @@ export default function StudentProfileCreateForm(props) {
           cognitoUserID,
           name,
           email,
-          CourseProfiles,
           birthdate,
-          avatar,
+          courseEnrollments,
         };
         const validationResponses = await Promise.all(
           Object.keys(validations).reduce((promises, fieldName) => {
@@ -360,9 +357,6 @@ export default function StudentProfileCreateForm(props) {
             name: modelFields.name,
             email: modelFields.email,
             birthdate: modelFields.birthdate,
-            avatar: modelFields.avatar
-              ? JSON.parse(modelFields.avatar)
-              : modelFields.avatar,
           };
           const studentProfile = (
             await client.graphql({
@@ -376,17 +370,13 @@ export default function StudentProfileCreateForm(props) {
           )?.data?.createStudentProfile;
           const promises = [];
           promises.push(
-            ...CourseProfiles.reduce((promises, courseProfile) => {
+            ...courseEnrollments.reduce((promises, original) => {
               promises.push(
                 client.graphql({
-                  query: createStudentProfileCourseProfile.replaceAll(
-                    "__typename",
-                    ""
-                  ),
+                  query: updateCourseEnrollment.replaceAll("__typename", ""),
                   variables: {
                     input: {
-                      studentProfileId: studentProfile.id,
-                      courseProfileId: courseProfile.id,
+                      id: original.id,
                     },
                   },
                 })
@@ -423,9 +413,8 @@ export default function StudentProfileCreateForm(props) {
               cognitoUserID: value,
               name,
               email,
-              CourseProfiles,
               birthdate,
-              avatar,
+              courseEnrollments,
             };
             const result = onChange(modelFields);
             value = result?.cognitoUserID ?? value;
@@ -452,9 +441,8 @@ export default function StudentProfileCreateForm(props) {
               cognitoUserID,
               name: value,
               email,
-              CourseProfiles,
               birthdate,
-              avatar,
+              courseEnrollments,
             };
             const result = onChange(modelFields);
             value = result?.name ?? value;
@@ -481,9 +469,8 @@ export default function StudentProfileCreateForm(props) {
               cognitoUserID,
               name,
               email: value,
-              CourseProfiles,
               birthdate,
-              avatar,
+              courseEnrollments,
             };
             const result = onChange(modelFields);
             value = result?.email ?? value;
@@ -498,90 +485,6 @@ export default function StudentProfileCreateForm(props) {
         hasError={errors.email?.hasError}
         {...getOverrideProps(overrides, "email")}
       ></TextField>
-      <ArrayField
-        onChange={async (items) => {
-          let values = items;
-          if (onChange) {
-            const modelFields = {
-              cognitoUserID,
-              name,
-              email,
-              CourseProfiles: values,
-              birthdate,
-              avatar,
-            };
-            const result = onChange(modelFields);
-            values = result?.CourseProfiles ?? values;
-          }
-          setCourseProfiles(values);
-          setCurrentCourseProfilesValue(undefined);
-          setCurrentCourseProfilesDisplayValue("");
-        }}
-        currentFieldValue={currentCourseProfilesValue}
-        label={"Course profiles"}
-        items={CourseProfiles}
-        hasError={errors?.CourseProfiles?.hasError}
-        runValidationTasks={async () =>
-          await runValidationTasks("CourseProfiles", currentCourseProfilesValue)
-        }
-        errorMessage={errors?.CourseProfiles?.errorMessage}
-        getBadgeText={getDisplayValue.CourseProfiles}
-        setFieldValue={(model) => {
-          setCurrentCourseProfilesDisplayValue(
-            model ? getDisplayValue.CourseProfiles(model) : ""
-          );
-          setCurrentCourseProfilesValue(model);
-        }}
-        inputFieldRef={CourseProfilesRef}
-        defaultFieldValue={""}
-      >
-        <Autocomplete
-          label="Course profiles"
-          isRequired={false}
-          isReadOnly={false}
-          placeholder="Search CourseProfile"
-          value={currentCourseProfilesDisplayValue}
-          options={courseProfilesRecords.map((r) => ({
-            id: getIDValue.CourseProfiles?.(r),
-            label: getDisplayValue.CourseProfiles?.(r),
-          }))}
-          isLoading={CourseProfilesLoading}
-          onSelect={({ id, label }) => {
-            setCurrentCourseProfilesValue(
-              courseProfilesRecords.find((r) =>
-                Object.entries(JSON.parse(id)).every(
-                  ([key, value]) => r[key] === value
-                )
-              )
-            );
-            setCurrentCourseProfilesDisplayValue(label);
-            runValidationTasks("CourseProfiles", label);
-          }}
-          onClear={() => {
-            setCurrentCourseProfilesDisplayValue("");
-          }}
-          onChange={(e) => {
-            let { value } = e.target;
-            fetchCourseProfilesRecords(value);
-            if (errors.CourseProfiles?.hasError) {
-              runValidationTasks("CourseProfiles", value);
-            }
-            setCurrentCourseProfilesDisplayValue(value);
-            setCurrentCourseProfilesValue(undefined);
-          }}
-          onBlur={() =>
-            runValidationTasks(
-              "CourseProfiles",
-              currentCourseProfilesDisplayValue
-            )
-          }
-          errorMessage={errors.CourseProfiles?.errorMessage}
-          hasError={errors.CourseProfiles?.hasError}
-          ref={CourseProfilesRef}
-          labelHidden={true}
-          {...getOverrideProps(overrides, "CourseProfiles")}
-        ></Autocomplete>
-      </ArrayField>
       <TextField
         label="Birthdate"
         isRequired={true}
@@ -595,9 +498,8 @@ export default function StudentProfileCreateForm(props) {
               cognitoUserID,
               name,
               email,
-              CourseProfiles,
               birthdate: value,
-              avatar,
+              courseEnrollments,
             };
             const result = onChange(modelFields);
             value = result?.birthdate ?? value;
@@ -612,34 +514,92 @@ export default function StudentProfileCreateForm(props) {
         hasError={errors.birthdate?.hasError}
         {...getOverrideProps(overrides, "birthdate")}
       ></TextField>
-      <TextAreaField
-        label="Avatar"
-        isRequired={false}
-        isReadOnly={false}
-        onChange={(e) => {
-          let { value } = e.target;
+      <ArrayField
+        onChange={async (items) => {
+          let values = items;
           if (onChange) {
             const modelFields = {
               cognitoUserID,
               name,
               email,
-              CourseProfiles,
               birthdate,
-              avatar: value,
+              courseEnrollments: values,
             };
             const result = onChange(modelFields);
-            value = result?.avatar ?? value;
+            values = result?.courseEnrollments ?? values;
           }
-          if (errors.avatar?.hasError) {
-            runValidationTasks("avatar", value);
-          }
-          setAvatar(value);
+          setCourseEnrollments(values);
+          setCurrentCourseEnrollmentsValue(undefined);
+          setCurrentCourseEnrollmentsDisplayValue("");
         }}
-        onBlur={() => runValidationTasks("avatar", avatar)}
-        errorMessage={errors.avatar?.errorMessage}
-        hasError={errors.avatar?.hasError}
-        {...getOverrideProps(overrides, "avatar")}
-      ></TextAreaField>
+        currentFieldValue={currentCourseEnrollmentsValue}
+        label={"Course enrollments"}
+        items={courseEnrollments}
+        hasError={errors?.courseEnrollments?.hasError}
+        runValidationTasks={async () =>
+          await runValidationTasks(
+            "courseEnrollments",
+            currentCourseEnrollmentsValue
+          )
+        }
+        errorMessage={errors?.courseEnrollments?.errorMessage}
+        getBadgeText={getDisplayValue.courseEnrollments}
+        setFieldValue={(model) => {
+          setCurrentCourseEnrollmentsDisplayValue(
+            model ? getDisplayValue.courseEnrollments(model) : ""
+          );
+          setCurrentCourseEnrollmentsValue(model);
+        }}
+        inputFieldRef={courseEnrollmentsRef}
+        defaultFieldValue={""}
+      >
+        <Autocomplete
+          label="Course enrollments"
+          isRequired={false}
+          isReadOnly={false}
+          placeholder="Search CourseEnrollment"
+          value={currentCourseEnrollmentsDisplayValue}
+          options={courseEnrollmentsRecords.map((r) => ({
+            id: getIDValue.courseEnrollments?.(r),
+            label: getDisplayValue.courseEnrollments?.(r),
+          }))}
+          isLoading={courseEnrollmentsLoading}
+          onSelect={({ id, label }) => {
+            setCurrentCourseEnrollmentsValue(
+              courseEnrollmentsRecords.find((r) =>
+                Object.entries(JSON.parse(id)).every(
+                  ([key, value]) => r[key] === value
+                )
+              )
+            );
+            setCurrentCourseEnrollmentsDisplayValue(label);
+            runValidationTasks("courseEnrollments", label);
+          }}
+          onClear={() => {
+            setCurrentCourseEnrollmentsDisplayValue("");
+          }}
+          onChange={(e) => {
+            let { value } = e.target;
+            fetchCourseEnrollmentsRecords(value);
+            if (errors.courseEnrollments?.hasError) {
+              runValidationTasks("courseEnrollments", value);
+            }
+            setCurrentCourseEnrollmentsDisplayValue(value);
+            setCurrentCourseEnrollmentsValue(undefined);
+          }}
+          onBlur={() =>
+            runValidationTasks(
+              "courseEnrollments",
+              currentCourseEnrollmentsDisplayValue
+            )
+          }
+          errorMessage={errors.courseEnrollments?.errorMessage}
+          hasError={errors.courseEnrollments?.hasError}
+          ref={courseEnrollmentsRef}
+          labelHidden={true}
+          {...getOverrideProps(overrides, "courseEnrollments")}
+        ></Autocomplete>
+      </ArrayField>
       <Flex
         justifyContent="space-between"
         {...getOverrideProps(overrides, "CTAFlex")}

@@ -21,10 +21,10 @@ import {
 } from "@aws-amplify/ui-react";
 import { fetchByPath, getOverrideProps, validateField } from "./utils";
 import { generateClient } from "aws-amplify/api";
-import { listStudentProfiles } from "../graphql/queries";
+import { listCourseEnrollments } from "../graphql/queries";
 import {
   createCourseProfile,
-  createStudentProfileCourseProfile,
+  updateCourseEnrollment,
 } from "../graphql/mutations";
 const client = generateClient();
 function ArrayField({
@@ -194,55 +194,54 @@ export default function CourseProfileCreateForm(props) {
     ...rest
   } = props;
   const initialValues = {
-    studentprofiles: [],
     title: "",
     description: "",
+    courseEnrollments: [],
   };
-  const [studentprofiles, setStudentprofiles] = React.useState(
-    initialValues.studentprofiles
-  );
-  const [studentprofilesLoading, setStudentprofilesLoading] =
-    React.useState(false);
-  const [studentprofilesRecords, setStudentprofilesRecords] = React.useState(
-    []
-  );
   const [title, setTitle] = React.useState(initialValues.title);
   const [description, setDescription] = React.useState(
     initialValues.description
   );
+  const [courseEnrollments, setCourseEnrollments] = React.useState(
+    initialValues.courseEnrollments
+  );
+  const [courseEnrollmentsLoading, setCourseEnrollmentsLoading] =
+    React.useState(false);
+  const [courseEnrollmentsRecords, setCourseEnrollmentsRecords] =
+    React.useState([]);
   const autocompleteLength = 10;
   const [errors, setErrors] = React.useState({});
   const resetStateValues = () => {
-    setStudentprofiles(initialValues.studentprofiles);
-    setCurrentStudentprofilesValue(undefined);
-    setCurrentStudentprofilesDisplayValue("");
     setTitle(initialValues.title);
     setDescription(initialValues.description);
+    setCourseEnrollments(initialValues.courseEnrollments);
+    setCurrentCourseEnrollmentsValue(undefined);
+    setCurrentCourseEnrollmentsDisplayValue("");
     setErrors({});
   };
   const [
-    currentStudentprofilesDisplayValue,
-    setCurrentStudentprofilesDisplayValue,
+    currentCourseEnrollmentsDisplayValue,
+    setCurrentCourseEnrollmentsDisplayValue,
   ] = React.useState("");
-  const [currentStudentprofilesValue, setCurrentStudentprofilesValue] =
+  const [currentCourseEnrollmentsValue, setCurrentCourseEnrollmentsValue] =
     React.useState(undefined);
-  const studentprofilesRef = React.createRef();
+  const courseEnrollmentsRef = React.createRef();
   const getIDValue = {
-    studentprofiles: (r) => JSON.stringify({ id: r?.id }),
+    courseEnrollments: (r) => JSON.stringify({ id: r?.id }),
   };
-  const studentprofilesIdSet = new Set(
-    Array.isArray(studentprofiles)
-      ? studentprofiles.map((r) => getIDValue.studentprofiles?.(r))
-      : getIDValue.studentprofiles?.(studentprofiles)
+  const courseEnrollmentsIdSet = new Set(
+    Array.isArray(courseEnrollments)
+      ? courseEnrollments.map((r) => getIDValue.courseEnrollments?.(r))
+      : getIDValue.courseEnrollments?.(courseEnrollments)
   );
   const getDisplayValue = {
-    studentprofiles: (r) =>
-      `${r?.cognitoUserID ? r?.cognitoUserID + " - " : ""}${r?.id}`,
+    courseEnrollments: (r) =>
+      `${r?.progress ? r?.progress + " - " : ""}${r?.id}`,
   };
   const validations = {
-    studentprofiles: [],
-    title: [],
+    title: [{ type: "Required" }],
     description: [],
+    courseEnrollments: [],
   };
   const runValidationTasks = async (
     fieldName,
@@ -261,18 +260,15 @@ export default function CourseProfileCreateForm(props) {
     setErrors((errors) => ({ ...errors, [fieldName]: validationResponse }));
     return validationResponse;
   };
-  const fetchStudentprofilesRecords = async (value) => {
-    setStudentprofilesLoading(true);
+  const fetchCourseEnrollmentsRecords = async (value) => {
+    setCourseEnrollmentsLoading(true);
     const newOptions = [];
     let newNext = "";
     while (newOptions.length < autocompleteLength && newNext != null) {
       const variables = {
         limit: autocompleteLength * 5,
         filter: {
-          or: [
-            { cognitoUserID: { contains: value } },
-            { id: { contains: value } },
-          ],
+          or: [{ progress: { contains: value } }, { id: { contains: value } }],
         },
       };
       if (newNext) {
@@ -280,21 +276,22 @@ export default function CourseProfileCreateForm(props) {
       }
       const result = (
         await client.graphql({
-          query: listStudentProfiles.replaceAll("__typename", ""),
+          query: listCourseEnrollments.replaceAll("__typename", ""),
           variables,
         })
-      )?.data?.listStudentProfiles?.items;
+      )?.data?.listCourseEnrollments?.items;
       var loaded = result.filter(
-        (item) => !studentprofilesIdSet.has(getIDValue.studentprofiles?.(item))
+        (item) =>
+          !courseEnrollmentsIdSet.has(getIDValue.courseEnrollments?.(item))
       );
       newOptions.push(...loaded);
       newNext = result.nextToken;
     }
-    setStudentprofilesRecords(newOptions.slice(0, autocompleteLength));
-    setStudentprofilesLoading(false);
+    setCourseEnrollmentsRecords(newOptions.slice(0, autocompleteLength));
+    setCourseEnrollmentsLoading(false);
   };
   React.useEffect(() => {
-    fetchStudentprofilesRecords("");
+    fetchCourseEnrollmentsRecords("");
   }, []);
   return (
     <Grid
@@ -305,9 +302,9 @@ export default function CourseProfileCreateForm(props) {
       onSubmit={async (event) => {
         event.preventDefault();
         let modelFields = {
-          studentprofiles,
           title,
           description,
+          courseEnrollments,
         };
         const validationResponses = await Promise.all(
           Object.keys(validations).reduce((promises, fieldName) => {
@@ -361,17 +358,13 @@ export default function CourseProfileCreateForm(props) {
           )?.data?.createCourseProfile;
           const promises = [];
           promises.push(
-            ...studentprofiles.reduce((promises, studentProfile) => {
+            ...courseEnrollments.reduce((promises, original) => {
               promises.push(
                 client.graphql({
-                  query: createStudentProfileCourseProfile.replaceAll(
-                    "__typename",
-                    ""
-                  ),
+                  query: updateCourseEnrollment.replaceAll("__typename", ""),
                   variables: {
                     input: {
-                      courseProfileId: courseProfile.id,
-                      studentProfileId: studentProfile.id,
+                      id: original.id,
                     },
                   },
                 })
@@ -396,102 +389,18 @@ export default function CourseProfileCreateForm(props) {
       {...getOverrideProps(overrides, "CourseProfileCreateForm")}
       {...rest}
     >
-      <ArrayField
-        onChange={async (items) => {
-          let values = items;
-          if (onChange) {
-            const modelFields = {
-              studentprofiles: values,
-              title,
-              description,
-            };
-            const result = onChange(modelFields);
-            values = result?.studentprofiles ?? values;
-          }
-          setStudentprofiles(values);
-          setCurrentStudentprofilesValue(undefined);
-          setCurrentStudentprofilesDisplayValue("");
-        }}
-        currentFieldValue={currentStudentprofilesValue}
-        label={"Studentprofiles"}
-        items={studentprofiles}
-        hasError={errors?.studentprofiles?.hasError}
-        runValidationTasks={async () =>
-          await runValidationTasks(
-            "studentprofiles",
-            currentStudentprofilesValue
-          )
-        }
-        errorMessage={errors?.studentprofiles?.errorMessage}
-        getBadgeText={getDisplayValue.studentprofiles}
-        setFieldValue={(model) => {
-          setCurrentStudentprofilesDisplayValue(
-            model ? getDisplayValue.studentprofiles(model) : ""
-          );
-          setCurrentStudentprofilesValue(model);
-        }}
-        inputFieldRef={studentprofilesRef}
-        defaultFieldValue={""}
-      >
-        <Autocomplete
-          label="Studentprofiles"
-          isRequired={false}
-          isReadOnly={false}
-          placeholder="Search StudentProfile"
-          value={currentStudentprofilesDisplayValue}
-          options={studentprofilesRecords.map((r) => ({
-            id: getIDValue.studentprofiles?.(r),
-            label: getDisplayValue.studentprofiles?.(r),
-          }))}
-          isLoading={studentprofilesLoading}
-          onSelect={({ id, label }) => {
-            setCurrentStudentprofilesValue(
-              studentprofilesRecords.find((r) =>
-                Object.entries(JSON.parse(id)).every(
-                  ([key, value]) => r[key] === value
-                )
-              )
-            );
-            setCurrentStudentprofilesDisplayValue(label);
-            runValidationTasks("studentprofiles", label);
-          }}
-          onClear={() => {
-            setCurrentStudentprofilesDisplayValue("");
-          }}
-          onChange={(e) => {
-            let { value } = e.target;
-            fetchStudentprofilesRecords(value);
-            if (errors.studentprofiles?.hasError) {
-              runValidationTasks("studentprofiles", value);
-            }
-            setCurrentStudentprofilesDisplayValue(value);
-            setCurrentStudentprofilesValue(undefined);
-          }}
-          onBlur={() =>
-            runValidationTasks(
-              "studentprofiles",
-              currentStudentprofilesDisplayValue
-            )
-          }
-          errorMessage={errors.studentprofiles?.errorMessage}
-          hasError={errors.studentprofiles?.hasError}
-          ref={studentprofilesRef}
-          labelHidden={true}
-          {...getOverrideProps(overrides, "studentprofiles")}
-        ></Autocomplete>
-      </ArrayField>
       <TextField
         label="Title"
-        isRequired={false}
+        isRequired={true}
         isReadOnly={false}
         value={title}
         onChange={(e) => {
           let { value } = e.target;
           if (onChange) {
             const modelFields = {
-              studentprofiles,
               title: value,
               description,
+              courseEnrollments,
             };
             const result = onChange(modelFields);
             value = result?.title ?? value;
@@ -515,9 +424,9 @@ export default function CourseProfileCreateForm(props) {
           let { value } = e.target;
           if (onChange) {
             const modelFields = {
-              studentprofiles,
               title,
               description: value,
+              courseEnrollments,
             };
             const result = onChange(modelFields);
             value = result?.description ?? value;
@@ -532,6 +441,90 @@ export default function CourseProfileCreateForm(props) {
         hasError={errors.description?.hasError}
         {...getOverrideProps(overrides, "description")}
       ></TextField>
+      <ArrayField
+        onChange={async (items) => {
+          let values = items;
+          if (onChange) {
+            const modelFields = {
+              title,
+              description,
+              courseEnrollments: values,
+            };
+            const result = onChange(modelFields);
+            values = result?.courseEnrollments ?? values;
+          }
+          setCourseEnrollments(values);
+          setCurrentCourseEnrollmentsValue(undefined);
+          setCurrentCourseEnrollmentsDisplayValue("");
+        }}
+        currentFieldValue={currentCourseEnrollmentsValue}
+        label={"Course enrollments"}
+        items={courseEnrollments}
+        hasError={errors?.courseEnrollments?.hasError}
+        runValidationTasks={async () =>
+          await runValidationTasks(
+            "courseEnrollments",
+            currentCourseEnrollmentsValue
+          )
+        }
+        errorMessage={errors?.courseEnrollments?.errorMessage}
+        getBadgeText={getDisplayValue.courseEnrollments}
+        setFieldValue={(model) => {
+          setCurrentCourseEnrollmentsDisplayValue(
+            model ? getDisplayValue.courseEnrollments(model) : ""
+          );
+          setCurrentCourseEnrollmentsValue(model);
+        }}
+        inputFieldRef={courseEnrollmentsRef}
+        defaultFieldValue={""}
+      >
+        <Autocomplete
+          label="Course enrollments"
+          isRequired={false}
+          isReadOnly={false}
+          placeholder="Search CourseEnrollment"
+          value={currentCourseEnrollmentsDisplayValue}
+          options={courseEnrollmentsRecords.map((r) => ({
+            id: getIDValue.courseEnrollments?.(r),
+            label: getDisplayValue.courseEnrollments?.(r),
+          }))}
+          isLoading={courseEnrollmentsLoading}
+          onSelect={({ id, label }) => {
+            setCurrentCourseEnrollmentsValue(
+              courseEnrollmentsRecords.find((r) =>
+                Object.entries(JSON.parse(id)).every(
+                  ([key, value]) => r[key] === value
+                )
+              )
+            );
+            setCurrentCourseEnrollmentsDisplayValue(label);
+            runValidationTasks("courseEnrollments", label);
+          }}
+          onClear={() => {
+            setCurrentCourseEnrollmentsDisplayValue("");
+          }}
+          onChange={(e) => {
+            let { value } = e.target;
+            fetchCourseEnrollmentsRecords(value);
+            if (errors.courseEnrollments?.hasError) {
+              runValidationTasks("courseEnrollments", value);
+            }
+            setCurrentCourseEnrollmentsDisplayValue(value);
+            setCurrentCourseEnrollmentsValue(undefined);
+          }}
+          onBlur={() =>
+            runValidationTasks(
+              "courseEnrollments",
+              currentCourseEnrollmentsDisplayValue
+            )
+          }
+          errorMessage={errors.courseEnrollments?.errorMessage}
+          hasError={errors.courseEnrollments?.hasError}
+          ref={courseEnrollmentsRef}
+          labelHidden={true}
+          {...getOverrideProps(overrides, "courseEnrollments")}
+        ></Autocomplete>
+      </ArrayField>
       <Flex
         justifyContent="space-between"
         {...getOverrideProps(overrides, "CTAFlex")}

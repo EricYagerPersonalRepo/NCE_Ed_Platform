@@ -1,10 +1,10 @@
 
 import { MobileStudentProfile, WebStudentProfile } from "@/src/components/StudentProfile"
-import { useRouter } from "next/router"
-import { useEffect } from "react"
 
-const StudentProfile = ({loggedIn, isMobile}:any) => {
-  return isMobile ? <MobileStudentProfile /> : <WebStudentProfile />
+
+const StudentProfile = ({loggedIn, isMobile, userData}:any) => {
+  const userID:any = userData.cognitoID
+  return isMobile ? <MobileStudentProfile /> : <WebStudentProfile userID={userID}/>
 }
 
 export default StudentProfile

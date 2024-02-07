@@ -1,6 +1,7 @@
 import React from 'react'
 import { AppBar, Toolbar, useTheme, useMediaQuery } from '@mui/material'
 import { CommonHeaderComponent, UserAccountButtons_Mobile, UserAccountButtons_Web } from './HeaderComponents'
+import { AuthenticatedHeaderProps } from '@/src/types/HeaderTypes'
 
 /**
  * Component for displaying the header when a user is authenticated.
@@ -13,7 +14,7 @@ import { CommonHeaderComponent, UserAccountButtons_Mobile, UserAccountButtons_We
  * and it dynamically switches between mobile and web versions of the user account
  * buttons based on the screen size.
  */
-const AuthenticatedHeader: React.FC = () => {
+const AuthenticatedHeader: React.FC<AuthenticatedHeaderProps>= ({userData}) => {
     const theme = useTheme()
     const isMobile = useMediaQuery(theme.breakpoints.down('sm'))
 
@@ -21,7 +22,7 @@ const AuthenticatedHeader: React.FC = () => {
         <AppBar position="static" style={{ background: 'white' }} elevation={0}>
             <Toolbar>
                 <CommonHeaderComponent />
-                {isMobile ? <UserAccountButtons_Mobile /> : <UserAccountButtons_Web />}
+                {isMobile ? <UserAccountButtons_Mobile /> : <UserAccountButtons_Web userID={userData.cognitoID}/>}
             </Toolbar>
         </AppBar>
     )

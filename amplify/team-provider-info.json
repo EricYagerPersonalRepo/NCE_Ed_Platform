@@ -13,13 +13,20 @@
     },
     "categories": {
       "api": {
-        "nceeducationplatform": {}
+        "nceeducationplatform": {},
+        "avatarHandlerGateway": {}
       },
       "auth": {
         "nceeducationplatform6bfa7874": {}
       },
       "storage": {
         "NCEEdAvatar": {}
+      },
+      "function": {
+        "nceAvatarHandler": {
+          "deploymentBucketName": "amplify-nceeducationplatform-staging-212417-deployment",
+          "s3Key": "amplify-builds/nceAvatarHandler-445a6c34507a474a724a-build.zip"
+        }
       }
     }
   }

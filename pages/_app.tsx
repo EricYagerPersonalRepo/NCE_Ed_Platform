@@ -11,26 +11,27 @@ import { AuthProvider } from '@/src/state/AuthGlobalState'
 import { useMediaQuery, useTheme } from '@mui/material'
 import { useRouter } from 'next/router'
 import { Hub } from 'aws-amplify/utils'
+import { getCurrentUser } from 'aws-amplify/auth'
 
 Amplify.configure(amplifyconfiguration, {ssr: true})
 
 const NCE_Education_App = ({ Component, pageProps }:any) => {
-
     const theme = useTheme()
     const isMobile = useMediaQuery(theme.breakpoints.down('sm'))
     const router = useRouter()
 
     const [loggedIn, setLoggedIn] = useState(false)
+    const [userData, setUserData] = useState({email:"", cognitoID:""})
 
 
     useEffect(() => {
         async function checkAndSetAuthStatus() {
             try {
-                const isUserLoggedIn = await checkAuthStatus();
-                setLoggedIn(isUserLoggedIn);
+                const isUserLoggedIn = await checkAuthStatus()
+                setLoggedIn(isUserLoggedIn)
             } catch (error) {
-                console.error('Failed to check authentication status:', error);
-                setLoggedIn(false);
+                console.error('Failed to check authentication status:', error)
+                setLoggedIn(false)
             }
         }
 
@@ -44,6 +45,21 @@ const NCE_Education_App = ({ Component, pageProps }:any) => {
         })
     }, [])
 
+    useEffect(()=> {
+        const getUserData = async() =>{
+            if(loggedIn){
+                const currentUser = await getCurrentUser()
+                const userDataResponse = {
+                    email: currentUser.signInDetails?.loginId || '', // Fallback to an empty string if undefined
+                    cognitoID: currentUser.userId
+                }
+                setUserData(userDataResponse)
+            }
+        }
+        getUserData()
+        
+    }, [loggedIn])
+
     return (
         <AuthProvider>
             <Head>
@@ -51,11 +67,11 @@ const NCE_Education_App = ({ Component, pageProps }:any) => {
             </Head>
             <ThemeProvider theme={studioTheme}>
                 {loggedIn ? 
-                    <AuthenticatedHeader />
+                    <AuthenticatedHeader userData={userData}/>
                     :
                     <UnauthenticatedHeader />
                 }
-                <Component {...pageProps} loggedIn={loggedIn} isMobile={isMobile} router={router}/>
+                <Component {...pageProps} loggedIn={loggedIn} userData={userData} isMobile={isMobile} router={router}/>
             </ThemeProvider>
         </AuthProvider>
     )

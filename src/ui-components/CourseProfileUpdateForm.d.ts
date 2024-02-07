@@ -6,7 +6,7 @@
 
 import * as React from "react";
 import { AutocompleteProps, GridProps, TextFieldProps } from "@aws-amplify/ui-react";
-import { CourseProfile, StudentProfile } from "../API.ts";
+import { CourseEnrollment, CourseProfile } from "../API.ts";
 export declare type EscapeHatchProps = {
     [elementHierarchy: string]: Record<string, unknown>;
 } | null;
@@ -23,21 +23,21 @@ export declare type ValidationResponse = {
 };
 export declare type ValidationFunction<T> = (value: T, validationResponse: ValidationResponse) => ValidationResponse | Promise<ValidationResponse>;
 export declare type CourseProfileUpdateFormInputValues = {
-    studentprofiles?: StudentProfile[];
     title?: string;
     description?: string;
+    courseEnrollments?: CourseEnrollment[];
 };
 export declare type CourseProfileUpdateFormValidationValues = {
-    studentprofiles?: ValidationFunction<StudentProfile>;
     title?: ValidationFunction<string>;
     description?: ValidationFunction<string>;
+    courseEnrollments?: ValidationFunction<CourseEnrollment>;
 };
 export declare type PrimitiveOverrideProps<T> = Partial<T> & React.DOMAttributes<HTMLDivElement>;
 export declare type CourseProfileUpdateFormOverridesProps = {
     CourseProfileUpdateFormGrid?: PrimitiveOverrideProps<GridProps>;
-    studentprofiles?: PrimitiveOverrideProps<AutocompleteProps>;
     title?: PrimitiveOverrideProps<TextFieldProps>;
     description?: PrimitiveOverrideProps<TextFieldProps>;
+    courseEnrollments?: PrimitiveOverrideProps<AutocompleteProps>;
 } & EscapeHatchProps;
 export declare type CourseProfileUpdateFormProps = React.PropsWithChildren<{
     overrides?: CourseProfileUpdateFormOverridesProps | undefined | null;

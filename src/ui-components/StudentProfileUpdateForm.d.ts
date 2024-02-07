@@ -5,8 +5,8 @@
  **************************************************************************/
 
 import * as React from "react";
-import { AutocompleteProps, GridProps, TextAreaFieldProps, TextFieldProps } from "@aws-amplify/ui-react";
-import { CourseProfile, StudentProfile } from "../API.ts";
+import { AutocompleteProps, GridProps, TextFieldProps } from "@aws-amplify/ui-react";
+import { CourseEnrollment, StudentProfile } from "../API.ts";
 export declare type EscapeHatchProps = {
     [elementHierarchy: string]: Record<string, unknown>;
 } | null;
@@ -26,17 +26,15 @@ export declare type StudentProfileUpdateFormInputValues = {
     cognitoUserID?: string;
     name?: string;
     email?: string;
-    CourseProfiles?: CourseProfile[];
     birthdate?: string;
-    avatar?: string;
+    courseEnrollments?: CourseEnrollment[];
 };
 export declare type StudentProfileUpdateFormValidationValues = {
     cognitoUserID?: ValidationFunction<string>;
     name?: ValidationFunction<string>;
     email?: ValidationFunction<string>;
-    CourseProfiles?: ValidationFunction<CourseProfile>;
     birthdate?: ValidationFunction<string>;
-    avatar?: ValidationFunction<string>;
+    courseEnrollments?: ValidationFunction<CourseEnrollment>;
 };
 export declare type PrimitiveOverrideProps<T> = Partial<T> & React.DOMAttributes<HTMLDivElement>;
 export declare type StudentProfileUpdateFormOverridesProps = {
@@ -44,9 +42,8 @@ export declare type StudentProfileUpdateFormOverridesProps = {
     cognitoUserID?: PrimitiveOverrideProps<TextFieldProps>;
     name?: PrimitiveOverrideProps<TextFieldProps>;
     email?: PrimitiveOverrideProps<TextFieldProps>;
-    CourseProfiles?: PrimitiveOverrideProps<AutocompleteProps>;
     birthdate?: PrimitiveOverrideProps<TextFieldProps>;
-    avatar?: PrimitiveOverrideProps<TextAreaFieldProps>;
+    courseEnrollments?: PrimitiveOverrideProps<AutocompleteProps>;
 } & EscapeHatchProps;
 export declare type StudentProfileUpdateFormProps = React.PropsWithChildren<{
     overrides?: StudentProfileUpdateFormOverridesProps | undefined | null;
