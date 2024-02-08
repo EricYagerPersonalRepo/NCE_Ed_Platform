@@ -144,15 +144,15 @@ describe('<Zip Code Input />', () => {
 
   it('fetches city and state for a valid ZIP code', () => {
     const mockResponse = {
-      places: [{ 'place name': 'SomeCity', 'state': 'SomeState' }]
+      places: [{ 'place name': 'De Kalb Junction', 'state': 'New York' }]
     }
 
     cy.intercept('GET', `${baseUrl}${validZip}`, mockResponse).as('getCityState')
 
     // Call your function here. Ensure that fetchCityState is imported and can be called within the test context.
     fetchCityState(validZip).then((result) => {
-      expect(result.City).to.equal('SomeCity')
-      expect(result.State).to.equal('SomeState')
+      expect(result.City).to.equal('De Kalb Junction')
+      expect(result.State).to.equal('New York')
     })
 
     cy.wait('@getCityState').its('response.statusCode').should('eq', 200)

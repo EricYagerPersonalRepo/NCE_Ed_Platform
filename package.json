@@ -9,7 +9,8 @@
     "test:putAvatar": "amplify mock function nceAvatarHandler --event src/test_events/put_event.json",
     "test:getAvatar": "amplify mock function nceAvatarHandler --event src/test_events/get_event.json",
     "test:deleteAvatar": "amplify mock function nceAvatarHandler --event src/test_events/delete_event.json",
-    "test:all": "npm run test:putAvatar && npm run test:getAvatar && npm run test:deleteAvatar"
+    "test:all_avatar_functions": "npm run test:putAvatar && npm run test:getAvatar && npm run test:deleteAvatar",
+    "test:e2e": "npx cypress run --component && npx cypress run"
   },
   "dependencies": {
     "@aws-amplify/adapter-nextjs": "^1.0.6",

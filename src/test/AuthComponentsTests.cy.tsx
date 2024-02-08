@@ -68,51 +68,91 @@ describe('<SignUpTabPanel />', () => {
     cy.get('@onClickSpy').should('have.been.calledOnce')
   })
 })
-/** 
- * Deleting temporarily, need to update for changes to TwoFactorAuthForm
+
 describe('<TwoFactorAuthForm />', () => {
+  let mockSignUpHooks:any;
+  let handleConfirmSignupMock;
+
+  beforeEach(() => {
+    handleConfirmSignupMock = cy.stub().resolves({ signUpComplete: true });
+
+    mockSignUpHooks = {
+      birthday: '',
+      setBirthday: cy.stub(),
+      name: '',
+      setName: cy.stub(),
+      city: '',
+      setCity: cy.stub(),
+      zipCode: '',
+      setZipCode: cy.stub(),
+      username: 'testuser',
+      setUsername: cy.stub(),
+      state: '',
+      setState: cy.stub(),
+      password: 'testpassword',
+      setPassword: cy.stub(),
+      confirmPassword: '',
+      setConfirmPassword: cy.stub(),
+      showPassword: false,
+      setShowPassword: cy.stub(),
+      showConfirmPassword: false,
+      setShowConfirmPassword: cy.stub(),
+      error: {},
+      setError: cy.stub(),
+      age: 0,
+      setAge: cy.stub(),
+      birthdayComplete: false,
+      setBirthdayComplete: cy.stub(),
+      nameComplete: false,
+      setNameComplete: cy.stub(),
+      locationComplete: false,
+      setLocationComplete: cy.stub(),
+      emailComplete: false,
+      setEmailComplete: cy.stub(),
+      birthdayWaiting: false,
+      setBirthdayWaiting: cy.stub(),
+      nameWaiting: false,
+      setNameWaiting: cy.stub(),
+      locationWaiting: false,
+      setLocationWaiting: cy.stub(),
+      emailWaiting: false,
+      setEmailWaiting: cy.stub(),
+      signupWaiting: false,
+      setSignupWaiting: cy.stub(),
+      signupComplete: false,
+      setSignupComplete: cy.stub(),
+      tfaOpen: false,
+      setTfaOpen: cy.stub(),
+      tabValue: 0,
+      setTabValue: cy.stub(),
+      formComplete: false,
+      setFormComplete: cy.stub(),
+      cognitoUserID: 'testCognitoUserID',
+      setCognitoUserID: cy.stub(),
+      userSignedIn: false,
+      setUserSignedIn: cy.stub(),
+    }
+  });
+
   it('renders', () => {
-    const username = "testuser"
     const handleConfirmSignupMock = cy.stub().resolves({ signUpComplete: true })
-    const onTfaSuccess = cy.stub()
     cy.mount(
       <TwoFactorAuthForm 
-        username={username} 
-        onTfaSuccess={onTfaSuccess} 
+        signUpHooks={mockSignUpHooks}
         handleConfirmSignup={handleConfirmSignupMock}
       />)
     cy.contains('Two-Factor Authentication').should('be.visible')
   })
 
   it('accepts input in the TFA code field', () => {
-    const username = "testuser"
     const handleConfirmSignupMock = cy.stub().resolves({ signUpComplete: true })
-    const onTfaSuccess = cy.stub()
     cy.mount(
       <TwoFactorAuthForm 
-        username={username} 
-        onTfaSuccess={onTfaSuccess} 
+        signUpHooks={mockSignUpHooks}
         handleConfirmSignup={handleConfirmSignupMock}
       />)
     cy.get('input').type('123456')
     cy.get('input').should('have.value', '123456')
   })
 
-  it('calls onTfaSuccess when submit button is clicked', () => {
-    const username = "testuser"
-    const onTfaSuccess = cy.stub().as('onTfaSuccess')
-    const handleConfirmSignupMock = cy.stub().resolves({ signUpComplete: true })
-
-    cy.mount(
-      <TwoFactorAuthForm 
-        username={username} 
-        onTfaSuccess={onTfaSuccess} 
-        handleConfirmSignup={handleConfirmSignupMock}
-      />
-    )
-    cy.get('input').type('123456')
-    cy.get('button').click()
-    cy.get('@onTfaSuccess').should('have.been.calledOnce')
-  })
 })
-*/

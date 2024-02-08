@@ -10,6 +10,7 @@ import { birthdayPattern, emailPattern, namePattern, SignUpTabItemProps, SignUpT
 import { ThrowSignUpError, fetchCityState } from '@/src/functions/AuthFunctions'
 import { tfaModalStyle } from '@/styles/AuthStyles'
 import { handleCreateStudentProfile, handleSignIn } from '../../functions/AuthFunctions'
+import { useSignUpHooks } from '@/src/state/SignUpHooks'
 
 
 export const BirthdayInput = ({signUpHooks}:any) => {
@@ -366,11 +367,12 @@ export const PasswordInput = ({signUpHooks}:any) => {
  * @param {Function} props.onTfaSuccess - Callback function to execute on successful TFA
  * @param {Function} props.handleConfirmSignup - Function to confirm user signup
  */
-export function TwoFactorAuthForm({ username, signUpHooks, handleConfirmSignup }: { username: string, signUpHooks:any, handleConfirmSignup:any }) { //export function TwoFactorAuthForm({ username, onTfaSuccess, handleConfirmSignup }) {
+export function TwoFactorAuthForm({ signUpHooks, handleConfirmSignup }: { signUpHooks:ReturnType<typeof useSignUpHooks>, handleConfirmSignup:any }) {
     const [confirmationCode, setConfirmationCode] = useState('')
+    let {username,password} = {username:signUpHooks.username, password:signUpHooks.password}
 
     const handlePostTfaWorkflow = async (signUpHooks:any) => {
-        let {username,password} = {username:signUpHooks.username, password:signUpHooks.password}
+        
         try {
             const signInResult = await handleSignIn({ username,password })
 
