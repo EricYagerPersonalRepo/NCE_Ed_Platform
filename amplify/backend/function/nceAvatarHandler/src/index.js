@@ -11,6 +11,8 @@ exports.handler = async (event) => {
             return handleGetRequest(userID);
         case 'PUT':
             return handlePutRequest(event, userID);
+        case 'DELETE':
+            return handleDeleteRequest(userID);
         default:
             return {
                 statusCode: 400,
@@ -19,18 +21,18 @@ exports.handler = async (event) => {
     }
 };
 
-async function handleGetRequest(userId) {
+async function handleGetRequest(userID) {
     let avatar;
     try {
-        avatar = await getCache(userId);
+        avatar = await getCache(userID);
         if (!avatar) {
             const s3Response = await S3.getObject({
                 Bucket: 'nce-ed-avatar-bucket212417-staging',
-                Key: `public/user_files/${userId}/avatar.png`,
+                Key: `public/user_files/${userID}/avatar.png`,
             }).promise();
 
             avatar = s3Response.Body;
-            await setCache(userId, avatar);
+            await setCache(userID, avatar);
         }
 
         return {
@@ -47,15 +49,11 @@ async function handleGetRequest(userId) {
 
 async function handlePutRequest(event, userID) {
     console.log(`Received event: ${JSON.stringify(event)}`);
-    console.log('UserID: ', userID)
-    // Extract the image data from the event body
-    const imageData = event.body; // Assume this data is base64 encoded image data
-
-    // Construct the S3 object key dynamically using the userId
+    console.log('userID: ', userID)
+    const imageData = event.body; 
     const objectKey = `public/user_files/${userID}/avatar.png`;
 
     try {
-        // Convert imageData from base64 and upload to S3
         await S3.putObject({
             Bucket: 'nce-ed-avatar-bucket212417-staging',
             Key: objectKey,
@@ -63,15 +61,32 @@ async function handlePutRequest(event, userID) {
             ContentType: 'image/png',
         }).promise();
 
-        // Optionally update cache here if you're using caching for avatar retrieval
-        // await setCache(userId, Buffer.from(imageData, 'base64'));
-
         return {
             statusCode: 200,
             body: JSON.stringify({ message: 'Avatar updated successfully' }),
         };
     } catch (error) {
         console.error('Error updating avatar:', error);
+        return { statusCode: 500, body: JSON.stringify({ message: 'Internal Server Error', error: error.toString() }) };
+    }
+}
+
+async function handleDeleteRequest(userID) {
+    console.log('Deleting avatar for userID:', userID);
+    const objectKey = `public/user_files/${userID}/avatar.png`;
+
+    try {
+        await S3.deleteObject({
+            Bucket: 'nce-ed-avatar-bucket212417-staging',
+            Key: objectKey,
+        }).promise();
+
+        return {
+            statusCode: 200,
+            body: JSON.stringify({ message: 'Avatar deleted successfully' }),
+        };
+    } catch (error) {
+        console.error('Error deleting avatar:', error);
         return { statusCode: 500, body: JSON.stringify({ message: 'Internal Server Error', error: error.toString() }) };
     }
 }

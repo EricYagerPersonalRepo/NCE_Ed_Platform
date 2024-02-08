@@ -1,0 +1,10 @@
+{
+    "httpMethod": "DELETE",
+    "pathParameters": {
+        "userID": "user123"
+    },
+    "queryStringParameters": null,
+    "headers": {},
+    "body": null,
+    "isBase64Encoded": false
+}

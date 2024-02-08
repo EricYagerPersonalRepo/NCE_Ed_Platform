@@ -1,12 +1,12 @@
 {
-  "httpMethod": "PUT",
-  "path": "public/avatars/{userID}",
+  "httpMethod": "GET",
   "pathParameters": {
     "userID": "user123"
   },
+  "queryStringParameters": null,
   "headers": {
     "Content-Type": "image/png"
   },
-  "body": "iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==",
-  "isBase64Encoded": true
+  "body": null,
+  "isBase64Encoded": false
 }
