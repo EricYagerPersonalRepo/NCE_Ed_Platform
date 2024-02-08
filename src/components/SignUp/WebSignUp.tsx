@@ -119,7 +119,7 @@ const WebSignUp = () => {
                     aria-labelledby="modal-title"
                     aria-describedby="modal-description"
                 >
-                    <TwoFactorAuthForm username={signUpHooks.username} signUpHooks={signUpHooks} handleConfirmSignup={handleConfirmSignup} />
+                    <TwoFactorAuthForm signUpHooks={signUpHooks} handleConfirmSignup={handleConfirmSignup} />
                 </Modal>
             </Container>
         </Container>
