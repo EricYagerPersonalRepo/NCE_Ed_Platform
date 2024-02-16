@@ -18,15 +18,6 @@ export const createStudentProfile = /* GraphQL */ `mutation CreateStudentProfile
     name
     email
     birthdate
-    avatar {
-      bucket
-      key
-      region
-      id
-      createdAt
-      updatedAt
-      __typename
-    }
     courseEnrollments {
       nextToken
       __typename
@@ -50,15 +41,6 @@ export const updateStudentProfile = /* GraphQL */ `mutation UpdateStudentProfile
     name
     email
     birthdate
-    avatar {
-      bucket
-      key
-      region
-      id
-      createdAt
-      updatedAt
-      __typename
-    }
     courseEnrollments {
       nextToken
       __typename
@@ -82,15 +64,6 @@ export const deleteStudentProfile = /* GraphQL */ `mutation DeleteStudentProfile
     name
     email
     birthdate
-    avatar {
-      bucket
-      key
-      region
-      id
-      createdAt
-      updatedAt
-      __typename
-    }
     courseEnrollments {
       nextToken
       __typename
@@ -280,58 +253,4 @@ export const deleteCourseEnrollment = /* GraphQL */ `mutation DeleteCourseEnroll
 ` as GeneratedMutation<
   APITypes.DeleteCourseEnrollmentMutationVariables,
   APITypes.DeleteCourseEnrollmentMutation
->;
-export const createAvatarObject = /* GraphQL */ `mutation CreateAvatarObject(
-  $input: CreateAvatarObjectInput!
-  $condition: ModelAvatarObjectConditionInput
-) {
-  createAvatarObject(input: $input, condition: $condition) {
-    bucket
-    key
-    region
-    id
-    createdAt
-    updatedAt
-    __typename
-  }
-}
-` as GeneratedMutation<
-  APITypes.CreateAvatarObjectMutationVariables,
-  APITypes.CreateAvatarObjectMutation
->;
-export const updateAvatarObject = /* GraphQL */ `mutation UpdateAvatarObject(
-  $input: UpdateAvatarObjectInput!
-  $condition: ModelAvatarObjectConditionInput
-) {
-  updateAvatarObject(input: $input, condition: $condition) {
-    bucket
-    key
-    region
-    id
-    createdAt
-    updatedAt
-    __typename
-  }
-}
-` as GeneratedMutation<
-  APITypes.UpdateAvatarObjectMutationVariables,
-  APITypes.UpdateAvatarObjectMutation
->;
-export const deleteAvatarObject = /* GraphQL */ `mutation DeleteAvatarObject(
-  $input: DeleteAvatarObjectInput!
-  $condition: ModelAvatarObjectConditionInput
-) {
-  deleteAvatarObject(input: $input, condition: $condition) {
-    bucket
-    key
-    region
-    id
-    createdAt
-    updatedAt
-    __typename
-  }
-}
-` as GeneratedMutation<
-  APITypes.DeleteAvatarObjectMutationVariables,
-  APITypes.DeleteAvatarObjectMutation
 >;

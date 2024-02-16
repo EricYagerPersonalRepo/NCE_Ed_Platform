@@ -1,15 +1,15 @@
 import { getUrl } from "aws-amplify/storage";
 
-export const validateFileExists = async(filename:string) => {
-    console.log("validateURL call", filename)
+export const getPresignedUrl = async (filename: string): Promise<string> => {
+    console.log("validateURL call", filename);
     const urlExists = await getUrl({
         key: filename,
         options: {
           validateObjectExistence: true
         }
-    })
-    
-    return urlExists
+    });
+
+    return urlExists.url.toString()
 }
 
 export const getUrlResult = async(filename:string) => {

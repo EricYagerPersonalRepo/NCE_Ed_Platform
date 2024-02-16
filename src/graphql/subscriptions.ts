@@ -17,15 +17,6 @@ export const onCreateStudentProfile = /* GraphQL */ `subscription OnCreateStuden
     name
     email
     birthdate
-    avatar {
-      bucket
-      key
-      region
-      id
-      createdAt
-      updatedAt
-      __typename
-    }
     courseEnrollments {
       nextToken
       __typename
@@ -48,15 +39,6 @@ export const onUpdateStudentProfile = /* GraphQL */ `subscription OnUpdateStuden
     name
     email
     birthdate
-    avatar {
-      bucket
-      key
-      region
-      id
-      createdAt
-      updatedAt
-      __typename
-    }
     courseEnrollments {
       nextToken
       __typename
@@ -79,15 +61,6 @@ export const onDeleteStudentProfile = /* GraphQL */ `subscription OnDeleteStuden
     name
     email
     birthdate
-    avatar {
-      bucket
-      key
-      region
-      id
-      createdAt
-      updatedAt
-      __typename
-    }
     courseEnrollments {
       nextToken
       __typename
@@ -271,55 +244,4 @@ export const onDeleteCourseEnrollment = /* GraphQL */ `subscription OnDeleteCour
 ` as GeneratedSubscription<
   APITypes.OnDeleteCourseEnrollmentSubscriptionVariables,
   APITypes.OnDeleteCourseEnrollmentSubscription
->;
-export const onCreateAvatarObject = /* GraphQL */ `subscription OnCreateAvatarObject(
-  $filter: ModelSubscriptionAvatarObjectFilterInput
-) {
-  onCreateAvatarObject(filter: $filter) {
-    bucket
-    key
-    region
-    id
-    createdAt
-    updatedAt
-    __typename
-  }
-}
-` as GeneratedSubscription<
-  APITypes.OnCreateAvatarObjectSubscriptionVariables,
-  APITypes.OnCreateAvatarObjectSubscription
->;
-export const onUpdateAvatarObject = /* GraphQL */ `subscription OnUpdateAvatarObject(
-  $filter: ModelSubscriptionAvatarObjectFilterInput
-) {
-  onUpdateAvatarObject(filter: $filter) {
-    bucket
-    key
-    region
-    id
-    createdAt
-    updatedAt
-    __typename
-  }
-}
-` as GeneratedSubscription<
-  APITypes.OnUpdateAvatarObjectSubscriptionVariables,
-  APITypes.OnUpdateAvatarObjectSubscription
->;
-export const onDeleteAvatarObject = /* GraphQL */ `subscription OnDeleteAvatarObject(
-  $filter: ModelSubscriptionAvatarObjectFilterInput
-) {
-  onDeleteAvatarObject(filter: $filter) {
-    bucket
-    key
-    region
-    id
-    createdAt
-    updatedAt
-    __typename
-  }
-}
-` as GeneratedSubscription<
-  APITypes.OnDeleteAvatarObjectSubscriptionVariables,
-  APITypes.OnDeleteAvatarObjectSubscription
 >;

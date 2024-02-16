@@ -4,7 +4,6 @@ type StudentProfile @model @auth(rules: [{ allow: public }]) {
   name: String!
   email: AWSEmail!
   birthdate: AWSDate!
-  avatar: AvatarObject
   courseEnrollments: [CourseEnrollment] @hasMany(indexName: "byStudent", fields: ["id"])
 }
 
@@ -24,12 +23,6 @@ type CourseEnrollment @model @auth(rules: [{ allow: public }]){
   enrollmentDate: AWSDateTime
   progress: Progress
   state: CourseState
-}
-
-type AvatarObject @model @auth(rules: [{ allow: public }]){
-  bucket: String!
-  key: String!
-  region: String!
 }
 
 enum Progress {

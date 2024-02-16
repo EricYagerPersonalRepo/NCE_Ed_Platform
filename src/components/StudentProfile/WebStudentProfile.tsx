@@ -12,6 +12,7 @@ const WebStudentProfile = ({ isLoggedIn, userID }: any) => {
     const renderActiveView = () => {
         switch (activeView) {
             case 'Account':
+                console.log(userID)
                 return <MyAccountView userID={userID}/>
             case 'My Courses':
                 return <MyCourseView />

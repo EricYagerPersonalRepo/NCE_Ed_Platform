@@ -7,8 +7,6 @@
 export { default as Auth } from "./Auth";
 export { default as AuthDark } from "./AuthDark";
 export { default as AuthenticatedHeader } from "./AuthenticatedHeader";
-export { default as AvatarObjectCreateForm } from "./AvatarObjectCreateForm";
-export { default as AvatarObjectUpdateForm } from "./AvatarObjectUpdateForm";
 export { default as CTASection } from "./CTASection";
 export { default as CheckoutPayment } from "./CheckoutPayment";
 export { default as ContactUs } from "./ContactUs";

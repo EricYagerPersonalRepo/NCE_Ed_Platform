@@ -67,18 +67,7 @@ export type StudentProfile = {
   name: string,
   email: string,
   birthdate: string,
-  avatar?: AvatarObject | null,
   courseEnrollments?: ModelCourseEnrollmentConnection | null,
-  createdAt: string,
-  updatedAt: string,
-};
-
-export type AvatarObject = {
-  __typename: "AvatarObject",
-  bucket: string,
-  key: string,
-  region: string,
-  id: string,
   createdAt: string,
   updatedAt: string,
 };
@@ -222,33 +211,6 @@ export type DeleteCourseEnrollmentInput = {
   id: string,
 };
 
-export type CreateAvatarObjectInput = {
-  bucket: string,
-  key: string,
-  region: string,
-  id?: string | null,
-};
-
-export type ModelAvatarObjectConditionInput = {
-  bucket?: ModelStringInput | null,
-  key?: ModelStringInput | null,
-  region?: ModelStringInput | null,
-  and?: Array< ModelAvatarObjectConditionInput | null > | null,
-  or?: Array< ModelAvatarObjectConditionInput | null > | null,
-  not?: ModelAvatarObjectConditionInput | null,
-};
-
-export type UpdateAvatarObjectInput = {
-  bucket?: string | null,
-  key?: string | null,
-  region?: string | null,
-  id: string,
-};
-
-export type DeleteAvatarObjectInput = {
-  id: string,
-};
-
 export type ModelStudentProfileFilterInput = {
   id?: ModelIDInput | null,
   cognitoUserID?: ModelStringInput | null,
@@ -309,21 +271,6 @@ export enum ModelSortDirection {
 }
 
 
-export type ModelAvatarObjectFilterInput = {
-  bucket?: ModelStringInput | null,
-  key?: ModelStringInput | null,
-  region?: ModelStringInput | null,
-  and?: Array< ModelAvatarObjectFilterInput | null > | null,
-  or?: Array< ModelAvatarObjectFilterInput | null > | null,
-  not?: ModelAvatarObjectFilterInput | null,
-};
-
-export type ModelAvatarObjectConnection = {
-  __typename: "ModelAvatarObjectConnection",
-  items:  Array<AvatarObject | null >,
-  nextToken?: string | null,
-};
-
 export type ModelSubscriptionStudentProfileFilterInput = {
   id?: ModelSubscriptionIDInput | null,
   cognitoUserID?: ModelSubscriptionStringInput | null,
@@ -383,14 +330,6 @@ export type ModelSubscriptionCourseEnrollmentFilterInput = {
   or?: Array< ModelSubscriptionCourseEnrollmentFilterInput | null > | null,
 };
 
-export type ModelSubscriptionAvatarObjectFilterInput = {
-  bucket?: ModelSubscriptionStringInput | null,
-  key?: ModelSubscriptionStringInput | null,
-  region?: ModelSubscriptionStringInput | null,
-  and?: Array< ModelSubscriptionAvatarObjectFilterInput | null > | null,
-  or?: Array< ModelSubscriptionAvatarObjectFilterInput | null > | null,
-};
-
 export type CreateStudentProfileMutationVariables = {
   input: CreateStudentProfileInput,
   condition?: ModelStudentProfileConditionInput | null,
@@ -404,15 +343,6 @@ export type CreateStudentProfileMutation = {
     name: string,
     email: string,
     birthdate: string,
-    avatar?:  {
-      __typename: "AvatarObject",
-      bucket: string,
-      key: string,
-      region: string,
-      id: string,
-      createdAt: string,
-      updatedAt: string,
-    } | null,
     courseEnrollments?:  {
       __typename: "ModelCourseEnrollmentConnection",
       nextToken?: string | null,
@@ -435,15 +365,6 @@ export type UpdateStudentProfileMutation = {
     name: string,
     email: string,
     birthdate: string,
-    avatar?:  {
-      __typename: "AvatarObject",
-      bucket: string,
-      key: string,
-      region: string,
-      id: string,
-      createdAt: string,
-      updatedAt: string,
-    } | null,
     courseEnrollments?:  {
       __typename: "ModelCourseEnrollmentConnection",
       nextToken?: string | null,
@@ -466,15 +387,6 @@ export type DeleteStudentProfileMutation = {
     name: string,
     email: string,
     birthdate: string,
-    avatar?:  {
-      __typename: "AvatarObject",
-      bucket: string,
-      key: string,
-      region: string,
-      id: string,
-      createdAt: string,
-      updatedAt: string,
-    } | null,
     courseEnrollments?:  {
       __typename: "ModelCourseEnrollmentConnection",
       nextToken?: string | null,
@@ -655,57 +567,6 @@ export type DeleteCourseEnrollmentMutation = {
   } | null,
 };
 
-export type CreateAvatarObjectMutationVariables = {
-  input: CreateAvatarObjectInput,
-  condition?: ModelAvatarObjectConditionInput | null,
-};
-
-export type CreateAvatarObjectMutation = {
-  createAvatarObject?:  {
-    __typename: "AvatarObject",
-    bucket: string,
-    key: string,
-    region: string,
-    id: string,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type UpdateAvatarObjectMutationVariables = {
-  input: UpdateAvatarObjectInput,
-  condition?: ModelAvatarObjectConditionInput | null,
-};
-
-export type UpdateAvatarObjectMutation = {
-  updateAvatarObject?:  {
-    __typename: "AvatarObject",
-    bucket: string,
-    key: string,
-    region: string,
-    id: string,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type DeleteAvatarObjectMutationVariables = {
-  input: DeleteAvatarObjectInput,
-  condition?: ModelAvatarObjectConditionInput | null,
-};
-
-export type DeleteAvatarObjectMutation = {
-  deleteAvatarObject?:  {
-    __typename: "AvatarObject",
-    bucket: string,
-    key: string,
-    region: string,
-    id: string,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
 export type GetStudentProfileQueryVariables = {
   id: string,
 };
@@ -718,15 +579,6 @@ export type GetStudentProfileQuery = {
     name: string,
     email: string,
     birthdate: string,
-    avatar?:  {
-      __typename: "AvatarObject",
-      bucket: string,
-      key: string,
-      region: string,
-      id: string,
-      createdAt: string,
-      updatedAt: string,
-    } | null,
     courseEnrollments?:  {
       __typename: "ModelCourseEnrollmentConnection",
       nextToken?: string | null,
@@ -913,44 +765,6 @@ export type CourseEnrollmentsByCourseProfileIDAndIdQuery = {
   } | null,
 };
 
-export type GetAvatarObjectQueryVariables = {
-  id: string,
-};
-
-export type GetAvatarObjectQuery = {
-  getAvatarObject?:  {
-    __typename: "AvatarObject",
-    bucket: string,
-    key: string,
-    region: string,
-    id: string,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type ListAvatarObjectsQueryVariables = {
-  filter?: ModelAvatarObjectFilterInput | null,
-  limit?: number | null,
-  nextToken?: string | null,
-};
-
-export type ListAvatarObjectsQuery = {
-  listAvatarObjects?:  {
-    __typename: "ModelAvatarObjectConnection",
-    items:  Array< {
-      __typename: "AvatarObject",
-      bucket: string,
-      key: string,
-      region: string,
-      id: string,
-      createdAt: string,
-      updatedAt: string,
-    } | null >,
-    nextToken?: string | null,
-  } | null,
-};
-
 export type OnCreateStudentProfileSubscriptionVariables = {
   filter?: ModelSubscriptionStudentProfileFilterInput | null,
 };
@@ -963,15 +777,6 @@ export type OnCreateStudentProfileSubscription = {
     name: string,
     email: string,
     birthdate: string,
-    avatar?:  {
-      __typename: "AvatarObject",
-      bucket: string,
-      key: string,
-      region: string,
-      id: string,
-      createdAt: string,
-      updatedAt: string,
-    } | null,
     courseEnrollments?:  {
       __typename: "ModelCourseEnrollmentConnection",
       nextToken?: string | null,
@@ -993,15 +798,6 @@ export type OnUpdateStudentProfileSubscription = {
     name: string,
     email: string,
     birthdate: string,
-    avatar?:  {
-      __typename: "AvatarObject",
-      bucket: string,
-      key: string,
-      region: string,
-      id: string,
-      createdAt: string,
-      updatedAt: string,
-    } | null,
     courseEnrollments?:  {
       __typename: "ModelCourseEnrollmentConnection",
       nextToken?: string | null,
@@ -1023,15 +819,6 @@ export type OnDeleteStudentProfileSubscription = {
     name: string,
     email: string,
     birthdate: string,
-    avatar?:  {
-      __typename: "AvatarObject",
-      bucket: string,
-      key: string,
-      region: string,
-      id: string,
-      createdAt: string,
-      updatedAt: string,
-    } | null,
     courseEnrollments?:  {
       __typename: "ModelCourseEnrollmentConnection",
       nextToken?: string | null,
@@ -1201,54 +988,6 @@ export type OnDeleteCourseEnrollmentSubscription = {
     enrollmentDate?: string | null,
     progress?: Progress | null,
     state?: CourseState | null,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type OnCreateAvatarObjectSubscriptionVariables = {
-  filter?: ModelSubscriptionAvatarObjectFilterInput | null,
-};
-
-export type OnCreateAvatarObjectSubscription = {
-  onCreateAvatarObject?:  {
-    __typename: "AvatarObject",
-    bucket: string,
-    key: string,
-    region: string,
-    id: string,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type OnUpdateAvatarObjectSubscriptionVariables = {
-  filter?: ModelSubscriptionAvatarObjectFilterInput | null,
-};
-
-export type OnUpdateAvatarObjectSubscription = {
-  onUpdateAvatarObject?:  {
-    __typename: "AvatarObject",
-    bucket: string,
-    key: string,
-    region: string,
-    id: string,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type OnDeleteAvatarObjectSubscriptionVariables = {
-  filter?: ModelSubscriptionAvatarObjectFilterInput | null,
-};
-
-export type OnDeleteAvatarObjectSubscription = {
-  onDeleteAvatarObject?:  {
-    __typename: "AvatarObject",
-    bucket: string,
-    key: string,
-    region: string,
-    id: string,
     createdAt: string,
     updatedAt: string,
   } | null,

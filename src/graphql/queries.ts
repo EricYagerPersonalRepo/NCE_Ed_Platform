@@ -15,15 +15,6 @@ export const getStudentProfile = /* GraphQL */ `query GetStudentProfile($id: ID!
     name
     email
     birthdate
-    avatar {
-      bucket
-      key
-      region
-      id
-      createdAt
-      updatedAt
-      __typename
-    }
     courseEnrollments {
       nextToken
       __typename
@@ -230,42 +221,4 @@ export const courseEnrollmentsByCourseProfileIDAndId = /* GraphQL */ `query Cour
 ` as GeneratedQuery<
   APITypes.CourseEnrollmentsByCourseProfileIDAndIdQueryVariables,
   APITypes.CourseEnrollmentsByCourseProfileIDAndIdQuery
->;
-export const getAvatarObject = /* GraphQL */ `query GetAvatarObject($id: ID!) {
-  getAvatarObject(id: $id) {
-    bucket
-    key
-    region
-    id
-    createdAt
-    updatedAt
-    __typename
-  }
-}
-` as GeneratedQuery<
-  APITypes.GetAvatarObjectQueryVariables,
-  APITypes.GetAvatarObjectQuery
->;
-export const listAvatarObjects = /* GraphQL */ `query ListAvatarObjects(
-  $filter: ModelAvatarObjectFilterInput
-  $limit: Int
-  $nextToken: String
-) {
-  listAvatarObjects(filter: $filter, limit: $limit, nextToken: $nextToken) {
-    items {
-      bucket
-      key
-      region
-      id
-      createdAt
-      updatedAt
-      __typename
-    }
-    nextToken
-    __typename
-  }
-}
-` as GeneratedQuery<
-  APITypes.ListAvatarObjectsQueryVariables,
-  APITypes.ListAvatarObjectsQuery
 >;

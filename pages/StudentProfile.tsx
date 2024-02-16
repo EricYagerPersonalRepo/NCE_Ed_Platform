@@ -4,6 +4,7 @@ import { MobileStudentProfile, WebStudentProfile } from "@/src/components/Studen
 
 const StudentProfile = ({loggedIn, isMobile, userData}:any) => {
   const userID:any = userData.cognitoID
+  console.log(userData)
   return isMobile ? <MobileStudentProfile /> : <WebStudentProfile userID={userID}/>
 }
 

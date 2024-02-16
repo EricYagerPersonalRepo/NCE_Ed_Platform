@@ -3,7 +3,7 @@ import { generateClient } from "aws-amplify/api"
 import { listCourseProfiles } from '@/src/graphql/queries'
 import { FormControl, InputLabel, Select, MenuItem, Typography, Grid, Paper, Avatar, Button } from '@mui/material'
 import { Course } from '@/src/types/StudentProfileTypes'
-import { uploadFileToS3 } from '@/src/functions/StorageFunctions'
+import { downloadAvatarFromS3, uploadFileToS3 } from '@/src/functions/StorageFunctions'
 
 const amplifyApiClient = generateClient()
 
@@ -60,7 +60,18 @@ export const MyCourseView = () => {
 }
 
 export const MyAccountView = ({userID}:any) => {
-    const avatarUrl = `avatars/${userID}/avatar.png`
+    const [avatar,setAvatar] = useState()
+
+    const avatarUrl = `/public/avatars/${userID}/avatar.png`
+    console.log("AVATARURL: ", avatarUrl)
+
+    useEffect(()=>{
+        const getUserAvatar = async() => {
+            const avatarCall = await downloadAvatarFromS3(avatarUrl)
+            console.log("AVATARCALL: ", avatarCall)
+        }
+        getUserAvatar()
+    },[])
 
     return (
         <Grid container spacing={2}>
@@ -98,7 +109,6 @@ const AvatarManager = ({ avatarUrl, onAvatarUpload }:any) => {
         if (!file) return;
         const uploadedKey:any = await uploadFileToS3(file, avatarUrl);
 
-        // If you need to do something after the upload, like updating the user's avatar URL
         if (uploadedKey) {
             onAvatarUpload(uploadedKey);
         }

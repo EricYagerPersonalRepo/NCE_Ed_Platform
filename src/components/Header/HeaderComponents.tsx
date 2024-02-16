@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { Avatar, Button, Grid, IconButton, Menu, MenuItem, Typography } from '@mui/material'
 import { AccountCircle, MoreVert } from '@mui/icons-material'
-import { getUrlResult, validateFileExists } from '@/src/functions/AmplifyFunctions'
+import { getUrlResult, getPresignedUrl } from '@/src/functions/AmplifyFunctions'
 import { useRouter } from 'next/router'
 import { getCurrentUser, signOut } from 'aws-amplify/auth'
 import { loginButtonStyle, signUpButtonStyle } from '@/src/style/HeaderStyle'
@@ -128,7 +128,7 @@ export const UnauthenticatedHeaderButtons_Mobile: React.FC = () => {
  * It is designed for web layouts and should be replaced with the user's avatar when available.
  */
 export const UserAccountButtons_Web = ({ userID }: any) => {
-    const [avatarUrl, setAvatarUrl] = useState<string>("");
+    const [avatarUrl, setAvatarUrl] = useState("");
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const open = Boolean(anchorEl);
 
@@ -146,20 +146,22 @@ export const UserAccountButtons_Web = ({ userID }: any) => {
                 const currentUser = await getCurrentUser();
                 if (currentUser && currentUser.userId) {
                     const avatarFileName = `avatars/${currentUser.userId}/avatar.png`;
-                    const exists = await validateFileExists(avatarFileName);
-                    if (exists) {
-                        const urlResult:any = await getUrlResult(avatarFileName);
-                        console.log("URLRESULT: ", urlResult.url.toString())
-                        if (urlResult.url.href) {
-                            setAvatarUrl(urlResult.url.toString());
-                        }
-                    }
+                    const url = await getPresignedUrl(avatarFileName);
+                    const response = await fetch(url);
+                    const imageBlob = await response.blob();
+                    const localUrl = URL.createObjectURL(imageBlob);
+                    console.log("LOCAL URL: ", localUrl)
+                    setAvatarUrl(localUrl);
                 }
             } catch (error) {
                 console.error("Error fetching user's avatar:", error);
             }
         };
         fetchAvatar();
+
+        return () => {
+            if (avatarUrl) URL.revokeObjectURL(avatarUrl) //dodge memory leaks and revoke URL
+        };
     }, []);
 
     return (
@@ -181,7 +183,6 @@ export const UserAccountButtons_Web = ({ userID }: any) => {
                     )}
                 </IconButton>
                 <Authenticated_UserHeaderMenu anchorEl={anchorEl} open={open} handleClose={handleClose} />
-                <a href={avatarUrl} target="_blank" rel="noreferrer">click it </a>
             </Grid>
         </Grid>
     );
