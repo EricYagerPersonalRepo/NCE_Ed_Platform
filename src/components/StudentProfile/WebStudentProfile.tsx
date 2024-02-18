@@ -1,8 +1,26 @@
 import React, { useState } from 'react'
-import { Button, Drawer, Grid, List, ListItem, ListItemText, Typography } from '@mui/material'
+import { Button, Grid, List, ListItem, Typography } from '@mui/material'
 import { MyAccountView, MyCourseView } from './StudentProfileComponents'
 
-const WebStudentProfile = ({ isLoggedIn, userID }: any) => {
+/**
+ * WebStudentProfile Component - Manages and displays the student profile interface within a web application.
+ * 
+ * This component serves as a navigation hub for different views of a student's profile, such as their account
+ * details and course enrollments. It maintains an 'activeView' state to control which component is displayed
+ * to the user based on their selection. The navigation menu allows the user to switch between different views,
+ * including 'Account' and 'My Courses', with the potential for additional views to be added.
+ * 
+ * The main functionality includes:
+ * - A side menu for selecting the view ('Account', 'My Courses', etc.).
+ * - Dynamic rendering of the selected view's component in the main content area.
+ * 
+ * @param {any} avatarUrl - The URL of the student's avatar image, passed to the 'MyAccountView' component.
+ * 
+ * @returns {JSX.Element} - A container with a side navigation menu and a main content area that displays the
+ *                          selected view's content.
+ */
+
+const WebStudentProfile = ({ avatarUrl }: any) => {
     const [activeView, setActiveView] = useState('Account')
 
     const handleMenuClick = (view: string) => {
@@ -12,8 +30,7 @@ const WebStudentProfile = ({ isLoggedIn, userID }: any) => {
     const renderActiveView = () => {
         switch (activeView) {
             case 'Account':
-                console.log(userID)
-                return <MyAccountView userID={userID}/>
+                return <MyAccountView avatarUrl={avatarUrl}/>
             case 'My Courses':
                 return <MyCourseView />
             // Add more cases for other views

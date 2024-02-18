@@ -1,9 +1,8 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { Avatar, Button, Grid, IconButton, Menu, MenuItem, Typography } from '@mui/material'
 import { AccountCircle, MoreVert } from '@mui/icons-material'
-import { getUrlResult, getPresignedUrl } from '@/src/functions/AmplifyFunctions'
 import { useRouter } from 'next/router'
-import { getCurrentUser, signOut } from 'aws-amplify/auth'
+import { signOut } from 'aws-amplify/auth'
 import { loginButtonStyle, signUpButtonStyle } from '@/src/style/HeaderStyle'
 
 /**
@@ -32,6 +31,20 @@ export const CommonHeaderComponent: React.FC = () => {
         </Typography>
     )
 }
+
+/**
+ * UnauthenticatedHeaderMenuOptions Component - Renders menu options for unauthenticated users.
+ * 
+ * This component displays different menu options based on the device's screen size. For mobile devices,
+ * it presents a dropdown menu activated by an icon button. For larger screens, it displays "Sign Up" and
+ * "Login" buttons directly in the header. It utilizes the `isMobile` prop to determine the screen size and
+ * accordingly adjust the UI presentation. The navigation to "Log In" and "Sign Up" pages is handled using
+ * the Next.js `useRouter` hook, providing SPA navigation experience.
+ * 
+ * @param {any} isMobile - A boolean indicating whether the device is a mobile device based on screen size.
+ * 
+ * @returns {JSX.Element} - A set of menu options for unauthenticated users, tailored to the screen size.
+ */
 
 export const UnauthenticatedHeaderMenuOptions = ({isMobile}:any) => {
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
@@ -122,15 +135,22 @@ export const UnauthenticatedHeaderButtons_Mobile: React.FC = () => {
 }
 
 /**
- * Component for displaying user account buttons for web view.
+ * UserAccountButtons_Web Component - Displays the user account button for web views.
  * 
- * This component shows an avatar icon button, representing the user's account.
- * It is designed for web layouts and should be replaced with the user's avatar when available.
+ * This component renders an avatar icon button in the web application's header for authenticated users.
+ * The avatar is conditionally rendered based on the `avatarUrl` prop. If an avatar URL is provided, it
+ * displays the user's avatar; otherwise, it defaults to a generic account circle icon. Clicking the avatar
+ * icon triggers a dropdown menu with user account-related actions. The component manages the dropdown's
+ * open/close state using local component state and provides handlers for opening and closing the menu.
+ * 
+ * @param {any} avatarUrl - The URL of the user's avatar image. If present, the avatar is displayed; otherwise, a default icon is used.
+ * 
+ * @returns {JSX.Element} - A container with an avatar icon button that toggles a dropdown menu for user account actions.
  */
-export const UserAccountButtons_Web = ({ userID }: any) => {
-    const [avatarUrl, setAvatarUrl] = useState("");
-    const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-    const open = Boolean(anchorEl);
+
+export const UserAccountButtons_Web = ({ avatarUrl }: any) => {
+    const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
+    const open = Boolean(anchorEl)
 
     const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
         setAnchorEl(event.currentTarget)
@@ -139,30 +159,6 @@ export const UserAccountButtons_Web = ({ userID }: any) => {
     const handleClose = () => {
         setAnchorEl(null)
     }
-
-    useEffect(() => {
-        const fetchAvatar = async () => {
-            try {
-                const currentUser = await getCurrentUser();
-                if (currentUser && currentUser.userId) {
-                    const avatarFileName = `avatars/${currentUser.userId}/avatar.png`;
-                    const url = await getPresignedUrl(avatarFileName);
-                    const response = await fetch(url);
-                    const imageBlob = await response.blob();
-                    const localUrl = URL.createObjectURL(imageBlob);
-                    console.log("LOCAL URL: ", localUrl)
-                    setAvatarUrl(localUrl);
-                }
-            } catch (error) {
-                console.error("Error fetching user's avatar:", error);
-            }
-        };
-        fetchAvatar();
-
-        return () => {
-            if (avatarUrl) URL.revokeObjectURL(avatarUrl) //dodge memory leaks and revoke URL
-        };
-    }, []);
 
     return (
         <Grid container justifyContent="flex-end" style={{ flexGrow: 1 }}>
@@ -185,9 +181,8 @@ export const UserAccountButtons_Web = ({ userID }: any) => {
                 <Authenticated_UserHeaderMenu anchorEl={anchorEl} open={open} handleClose={handleClose} />
             </Grid>
         </Grid>
-    );
-};
-
+    )
+}
 
 /**
  * Component for displaying user account options for mobile view.
@@ -225,6 +220,24 @@ export const UserAccountButtons_Mobile: React.FC = () => {
         </Grid>
     )
 }
+
+/**
+ * Authenticated_UserHeaderMenu Component - Renders a dropdown menu for authenticated users.
+ * 
+ * This component provides a dropdown menu for authenticated users, offering navigation options to
+ * "My Courses" and a logout functionality. The menu is triggered by an IconButton in the parent
+ * component and utilizes the `anchorEl` prop for positioning. The `open` prop controls the visibility
+ * of the dropdown, and the `handleClose` function is used to close the menu upon selecting an option
+ * or clicking outside. Navigation is handled using the Next.js `useRouter` hook, ensuring a seamless
+ * SPA experience. The logout functionality is implemented with an async `signOut` function, which, upon
+ * success, redirects the user to the homepage.
+ * 
+ * @param {any} anchorEl - The element to anchor the dropdown menu to.
+ * @param {any} open - A boolean controlling the visibility of the dropdown menu.
+ * @param {any} handleClose - A function to close the dropdown menu.
+ * 
+ * @returns {JSX.Element} - A dropdown menu with options for "My Courses" and "Logout" for authenticated users.
+ */
 
 export const Authenticated_UserHeaderMenu = ({anchorEl, open, handleClose}:any) => {
     const router = useRouter()

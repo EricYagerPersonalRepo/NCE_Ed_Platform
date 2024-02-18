@@ -4,8 +4,25 @@ import { listCourseProfiles } from '@/src/graphql/queries'
 import { FormControl, InputLabel, Select, MenuItem, Typography, Grid, Paper, Avatar, Button } from '@mui/material'
 import { Course } from '@/src/types/StudentProfileTypes'
 import { downloadAvatarFromS3, uploadFileToS3 } from '@/src/functions/StorageFunctions'
+import { getCurrentUser } from 'aws-amplify/auth'
 
 const amplifyApiClient = generateClient()
+
+/**
+ * MyCourseView Component - Manages and displays a list of courses and details for a selected course.
+ * 
+ * This component is responsible for fetching and displaying a list of courses. It allows users to select
+ * a course from a dropdown menu to view more detailed information about it, such as its description. The
+ * courses are fetched asynchronously on component mount and stored in the component's state. The user's
+ * selected course is also managed in the state, allowing dynamic rendering of the selected course's details.
+ * 
+ * The fetching of courses is handled via an async function within a useEffect hook to ensure data is loaded
+ * when the component is rendered. Error handling is included to log issues when fetching course data. The
+ * component utilizes Material-UI components for the UI, providing a consistent and user-friendly experience.
+ * 
+ * @returns {JSX.Element} - A component that provides a dropdown list of courses and displays the description
+ * of the selected course.
+ */
 
 export const MyCourseView = () => {
     const [courses, setCourses] = useState<Course[]>([])
@@ -59,19 +76,21 @@ export const MyCourseView = () => {
     )
 }
 
-export const MyAccountView = ({userID}:any) => {
-    const [avatar,setAvatar] = useState()
+/**
+ * MyAccountView Component - Renders the account management dashboard with user-specific details.
+ * 
+ * This component structures the account dashboard into a grid layout, featuring sections for profile
+ * information, settings, avatar management, and recent activity. Each section is presented within its
+ * own card for clear separation and focus. The avatar management section utilizes the AvatarManager
+ * component to handle avatar uploads, leveraging the passed `avatarUrl` prop to display the current avatar.
+ * 
+ * @param {any} avatarUrl - The URL of the user's current avatar image.
+ * 
+ * @returns {JSX.Element} - A comprehensive view of the user's account dashboard, including profile
+ * information, settings, avatar management, and a placeholder for recent activity.
+ */
 
-    const avatarUrl = `/public/avatars/${userID}/avatar.png`
-    console.log("AVATARURL: ", avatarUrl)
-
-    useEffect(()=>{
-        const getUserAvatar = async() => {
-            const avatarCall = await downloadAvatarFromS3(avatarUrl)
-            console.log("AVATARCALL: ", avatarCall)
-        }
-        getUserAvatar()
-    },[])
+export const MyAccountView = ({avatarUrl}:any) => {
 
     return (
         <Grid container spacing={2}>
@@ -100,19 +119,43 @@ export const MyAccountView = ({userID}:any) => {
             </Grid>
             {/* Additional sections can be added here */}
         </Grid>
-    );
-};
+    )
+}
 
-const AvatarManager = ({ avatarUrl, onAvatarUpload }:any) => {
+/**
+ * AvatarManager Component - Manages user avatar uploads and displays the current avatar.
+ * 
+ * This component allows users to upload a new avatar image, which is then uploaded to an S3 bucket.
+ * It displays the user's current avatar if available. The component handles file selection and
+ * triggers the upload process. Upon successful upload, the avatar is updated and the page is reloaded
+ * to reflect the change. The upload process involves fetching the current user's details to construct
+ * a target path for the avatar in the S3 bucket, ensuring the avatar is associated with the correct user.
+ * 
+ * @param {any} avatarUrl - The URL of the user's current avatar image.
+ * 
+ * @returns {JSX.Element} - A component that includes an avatar display and an upload button for updating the avatar.
+ */
+const AvatarManager = ({ avatarUrl }:any) => {
     const handleFileChange:any = async (event:any) => {
-        const file = event.target.files[0];
-        if (!file) return;
-        const uploadedKey:any = await uploadFileToS3(file, avatarUrl);
+        const file = event.target.files[0]
+        const currentUser = await getCurrentUser()
+        const userDataResponse = {
+            email: currentUser.signInDetails?.loginId || '', // Fallback to an empty string if undefined
+            cognitoID: currentUser.userId
+        }
+        const avatarTarget = `avatars/${userDataResponse.cognitoID}/avatar.png`
+
+        if (!file) return
+        const uploadedKey:any = await uploadFileToS3(file, avatarTarget)
+
+        const onAvatarUpload = () => {
+            window.location.reload()
+        }
 
         if (uploadedKey) {
-            onAvatarUpload(uploadedKey);
+            onAvatarUpload()
         }
-    };
+    }
 
     return (
         <Paper elevation={3} style={{ padding: 20 }}>
@@ -123,5 +166,5 @@ const AvatarManager = ({ avatarUrl, onAvatarUpload }:any) => {
                 <input type="file" hidden onChange={handleFileChange} />
             </Button>
         </Paper>
-    );
+    )
 }

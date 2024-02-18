@@ -1,5 +1,7 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react'
 import { checkAuthStatus } from '../functions/AuthFunctions'
+import { getCurrentUser } from 'aws-amplify/auth';
+import { getPresignedUrl } from '../functions/AmplifyFunctions';
 
 /**
  * Type definition for the AuthContext.
@@ -9,10 +11,12 @@ import { checkAuthStatus } from '../functions/AuthFunctions'
  * 'setLoggedIn' is a function to update the 'loggedIn' state.
  */
 interface AuthContextType {
-    loggedIn: boolean
-    setLoggedIn: React.Dispatch<React.SetStateAction<boolean>>
-    login: any
-    logout: any
+    loggedIn: boolean;
+    setLoggedIn: React.Dispatch<React.SetStateAction<boolean>>;
+    login: any;
+    logout: any;
+    avatarUrl: string; // Add avatarUrl to the context type
+    setAvatarUrl: React.Dispatch<React.SetStateAction<string>>; // Add setter for avatarUrl
 }
 
 /**
@@ -21,7 +25,14 @@ interface AuthContextType {
  * This context provides a way to share the user's logged-in status across the application.
  * It contains a default state with 'loggedIn' set to false and a placeholder function for 'setLoggedIn'.
  */
-const AuthContext = createContext<AuthContextType>({ loggedIn: false, setLoggedIn: () => {}, login: ()=>{}, logout: ()=>{} })
+const AuthContext = createContext<AuthContextType>({
+    loggedIn: false, 
+    setLoggedIn: () => {}, 
+    login: () => {}, 
+    logout: () => {},
+    avatarUrl: '', // Default avatarUrl state
+    setAvatarUrl: () => {} // Placeholder function for setAvatarUrl
+})
 
 /**
  * Props for AuthProvider component.
@@ -42,7 +53,8 @@ interface AuthProviderProps {
  * @param {AuthProviderProps} props - The props passed to the component.
  */
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
-    const [loggedIn, setLoggedIn] = useState(false)
+    const [loggedIn, setLoggedIn] = useState(false);
+    const [avatarUrl, setAvatarUrl] = useState('')
 
     const login = () => {
         setLoggedIn(true);
@@ -50,23 +62,68 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     
     const logout = () => {
         setLoggedIn(false);
+        setAvatarUrl(''); // Optionally reset avatarUrl on logout
     };
 
     useEffect(() => {
-        async function checkAndSetAuthStatus() {
+        async function initializeAuth() {
             try {
-                const isUserLoggedIn = await checkAuthStatus()
-                setLoggedIn(isUserLoggedIn)
+                // Check authentication status
+                const isUserLoggedIn = await checkAuthStatus();
+                setLoggedIn(isUserLoggedIn);
+
+                // If user is logged in, fetch the avatar
+                if (isUserLoggedIn) {
+                    const currentUser = await getCurrentUser();
+                    if (currentUser && currentUser.userId) {
+                        const avatarFileName = `avatars/${currentUser.userId}/avatar.png`;
+                        const url = await getPresignedUrl(avatarFileName);
+                        const response = await fetch(url);
+                        const imageBlob = await response.blob();
+                        const localUrl = URL.createObjectURL(imageBlob);
+                        setAvatarUrl(localUrl);
+                    }
+                }
             } catch (error) {
-                console.error('Failed to check authentication status:', error)
-                setLoggedIn(false)
+                console.error('Initialization error:', error);
+                setLoggedIn(false);
+                setAvatarUrl(''); // Optionally reset avatarUrl on error
             }
         }
-        checkAndSetAuthStatus()
+        initializeAuth();
+
+        // Cleanup function to revoke the avatar URL
+        return () => {
+            if (avatarUrl) URL.revokeObjectURL(avatarUrl);
+        };
+    }, []);
+
+    useEffect(() => {
+        const fetchAvatar = async () => {
+            try {
+                const currentUser = await getCurrentUser();
+                if (currentUser && currentUser.userId) {
+                    const avatarFileName = `avatars/${currentUser.userId}/avatar.png`;
+                    const url = await getPresignedUrl(avatarFileName);
+                    const response = await fetch(url);
+                    const imageBlob = await response.blob();
+                    const localUrl = URL.createObjectURL(imageBlob);
+                    console.log("LOCAL URL: ", localUrl)
+                    setAvatarUrl(localUrl);
+                }
+            } catch (error) {
+                console.error("Error fetching user's avatar:", error);
+            }
+        };
+        fetchAvatar();
+
+        return () => {
+            if (avatarUrl) URL.revokeObjectURL(avatarUrl) //dodge memory leaks and revoke URL
+        };
     }, [])
 
     return (
-        <AuthContext.Provider value={{ loggedIn, setLoggedIn, login, logout }}>
+        <AuthContext.Provider value={{ loggedIn, setLoggedIn, login, logout, avatarUrl, setAvatarUrl }}>
             {children}
         </AuthContext.Provider>
     )
