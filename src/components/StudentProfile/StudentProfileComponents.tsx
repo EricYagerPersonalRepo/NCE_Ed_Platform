@@ -5,6 +5,8 @@ import { FormControl, InputLabel, Select, MenuItem, Typography, Grid, Paper, Ava
 import { Course } from '@/src/types/StudentProfileTypes'
 import { downloadAvatarFromS3, uploadFileToS3 } from '@/src/functions/StorageFunctions'
 import { getCurrentUser } from 'aws-amplify/auth'
+import { createUserSettings } from '@/src/graphql/mutations'
+import { CreateUserSettingsInput } from '@/src/API'
 
 const amplifyApiClient = generateClient()
 
@@ -90,25 +92,48 @@ export const MyCourseView = ({userID}:any) => {
  */
 
 export const MyAccountView = ({userID, avatarUrl}:any) => {
-    const [userInformation, setUserInformation] = useState({})
+    const [userInformation, setUserInformation] = useState<any>({})
 
     useEffect(() => {
         const fetchUserData = async () => {
-            try{
-                const userData:any = await amplifyApiClient.graphql({
+            if (!userID) return
+
+            try {
+                const userData: any = await amplifyApiClient.graphql({
                     query: getStudentProfile,
                     variables: {
                         id: userID
                     }
                 })
                 setUserInformation(userData.data.getStudentProfile)
-                console.log(userData)
             } catch (error) {
-                console.error('Error fetching user data:', error)  
+                console.error('Error fetching user data:', error)
             }
         }
         fetchUserData()
-    },[])
+
+        const userSettingsInput: CreateUserSettingsInput = {
+            studentProfileID: userID,
+            notificationsEnabled: true, 
+            darkModeEnabled: false, 
+            language: 'en', 
+        }
+
+        
+        const createUserSettingsCall = async() =>{
+            try {
+                const apiCall = await amplifyApiClient.graphql({
+                    query: createUserSettings,
+                    variables: { input: userSettingsInput }
+                })
+            } catch (userSettingsCreateError) {
+                console.log('Error Creating User Settings:', userSettingsCreateError)
+            }
+        }
+        if (userInformation.userSettings?.studentProfileID ?? null === null) {
+            createUserSettingsCall();
+        }
+    }, [userID])
 
     return (
         <Grid container spacing={2}>
@@ -166,12 +191,8 @@ const AvatarManager = ({ avatarUrl }:any) => {
         if (!file) return
         const uploadedKey:any = await uploadFileToS3(file, avatarTarget)
 
-        const onAvatarUpload = () => {
-            window.location.reload()
-        }
-
         if (uploadedKey) {
-            onAvatarUpload()
+            window.location.reload()
         }
     }
 

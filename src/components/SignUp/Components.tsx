@@ -169,9 +169,6 @@ export const NameInput = ({signUpHooks}:any) => {
  *                          validation and dynamic feedback based on the inputted value.
  */
 export const ZipInput = ({signUpHooks}:any) => {
-    /**
- * Zip Code functions
- */
 
     // Fetches city and state information based on the provided zip code.
     const fetchCityStateCall = async(zip:any) => {

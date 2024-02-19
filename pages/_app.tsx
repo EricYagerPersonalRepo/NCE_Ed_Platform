@@ -62,9 +62,7 @@ const NCE_Education_App = ({ Component, pageProps }:any) => {
                 setLoggedIn(false)
             }
         }
-
         validateAuthState()
-
     }, [])
 
     /**
@@ -102,47 +100,6 @@ const NCE_Education_App = ({ Component, pageProps }:any) => {
         getUserData()
         
     }, [loggedIn])
-
-    /**
-     * Initializes the application's authentication state and fetches the user's avatar if logged in. 
-     * On app start, it checks the user's authentication status. If authenticated, it retrieves the 
-     * user's details to fetch and set their avatar URL. In case of errors during initialization,
-     * it logs the error, and resets both the loggedIn and avatarUrl states. A cleanup function 
-     * revokes the avatar URL to free resources when the component unmounts or the avatar changes.
-     * 
-     * Dependencies: None
-     */
-    useEffect(() => {
-        async function initializeAuth() {
-            try {
-                const isUserLoggedIn = await checkAuthStatus();
-                setLoggedIn(isUserLoggedIn);
-
-                if (isUserLoggedIn) {
-                    const currentUser = await getCurrentUser();
-                    if (currentUser && currentUser.userId) {
-                        const avatarFileName = `avatars/${currentUser.userId}/avatar.png`;
-                        const url = await getPresignedUrl(avatarFileName);
-                        const response = await fetch(url);
-                        const imageBlob = await response.blob();
-                        const localUrl = URL.createObjectURL(imageBlob);
-                        setAvatarUrl(localUrl);
-                    }
-                }
-
-            } catch (error) {
-                console.error('Initialization error:', error);
-                setLoggedIn(false);
-                setAvatarUrl('');
-            }
-        }
-        initializeAuth();
-
-        // Cleanup function to revoke the avatar URL
-        return () => {
-            if (avatarUrl) URL.revokeObjectURL(avatarUrl);
-        };
-    }, []);
 
     return (
         <AuthProvider>
