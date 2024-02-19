@@ -45,7 +45,13 @@ const NCE_Education_App = ({ Component, pageProps }:any) => {
     const [avatarUrl, setAvatarUrl] = useState('')
 
 
-
+    /**
+     * Initializes the application by checking the user's authentication status once when the app loads.
+     * It attempts to verify if the user is logged in through `checkAuthStatus`. If successful, `setLoggedIn` updates
+     * the state to reflect the user's status. Any errors during this process result in the user being set to logged out.
+     * 
+     * Dependencies: None
+    */
     useEffect(() => {
         async function validateAuthState() {
             try {
@@ -61,12 +67,27 @@ const NCE_Education_App = ({ Component, pageProps }:any) => {
 
     }, [])
 
+    /**
+     * Sets up a listener for authentication events using AWS Amplify's Hub module. Whenever an authentication event occurs,
+     * such as sign-in or sign-out, it triggers a page reload to reflect changes in the user's authentication state across
+     * the application. This useEffect hook ensures the listener is registered once when the app component mounts.
+     * 
+     * Dependencies: None
+    */
     useEffect(()=> {
         Hub.listen('auth', () => {
             window.location.reload()
         })
     }, [])
 
+    /**
+     * This effect fetches and sets the user's data upon a change in their logged-in status. 
+     * If the user is logged in, it calls `getCurrentUser` to retrieve the user's details,
+     * such as email and cognitoID, and updates the application's state with this information.
+     * It runs every time the `loggedIn` state changes, ensuring the user data is always current.
+     * 
+     * Dependencies: loggedIn - The effect triggers in response to changes in the user's logged-in status.
+    */
     useEffect(()=> {
         const getUserData = async() =>{
             if(loggedIn){
@@ -82,14 +103,21 @@ const NCE_Education_App = ({ Component, pageProps }:any) => {
         
     }, [loggedIn])
 
+    /**
+     * Initializes the application's authentication state and fetches the user's avatar if logged in. 
+     * On app start, it checks the user's authentication status. If authenticated, it retrieves the 
+     * user's details to fetch and set their avatar URL. In case of errors during initialization,
+     * it logs the error, and resets both the loggedIn and avatarUrl states. A cleanup function 
+     * revokes the avatar URL to free resources when the component unmounts or the avatar changes.
+     * 
+     * Dependencies: None
+     */
     useEffect(() => {
         async function initializeAuth() {
             try {
-                // Check authentication status
                 const isUserLoggedIn = await checkAuthStatus();
                 setLoggedIn(isUserLoggedIn);
 
-                // If user is logged in, fetch the avatar
                 if (isUserLoggedIn) {
                     const currentUser = await getCurrentUser();
                     if (currentUser && currentUser.userId) {
@@ -101,17 +129,19 @@ const NCE_Education_App = ({ Component, pageProps }:any) => {
                         setAvatarUrl(localUrl);
                     }
                 }
+
             } catch (error) {
                 console.error('Initialization error:', error);
                 setLoggedIn(false);
-                setAvatarUrl(''); // Optionally reset avatarUrl on error
+                setAvatarUrl('');
             }
         }
         initializeAuth();
-            // Cleanup function to revoke the avatar URL
-            return () => {
-                if (avatarUrl) URL.revokeObjectURL(avatarUrl);
-            };
+
+        // Cleanup function to revoke the avatar URL
+        return () => {
+            if (avatarUrl) URL.revokeObjectURL(avatarUrl);
+        };
     }, []);
 
     return (

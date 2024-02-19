@@ -1,35 +1,31 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import { AppBar, Toolbar, useTheme, useMediaQuery } from '@mui/material'
 import { CommonHeaderComponent, UserAccountButtons_Mobile, UserAccountButtons_Web } from './HeaderComponents'
 import { AuthenticatedHeaderProps } from '@/src/types/HeaderTypes'
-import { useAuth } from '@/src/state/AuthGlobalState'
 
 /**
- * AuthenticatedHeader Component - Renders the header for authenticated users, adapting to screen size.
+ * AuthenticatedHeader Component - Renders the header for authenticated users in the application.
  * 
- * This component displays a navigation header for authenticated users, incorporating responsive design to
- * adapt to different screen sizes. It utilizes Material-UI's AppBar and Toolbar components for layout and
- * styling. The header includes a common header component that is always displayed, and user account buttons
- * that change based on the screen size - showing a mobile-specific version on small screens and a web-specific
- * version on larger screens. The avatar URL is passed to the user account buttons component to display the
- * user's avatar image.
+ * This component displays a consistent header for authenticated users across different parts of the application.
+ * It dynamically adjusts the user account buttons based on the screen size, showing a mobile-optimized version
+ * on smaller screens and a web version on larger screens. The decision is made using Material-UI's useMediaQuery
+ * hook to check against the theme's breakpoints.
  * 
- * The use of Material-UI's useTheme and useMediaQuery hooks allows the component to responsively adjust its
- * layout and content. A useEffect hook is used to log the avatar URL on component mount, demonstrating how
- * side effects can be managed within functional components.
+ * Props:
+ * - avatarUrl: URL string pointing to the authenticated user's avatar image. This URL is passed to the
+ *   UserAccountButtons_Web component for displaying the user's avatar.
  * 
- * @param {AuthenticatedHeaderProps} props - Props containing the avatar URL for the authenticated user.
- * @returns {JSX.Element} - The AppBar component with conditional content based on screen size.
+ * The component includes a CommonHeaderComponent, which could contain navigation or branding common to
+ * all authenticated states of the application. The presence of avatarUrl in the props suggests that the
+ * component may also display user-specific information, enhancing the personalized experience of the application.
+ * 
+ * @param {AuthenticatedHeaderProps} props - The props object, destructured to extract avatarUrl for use in the component.
+ * @returns {JSX.Element} - The AppBar component containing the toolbar with common header elements and user account buttons,
+ *                          adapted for mobile or web display based on the current screen size.
  */
-
 const AuthenticatedHeader: React.FC<AuthenticatedHeaderProps>= ({avatarUrl}) => {
     const theme = useTheme()
     const isMobile = useMediaQuery(theme.breakpoints.down('sm'))
-    
-
-    useEffect(()=>{
-        console.log("avatar: ", avatarUrl)
-    },[])
 
     return (
         <AppBar position="static" style={{ background: 'white' }} elevation={0}>

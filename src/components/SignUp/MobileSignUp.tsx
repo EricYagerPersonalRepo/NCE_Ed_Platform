@@ -4,6 +4,25 @@ import { BirthdayInput, EmailInput, NameInput, PasswordInput, ZipInput, TwoFacto
 import { useSignUpHooks } from '@/src/state/SignUpHooks'
 import { handleConfirmSignup } from '@/src/functions/AuthFunctions'
 
+/**
+ * MobileSignUp Component - Manages the sign-up process for mobile users with a step-by-step navigation approach.
+ * 
+ * This component leverages the `useSignUpHooks` custom hook to manage state across different steps of the sign-up
+ * process, such as birthday, name, location, email, and password input. It uses a conditional rendering strategy
+ * based on the current tab value to display only the relevant input component for the current step, creating a
+ * linear and focused sign-up experience.
+ * 
+ * The useEffect hook within this component monitors the completion state of each step and automatically advances
+ * the user to the next step upon completion, ensuring a smooth progression through the sign-up process without
+ * manual navigation required by the user.
+ * 
+ * A Modal component is conditionally rendered when two-factor authentication (TFA) is required, providing an
+ * additional security layer during the sign-up process. This modal presents the TwoFactorAuthForm to the user,
+ * facilitating the TFA verification.
+ * 
+ * @returns {JSX.Element} - A containerized sign-up form with conditional rendering based on the current sign-up
+ *                          step, optimized for mobile users with automatic step advancement and a TFA modal.
+ */
 const MobileSignUp = () => {
     const signUpHooks = useSignUpHooks()
 
@@ -18,7 +37,7 @@ const MobileSignUp = () => {
         } else if (signUpHooks.emailComplete && signUpHooks.tabValue === 3) {
             signUpHooks.setTabValue(4)
         }
-        // Add any other conditions as needed for further steps
+
     }, [signUpHooks, signUpHooks.birthdayComplete, signUpHooks.nameComplete, signUpHooks.locationComplete, signUpHooks.emailComplete])
 
     return (

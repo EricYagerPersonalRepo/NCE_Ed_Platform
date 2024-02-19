@@ -6,7 +6,7 @@
 
 import * as React from "react";
 import { AutocompleteProps, GridProps, TextFieldProps } from "@aws-amplify/ui-react";
-import { CourseEnrollment } from "../API.ts";
+import { CourseEnrollment, UserSettings } from "../API.ts";
 export declare type EscapeHatchProps = {
     [elementHierarchy: string]: Record<string, unknown>;
 } | null;
@@ -28,6 +28,7 @@ export declare type StudentProfileCreateFormInputValues = {
     email?: string;
     birthdate?: string;
     courseEnrollments?: CourseEnrollment[];
+    userSettings?: UserSettings[];
 };
 export declare type StudentProfileCreateFormValidationValues = {
     cognitoUserID?: ValidationFunction<string>;
@@ -35,6 +36,7 @@ export declare type StudentProfileCreateFormValidationValues = {
     email?: ValidationFunction<string>;
     birthdate?: ValidationFunction<string>;
     courseEnrollments?: ValidationFunction<CourseEnrollment>;
+    userSettings?: ValidationFunction<UserSettings>;
 };
 export declare type PrimitiveOverrideProps<T> = Partial<T> & React.DOMAttributes<HTMLDivElement>;
 export declare type StudentProfileCreateFormOverridesProps = {
@@ -44,6 +46,7 @@ export declare type StudentProfileCreateFormOverridesProps = {
     email?: PrimitiveOverrideProps<TextFieldProps>;
     birthdate?: PrimitiveOverrideProps<TextFieldProps>;
     courseEnrollments?: PrimitiveOverrideProps<AutocompleteProps>;
+    userSettings?: PrimitiveOverrideProps<AutocompleteProps>;
 } & EscapeHatchProps;
 export declare type StudentProfileCreateFormProps = React.PropsWithChildren<{
     overrides?: StudentProfileCreateFormOverridesProps | undefined | null;

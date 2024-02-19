@@ -35,4 +35,6 @@ export { default as Stat } from "./Stat";
 export { default as StudentProfileCreateForm } from "./StudentProfileCreateForm";
 export { default as StudentProfileUpdateForm } from "./StudentProfileUpdateForm";
 export { default as UnauthenticatedHeader } from "./UnauthenticatedHeader";
+export { default as UserSettingsCreateForm } from "./UserSettingsCreateForm";
+export { default as UserSettingsUpdateForm } from "./UserSettingsUpdateForm";
 export { default as studioTheme } from "./studioTheme";

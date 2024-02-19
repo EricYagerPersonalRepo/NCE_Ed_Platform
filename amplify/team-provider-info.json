@@ -25,7 +25,7 @@
       "function": {
         "nceAvatarHandler": {
           "deploymentBucketName": "amplify-nceeducationplatform-staging-212417-deployment",
-          "s3Key": "amplify-builds/nceAvatarHandler-445a6c34507a474a724a-build.zip"
+          "s3Key": "amplify-builds/nceAvatarHandler-4e334764482f59782f79-build.zip"
         }
       }
     }

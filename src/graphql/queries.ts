@@ -19,6 +19,10 @@ export const getStudentProfile = /* GraphQL */ `query GetStudentProfile($id: ID!
       nextToken
       __typename
     }
+    userSettings {
+      nextToken
+      __typename
+    }
     createdAt
     updatedAt
     __typename
@@ -51,6 +55,38 @@ export const listStudentProfiles = /* GraphQL */ `query ListStudentProfiles(
 ` as GeneratedQuery<
   APITypes.ListStudentProfilesQueryVariables,
   APITypes.ListStudentProfilesQuery
+>;
+export const studentProfilesByCognitoUserID = /* GraphQL */ `query StudentProfilesByCognitoUserID(
+  $cognitoUserID: ID!
+  $sortDirection: ModelSortDirection
+  $filter: ModelStudentProfileFilterInput
+  $limit: Int
+  $nextToken: String
+) {
+  studentProfilesByCognitoUserID(
+    cognitoUserID: $cognitoUserID
+    sortDirection: $sortDirection
+    filter: $filter
+    limit: $limit
+    nextToken: $nextToken
+  ) {
+    items {
+      id
+      cognitoUserID
+      name
+      email
+      birthdate
+      createdAt
+      updatedAt
+      __typename
+    }
+    nextToken
+    __typename
+  }
+}
+` as GeneratedQuery<
+  APITypes.StudentProfilesByCognitoUserIDQueryVariables,
+  APITypes.StudentProfilesByCognitoUserIDQuery
 >;
 export const getCourseProfile = /* GraphQL */ `query GetCourseProfile($id: ID!) {
   getCourseProfile(id: $id) {
@@ -221,4 +257,88 @@ export const courseEnrollmentsByCourseProfileIDAndId = /* GraphQL */ `query Cour
 ` as GeneratedQuery<
   APITypes.CourseEnrollmentsByCourseProfileIDAndIdQueryVariables,
   APITypes.CourseEnrollmentsByCourseProfileIDAndIdQuery
+>;
+export const getUserSettings = /* GraphQL */ `query GetUserSettings($id: ID!) {
+  getUserSettings(id: $id) {
+    id
+    studentProfileID
+    studentProfile {
+      id
+      cognitoUserID
+      name
+      email
+      birthdate
+      createdAt
+      updatedAt
+      __typename
+    }
+    notificationsEnabled
+    darkModeEnabled
+    language
+    createdAt
+    updatedAt
+    __typename
+  }
+}
+` as GeneratedQuery<
+  APITypes.GetUserSettingsQueryVariables,
+  APITypes.GetUserSettingsQuery
+>;
+export const listUserSettings = /* GraphQL */ `query ListUserSettings(
+  $filter: ModelUserSettingsFilterInput
+  $limit: Int
+  $nextToken: String
+) {
+  listUserSettings(filter: $filter, limit: $limit, nextToken: $nextToken) {
+    items {
+      id
+      studentProfileID
+      notificationsEnabled
+      darkModeEnabled
+      language
+      createdAt
+      updatedAt
+      __typename
+    }
+    nextToken
+    __typename
+  }
+}
+` as GeneratedQuery<
+  APITypes.ListUserSettingsQueryVariables,
+  APITypes.ListUserSettingsQuery
+>;
+export const userSettingsByStudentProfileIDAndId = /* GraphQL */ `query UserSettingsByStudentProfileIDAndId(
+  $studentProfileID: ID!
+  $id: ModelIDKeyConditionInput
+  $sortDirection: ModelSortDirection
+  $filter: ModelUserSettingsFilterInput
+  $limit: Int
+  $nextToken: String
+) {
+  userSettingsByStudentProfileIDAndId(
+    studentProfileID: $studentProfileID
+    id: $id
+    sortDirection: $sortDirection
+    filter: $filter
+    limit: $limit
+    nextToken: $nextToken
+  ) {
+    items {
+      id
+      studentProfileID
+      notificationsEnabled
+      darkModeEnabled
+      language
+      createdAt
+      updatedAt
+      __typename
+    }
+    nextToken
+    __typename
+  }
+}
+` as GeneratedQuery<
+  APITypes.UserSettingsByStudentProfileIDAndIdQueryVariables,
+  APITypes.UserSettingsByStudentProfileIDAndIdQuery
 >;

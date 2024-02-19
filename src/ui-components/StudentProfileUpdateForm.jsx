@@ -21,10 +21,15 @@ import {
 } from "@aws-amplify/ui-react";
 import { fetchByPath, getOverrideProps, validateField } from "./utils";
 import { generateClient } from "aws-amplify/api";
-import { getStudentProfile, listCourseEnrollments } from "../graphql/queries";
+import {
+  getStudentProfile,
+  listCourseEnrollments,
+  listUserSettings,
+} from "../graphql/queries";
 import {
   updateCourseEnrollment,
   updateStudentProfile,
+  updateUserSettings,
 } from "../graphql/mutations";
 const client = generateClient();
 function ArrayField({
@@ -200,6 +205,7 @@ export default function StudentProfileUpdateForm(props) {
     email: "",
     birthdate: "",
     courseEnrollments: [],
+    userSettings: [],
   };
   const [cognitoUserID, setCognitoUserID] = React.useState(
     initialValues.cognitoUserID
@@ -214,6 +220,11 @@ export default function StudentProfileUpdateForm(props) {
     React.useState(false);
   const [courseEnrollmentsRecords, setCourseEnrollmentsRecords] =
     React.useState([]);
+  const [userSettings, setUserSettings] = React.useState(
+    initialValues.userSettings
+  );
+  const [userSettingsLoading, setUserSettingsLoading] = React.useState(false);
+  const [userSettingsRecords, setUserSettingsRecords] = React.useState([]);
   const autocompleteLength = 10;
   const [errors, setErrors] = React.useState({});
   const resetStateValues = () => {
@@ -222,6 +233,7 @@ export default function StudentProfileUpdateForm(props) {
           ...initialValues,
           ...studentProfileRecord,
           courseEnrollments: linkedCourseEnrollments,
+          userSettings: linkedUserSettings,
         }
       : initialValues;
     setCognitoUserID(cleanValues.cognitoUserID);
@@ -231,6 +243,9 @@ export default function StudentProfileUpdateForm(props) {
     setCourseEnrollments(cleanValues.courseEnrollments ?? []);
     setCurrentCourseEnrollmentsValue(undefined);
     setCurrentCourseEnrollmentsDisplayValue("");
+    setUserSettings(cleanValues.userSettings ?? []);
+    setCurrentUserSettingsValue(undefined);
+    setCurrentUserSettingsDisplayValue("");
     setErrors({});
   };
   const [studentProfileRecord, setStudentProfileRecord] = React.useState(
@@ -240,6 +255,8 @@ export default function StudentProfileUpdateForm(props) {
     []
   );
   const canUnlinkCourseEnrollments = false;
+  const [linkedUserSettings, setLinkedUserSettings] = React.useState([]);
+  const canUnlinkUserSettings = false;
   React.useEffect(() => {
     const queryData = async () => {
       const record = idProp
@@ -252,6 +269,8 @@ export default function StudentProfileUpdateForm(props) {
         : studentProfileModelProp;
       const linkedCourseEnrollments = record?.courseEnrollments?.items ?? [];
       setLinkedCourseEnrollments(linkedCourseEnrollments);
+      const linkedUserSettings = record?.userSettings?.items ?? [];
+      setLinkedUserSettings(linkedUserSettings);
       setStudentProfileRecord(record);
     };
     queryData();
@@ -259,6 +278,7 @@ export default function StudentProfileUpdateForm(props) {
   React.useEffect(resetStateValues, [
     studentProfileRecord,
     linkedCourseEnrollments,
+    linkedUserSettings,
   ]);
   const [
     currentCourseEnrollmentsDisplayValue,
@@ -267,17 +287,32 @@ export default function StudentProfileUpdateForm(props) {
   const [currentCourseEnrollmentsValue, setCurrentCourseEnrollmentsValue] =
     React.useState(undefined);
   const courseEnrollmentsRef = React.createRef();
+  const [currentUserSettingsDisplayValue, setCurrentUserSettingsDisplayValue] =
+    React.useState("");
+  const [currentUserSettingsValue, setCurrentUserSettingsValue] =
+    React.useState(undefined);
+  const userSettingsRef = React.createRef();
   const getIDValue = {
     courseEnrollments: (r) => JSON.stringify({ id: r?.id }),
+    userSettings: (r) => JSON.stringify({ id: r?.id }),
   };
   const courseEnrollmentsIdSet = new Set(
     Array.isArray(courseEnrollments)
       ? courseEnrollments.map((r) => getIDValue.courseEnrollments?.(r))
       : getIDValue.courseEnrollments?.(courseEnrollments)
   );
+  const userSettingsIdSet = new Set(
+    Array.isArray(userSettings)
+      ? userSettings.map((r) => getIDValue.userSettings?.(r))
+      : getIDValue.userSettings?.(userSettings)
+  );
   const getDisplayValue = {
     courseEnrollments: (r) =>
       `${r?.progress ? r?.progress + " - " : ""}${r?.id}`,
+    userSettings: (r) =>
+      `${r?.notificationsEnabled ? r?.notificationsEnabled + " - " : ""}${
+        r?.id
+      }`,
   };
   const validations = {
     cognitoUserID: [{ type: "Required" }],
@@ -285,6 +320,7 @@ export default function StudentProfileUpdateForm(props) {
     email: [{ type: "Required" }, { type: "Email" }],
     birthdate: [{ type: "Required" }],
     courseEnrollments: [],
+    userSettings: [],
   };
   const runValidationTasks = async (
     fieldName,
@@ -333,8 +369,41 @@ export default function StudentProfileUpdateForm(props) {
     setCourseEnrollmentsRecords(newOptions.slice(0, autocompleteLength));
     setCourseEnrollmentsLoading(false);
   };
+  const fetchUserSettingsRecords = async (value) => {
+    setUserSettingsLoading(true);
+    const newOptions = [];
+    let newNext = "";
+    while (newOptions.length < autocompleteLength && newNext != null) {
+      const variables = {
+        limit: autocompleteLength * 5,
+        filter: {
+          or: [
+            { notificationsEnabled: { contains: value } },
+            { id: { contains: value } },
+          ],
+        },
+      };
+      if (newNext) {
+        variables["nextToken"] = newNext;
+      }
+      const result = (
+        await client.graphql({
+          query: listUserSettings.replaceAll("__typename", ""),
+          variables,
+        })
+      )?.data?.listUserSettings?.items;
+      var loaded = result.filter(
+        (item) => !userSettingsIdSet.has(getIDValue.userSettings?.(item))
+      );
+      newOptions.push(...loaded);
+      newNext = result.nextToken;
+    }
+    setUserSettingsRecords(newOptions.slice(0, autocompleteLength));
+    setUserSettingsLoading(false);
+  };
   React.useEffect(() => {
     fetchCourseEnrollmentsRecords("");
+    fetchUserSettingsRecords("");
   }, []);
   return (
     <Grid
@@ -350,6 +419,7 @@ export default function StudentProfileUpdateForm(props) {
           email,
           birthdate,
           courseEnrollments: courseEnrollments ?? null,
+          userSettings: userSettings ?? null,
         };
         const validationResponses = await Promise.all(
           Object.keys(validations).reduce((promises, fieldName) => {
@@ -439,6 +509,55 @@ export default function StudentProfileUpdateForm(props) {
               })
             );
           });
+          const userSettingsToLink = [];
+          const userSettingsToUnLink = [];
+          const userSettingsSet = new Set();
+          const linkedUserSettingsSet = new Set();
+          userSettings.forEach((r) =>
+            userSettingsSet.add(getIDValue.userSettings?.(r))
+          );
+          linkedUserSettings.forEach((r) =>
+            linkedUserSettingsSet.add(getIDValue.userSettings?.(r))
+          );
+          linkedUserSettings.forEach((r) => {
+            if (!userSettingsSet.has(getIDValue.userSettings?.(r))) {
+              userSettingsToUnLink.push(r);
+            }
+          });
+          userSettings.forEach((r) => {
+            if (!linkedUserSettingsSet.has(getIDValue.userSettings?.(r))) {
+              userSettingsToLink.push(r);
+            }
+          });
+          userSettingsToUnLink.forEach((original) => {
+            if (!canUnlinkUserSettings) {
+              throw Error(
+                `UserSettings ${original.id} cannot be unlinked from StudentProfile because undefined is a required field.`
+              );
+            }
+            promises.push(
+              client.graphql({
+                query: updateUserSettings.replaceAll("__typename", ""),
+                variables: {
+                  input: {
+                    id: original.id,
+                  },
+                },
+              })
+            );
+          });
+          userSettingsToLink.forEach((original) => {
+            promises.push(
+              client.graphql({
+                query: updateUserSettings.replaceAll("__typename", ""),
+                variables: {
+                  input: {
+                    id: original.id,
+                  },
+                },
+              })
+            );
+          });
           const modelFieldsToSave = {
             cognitoUserID: modelFields.cognitoUserID,
             name: modelFields.name,
@@ -484,6 +603,7 @@ export default function StudentProfileUpdateForm(props) {
               email,
               birthdate,
               courseEnrollments,
+              userSettings,
             };
             const result = onChange(modelFields);
             value = result?.cognitoUserID ?? value;
@@ -512,6 +632,7 @@ export default function StudentProfileUpdateForm(props) {
               email,
               birthdate,
               courseEnrollments,
+              userSettings,
             };
             const result = onChange(modelFields);
             value = result?.name ?? value;
@@ -540,6 +661,7 @@ export default function StudentProfileUpdateForm(props) {
               email: value,
               birthdate,
               courseEnrollments,
+              userSettings,
             };
             const result = onChange(modelFields);
             value = result?.email ?? value;
@@ -569,6 +691,7 @@ export default function StudentProfileUpdateForm(props) {
               email,
               birthdate: value,
               courseEnrollments,
+              userSettings,
             };
             const result = onChange(modelFields);
             value = result?.birthdate ?? value;
@@ -593,6 +716,7 @@ export default function StudentProfileUpdateForm(props) {
               email,
               birthdate,
               courseEnrollments: values,
+              userSettings,
             };
             const result = onChange(modelFields);
             values = result?.courseEnrollments ?? values;
@@ -667,6 +791,87 @@ export default function StudentProfileUpdateForm(props) {
           ref={courseEnrollmentsRef}
           labelHidden={true}
           {...getOverrideProps(overrides, "courseEnrollments")}
+        ></Autocomplete>
+      </ArrayField>
+      <ArrayField
+        onChange={async (items) => {
+          let values = items;
+          if (onChange) {
+            const modelFields = {
+              cognitoUserID,
+              name,
+              email,
+              birthdate,
+              courseEnrollments,
+              userSettings: values,
+            };
+            const result = onChange(modelFields);
+            values = result?.userSettings ?? values;
+          }
+          setUserSettings(values);
+          setCurrentUserSettingsValue(undefined);
+          setCurrentUserSettingsDisplayValue("");
+        }}
+        currentFieldValue={currentUserSettingsValue}
+        label={"User settings"}
+        items={userSettings}
+        hasError={errors?.userSettings?.hasError}
+        runValidationTasks={async () =>
+          await runValidationTasks("userSettings", currentUserSettingsValue)
+        }
+        errorMessage={errors?.userSettings?.errorMessage}
+        getBadgeText={getDisplayValue.userSettings}
+        setFieldValue={(model) => {
+          setCurrentUserSettingsDisplayValue(
+            model ? getDisplayValue.userSettings(model) : ""
+          );
+          setCurrentUserSettingsValue(model);
+        }}
+        inputFieldRef={userSettingsRef}
+        defaultFieldValue={""}
+      >
+        <Autocomplete
+          label="User settings"
+          isRequired={false}
+          isReadOnly={false}
+          placeholder="Search UserSettings"
+          value={currentUserSettingsDisplayValue}
+          options={userSettingsRecords.map((r) => ({
+            id: getIDValue.userSettings?.(r),
+            label: getDisplayValue.userSettings?.(r),
+          }))}
+          isLoading={userSettingsLoading}
+          onSelect={({ id, label }) => {
+            setCurrentUserSettingsValue(
+              userSettingsRecords.find((r) =>
+                Object.entries(JSON.parse(id)).every(
+                  ([key, value]) => r[key] === value
+                )
+              )
+            );
+            setCurrentUserSettingsDisplayValue(label);
+            runValidationTasks("userSettings", label);
+          }}
+          onClear={() => {
+            setCurrentUserSettingsDisplayValue("");
+          }}
+          onChange={(e) => {
+            let { value } = e.target;
+            fetchUserSettingsRecords(value);
+            if (errors.userSettings?.hasError) {
+              runValidationTasks("userSettings", value);
+            }
+            setCurrentUserSettingsDisplayValue(value);
+            setCurrentUserSettingsValue(undefined);
+          }}
+          onBlur={() =>
+            runValidationTasks("userSettings", currentUserSettingsDisplayValue)
+          }
+          errorMessage={errors.userSettings?.errorMessage}
+          hasError={errors.userSettings?.hasError}
+          ref={userSettingsRef}
+          labelHidden={true}
+          {...getOverrideProps(overrides, "userSettings")}
         ></Autocomplete>
       </ArrayField>
       <Flex

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { generateClient } from "aws-amplify/api"
-import { listCourseProfiles } from '@/src/graphql/queries'
+import { getStudentProfile, listCourseProfiles } from '@/src/graphql/queries'
 import { FormControl, InputLabel, Select, MenuItem, Typography, Grid, Paper, Avatar, Button } from '@mui/material'
 import { Course } from '@/src/types/StudentProfileTypes'
 import { downloadAvatarFromS3, uploadFileToS3 } from '@/src/functions/StorageFunctions'
@@ -24,7 +24,7 @@ const amplifyApiClient = generateClient()
  * of the selected course.
  */
 
-export const MyCourseView = () => {
+export const MyCourseView = ({userID}:any) => {
     const [courses, setCourses] = useState<Course[]>([])
     const [selectedCourseId, setSelectedCourseId] = useState('')
 
@@ -40,7 +40,6 @@ export const MyCourseView = () => {
                 console.error('Error fetching courses:', error)
             }
         }
-
         fetchCourses()
     }, [])
 
@@ -90,7 +89,26 @@ export const MyCourseView = () => {
  * information, settings, avatar management, and a placeholder for recent activity.
  */
 
-export const MyAccountView = ({avatarUrl}:any) => {
+export const MyAccountView = ({userID, avatarUrl}:any) => {
+    const [userInformation, setUserInformation] = useState({})
+
+    useEffect(() => {
+        const fetchUserData = async () => {
+            try{
+                const userData:any = await amplifyApiClient.graphql({
+                    query: getStudentProfile,
+                    variables: {
+                        id: userID
+                    }
+                })
+                setUserInformation(userData.data.getStudentProfile)
+                console.log(userData)
+            } catch (error) {
+                console.error('Error fetching user data:', error)  
+            }
+        }
+        fetchUserData()
+    },[])
 
     return (
         <Grid container spacing={2}>

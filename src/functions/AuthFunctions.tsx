@@ -50,7 +50,6 @@ export const handleCreateStudentProfile = async (studentProfileInput:CreateStude
             query: createStudentProfile,
             variables: { input: studentProfileInput }
         })
-        console.log('Student profile creation result:', profileResult)
         return({isSignedUp:true, userProfile:profileResult})
     } catch (signInError) {
         console.log('Error signing in:', signInError)
@@ -67,15 +66,13 @@ export const handleCreateStudentProfile = async (studentProfileInput:CreateStude
 export const handleSignIn = async({ username, password }: SignInInput) => {
     try {
         const { isSignedIn, nextStep }:SignInOutput = await signIn({ username, password })
-        console.log(isSignedIn, nextStep)
+
         if(isSignedIn){
-            console.log("signed in")
-            console.log(nextStep)
             return({isSignedIn:true, nextStep:nextStep})
         }else{
-            console.log("not signed in")
             return({isSignedIn:false})
         }
+
     } catch (error) {
         console.log('error signing in', error)
         return({isSignedIn:false, nextStep:null})
@@ -160,7 +157,6 @@ export const fetchCityState = async(zip:string) => {
  */
 export const signUserOut = async() => {
     let signUserOut = await signOut()
-    console.log(signUserOut)
 }
 
 

@@ -21,10 +21,11 @@ import {
 } from "@aws-amplify/ui-react";
 import { fetchByPath, getOverrideProps, validateField } from "./utils";
 import { generateClient } from "aws-amplify/api";
-import { listCourseEnrollments } from "../graphql/queries";
+import { listCourseEnrollments, listUserSettings } from "../graphql/queries";
 import {
   createStudentProfile,
   updateCourseEnrollment,
+  updateUserSettings,
 } from "../graphql/mutations";
 const client = generateClient();
 function ArrayField({
@@ -199,6 +200,7 @@ export default function StudentProfileCreateForm(props) {
     email: "",
     birthdate: "",
     courseEnrollments: [],
+    userSettings: [],
   };
   const [cognitoUserID, setCognitoUserID] = React.useState(
     initialValues.cognitoUserID
@@ -213,6 +215,11 @@ export default function StudentProfileCreateForm(props) {
     React.useState(false);
   const [courseEnrollmentsRecords, setCourseEnrollmentsRecords] =
     React.useState([]);
+  const [userSettings, setUserSettings] = React.useState(
+    initialValues.userSettings
+  );
+  const [userSettingsLoading, setUserSettingsLoading] = React.useState(false);
+  const [userSettingsRecords, setUserSettingsRecords] = React.useState([]);
   const autocompleteLength = 10;
   const [errors, setErrors] = React.useState({});
   const resetStateValues = () => {
@@ -223,6 +230,9 @@ export default function StudentProfileCreateForm(props) {
     setCourseEnrollments(initialValues.courseEnrollments);
     setCurrentCourseEnrollmentsValue(undefined);
     setCurrentCourseEnrollmentsDisplayValue("");
+    setUserSettings(initialValues.userSettings);
+    setCurrentUserSettingsValue(undefined);
+    setCurrentUserSettingsDisplayValue("");
     setErrors({});
   };
   const [
@@ -232,17 +242,32 @@ export default function StudentProfileCreateForm(props) {
   const [currentCourseEnrollmentsValue, setCurrentCourseEnrollmentsValue] =
     React.useState(undefined);
   const courseEnrollmentsRef = React.createRef();
+  const [currentUserSettingsDisplayValue, setCurrentUserSettingsDisplayValue] =
+    React.useState("");
+  const [currentUserSettingsValue, setCurrentUserSettingsValue] =
+    React.useState(undefined);
+  const userSettingsRef = React.createRef();
   const getIDValue = {
     courseEnrollments: (r) => JSON.stringify({ id: r?.id }),
+    userSettings: (r) => JSON.stringify({ id: r?.id }),
   };
   const courseEnrollmentsIdSet = new Set(
     Array.isArray(courseEnrollments)
       ? courseEnrollments.map((r) => getIDValue.courseEnrollments?.(r))
       : getIDValue.courseEnrollments?.(courseEnrollments)
   );
+  const userSettingsIdSet = new Set(
+    Array.isArray(userSettings)
+      ? userSettings.map((r) => getIDValue.userSettings?.(r))
+      : getIDValue.userSettings?.(userSettings)
+  );
   const getDisplayValue = {
     courseEnrollments: (r) =>
       `${r?.progress ? r?.progress + " - " : ""}${r?.id}`,
+    userSettings: (r) =>
+      `${r?.notificationsEnabled ? r?.notificationsEnabled + " - " : ""}${
+        r?.id
+      }`,
   };
   const validations = {
     cognitoUserID: [{ type: "Required" }],
@@ -250,6 +275,7 @@ export default function StudentProfileCreateForm(props) {
     email: [{ type: "Required" }, { type: "Email" }],
     birthdate: [{ type: "Required" }],
     courseEnrollments: [],
+    userSettings: [],
   };
   const runValidationTasks = async (
     fieldName,
@@ -298,8 +324,41 @@ export default function StudentProfileCreateForm(props) {
     setCourseEnrollmentsRecords(newOptions.slice(0, autocompleteLength));
     setCourseEnrollmentsLoading(false);
   };
+  const fetchUserSettingsRecords = async (value) => {
+    setUserSettingsLoading(true);
+    const newOptions = [];
+    let newNext = "";
+    while (newOptions.length < autocompleteLength && newNext != null) {
+      const variables = {
+        limit: autocompleteLength * 5,
+        filter: {
+          or: [
+            { notificationsEnabled: { contains: value } },
+            { id: { contains: value } },
+          ],
+        },
+      };
+      if (newNext) {
+        variables["nextToken"] = newNext;
+      }
+      const result = (
+        await client.graphql({
+          query: listUserSettings.replaceAll("__typename", ""),
+          variables,
+        })
+      )?.data?.listUserSettings?.items;
+      var loaded = result.filter(
+        (item) => !userSettingsIdSet.has(getIDValue.userSettings?.(item))
+      );
+      newOptions.push(...loaded);
+      newNext = result.nextToken;
+    }
+    setUserSettingsRecords(newOptions.slice(0, autocompleteLength));
+    setUserSettingsLoading(false);
+  };
   React.useEffect(() => {
     fetchCourseEnrollmentsRecords("");
+    fetchUserSettingsRecords("");
   }, []);
   return (
     <Grid
@@ -315,6 +374,7 @@ export default function StudentProfileCreateForm(props) {
           email,
           birthdate,
           courseEnrollments,
+          userSettings,
         };
         const validationResponses = await Promise.all(
           Object.keys(validations).reduce((promises, fieldName) => {
@@ -384,6 +444,21 @@ export default function StudentProfileCreateForm(props) {
               return promises;
             }, [])
           );
+          promises.push(
+            ...userSettings.reduce((promises, original) => {
+              promises.push(
+                client.graphql({
+                  query: updateUserSettings.replaceAll("__typename", ""),
+                  variables: {
+                    input: {
+                      id: original.id,
+                    },
+                  },
+                })
+              );
+              return promises;
+            }, [])
+          );
           await Promise.all(promises);
           if (onSuccess) {
             onSuccess(modelFields);
@@ -415,6 +490,7 @@ export default function StudentProfileCreateForm(props) {
               email,
               birthdate,
               courseEnrollments,
+              userSettings,
             };
             const result = onChange(modelFields);
             value = result?.cognitoUserID ?? value;
@@ -443,6 +519,7 @@ export default function StudentProfileCreateForm(props) {
               email,
               birthdate,
               courseEnrollments,
+              userSettings,
             };
             const result = onChange(modelFields);
             value = result?.name ?? value;
@@ -471,6 +548,7 @@ export default function StudentProfileCreateForm(props) {
               email: value,
               birthdate,
               courseEnrollments,
+              userSettings,
             };
             const result = onChange(modelFields);
             value = result?.email ?? value;
@@ -500,6 +578,7 @@ export default function StudentProfileCreateForm(props) {
               email,
               birthdate: value,
               courseEnrollments,
+              userSettings,
             };
             const result = onChange(modelFields);
             value = result?.birthdate ?? value;
@@ -524,6 +603,7 @@ export default function StudentProfileCreateForm(props) {
               email,
               birthdate,
               courseEnrollments: values,
+              userSettings,
             };
             const result = onChange(modelFields);
             values = result?.courseEnrollments ?? values;
@@ -598,6 +678,87 @@ export default function StudentProfileCreateForm(props) {
           ref={courseEnrollmentsRef}
           labelHidden={true}
           {...getOverrideProps(overrides, "courseEnrollments")}
+        ></Autocomplete>
+      </ArrayField>
+      <ArrayField
+        onChange={async (items) => {
+          let values = items;
+          if (onChange) {
+            const modelFields = {
+              cognitoUserID,
+              name,
+              email,
+              birthdate,
+              courseEnrollments,
+              userSettings: values,
+            };
+            const result = onChange(modelFields);
+            values = result?.userSettings ?? values;
+          }
+          setUserSettings(values);
+          setCurrentUserSettingsValue(undefined);
+          setCurrentUserSettingsDisplayValue("");
+        }}
+        currentFieldValue={currentUserSettingsValue}
+        label={"User settings"}
+        items={userSettings}
+        hasError={errors?.userSettings?.hasError}
+        runValidationTasks={async () =>
+          await runValidationTasks("userSettings", currentUserSettingsValue)
+        }
+        errorMessage={errors?.userSettings?.errorMessage}
+        getBadgeText={getDisplayValue.userSettings}
+        setFieldValue={(model) => {
+          setCurrentUserSettingsDisplayValue(
+            model ? getDisplayValue.userSettings(model) : ""
+          );
+          setCurrentUserSettingsValue(model);
+        }}
+        inputFieldRef={userSettingsRef}
+        defaultFieldValue={""}
+      >
+        <Autocomplete
+          label="User settings"
+          isRequired={false}
+          isReadOnly={false}
+          placeholder="Search UserSettings"
+          value={currentUserSettingsDisplayValue}
+          options={userSettingsRecords.map((r) => ({
+            id: getIDValue.userSettings?.(r),
+            label: getDisplayValue.userSettings?.(r),
+          }))}
+          isLoading={userSettingsLoading}
+          onSelect={({ id, label }) => {
+            setCurrentUserSettingsValue(
+              userSettingsRecords.find((r) =>
+                Object.entries(JSON.parse(id)).every(
+                  ([key, value]) => r[key] === value
+                )
+              )
+            );
+            setCurrentUserSettingsDisplayValue(label);
+            runValidationTasks("userSettings", label);
+          }}
+          onClear={() => {
+            setCurrentUserSettingsDisplayValue("");
+          }}
+          onChange={(e) => {
+            let { value } = e.target;
+            fetchUserSettingsRecords(value);
+            if (errors.userSettings?.hasError) {
+              runValidationTasks("userSettings", value);
+            }
+            setCurrentUserSettingsDisplayValue(value);
+            setCurrentUserSettingsValue(undefined);
+          }}
+          onBlur={() =>
+            runValidationTasks("userSettings", currentUserSettingsDisplayValue)
+          }
+          errorMessage={errors.userSettings?.errorMessage}
+          hasError={errors.userSettings?.hasError}
+          ref={userSettingsRef}
+          labelHidden={true}
+          {...getOverrideProps(overrides, "userSettings")}
         ></Autocomplete>
       </ArrayField>
       <Flex

@@ -12,7 +12,22 @@ import { tfaModalStyle } from '@/styles/AuthStyles'
 import { handleCreateStudentProfile, handleSignIn } from '../../functions/AuthFunctions'
 import { useSignUpHooks } from '@/src/state/SignUpHooks'
 
-
+/**
+ * BirthdayInput Component - Manages the input and validation of a user's birthday during sign-up.
+ * 
+ * This component provides a text field for users to input their birthday as part of the sign-up process.
+ * It utilizes the `signUpHooks` object to access and update the birthday state. The component performs
+ * validation on the inputted birthday to ensure the user meets age requirements for signing up (at least
+ * 16 years old). If the inputted birthday fails validation, an appropriate error message is displayed.
+ * Otherwise, it updates the user's age state and proceeds to the next step of the sign-up process.
+ * 
+ * @param {Object} props - Component props.
+ * @param {any} props.signUpHooks - An object containing various hooks related to the sign-up process,
+ *                                  including methods to set the birthday, handle errors, and manage sign-up steps.
+ * 
+ * @returns {JSX.Element} - A form element allowing users to input their birthday, with validation feedback
+ *                          provided via a `FormHelperText` component if the input does not meet the age requirement.
+ */
 export const BirthdayInput = ({signUpHooks}:any) => {
 
     const dateInputRef:any = useRef(null)
@@ -26,7 +41,6 @@ export const BirthdayInput = ({signUpHooks}:any) => {
     // Validates the birthday input and updates related states.
     useEffect(() => {
         if(birthdayPattern.test(signUpHooks.birthday)){
-            console.log(signUpHooks.birthday)
             let age = ageCaluclatedFromInputBirthday(signUpHooks.birthday)
             signUpHooks.setBirthdayWaiting(true)
             if (age < 16) {
@@ -66,6 +80,28 @@ export const BirthdayInput = ({signUpHooks}:any) => {
     )
 }
 
+/**
+ * NameInput Component - Manages the input and validation of a user's full name during the sign-up process.
+ * 
+ * This component provides an input field for users to enter their full name as part of the sign-up process.
+ * Utilizing the `signUpHooks` prop, the component integrates with the broader sign-up form's state management,
+ * including validation, error handling, and navigation between sign-up steps. The name input is validated
+ * against a predefined pattern to ensure it meets the application's requirements for a full name. If the
+ * validation fails, an error message guides the user to enter a valid name format. Upon successful validation,
+ * the user is advanced to the next step of the sign-up process.
+ * 
+ * The component leverages Material-UI components such as FormControl, InputLabel, Input, FormHelperText,
+ * and Button to provide a user-friendly interface. The `Done` button within the input's end adornment triggers
+ * the validation and state update logic.
+ * 
+ * @param {Object} props - Component props.
+ * @param {any} props.signUpHooks - An object containing various hooks for managing the sign-up process,
+ *                                  such as setting the user's name, handling validation errors, and controlling
+ *                                  the active tab in the sign-up form.
+ * 
+ * @returns {JSX.Element} - A controlled input field for the user's full name with integrated validation and
+ *                          dynamic feedback provided via FormHelperText.
+ */
 export const NameInput = ({signUpHooks}:any) => {
 
     // Validates the name input and updates related states.
@@ -113,6 +149,25 @@ export const NameInput = ({signUpHooks}:any) => {
     )
 }
 
+/**
+ * ZipInput Component - Manages the input and validation of a user's zip code during the sign-up process.
+ * 
+ * This component provides a text field for users to input their zip code as part of the sign-up process.
+ * It leverages the `signUpHooks` prop for state management, including setting the city and state based on
+ * the zip code, displaying loading states, and handling validation errors. The zip code input is validated
+ * against a predefined pattern and a list of allowed zip codes to ensure it meets the application's service
+ * area requirements. Upon successful validation, city and state information is fetched and displayed, and
+ * the user is advanced to the next step of the sign-up process. If the zip code is outside the supported
+ * area or if an error occurs during the city/state fetch, an appropriate error message is displayed.
+ * 
+ * @param {Object} props - Component props.
+ * @param {any} props.signUpHooks - An object containing various hooks for managing the sign-up process,
+ *                                  such as setting the zip code, city, state, handling validation errors,
+ *                                  and controlling the active tab in the sign-up form.
+ * 
+ * @returns {JSX.Element} - A form section allowing users to input their zip code, with integrated
+ *                          validation and dynamic feedback based on the inputted value.
+ */
 export const ZipInput = ({signUpHooks}:any) => {
     /**
  * Zip Code functions
@@ -133,6 +188,7 @@ export const ZipInput = ({signUpHooks}:any) => {
         }
     }
 
+    // Validates the zip code input and updates related states.
     useEffect(() => {  
         if (zipCodePattern.test(signUpHooks.zipCode)) {
             signUpHooks.setLocationWaiting(true)
@@ -193,6 +249,27 @@ export const ZipInput = ({signUpHooks}:any) => {
     )
 }
 
+/**
+ * EmailInput Component - Manages the input and validation of a user's email address during the sign-up process.
+ * 
+ * This component provides a field for users to enter their email address as part of signing up. Utilizing the
+ * `signUpHooks` prop, the component integrates with the broader sign-up form's state management, including validation,
+ * error handling, and navigation between sign-up steps. The email input is validated against a predefined pattern
+ * to ensure it meets standard email format requirements. If the validation fails, an error message guides the user
+ * to enter a valid email address format. Upon successful validation, the user is advanced to the next step of the
+ * sign-up process.
+ * 
+ * The component leverages Material-UI components such as FormControl, InputLabel, Input, and FormHelperText to
+ * provide a user-friendly interface. The `Done` button within the input's end adornment triggers the validation
+ * and state update logic.
+ * 
+ * @param {Object} props - Component props.
+ * @param {any} props.signUpHooks - An object containing various hooks related to the sign-up process,
+ *                                  including methods to set the email, handle errors, and manage sign-up steps.
+ * 
+ * @returns {JSX.Element} - A controlled input field for the user's email with integrated validation and
+ *                          dynamic feedback provided via FormHelperText.
+ */
 export const EmailInput = ({signUpHooks}:any) => {
 
     // Validates the email input and updates related states.
@@ -240,11 +317,31 @@ export const EmailInput = ({signUpHooks}:any) => {
     )
 }
 
+/**
+ * PasswordInput Component - Manages the password input fields during the sign-up process.
+ * 
+ * This component provides two input fields for users to enter and confirm their password as part of signing up.
+ * It leverages the `signUpHooks` prop for state management, including showing or hiding passwords, handling user
+ * input, and submitting the sign-up form to AWS Amplify. The component implements validation logic to ensure
+ * the form is complete and both password fields match before allowing the user to submit the form. Upon successful
+ * validation and submission, it triggers the next step in the sign-up process or displays errors as necessary.
+ * 
+ * The component also includes an effect hook that monitors the completion state of the password inputs to enable
+ * or disable the sign-up button accordingly. The `handleSignUp` function encapsulates the sign-up logic, invoking
+ * the provided `signUp` function with user credentials and handling any errors that occur during the process.
+ * 
+ * @param {Object} props - Component props.
+ * @param {any} props.signUpHooks - An object containing various hooks and state management functions for the sign-up
+ *                                  process, such as setting passwords, toggling password visibility, and handling
+ *                                  sign-up submission.
+ * 
+ * @returns {JSX.Element} - A form section allowing users to input and confirm their password, with a sign-up button
+ *                          that is enabled only when the form is correctly completed.
+ */
 export const PasswordInput = ({signUpHooks}:any) => {
     const username = signUpHooks.username
     const password = signUpHooks.password
 
-    // Handles the sign-up submission to AWS Amplify.
     async function handleSignUp() {
         try {
             const response:SignUpOutput = await signUp({
@@ -257,7 +354,6 @@ export const PasswordInput = ({signUpHooks}:any) => {
             })
 
             if (response.nextStep && response.nextStep.signUpStep === "CONFIRM_SIGN_UP") {
-                console.log(response)
                 signUpHooks.setTfaOpen(true)
             }
 
@@ -281,13 +377,18 @@ export const PasswordInput = ({signUpHooks}:any) => {
         event.preventDefault()
     }
 
+    /**
+     * Monitors the password and confirmPassword completion states. If both are complete, it marks the form as complete;
+     * otherwise, it sets the form as incomplete. This useEffect is triggered by changes to either `passwordComplete` 
+     * or `confirmPasswordComplete` states.
+     * 
+     * Dependencies: signUpHooks.passwordComplete, signUpHooks.confirmPasswordComplete
+    */
     useEffect(() => {
         if(signUpHooks.passwordComplete && signUpHooks.confirmPasswordComplete){
             signUpHooks.setFormComplete(true)
-            console.log("Form complete")
         }else{
             signUpHooks.setFormComplete(false)
-            console.log("Form incomplete")
         }
     }, [signUpHooks.passwordComplete, signUpHooks.confirmPasswordComplete])
     
@@ -355,17 +456,20 @@ export const PasswordInput = ({signUpHooks}:any) => {
 }   
 
 /**
- * Component for handling two-factor authentication (TFA).
+ * TwoFactorAuthForm Component - Manages the submission of a two-factor authentication code during sign-up.
  * 
- * This component presents a form for users to enter their TFA code. It takes
- * the username, a callback function 'onTfaSuccess', and a function to handle
- * the confirmation of the signup process. On successful verification of the 
- * TFA code, it triggers the 'onTfaSuccess' callback.
+ * This component provides a form for users to enter their two-factor authentication (TFA) code as part of
+ * the sign-up process. It leverages `signUpHooks` for accessing user input data (e.g., username, password) and
+ * uses `handleConfirmSignup` for submitting the TFA code. Upon successful TFA code verification, it initiates
+ * the post-TFA workflow, which includes signing in the user and creating their profile based on the provided
+ * information in `signUpHooks`.
  * 
- * @param {Object} props - Component props
- * @param {string} props.username - The username of the user
- * @param {Function} props.onTfaSuccess - Callback function to execute on successful TFA
- * @param {Function} props.handleConfirmSignup - Function to confirm user signup
+ * @param {Object} props - Component props.
+ * @param {ReturnType<typeof useSignUpHooks>} props.signUpHooks - Hooks containing user input data from the sign-up form.
+ * @param {Function} props.handleConfirmSignup - Function to handle the submission of the TFA code for verification.
+ * 
+ * @returns {JSX.Element} - A form for users to submit their two-factor authentication code, with error handling
+ *                          and redirection upon successful sign-up and TFA verification.
  */
 export function TwoFactorAuthForm({ signUpHooks, handleConfirmSignup }: { signUpHooks:ReturnType<typeof useSignUpHooks>, handleConfirmSignup:any }) {
     const [confirmationCode, setConfirmationCode] = useState('')

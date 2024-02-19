@@ -21,6 +21,10 @@ export const onCreateStudentProfile = /* GraphQL */ `subscription OnCreateStuden
       nextToken
       __typename
     }
+    userSettings {
+      nextToken
+      __typename
+    }
     createdAt
     updatedAt
     __typename
@@ -43,6 +47,10 @@ export const onUpdateStudentProfile = /* GraphQL */ `subscription OnUpdateStuden
       nextToken
       __typename
     }
+    userSettings {
+      nextToken
+      __typename
+    }
     createdAt
     updatedAt
     __typename
@@ -62,6 +70,10 @@ export const onDeleteStudentProfile = /* GraphQL */ `subscription OnDeleteStuden
     email
     birthdate
     courseEnrollments {
+      nextToken
+      __typename
+    }
+    userSettings {
       nextToken
       __typename
     }
@@ -244,4 +256,88 @@ export const onDeleteCourseEnrollment = /* GraphQL */ `subscription OnDeleteCour
 ` as GeneratedSubscription<
   APITypes.OnDeleteCourseEnrollmentSubscriptionVariables,
   APITypes.OnDeleteCourseEnrollmentSubscription
+>;
+export const onCreateUserSettings = /* GraphQL */ `subscription OnCreateUserSettings(
+  $filter: ModelSubscriptionUserSettingsFilterInput
+) {
+  onCreateUserSettings(filter: $filter) {
+    id
+    studentProfileID
+    studentProfile {
+      id
+      cognitoUserID
+      name
+      email
+      birthdate
+      createdAt
+      updatedAt
+      __typename
+    }
+    notificationsEnabled
+    darkModeEnabled
+    language
+    createdAt
+    updatedAt
+    __typename
+  }
+}
+` as GeneratedSubscription<
+  APITypes.OnCreateUserSettingsSubscriptionVariables,
+  APITypes.OnCreateUserSettingsSubscription
+>;
+export const onUpdateUserSettings = /* GraphQL */ `subscription OnUpdateUserSettings(
+  $filter: ModelSubscriptionUserSettingsFilterInput
+) {
+  onUpdateUserSettings(filter: $filter) {
+    id
+    studentProfileID
+    studentProfile {
+      id
+      cognitoUserID
+      name
+      email
+      birthdate
+      createdAt
+      updatedAt
+      __typename
+    }
+    notificationsEnabled
+    darkModeEnabled
+    language
+    createdAt
+    updatedAt
+    __typename
+  }
+}
+` as GeneratedSubscription<
+  APITypes.OnUpdateUserSettingsSubscriptionVariables,
+  APITypes.OnUpdateUserSettingsSubscription
+>;
+export const onDeleteUserSettings = /* GraphQL */ `subscription OnDeleteUserSettings(
+  $filter: ModelSubscriptionUserSettingsFilterInput
+) {
+  onDeleteUserSettings(filter: $filter) {
+    id
+    studentProfileID
+    studentProfile {
+      id
+      cognitoUserID
+      name
+      email
+      birthdate
+      createdAt
+      updatedAt
+      __typename
+    }
+    notificationsEnabled
+    darkModeEnabled
+    language
+    createdAt
+    updatedAt
+    __typename
+  }
+}
+` as GeneratedSubscription<
+  APITypes.OnDeleteUserSettingsSubscriptionVariables,
+  APITypes.OnDeleteUserSettingsSubscription
 >;

@@ -15,10 +15,8 @@ import { MobileStudentProfile, WebStudentProfile } from "@/src/components/Studen
  * 
  * @returns {JSX.Element} - The student profile view appropriate for the current device, either mobile or desktop.
  */
-
-const StudentProfile = ({isMobile, avatarUrl}:any) => {
-
-  return isMobile ? <MobileStudentProfile /> : <WebStudentProfile avatarUrl={avatarUrl}/>
+const StudentProfile = ({isMobile, userData, avatarUrl}:any) => {
+  return isMobile ? <MobileStudentProfile /> : <WebStudentProfile userID={userData.cognitoID} avatarUrl={avatarUrl}/>
 }
 
 export default StudentProfile

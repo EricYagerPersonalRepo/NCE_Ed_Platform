@@ -22,6 +22,10 @@ export const createStudentProfile = /* GraphQL */ `mutation CreateStudentProfile
       nextToken
       __typename
     }
+    userSettings {
+      nextToken
+      __typename
+    }
     createdAt
     updatedAt
     __typename
@@ -45,6 +49,10 @@ export const updateStudentProfile = /* GraphQL */ `mutation UpdateStudentProfile
       nextToken
       __typename
     }
+    userSettings {
+      nextToken
+      __typename
+    }
     createdAt
     updatedAt
     __typename
@@ -65,6 +73,10 @@ export const deleteStudentProfile = /* GraphQL */ `mutation DeleteStudentProfile
     email
     birthdate
     courseEnrollments {
+      nextToken
+      __typename
+    }
+    userSettings {
       nextToken
       __typename
     }
@@ -253,4 +265,91 @@ export const deleteCourseEnrollment = /* GraphQL */ `mutation DeleteCourseEnroll
 ` as GeneratedMutation<
   APITypes.DeleteCourseEnrollmentMutationVariables,
   APITypes.DeleteCourseEnrollmentMutation
+>;
+export const createUserSettings = /* GraphQL */ `mutation CreateUserSettings(
+  $input: CreateUserSettingsInput!
+  $condition: ModelUserSettingsConditionInput
+) {
+  createUserSettings(input: $input, condition: $condition) {
+    id
+    studentProfileID
+    studentProfile {
+      id
+      cognitoUserID
+      name
+      email
+      birthdate
+      createdAt
+      updatedAt
+      __typename
+    }
+    notificationsEnabled
+    darkModeEnabled
+    language
+    createdAt
+    updatedAt
+    __typename
+  }
+}
+` as GeneratedMutation<
+  APITypes.CreateUserSettingsMutationVariables,
+  APITypes.CreateUserSettingsMutation
+>;
+export const updateUserSettings = /* GraphQL */ `mutation UpdateUserSettings(
+  $input: UpdateUserSettingsInput!
+  $condition: ModelUserSettingsConditionInput
+) {
+  updateUserSettings(input: $input, condition: $condition) {
+    id
+    studentProfileID
+    studentProfile {
+      id
+      cognitoUserID
+      name
+      email
+      birthdate
+      createdAt
+      updatedAt
+      __typename
+    }
+    notificationsEnabled
+    darkModeEnabled
+    language
+    createdAt
+    updatedAt
+    __typename
+  }
+}
+` as GeneratedMutation<
+  APITypes.UpdateUserSettingsMutationVariables,
+  APITypes.UpdateUserSettingsMutation
+>;
+export const deleteUserSettings = /* GraphQL */ `mutation DeleteUserSettings(
+  $input: DeleteUserSettingsInput!
+  $condition: ModelUserSettingsConditionInput
+) {
+  deleteUserSettings(input: $input, condition: $condition) {
+    id
+    studentProfileID
+    studentProfile {
+      id
+      cognitoUserID
+      name
+      email
+      birthdate
+      createdAt
+      updatedAt
+      __typename
+    }
+    notificationsEnabled
+    darkModeEnabled
+    language
+    createdAt
+    updatedAt
+    __typename
+  }
+}
+` as GeneratedMutation<
+  APITypes.DeleteUserSettingsMutationVariables,
+  APITypes.DeleteUserSettingsMutation
 >;

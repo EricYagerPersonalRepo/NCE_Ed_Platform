@@ -26,6 +26,8 @@ import { MobileSignUp, WebSignUp } from '@/src/components/SignUp'
  * or redirects the user if already logged in.
  */
 const SignUp = ({ loggedIn, isMobile, router }: any)  =>{
+
+    //punt user if they're already logged in
     useEffect(() => {
         if (loggedIn) {
             router.push('/')

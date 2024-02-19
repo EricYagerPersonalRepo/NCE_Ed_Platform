@@ -15,15 +15,15 @@ import {
   Grid,
   Icon,
   ScrollView,
-  SelectField,
+  SwitchField,
   Text,
   TextField,
   useTheme,
 } from "@aws-amplify/ui-react";
 import { fetchByPath, getOverrideProps, validateField } from "./utils";
 import { generateClient } from "aws-amplify/api";
-import { listCourseProfiles, listStudentProfiles } from "../graphql/queries";
-import { createCourseEnrollment } from "../graphql/mutations";
+import { listStudentProfiles } from "../graphql/queries";
+import { createUserSettings } from "../graphql/mutations";
 const client = generateClient();
 function ArrayField({
   items = [],
@@ -180,7 +180,7 @@ function ArrayField({
     </React.Fragment>
   );
 }
-export default function CourseEnrollmentCreateForm(props) {
+export default function UserSettingsCreateForm(props) {
   const {
     clearOnSuccess = true,
     onSuccess,
@@ -193,10 +193,9 @@ export default function CourseEnrollmentCreateForm(props) {
   } = props;
   const initialValues = {
     studentProfile: undefined,
-    courseProfile: undefined,
-    enrollmentDate: "",
-    progress: "",
-    state: "",
+    notificationsEnabled: false,
+    darkModeEnabled: false,
+    language: "",
   };
   const [studentProfile, setStudentProfile] = React.useState(
     initialValues.studentProfile
@@ -204,28 +203,22 @@ export default function CourseEnrollmentCreateForm(props) {
   const [studentProfileLoading, setStudentProfileLoading] =
     React.useState(false);
   const [studentProfileRecords, setStudentProfileRecords] = React.useState([]);
-  const [courseProfile, setCourseProfile] = React.useState(
-    initialValues.courseProfile
+  const [notificationsEnabled, setNotificationsEnabled] = React.useState(
+    initialValues.notificationsEnabled
   );
-  const [courseProfileLoading, setCourseProfileLoading] = React.useState(false);
-  const [courseProfileRecords, setCourseProfileRecords] = React.useState([]);
-  const [enrollmentDate, setEnrollmentDate] = React.useState(
-    initialValues.enrollmentDate
+  const [darkModeEnabled, setDarkModeEnabled] = React.useState(
+    initialValues.darkModeEnabled
   );
-  const [progress, setProgress] = React.useState(initialValues.progress);
-  const [state, setState] = React.useState(initialValues.state);
+  const [language, setLanguage] = React.useState(initialValues.language);
   const autocompleteLength = 10;
   const [errors, setErrors] = React.useState({});
   const resetStateValues = () => {
     setStudentProfile(initialValues.studentProfile);
     setCurrentStudentProfileValue(undefined);
     setCurrentStudentProfileDisplayValue("");
-    setCourseProfile(initialValues.courseProfile);
-    setCurrentCourseProfileValue(undefined);
-    setCurrentCourseProfileDisplayValue("");
-    setEnrollmentDate(initialValues.enrollmentDate);
-    setProgress(initialValues.progress);
-    setState(initialValues.state);
+    setNotificationsEnabled(initialValues.notificationsEnabled);
+    setDarkModeEnabled(initialValues.darkModeEnabled);
+    setLanguage(initialValues.language);
     setErrors({});
   };
   const [
@@ -235,41 +228,24 @@ export default function CourseEnrollmentCreateForm(props) {
   const [currentStudentProfileValue, setCurrentStudentProfileValue] =
     React.useState(undefined);
   const studentProfileRef = React.createRef();
-  const [
-    currentCourseProfileDisplayValue,
-    setCurrentCourseProfileDisplayValue,
-  ] = React.useState("");
-  const [currentCourseProfileValue, setCurrentCourseProfileValue] =
-    React.useState(undefined);
-  const courseProfileRef = React.createRef();
   const getIDValue = {
     studentProfile: (r) => JSON.stringify({ id: r?.id }),
-    courseProfile: (r) => JSON.stringify({ id: r?.id }),
   };
   const studentProfileIdSet = new Set(
     Array.isArray(studentProfile)
       ? studentProfile.map((r) => getIDValue.studentProfile?.(r))
       : getIDValue.studentProfile?.(studentProfile)
   );
-  const courseProfileIdSet = new Set(
-    Array.isArray(courseProfile)
-      ? courseProfile.map((r) => getIDValue.courseProfile?.(r))
-      : getIDValue.courseProfile?.(courseProfile)
-  );
   const getDisplayValue = {
     studentProfile: (r) => `${r?.name ? r?.name + " - " : ""}${r?.id}`,
-    courseProfile: (r) => `${r?.title ? r?.title + " - " : ""}${r?.id}`,
   };
   const validations = {
     studentProfile: [
       { type: "Required", validationMessage: "StudentProfile is required." },
     ],
-    courseProfile: [
-      { type: "Required", validationMessage: "CourseProfile is required." },
-    ],
-    enrollmentDate: [],
-    progress: [],
-    state: [],
+    notificationsEnabled: [{ type: "Required" }],
+    darkModeEnabled: [{ type: "Required" }],
+    language: [],
   };
   const runValidationTasks = async (
     fieldName,
@@ -287,23 +263,6 @@ export default function CourseEnrollmentCreateForm(props) {
     }
     setErrors((errors) => ({ ...errors, [fieldName]: validationResponse }));
     return validationResponse;
-  };
-  const convertToLocal = (date) => {
-    const df = new Intl.DateTimeFormat("default", {
-      year: "numeric",
-      month: "2-digit",
-      day: "2-digit",
-      hour: "2-digit",
-      minute: "2-digit",
-      calendar: "iso8601",
-      numberingSystem: "latn",
-      hourCycle: "h23",
-    });
-    const parts = df.formatToParts(date).reduce((acc, part) => {
-      acc[part.type] = part.value;
-      return acc;
-    }, {});
-    return `${parts.year}-${parts.month}-${parts.day}T${parts.hour}:${parts.minute}`;
   };
   const fetchStudentProfileRecords = async (value) => {
     setStudentProfileLoading(true);
@@ -334,38 +293,8 @@ export default function CourseEnrollmentCreateForm(props) {
     setStudentProfileRecords(newOptions.slice(0, autocompleteLength));
     setStudentProfileLoading(false);
   };
-  const fetchCourseProfileRecords = async (value) => {
-    setCourseProfileLoading(true);
-    const newOptions = [];
-    let newNext = "";
-    while (newOptions.length < autocompleteLength && newNext != null) {
-      const variables = {
-        limit: autocompleteLength * 5,
-        filter: {
-          or: [{ title: { contains: value } }, { id: { contains: value } }],
-        },
-      };
-      if (newNext) {
-        variables["nextToken"] = newNext;
-      }
-      const result = (
-        await client.graphql({
-          query: listCourseProfiles.replaceAll("__typename", ""),
-          variables,
-        })
-      )?.data?.listCourseProfiles?.items;
-      var loaded = result.filter(
-        (item) => !courseProfileIdSet.has(getIDValue.courseProfile?.(item))
-      );
-      newOptions.push(...loaded);
-      newNext = result.nextToken;
-    }
-    setCourseProfileRecords(newOptions.slice(0, autocompleteLength));
-    setCourseProfileLoading(false);
-  };
   React.useEffect(() => {
     fetchStudentProfileRecords("");
-    fetchCourseProfileRecords("");
   }, []);
   return (
     <Grid
@@ -377,10 +306,9 @@ export default function CourseEnrollmentCreateForm(props) {
         event.preventDefault();
         let modelFields = {
           studentProfile,
-          courseProfile,
-          enrollmentDate,
-          progress,
-          state,
+          notificationsEnabled,
+          darkModeEnabled,
+          language,
         };
         const validationResponses = await Promise.all(
           Object.keys(validations).reduce((promises, fieldName) => {
@@ -420,13 +348,12 @@ export default function CourseEnrollmentCreateForm(props) {
           });
           const modelFieldsToSave = {
             studentProfileID: modelFields?.studentProfile?.id,
-            courseProfileID: modelFields?.courseProfile?.id,
-            enrollmentDate: modelFields.enrollmentDate,
-            progress: modelFields.progress,
-            state: modelFields.state,
+            notificationsEnabled: modelFields.notificationsEnabled,
+            darkModeEnabled: modelFields.darkModeEnabled,
+            language: modelFields.language,
           };
           await client.graphql({
-            query: createCourseEnrollment.replaceAll("__typename", ""),
+            query: createUserSettings.replaceAll("__typename", ""),
             variables: {
               input: {
                 ...modelFieldsToSave,
@@ -446,7 +373,7 @@ export default function CourseEnrollmentCreateForm(props) {
           }
         }
       }}
-      {...getOverrideProps(overrides, "CourseEnrollmentCreateForm")}
+      {...getOverrideProps(overrides, "UserSettingsCreateForm")}
       {...rest}
     >
       <ArrayField
@@ -456,10 +383,9 @@ export default function CourseEnrollmentCreateForm(props) {
           if (onChange) {
             const modelFields = {
               studentProfile: value,
-              courseProfile,
-              enrollmentDate,
-              progress,
-              state,
+              notificationsEnabled,
+              darkModeEnabled,
+              language,
             };
             const result = onChange(modelFields);
             value = result?.studentProfile ?? value;
@@ -537,212 +463,89 @@ export default function CourseEnrollmentCreateForm(props) {
           {...getOverrideProps(overrides, "studentProfile")}
         ></Autocomplete>
       </ArrayField>
-      <ArrayField
-        lengthLimit={1}
-        onChange={async (items) => {
-          let value = items[0];
+      <SwitchField
+        label="Notifications enabled"
+        defaultChecked={false}
+        isDisabled={false}
+        isChecked={notificationsEnabled}
+        onChange={(e) => {
+          let value = e.target.checked;
           if (onChange) {
             const modelFields = {
               studentProfile,
-              courseProfile: value,
-              enrollmentDate,
-              progress,
-              state,
+              notificationsEnabled: value,
+              darkModeEnabled,
+              language,
             };
             const result = onChange(modelFields);
-            value = result?.courseProfile ?? value;
+            value = result?.notificationsEnabled ?? value;
           }
-          setCourseProfile(value);
-          setCurrentCourseProfileValue(undefined);
-          setCurrentCourseProfileDisplayValue("");
+          if (errors.notificationsEnabled?.hasError) {
+            runValidationTasks("notificationsEnabled", value);
+          }
+          setNotificationsEnabled(value);
         }}
-        currentFieldValue={currentCourseProfileValue}
-        label={"Course profile"}
-        items={courseProfile ? [courseProfile] : []}
-        hasError={errors?.courseProfile?.hasError}
-        runValidationTasks={async () =>
-          await runValidationTasks("courseProfile", currentCourseProfileValue)
+        onBlur={() =>
+          runValidationTasks("notificationsEnabled", notificationsEnabled)
         }
-        errorMessage={errors?.courseProfile?.errorMessage}
-        getBadgeText={getDisplayValue.courseProfile}
-        setFieldValue={(model) => {
-          setCurrentCourseProfileDisplayValue(
-            model ? getDisplayValue.courseProfile(model) : ""
-          );
-          setCurrentCourseProfileValue(model);
-        }}
-        inputFieldRef={courseProfileRef}
-        defaultFieldValue={""}
-      >
-        <Autocomplete
-          label="Course profile"
-          isRequired={true}
-          isReadOnly={false}
-          placeholder="Search CourseProfile"
-          value={currentCourseProfileDisplayValue}
-          options={courseProfileRecords
-            .filter(
-              (r) => !courseProfileIdSet.has(getIDValue.courseProfile?.(r))
-            )
-            .map((r) => ({
-              id: getIDValue.courseProfile?.(r),
-              label: getDisplayValue.courseProfile?.(r),
-            }))}
-          isLoading={courseProfileLoading}
-          onSelect={({ id, label }) => {
-            setCurrentCourseProfileValue(
-              courseProfileRecords.find((r) =>
-                Object.entries(JSON.parse(id)).every(
-                  ([key, value]) => r[key] === value
-                )
-              )
-            );
-            setCurrentCourseProfileDisplayValue(label);
-            runValidationTasks("courseProfile", label);
-          }}
-          onClear={() => {
-            setCurrentCourseProfileDisplayValue("");
-          }}
-          onChange={(e) => {
-            let { value } = e.target;
-            fetchCourseProfileRecords(value);
-            if (errors.courseProfile?.hasError) {
-              runValidationTasks("courseProfile", value);
-            }
-            setCurrentCourseProfileDisplayValue(value);
-            setCurrentCourseProfileValue(undefined);
-          }}
-          onBlur={() =>
-            runValidationTasks(
-              "courseProfile",
-              currentCourseProfileDisplayValue
-            )
+        errorMessage={errors.notificationsEnabled?.errorMessage}
+        hasError={errors.notificationsEnabled?.hasError}
+        {...getOverrideProps(overrides, "notificationsEnabled")}
+      ></SwitchField>
+      <SwitchField
+        label="Dark mode enabled"
+        defaultChecked={false}
+        isDisabled={false}
+        isChecked={darkModeEnabled}
+        onChange={(e) => {
+          let value = e.target.checked;
+          if (onChange) {
+            const modelFields = {
+              studentProfile,
+              notificationsEnabled,
+              darkModeEnabled: value,
+              language,
+            };
+            const result = onChange(modelFields);
+            value = result?.darkModeEnabled ?? value;
           }
-          errorMessage={errors.courseProfile?.errorMessage}
-          hasError={errors.courseProfile?.hasError}
-          ref={courseProfileRef}
-          labelHidden={true}
-          {...getOverrideProps(overrides, "courseProfile")}
-        ></Autocomplete>
-      </ArrayField>
+          if (errors.darkModeEnabled?.hasError) {
+            runValidationTasks("darkModeEnabled", value);
+          }
+          setDarkModeEnabled(value);
+        }}
+        onBlur={() => runValidationTasks("darkModeEnabled", darkModeEnabled)}
+        errorMessage={errors.darkModeEnabled?.errorMessage}
+        hasError={errors.darkModeEnabled?.hasError}
+        {...getOverrideProps(overrides, "darkModeEnabled")}
+      ></SwitchField>
       <TextField
-        label="Enrollment date"
+        label="Language"
         isRequired={false}
         isReadOnly={false}
-        type="datetime-local"
-        value={enrollmentDate && convertToLocal(new Date(enrollmentDate))}
+        value={language}
         onChange={(e) => {
-          let value =
-            e.target.value === "" ? "" : new Date(e.target.value).toISOString();
+          let { value } = e.target;
           if (onChange) {
             const modelFields = {
               studentProfile,
-              courseProfile,
-              enrollmentDate: value,
-              progress,
-              state,
+              notificationsEnabled,
+              darkModeEnabled,
+              language: value,
             };
             const result = onChange(modelFields);
-            value = result?.enrollmentDate ?? value;
+            value = result?.language ?? value;
           }
-          if (errors.enrollmentDate?.hasError) {
-            runValidationTasks("enrollmentDate", value);
+          if (errors.language?.hasError) {
+            runValidationTasks("language", value);
           }
-          setEnrollmentDate(value);
+          setLanguage(value);
         }}
-        onBlur={() => runValidationTasks("enrollmentDate", enrollmentDate)}
-        errorMessage={errors.enrollmentDate?.errorMessage}
-        hasError={errors.enrollmentDate?.hasError}
-        {...getOverrideProps(overrides, "enrollmentDate")}
+        onBlur={() => runValidationTasks("language", language)}
+        errorMessage={errors.language?.errorMessage}
+        hasError={errors.language?.hasError}
+        {...getOverrideProps(overrides, "language")}
       ></TextField>
-      <SelectField
-        label="Progress"
-        placeholder="Please select an option"
-        isDisabled={false}
-        value={progress}
-        onChange={(e) => {
-          let { value } = e.target;
-          if (onChange) {
-            const modelFields = {
-              studentProfile,
-              courseProfile,
-              enrollmentDate,
-              progress: value,
-              state,
-            };
-            const result = onChange(modelFields);
-            value = result?.progress ?? value;
-          }
-          if (errors.progress?.hasError) {
-            runValidationTasks("progress", value);
-          }
-          setProgress(value);
-        }}
-        onBlur={() => runValidationTasks("progress", progress)}
-        errorMessage={errors.progress?.errorMessage}
-        hasError={errors.progress?.hasError}
-        {...getOverrideProps(overrides, "progress")}
-      >
-        <option
-          children="Not started"
-          value="NOT_STARTED"
-          {...getOverrideProps(overrides, "progressoption0")}
-        ></option>
-        <option
-          children="In progress"
-          value="IN_PROGRESS"
-          {...getOverrideProps(overrides, "progressoption1")}
-        ></option>
-        <option
-          children="Completed"
-          value="COMPLETED"
-          {...getOverrideProps(overrides, "progressoption2")}
-        ></option>
-      </SelectField>
-      <SelectField
-        label="State"
-        placeholder="Please select an option"
-        isDisabled={false}
-        value={state}
-        onChange={(e) => {
-          let { value } = e.target;
-          if (onChange) {
-            const modelFields = {
-              studentProfile,
-              courseProfile,
-              enrollmentDate,
-              progress,
-              state: value,
-            };
-            const result = onChange(modelFields);
-            value = result?.state ?? value;
-          }
-          if (errors.state?.hasError) {
-            runValidationTasks("state", value);
-          }
-          setState(value);
-        }}
-        onBlur={() => runValidationTasks("state", state)}
-        errorMessage={errors.state?.errorMessage}
-        hasError={errors.state?.hasError}
-        {...getOverrideProps(overrides, "state")}
-      >
-        <option
-          children="Active"
-          value="ACTIVE"
-          {...getOverrideProps(overrides, "stateoption0")}
-        ></option>
-        <option
-          children="Paused"
-          value="PAUSED"
-          {...getOverrideProps(overrides, "stateoption1")}
-        ></option>
-        <option
-          children="Completed"
-          value="COMPLETED"
-          {...getOverrideProps(overrides, "stateoption2")}
-        ></option>
-      </SelectField>
       <Flex
         justifyContent="space-between"
         {...getOverrideProps(overrides, "CTAFlex")}

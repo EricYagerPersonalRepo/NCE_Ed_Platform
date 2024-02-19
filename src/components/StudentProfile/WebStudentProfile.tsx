@@ -20,7 +20,7 @@ import { MyAccountView, MyCourseView } from './StudentProfileComponents'
  *                          selected view's content.
  */
 
-const WebStudentProfile = ({ avatarUrl }: any) => {
+const WebStudentProfile = ({ userID, avatarUrl }: any) => {
     const [activeView, setActiveView] = useState('Account')
 
     const handleMenuClick = (view: string) => {
@@ -30,7 +30,7 @@ const WebStudentProfile = ({ avatarUrl }: any) => {
     const renderActiveView = () => {
         switch (activeView) {
             case 'Account':
-                return <MyAccountView avatarUrl={avatarUrl}/>
+                return <MyAccountView userID={userID} avatarUrl={avatarUrl}/>
             case 'My Courses':
                 return <MyCourseView />
             // Add more cases for other views

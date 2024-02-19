@@ -49,7 +49,6 @@ async function handleGetRequest(userID) {
 
 async function handlePutRequest(event, userID) {
     console.log(`Received event: ${JSON.stringify(event)}`);
-    console.log('userID: ', userID)
     const imageData = event.body; 
     const objectKey = `public/user_files/${userID}/avatar.png`;
 

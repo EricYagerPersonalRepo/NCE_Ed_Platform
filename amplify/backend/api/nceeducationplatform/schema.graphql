@@ -1,20 +1,30 @@
-type StudentProfile @model @auth(rules: [{ allow: public }]) {
+type StudentProfile 
+  @model 
+  @auth(rules: [{ allow: public }]) 
+{
   id: ID!
-  cognitoUserID: String!
+  cognitoUserID: ID! @index
   name: String!
   email: AWSEmail!
   birthdate: AWSDate!
   courseEnrollments: [CourseEnrollment] @hasMany(indexName: "byStudent", fields: ["id"])
+  userSettings: [UserSettings] @hasMany(indexName: "byStudentProfile", fields: ["id"])
 }
 
-type CourseProfile @model @auth(rules: [{ allow: public }]) {
+type CourseProfile 
+  @model 
+  @auth(rules: [{ allow: public }]) 
+{
   id: ID!
   title: String!
   description: String
   courseEnrollments: [CourseEnrollment] @hasMany(indexName: "byCourse", fields: ["id"])
 }
 
-type CourseEnrollment @model @auth(rules: [{ allow: public }]){
+type CourseEnrollment 
+  @model 
+  @auth(rules: [{ allow: public }])
+{
   id: ID!
   studentProfileID: ID! @index(name: "byStudent", sortKeyFields: ["id"])
   courseProfileID: ID! @index(name: "byCourse", sortKeyFields: ["id"])
@@ -24,6 +34,16 @@ type CourseEnrollment @model @auth(rules: [{ allow: public }]){
   progress: Progress
   state: CourseState
 }
+
+type UserSettings @model @auth(rules: [{ allow: public }]) {
+  id: ID!
+  studentProfileID: ID! @index(name: "byStudentProfile", sortKeyFields: ["id"])
+  studentProfile: StudentProfile! @belongsTo(fields: ["studentProfileID"])
+  notificationsEnabled: Boolean!
+  darkModeEnabled: Boolean!
+  language: String
+}
+
 
 enum Progress {
   NOT_STARTED

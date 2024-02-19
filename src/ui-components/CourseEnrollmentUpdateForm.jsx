@@ -300,8 +300,7 @@ export default function CourseEnrollmentUpdateForm(props) {
       : getIDValue.courseProfile?.(courseProfile)
   );
   const getDisplayValue = {
-    studentProfile: (r) =>
-      `${r?.cognitoUserID ? r?.cognitoUserID + " - " : ""}${r?.id}`,
+    studentProfile: (r) => `${r?.name ? r?.name + " - " : ""}${r?.id}`,
     courseProfile: (r) => `${r?.title ? r?.title + " - " : ""}${r?.id}`,
   };
   const validations = {
@@ -357,10 +356,7 @@ export default function CourseEnrollmentUpdateForm(props) {
       const variables = {
         limit: autocompleteLength * 5,
         filter: {
-          or: [
-            { cognitoUserID: { contains: value } },
-            { id: { contains: value } },
-          ],
+          or: [{ name: { contains: value } }, { id: { contains: value } }],
         },
       };
       if (newNext) {
