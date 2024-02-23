@@ -29,7 +29,7 @@ export const checkAuthStatus = async () => {
 export const handleConfirmSignup = async (signUpInput: ConfirmSignUpInput): Promise<handleConfirmSignUpReturnType> => {
     try {
         const { isSignUpComplete, nextStep }:ConfirmSignUpOutput = await confirmSignUp(signUpInput)
-        console.log(isSignUpComplete, nextStep)
+        console.log("HandleConfirmSignup: ", isSignUpComplete, nextStep)
         if(isSignUpComplete) return({signUpComplete:true, nextStep:nextStep})
         else return({signUpComplete:false,nextStep:nextStep})
     } catch (error) {
@@ -50,9 +50,10 @@ export const handleCreateStudentProfile = async (studentProfileInput:CreateStude
             query: createStudentProfile,
             variables: { input: studentProfileInput }
         })
+        console.log("Tried to create student profile: ", profileResult)
         return({isSignedUp:true, userProfile:profileResult})
     } catch (signInError) {
-        console.log('Error signing in:', signInError)
+        console.log('Error CREATING student profile:', signInError)
         return({isSignedUp:false, userProfile:null})
     }
 }
@@ -66,6 +67,8 @@ export const handleCreateStudentProfile = async (studentProfileInput:CreateStude
 export const handleSignIn = async({ username, password }: SignInInput) => {
     try {
         const { isSignedIn, nextStep }:SignInOutput = await signIn({ username, password })
+
+        console.log("HandleSignIn: ", isSignedIn, nextStep)
 
         if(isSignedIn){
             return({isSignedIn:true, nextStep:nextStep})

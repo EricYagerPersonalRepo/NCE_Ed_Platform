@@ -66,15 +66,11 @@ const NCE_Education_App = ({ Component, pageProps }:any) => {
     }, [])
 
     /**
-     * Sets up a listener for authentication events using AWS Amplify's Hub module. Whenever an authentication event occurs,
-     * such as sign-in or sign-out, it triggers a page reload to reflect changes in the user's authentication state across
-     * the application. This useEffect hook ensures the listener is registered once when the app component mounts.
-     * 
-     * Dependencies: None
+     * Removing this functionality because it is interrupting the signup flow which contains a login event
     */
     useEffect(()=> {
         Hub.listen('auth', () => {
-            window.location.reload()
+            console.log("_app.tsx received a login event")//window.location.reload()
         })
     }, [])
 

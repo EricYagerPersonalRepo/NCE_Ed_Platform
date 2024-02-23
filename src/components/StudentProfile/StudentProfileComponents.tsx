@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react'
 import { generateClient } from "aws-amplify/api"
-import { getStudentProfile, listCourseProfiles } from '@/src/graphql/queries'
+import { getStudentProfile, getUserSettings, listCourseProfiles, listStudentProfiles } from '@/src/graphql/queries'
 import { FormControl, InputLabel, Select, MenuItem, Typography, Grid, Paper, Avatar, Button } from '@mui/material'
 import { Course } from '@/src/types/StudentProfileTypes'
 import { downloadAvatarFromS3, uploadFileToS3 } from '@/src/functions/StorageFunctions'
 import { getCurrentUser } from 'aws-amplify/auth'
 import { createUserSettings } from '@/src/graphql/mutations'
 import { CreateUserSettingsInput } from '@/src/API'
+import { use } from 'chai'
 
 const amplifyApiClient = generateClient()
 
@@ -94,31 +95,47 @@ export const MyCourseView = ({userID}:any) => {
 export const MyAccountView = ({userID, avatarUrl}:any) => {
     const [userInformation, setUserInformation] = useState<any>({})
 
+
+
     useEffect(() => {
         const fetchUserData = async () => {
             if (!userID) return
-
-            try {
-                const userData: any = await amplifyApiClient.graphql({
-                    query: getStudentProfile,
-                    variables: {
-                        id: userID
-                    }
-                })
-                setUserInformation(userData.data.getStudentProfile)
-            } catch (error) {
-                console.error('Error fetching user data:', error)
+            else{
+                console.log("User ID Passed to MyAccountView: ", userID)
+                try {
+                    const userData: any = await amplifyApiClient.graphql({
+                        query: getStudentProfile,
+                        variables: {
+                            id: "11ca122d-a4ee-47ed-84b8-95f712fdd4d9"
+                        }
+                    })
+                    console.log({"User Data": userData})
+                    setUserInformation(userData.data.getStudentProfile)
+                } catch (error) {
+                    console.error('Error fetching user data:', error)
+                }
             }
         }
         fetchUserData()
+    }, [userID])
 
+    useEffect(()=>{
         const userSettingsInput: CreateUserSettingsInput = {
+            id: userID,
             studentProfileID: userID,
             notificationsEnabled: true, 
             darkModeEnabled: false, 
             language: 'en', 
         }
 
+        const checkUserSettings = async () => {
+            const apiCall = await amplifyApiClient.graphql({
+                query: getUserSettings,
+                variables: { id: userID }
+            })
+            return apiCall.data.getUserSettings !== null
+        }
+        
         
         const createUserSettingsCall = async() =>{
             try {
@@ -126,14 +143,26 @@ export const MyAccountView = ({userID, avatarUrl}:any) => {
                     query: createUserSettings,
                     variables: { input: userSettingsInput }
                 })
+                console.log('User Settings Created:', apiCall)
             } catch (userSettingsCreateError) {
                 console.log('Error Creating User Settings:', userSettingsCreateError)
             }
         }
-        if (userInformation.userSettings?.studentProfileID ?? null === null) {
-            createUserSettingsCall();
+
+        if(userInformation.id){
+            //using IIFE to ensure the promises created above are fulfilled before action
+            (async () => {
+                console.log("The user information is: ", userInformation)
+                let userSettingsExist = await checkUserSettings()
+                console.log("user settings exist: ", userSettingsExist);
+        
+                if (!userSettingsExist) {
+                    console.log("hit");
+                    createUserSettingsCall()
+                }
+            })()
         }
-    }, [userID])
+    },[userInformation])
 
     return (
         <Grid container spacing={2}>
@@ -182,6 +211,7 @@ const AvatarManager = ({ avatarUrl }:any) => {
     const handleFileChange:any = async (event:any) => {
         const file = event.target.files[0]
         const currentUser = await getCurrentUser()
+        console.log("current user from studentprof: ", currentUser)
         const userDataResponse = {
             email: currentUser.signInDetails?.loginId || '', // Fallback to an empty string if undefined
             cognitoID: currentUser.userId

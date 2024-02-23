@@ -23,8 +23,6 @@ export const getPresignedUrl = async (filename: string): Promise<string> => {
             }
         })
     
-        console.log("urlExists: ", urlExists)
-    
         return urlExists.url.toString()
     }catch(presignedURLCallError){
         return ""

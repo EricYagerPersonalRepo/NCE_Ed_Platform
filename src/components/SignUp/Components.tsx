@@ -481,7 +481,7 @@ export function TwoFactorAuthForm({ signUpHooks, handleConfirmSignup }: { signUp
                 const profileInput= { cognitoUserID:signUpHooks.cognitoUserID, name:signUpHooks.name, email:signUpHooks.username, birthdate:signUpHooks.birthday }
                 const profileResult = await handleCreateStudentProfile(profileInput)
                 if (profileResult.isSignedUp) {
-                    window.location.href = '/StudentProfile'
+                    console.log("They are signed up.")//window.location.href = '/StudentProfile'
                 }
             }
         } catch (error) {
