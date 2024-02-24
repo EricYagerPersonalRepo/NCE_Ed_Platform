@@ -4,13 +4,12 @@ import Visibility from '@mui/icons-material/Visibility'
 import VisibilityOff from '@mui/icons-material/VisibilityOff'
 import { ageCaluclatedFromInputBirthday, allowedZipCodes } from '@/src/functions/SignUpFunctions'
 import { ErrorOutline, CheckCircle } from '@mui/icons-material'
-import { signUp } from 'aws-amplify/auth'
-import { SignUpOutput } from 'aws-amplify/auth'
 import { birthdayPattern, emailPattern, namePattern, SignUpTabItemProps, SignUpTabPanelProps, zipCodePattern } from '@/src/types/SignUpTypes'
-import { ThrowSignUpError, fetchCityState } from '@/src/functions/AuthFunctions'
+import { fetchCityState } from '@/src/functions/AuthFunctions'
 import { tfaModalStyle } from '@/styles/AuthStyles'
 import { handleCreateStudentProfile, handleSignIn } from '../../functions/AuthFunctions'
 import { useSignUpHooks } from '@/src/state/SignUpHooks'
+import { handleSignUp } from './Functions'
 
 /**
  * BirthdayInput Component - Manages the input and validation of a user's birthday during sign-up.
@@ -336,33 +335,7 @@ export const EmailInput = ({signUpHooks}:any) => {
  *                          that is enabled only when the form is correctly completed.
  */
 export const PasswordInput = ({signUpHooks}:any) => {
-    const username = signUpHooks.username
-    const password = signUpHooks.password
-
-    async function handleSignUp() {
-        try {
-            const response:SignUpOutput = await signUp({
-                username,
-                password,
-                options: {
-                    autoSignIn: true,
-                    userAttributes: {}
-                }
-            })
-
-            if (response.nextStep && response.nextStep.signUpStep === "CONFIRM_SIGN_UP") {
-                signUpHooks.setTfaOpen(true)
-            }
-
-            if(response.userId){
-                signUpHooks.setCognitoUserID(response.userId)
-            }
-        } catch (e:any) {
-            let errorMessage = ThrowSignUpError(e.name)
-            signUpHooks.setError({ ...signUpHooks.error, signUp: errorMessage })
-            console.error(signUpHooks.error)
-        }
-    }
+    
     
     // Toggles the visibility of the password input field.
     const handleClickShowPassword = (target:number) => {
@@ -441,7 +414,7 @@ export const PasswordInput = ({signUpHooks}:any) => {
                 </Grid>
                 <Grid item xs={12}>
                     { signUpHooks.formComplete ?
-                        <Button onClick={handleSignUp} fullWidth>Sign Up</Button>
+                        <Button onClick={()=>handleSignUp(signUpHooks)} fullWidth>Sign Up</Button>
                         :
                         <Button disabled fullWidth>Form not complete</Button>
 

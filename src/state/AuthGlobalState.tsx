@@ -31,8 +31,8 @@ const AuthContext = createContext<AuthContextType>({
     setLoggedIn: () => {}, 
     login: () => {}, 
     logout: () => {},
-    avatarUrl: '', // Default avatarUrl state
-    setAvatarUrl: () => {} // Placeholder function for setAvatarUrl
+    avatarUrl: '',
+    setAvatarUrl: () => {}
 })
 
 /**
@@ -77,7 +77,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     
     const logout = () => {
         setLoggedIn(false);
-        setAvatarUrl(''); // Optionally reset avatarUrl on logout
+        setAvatarUrl('');
     };
 
     useEffect(() => {
@@ -86,41 +86,9 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
                 // Check authentication status
                 const isUserLoggedIn = await checkAuthStatus();
                 setLoggedIn(isUserLoggedIn);
-
-                // If user is logged in, fetch the avatar
-                if (isUserLoggedIn) {
-                    const currentUser = await getCurrentUser();
-                    const avatarFileName = `avatars/${currentUser.userId}/avatar.png`;
-                    if (currentUser && currentUser.userId) {
-                        
-                        const url = await getPresignedUrl(avatarFileName);
-                        if(url!==""){
-                            const response = await fetch(url);
-                            const imageBlob = await response.blob();
-                            const localUrl = URL.createObjectURL(imageBlob);
-                            setAvatarUrl(localUrl);
-                        }
-                        else{
-                            //booty
-                            const imagePath = '/Generic_Avatar.png'; // Path to the image in your public folder
-                            
-                            try {
-                                const response = await fetch(imagePath);
-                                if (!response.ok) throw new Error('Failed to fetch the image');
-                                const blob = await response.blob();
-                                const file = new File([blob], 'Generic_Avatar.png', { type: blob.type });
-                                await uploadFileToS3(file, avatarFileName);
-                                console.log('Created an avatar for this new user');
-                            } catch (error) {
-                                console.error('Error uploading generic avatar:', error);
-                            }
-                        }
-                    }
-                }
             } catch (error) {
-                console.error('Initialization error:', error);
+                console.error('Auth Initialization error:', error);
                 setLoggedIn(false);
-                setAvatarUrl(''); // Optionally reset avatarUrl on error
             }
         }
         initializeAuth();

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Avatar, Button, Grid, IconButton, Menu, MenuItem, Typography } from '@mui/material'
 import { AccountCircle, MoreVert } from '@mui/icons-material'
 import { useRouter } from 'next/router'
@@ -159,6 +159,10 @@ export const UserAccountButtons_Web = ({ avatarUrl }: any) => {
     const handleClose = () => {
         setAnchorEl(null)
     }
+
+    useEffect(()=>{
+        console.log("Avatar URL from UserAccountButtons_Web: ", avatarUrl)
+    },[avatarUrl])
 
     return (
         <Grid container justifyContent="flex-end" style={{ flexGrow: 1 }}>

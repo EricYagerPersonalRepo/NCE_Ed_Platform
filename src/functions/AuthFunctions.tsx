@@ -20,23 +20,7 @@ export const checkAuthStatus = async () => {
     }
 }
 
-/**
- * Asynchronously handles the confirmation of user sign-up.
- * 
- * @param {ConfirmSignUpInput} signUpInput - The input object containing username and confirmation code.
- * @returns {Promise<handleConfirmSignUpReturnType>} A promise that resolves to an object indicating if sign-up is complete and the next step.
- */
-export const handleConfirmSignup = async (signUpInput: ConfirmSignUpInput): Promise<handleConfirmSignUpReturnType> => {
-    try {
-        const { isSignUpComplete, nextStep }:ConfirmSignUpOutput = await confirmSignUp(signUpInput)
-        console.log("HandleConfirmSignup: ", isSignUpComplete, nextStep)
-        if(isSignUpComplete) return({signUpComplete:true, nextStep:nextStep})
-        else return({signUpComplete:false,nextStep:nextStep})
-    } catch (error) {
-        console.error('Error confirming sign up:', error)
-        return({signUpComplete:false,nextStep:null,error:error})
-    }
-}
+
 
 /**
  * Asynchronously creates a student profile in the system.
@@ -83,60 +67,6 @@ export const handleSignIn = async({ username, password }: SignInInput) => {
 }
 
 /**
- * Maps an error event string to a user-friendly error message.
- * 
- * @param {string} event - The error event string.
- * @returns {string} A user-friendly error message corresponding to the provided event.
- */
-export const ThrowSignUpError = (event:string) => {
-    let errorMessage = ''
-    switch (event) {
-        case 'NoUserPoolError':
-            errorMessage = 'No user pool configured'
-            break
-        case 'UsernameExistsException':
-            errorMessage = 'Username already exists'
-            break
-        case 'InvalidParameterException':
-            errorMessage = 'Invalid parameters'
-            break
-        case 'InvalidPasswordException':
-            errorMessage = 'Invalid password format'
-            break
-        case 'NotAuthorizedException':
-            errorMessage = 'Not authorized'
-            break
-        case 'UserNotFoundException':
-            errorMessage = 'User not found'
-            break
-        case 'LimitExceededException':
-            errorMessage = 'Limit exceeded'
-            break
-        case 'CodeMismatchException':
-            errorMessage = 'Invalid verification code'
-            break
-        case 'ExpiredCodeException':
-            errorMessage = 'Verification code expired'
-            break
-        case 'TooManyRequestsException':
-            errorMessage = 'Too many requests, try again later'
-            break
-        case 'TooManyFailedAttemptsException':
-            errorMessage = 'Too many failed attempts'
-            break
-        case 'UsernameExistsException':
-            errorMessage = 'User exists with provided email, use a different email'
-            break
-        case 'EmptySignUpUsername':
-            errorMessage = 'No email address provided'
-            break
-        default:
-            errorMessage = 'An unknown error occurred'
-    }
-    return(errorMessage)
-}
-
-/**
  * Asynchronously fetches city and state information based on the provided ZIP code.
  * 
  * @param {string} zip - The ZIP code for which to fetch city and state information.
@@ -160,6 +90,7 @@ export const fetchCityState = async(zip:string) => {
  */
 export const signUserOut = async() => {
     let signUserOut = await signOut()
+    return(signUserOut)
 }
 
 

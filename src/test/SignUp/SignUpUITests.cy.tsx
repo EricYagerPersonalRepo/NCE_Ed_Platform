@@ -1,16 +1,8 @@
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect} from 'react'
 import { mount } from 'cypress/react18'
-import { fetchCityState } from '../functions/AuthFunctions'
-import { BirthdayInput, EmailInput, NameInput, PasswordInput, ZipInput } from '../components/SignUp'
-import { useSignUpHooks } from '../state/SignUpHooks'
-
-
-/**
- * Test Wrappers
- * 
- * TODO: Write a generic test wrapper that takes the component in 
- * so we don't have to write individual wrappers for each component
- */
+import { fetchCityState } from '../../functions/AuthFunctions'
+import { BirthdayInput, EmailInput, NameInput, PasswordInput, ZipInput } from '../../components/SignUp'
+import { useSignUpHooks } from '../../state/SignUpHooks'
 
 export const BirthdayInputTestWrapper = ({ testData, testError }: any) => {
   const signUpHooks = useSignUpHooks()
@@ -131,7 +123,7 @@ describe('<NameInput />', () => {
 })
 
 
-describe('<Zip Code Input />', () => {
+describe('<ZipCodeInput />', () => {
   const baseUrl = 'https://api.zippopotam.us/us/'
   const validZip = "13630"
   const invalidZip = "99999"

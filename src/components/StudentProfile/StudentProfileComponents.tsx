@@ -213,17 +213,16 @@ const AvatarManager = ({ avatarUrl }:any) => {
         const currentUser = await getCurrentUser()
         console.log("current user from studentprof: ", currentUser)
         const userDataResponse = {
-            email: currentUser.signInDetails?.loginId || '', // Fallback to an empty string if undefined
+            email: currentUser.signInDetails?.loginId || '',
             cognitoID: currentUser.userId
         }
         const avatarTarget = `avatars/${userDataResponse.cognitoID}/avatar.png`
 
         if (!file) return
+        
         const uploadedKey:any = await uploadFileToS3(file, avatarTarget)
 
-        if (uploadedKey) {
-            window.location.reload()
-        }
+        if (uploadedKey)  window.location.reload()
     }
 
     return (

@@ -6,8 +6,8 @@ import { Amplify } from 'aws-amplify'
 import { ThemeProvider } from '@aws-amplify/ui-react'
 import studioTheme from '../src/ui-components/studioTheme'
 import { checkAuthStatus } from '@/src/functions/AuthFunctions'
-import { AuthenticatedHeader, UnauthenticatedHeader } from '@/src/components/Header'
-import { AuthProvider, useAuth } from '@/src/state/AuthGlobalState'
+import { Header } from '@/src/components/Header'
+import { AuthProvider } from '@/src/state/AuthGlobalState'
 import { useMediaQuery, useTheme } from '@mui/material'
 import { useRouter } from 'next/router'
 import { Hub } from 'aws-amplify/utils'
@@ -65,23 +65,6 @@ const NCE_Education_App = ({ Component, pageProps }:any) => {
         validateAuthState()
     }, [])
 
-    /**
-     * Removing this functionality because it is interrupting the signup flow which contains a login event
-    */
-    useEffect(()=> {
-        Hub.listen('auth', () => {
-            console.log("_app.tsx received a login event")//window.location.reload()
-        })
-    }, [])
-
-    /**
-     * This effect fetches and sets the user's data upon a change in their logged-in status. 
-     * If the user is logged in, it calls `getCurrentUser` to retrieve the user's details,
-     * such as email and cognitoID, and updates the application's state with this information.
-     * It runs every time the `loggedIn` state changes, ensuring the user data is always current.
-     * 
-     * Dependencies: loggedIn - The effect triggers in response to changes in the user's logged-in status.
-    */
     useEffect(()=> {
         const getUserData = async() =>{
             if(loggedIn){
@@ -90,6 +73,7 @@ const NCE_Education_App = ({ Component, pageProps }:any) => {
                     email: currentUser.signInDetails?.loginId || '', // Fallback to an empty string if undefined
                     cognitoID: currentUser.userId
                 }
+                
                 setUserData(userDataResponse)
             }
         }
@@ -97,16 +81,54 @@ const NCE_Education_App = ({ Component, pageProps }:any) => {
         
     }, [loggedIn])
 
+    useEffect(() => {
+        Hub.listen('auth', (data:any) => {
+            switch(data.payload.event){
+                case "signedIn": 
+                    setLoggedIn(true)
+                    setUserData({
+                        email:data.payload.data.username,
+                        cognitoID:data.payload.data.userId
+                    })
+                    break;
+                case "signedOut":
+                    setLoggedIn(false)
+                    setUserData({email:"", cognitoID:""})
+                    break;
+                default:
+                    break;
+            }
+        })
+    }, [])
+
+    useEffect(()=>{
+        const avatarUrlResponse = async() => {
+            try{
+                const currentUser = await getCurrentUser();
+                const avatarFileName = `avatars/${currentUser.userId}/avatar.png`;
+                let presignedUrlResponse = await getPresignedUrl(avatarFileName)
+                console.log("presignedUrlREsponse call result from _app.tsx: ", presignedUrlResponse)
+                setAvatarUrl(presignedUrlResponse)
+            }catch(error){
+                console.error("Error with presignedUrlResponse call in app.tsx: ", error)
+                return
+            }
+        }
+        avatarUrlResponse()
+    },[userData])
+
+
+
     return (
         <AuthProvider>
             <Head>
                 <title>NCE Education App</title>
             </Head>
             <ThemeProvider theme={studioTheme}>
-                {loggedIn ? 
-                    <AuthenticatedHeader userData={userData} avatarUrl={avatarUrl}/>
+                {
+                    loggedIn ? <Header loggedIn={loggedIn} avatarUrl={avatarUrl} userData={userData} isMobile={isMobile} />
                     :
-                    <UnauthenticatedHeader />
+                    <Header />
                 }
                 <Component {...pageProps} loggedIn={loggedIn} avatarUrl={avatarUrl} userData={userData} isMobile={isMobile} router={router}/>
             </ThemeProvider>
@@ -115,3 +137,13 @@ const NCE_Education_App = ({ Component, pageProps }:any) => {
 }
 
 export default NCE_Education_App
+
+/**
+ * Removing this functionality because it is interrupting the signup flow which contains a login event
+*
+*useEffect(()=> {
+*    Hub.listen('auth', () => {
+*        console.log("_app.tsx received a login event")//window.location.reload()
+*    })
+*}, [])
+**/

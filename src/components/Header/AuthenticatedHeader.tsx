@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { AppBar, Toolbar, useTheme, useMediaQuery } from '@mui/material'
 import { CommonHeaderComponent, UserAccountButtons_Mobile, UserAccountButtons_Web } from './HeaderComponents'
 import { AuthenticatedHeaderProps } from '@/src/types/HeaderTypes'
@@ -26,6 +26,10 @@ import { AuthenticatedHeaderProps } from '@/src/types/HeaderTypes'
 const AuthenticatedHeader: React.FC<AuthenticatedHeaderProps>= ({avatarUrl}) => {
     const theme = useTheme()
     const isMobile = useMediaQuery(theme.breakpoints.down('sm'))
+
+    useEffect(()=>{
+        console.log("Avatar URL from AuthenticatedHeader: ", avatarUrl)
+    },[avatarUrl])
 
     return (
         <AppBar position="static" style={{ background: 'white' }} elevation={0}>

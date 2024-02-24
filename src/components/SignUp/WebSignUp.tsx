@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react'
 import {  Grid, Container, Tabs, Tab, Modal } from '@mui/material'
-import { handleConfirmSignup } from '@/src/functions/AuthFunctions'
+import { handleConfirmSignup } from './Functions'
 import { useSignUpHooks } from '@/src/state/SignUpHooks'
 import { BirthdayInput, EmailInput, NameInput, PasswordInput, ZipInput,  SignUpTabItem, TwoFactorAuthForm } from './Components'
 
@@ -32,7 +32,6 @@ const WebSignUp = () => {
 
     useEffect(() => {
         if (signUpHooks.tabValue === 0 && dateInputRef.current) {
-            // Manually set the focus on the input field
             dateInputRef.current.focus()
         }
     }, [signUpHooks.tabValue])

@@ -33,9 +33,10 @@ export async function uploadFileToS3(file:any, path = '') {
                 }
             }
         }).result
-        result && window.location.reload()
+        return(result)
     } catch (error) {
-        console.log('Error : ', error)
+        console.log('Error with file upload to S3: ', error)
+        return(null)
     }
 }
 

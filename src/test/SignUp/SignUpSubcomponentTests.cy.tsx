@@ -1,5 +1,5 @@
 import React from 'react'
-import { SignUpTabItem, SignUpTabPanel, TwoFactorAuthForm } from '../components/SignUp/Components'
+import { SignUpTabItem, SignUpTabPanel, TwoFactorAuthForm } from '../../components/SignUp/Components'
 import { TextField } from '@mui/material'
 import { mount } from 'cypress/react18'
 import { Button } from '@aws-amplify/ui-react'
@@ -48,7 +48,7 @@ describe('<SignUpTabPanel />', () => {
   })
 
   it('handles input change', () => {
-    mount(
+    cy.mount(
       <SignUpTabPanel value={0} index={0}>
         <TextField data-cy="test-input" label="Test Input" />
       </SignUpTabPanel>
@@ -146,7 +146,7 @@ describe('<TwoFactorAuthForm />', () => {
 
   it('accepts input in the TFA code field', () => {
     const handleConfirmSignupMock = cy.stub().resolves({ signUpComplete: true })
-    cy.mount(
+    mount(
       <TwoFactorAuthForm 
         signUpHooks={mockSignUpHooks}
         handleConfirmSignup={handleConfirmSignupMock}

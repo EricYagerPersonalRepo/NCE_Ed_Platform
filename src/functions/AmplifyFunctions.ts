@@ -22,9 +22,17 @@ export const getPresignedUrl = async (filename: string): Promise<string> => {
               validateObjectExistence: true
             }
         })
-    
-        return urlExists.url.toString()
-    }catch(presignedURLCallError){
+        console.log("urlExists definition from getPresignedUrl: ", urlExists)
+        const returnUrl = urlExists.url.href.toString()
+        if(returnUrl!==""){
+            const response = await fetch(returnUrl);
+            const imageBlob = await response.blob();
+            const localUrl = URL.createObjectURL(imageBlob);
+            return(localUrl)
+        }
+        else return("")
+    }catch(presignedUrlCallError){
+        console.error(presignedUrlCallError)
         return ""
     }
 }

@@ -7,3 +7,8 @@ interface UserDataProps {
     email: String | undefined
     cognitoID: String | undefined
 }
+
+export interface HeaderProps {
+    userData?: UserDataProps
+    avatarUrl?: String | undefined
+}
