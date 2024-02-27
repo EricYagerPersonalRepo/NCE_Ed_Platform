@@ -275,6 +275,7 @@ export const getUserSettings = /* GraphQL */ `query GetUserSettings($id: ID!) {
     notificationsEnabled
     darkModeEnabled
     language
+    isAdmin
     createdAt
     updatedAt
     __typename
@@ -296,6 +297,7 @@ export const listUserSettings = /* GraphQL */ `query ListUserSettings(
       notificationsEnabled
       darkModeEnabled
       language
+      isAdmin
       createdAt
       updatedAt
       __typename
@@ -330,6 +332,7 @@ export const userSettingsByStudentProfileIDAndId = /* GraphQL */ `query UserSett
       notificationsEnabled
       darkModeEnabled
       language
+      isAdmin
       createdAt
       updatedAt
       __typename

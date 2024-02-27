@@ -4,6 +4,7 @@ import { AccountCircle, MoreVert } from '@mui/icons-material'
 import { useRouter } from 'next/router'
 import { signOut } from 'aws-amplify/auth'
 import { loginButtonStyle, signUpButtonStyle } from '@/src/style/HeaderStyle'
+import { ConsoleLogger } from 'aws-amplify/utils'
 
 /**
  * CommonHeaderComponent - Displays the brand image in the header.
@@ -160,10 +161,6 @@ export const UserAccountButtons_Web = ({ avatarUrl }: any) => {
         setAnchorEl(null)
     }
 
-    useEffect(()=>{
-        console.log("Avatar URL from UserAccountButtons_Web: ", avatarUrl)
-    },[avatarUrl])
-
     return (
         <Grid container justifyContent="flex-end" style={{ flexGrow: 1 }}>
             <Grid item>
@@ -245,6 +242,7 @@ export const UserAccountButtons_Mobile: React.FC = () => {
 
 export const Authenticated_UserHeaderMenu = ({anchorEl, open, handleClose}:any) => {
     const router = useRouter()
+    
 
     const handleMyCourses = () => {
         handleClose() // Close the menu
@@ -252,12 +250,13 @@ export const Authenticated_UserHeaderMenu = ({anchorEl, open, handleClose}:any) 
     }
 
     const handleLogout = async () => {
+        const logger = new ConsoleLogger('handleLogout in Authenticated_UserHeaderMenu')
         try {
             await signOut()
             handleClose()
             router.push('/')
         } catch (error) {
-            console.log('error signing out: ', error)
+            logger.error(error)
         }
     }
 

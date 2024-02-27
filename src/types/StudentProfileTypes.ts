@@ -39,6 +39,7 @@ export interface UserSettings {
   notificationsEnabled: boolean;
   darkModeEnabled: boolean;
   language?: string;
+  isAdmin: boolean;
 }
 
 export enum Progress {

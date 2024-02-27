@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from 'react'
 import { generateClient } from "aws-amplify/api"
 import { getStudentProfile, getUserSettings, listCourseProfiles, listStudentProfiles } from '@/src/graphql/queries'
-import { FormControl, InputLabel, Select, MenuItem, Typography, Grid, Paper, Avatar, Button } from '@mui/material'
+import { FormControl, InputLabel, Select, MenuItem, Typography, Grid, Paper, Avatar, Button, List, ListItem, ListItemText, TextField, FormControlLabel, Switch } from '@mui/material'
 import { Course } from '@/src/types/StudentProfileTypes'
 import { downloadAvatarFromS3, uploadFileToS3 } from '@/src/functions/StorageFunctions'
 import { getCurrentUser } from 'aws-amplify/auth'
-import { createUserSettings } from '@/src/graphql/mutations'
-import { CreateUserSettingsInput } from '@/src/API'
+import { createUserSettings, updateUserSettings } from '@/src/graphql/mutations'
+import { CreateUserSettingsInput, UpdateUserSettingsInput, UserSettings } from '@/src/API'
 import { use } from 'chai'
+import { UserSettingsUpdateFormInputValues } from '@/src/ui-components/UserSettingsUpdateForm'
 
 const amplifyApiClient = generateClient()
 
@@ -78,6 +79,36 @@ export const MyCourseView = ({userID}:any) => {
     )
 }
 
+export const getFullStudentProfile = /* GraphQL */ `query GetStudentProfile($id: ID!) {
+    getStudentProfile(id: $id) {
+      id
+      cognitoUserID
+      name
+      email
+      birthdate
+      courseEnrollments {
+        items {
+            enrollmentDate
+            progress
+            state
+        }
+        }
+      userSettings {
+        items {
+          id
+          darkModeEnabled
+          isAdmin
+          language
+          notificationsEnabled
+        }
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+  `
+
 /**
  * MyAccountView Component - Renders the account management dashboard with user-specific details.
  * 
@@ -94,8 +125,7 @@ export const MyCourseView = ({userID}:any) => {
 
 export const MyAccountView = ({userID, avatarUrl}:any) => {
     const [userInformation, setUserInformation] = useState<any>({})
-
-
+    const [userSettings, setUserSettings] = useState<any>({})
 
     useEffect(() => {
         const fetchUserData = async () => {
@@ -104,13 +134,13 @@ export const MyAccountView = ({userID, avatarUrl}:any) => {
                 console.log("User ID Passed to MyAccountView: ", userID)
                 try {
                     const userData: any = await amplifyApiClient.graphql({
-                        query: getStudentProfile,
+                        query: getFullStudentProfile,
                         variables: {
-                            id: "11ca122d-a4ee-47ed-84b8-95f712fdd4d9"
+                            id: userID
                         }
                     })
-                    console.log({"User Data": userData})
                     setUserInformation(userData.data.getStudentProfile)
+                    setUserSettings(userData.data.getStudentProfile.userSettings.items[0])
                 } catch (error) {
                     console.error('Error fetching user data:', error)
                 }
@@ -125,15 +155,23 @@ export const MyAccountView = ({userID, avatarUrl}:any) => {
             studentProfileID: userID,
             notificationsEnabled: true, 
             darkModeEnabled: false, 
-            language: 'en', 
+            language: 'en',
+            isAdmin: false,
         }
 
         const checkUserSettings = async () => {
-            const apiCall = await amplifyApiClient.graphql({
-                query: getUserSettings,
-                variables: { id: userID }
-            })
-            return apiCall.data.getUserSettings !== null
+            console.log("checkUserSettings call initiated")
+            try{
+                const apiCall = await amplifyApiClient.graphql({
+                    query: getUserSettings,
+                    variables: { id: userID }
+                })
+                console.log("checkUserSettings: ", apiCall)
+                return apiCall.data.getUserSettings !== null
+            }catch(error){
+                console.error(error)
+                return false
+            }
         }
         
         
@@ -152,17 +190,127 @@ export const MyAccountView = ({userID, avatarUrl}:any) => {
         if(userInformation.id){
             //using IIFE to ensure the promises created above are fulfilled before action
             (async () => {
-                console.log("The user information is: ", userInformation)
-                let userSettingsExist = await checkUserSettings()
-                console.log("user settings exist: ", userSettingsExist);
-        
-                if (!userSettingsExist) {
-                    console.log("hit");
-                    createUserSettingsCall()
+                try{
+                    console.log("The user information is: ", userInformation)
+                    let userSettingsExist = await checkUserSettings()
+                    console.log("user settings exist: ", userSettingsExist)
+            
+                    if (!userSettingsExist) {
+                        console.log("hit")
+                        createUserSettingsCall()
+                    }
+                }catch(error){
+                    console.error(error)
                 }
+                
             })()
         }
     },[userInformation])
+
+    useEffect(()=>{
+        const userSettingsUpdateCall = async() => {
+            const userSettingsUpdateData = {
+                id:userSettings.id,
+                studentProfileID: userSettings
+
+
+            }
+            try {
+                const apiCall = await amplifyApiClient.graphql({
+                    query: updateUserSettings,
+                    variables: { input: userSettings }
+                })
+                console.log('User Settings Updated:', apiCall)
+            } catch (userSettingsUpdateError) {
+                console.log('Error Creating User Settings:', userSettingsUpdateError)
+            }
+        }
+
+        userSettingsUpdateCall()
+    },[userSettings])
+
+    const SettingsComponent = () => {
+        // Initialize state
+        const [settings, setSettings] = useState({
+            id:userSettings.id,
+            darkModeEnabled: userSettings.darkModeEnabled,
+            language: userSettings.language,
+            notificationsEnabled: userSettings.notificationsEnabled,
+            isAdmin: userSettings.isAdmin
+        })
+    
+        // Handle changes to the switches and select
+        const handleChange = (event:any) => {
+            const { name, value, checked, type } = event.target;
+            setSettings(prevSettings => ({
+                ...prevSettings,
+                [name]: type === 'checkbox' ? checked : value,
+            }));
+        };
+    
+        // Placeholder for saving changes
+        const handleSave = () => {
+            console.log('Saving settings:', settings);
+            setUserSettings(settings); 
+        };
+    
+        return (
+            <Grid item xs={12}>
+                <Paper elevation={3} style={{ padding: 20, width: '100%' }}>
+                    <Typography variant="h6" gutterBottom>
+                        User Settings
+                    </Typography>
+                    <div style={{ marginBottom: 16 }}>
+                        <FormControlLabel
+                            control={
+                                <Switch
+                                    checked={settings.darkModeEnabled}
+                                    onChange={handleChange}
+                                    name="darkModeEnabled"
+                                    color="primary"
+                                />
+                            }
+                            label="Dark Mode"
+                        />
+                    </div>
+                    <div style={{ marginBottom: 16 }}>
+                        <TextField
+                            select
+                            label="Language"
+                            value={settings.language}
+                            onChange={handleChange}
+                            name="language"
+                            variant="outlined"
+                            size="small"
+                            fullWidth
+                        >
+                            <MenuItem value="en">English</MenuItem>
+                            <MenuItem value="es">Spanish</MenuItem>
+                            <MenuItem value="fr">French</MenuItem>
+                            {/* Add more language options as needed */}
+                        </TextField>
+                    </div>
+                    <div style={{ marginBottom: 16 }}>
+                        <FormControlLabel
+                            control={
+                                <Switch
+                                    checked={settings.notificationsEnabled}
+                                    onChange={handleChange}
+                                    name="notificationsEnabled"
+                                    color="primary"
+                                />
+                            }
+                            label="Allow Notifications"
+                        />
+                    </div>
+                    <Button variant="contained" color="primary" onClick={handleSave}>
+                        Save Changes
+                    </Button>
+                </Paper>
+            </Grid>
+        );
+    }
+
 
     return (
         <Grid container spacing={2}>
@@ -171,16 +319,10 @@ export const MyAccountView = ({userID, avatarUrl}:any) => {
                     Account Dashboard
                 </Typography>
             </Grid>
-            <Grid item xs={12} sm={6} md={4}>
-                <Paper elevation={3} style={{ padding: 20 }}>
-                    <Typography variant="h6">Profile Information</Typography>
-                    {/* Profile information goes here */}
-                </Paper>
-            </Grid>
-            <Grid item xs={12} sm={6} md={4}>
+            <Grid item xs={12} sm={6} md={8}>
                 <Paper elevation={3} style={{ padding: 20 }}>
                     <Typography variant="h6">Settings</Typography>
-                    {/* Settings go here */}
+                    <SettingsComponent />
                 </Paper>
             </Grid>
             <Grid item xs={12} sm={6} md={4}>

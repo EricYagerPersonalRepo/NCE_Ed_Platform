@@ -286,6 +286,7 @@ export const createUserSettings = /* GraphQL */ `mutation CreateUserSettings(
     notificationsEnabled
     darkModeEnabled
     language
+    isAdmin
     createdAt
     updatedAt
     __typename
@@ -315,6 +316,7 @@ export const updateUserSettings = /* GraphQL */ `mutation UpdateUserSettings(
     notificationsEnabled
     darkModeEnabled
     language
+    isAdmin
     createdAt
     updatedAt
     __typename
@@ -344,6 +346,7 @@ export const deleteUserSettings = /* GraphQL */ `mutation DeleteUserSettings(
     notificationsEnabled
     darkModeEnabled
     language
+    isAdmin
     createdAt
     updatedAt
     __typename

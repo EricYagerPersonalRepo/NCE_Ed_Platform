@@ -27,12 +27,14 @@ export declare type UserSettingsUpdateFormInputValues = {
     notificationsEnabled?: boolean;
     darkModeEnabled?: boolean;
     language?: string;
+    isAdmin?: boolean;
 };
 export declare type UserSettingsUpdateFormValidationValues = {
     studentProfile?: ValidationFunction<StudentProfile>;
     notificationsEnabled?: ValidationFunction<boolean>;
     darkModeEnabled?: ValidationFunction<boolean>;
     language?: ValidationFunction<string>;
+    isAdmin?: ValidationFunction<boolean>;
 };
 export declare type PrimitiveOverrideProps<T> = Partial<T> & React.DOMAttributes<HTMLDivElement>;
 export declare type UserSettingsUpdateFormOverridesProps = {
@@ -41,6 +43,7 @@ export declare type UserSettingsUpdateFormOverridesProps = {
     notificationsEnabled?: PrimitiveOverrideProps<SwitchFieldProps>;
     darkModeEnabled?: PrimitiveOverrideProps<SwitchFieldProps>;
     language?: PrimitiveOverrideProps<TextFieldProps>;
+    isAdmin?: PrimitiveOverrideProps<SwitchFieldProps>;
 } & EscapeHatchProps;
 export declare type UserSettingsUpdateFormProps = React.PropsWithChildren<{
     overrides?: UserSettingsUpdateFormOverridesProps | undefined | null;

@@ -13,12 +13,16 @@ const LogInForm = ({loggedIn}:any) => {
     const { login, avatarUrl } = useAuth()
 
     const handleLogin = async () => {
+        console.log("Login event attempted")
         try {
+            console.log("Login event attempted")
             await signIn({ username, password })
             login()
+            console.log("Login event succeeded attempting redrect")
             router.push("/StudentProfile")
         
         } catch (error:any) {
+            console.error("LogInForm error")
             setError(error.message)
         }
     }

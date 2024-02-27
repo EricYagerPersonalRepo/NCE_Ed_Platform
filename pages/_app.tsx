@@ -107,7 +107,6 @@ const NCE_Education_App = ({ Component, pageProps }:any) => {
                 const currentUser = await getCurrentUser();
                 const avatarFileName = `avatars/${currentUser.userId}/avatar.png`;
                 let presignedUrlResponse = await getPresignedUrl(avatarFileName)
-                console.log("presignedUrlREsponse call result from _app.tsx: ", presignedUrlResponse)
                 setAvatarUrl(presignedUrlResponse)
             }catch(error){
                 console.error("Error with presignedUrlResponse call in app.tsx: ", error)
@@ -117,6 +116,20 @@ const NCE_Education_App = ({ Component, pageProps }:any) => {
         avatarUrlResponse()
     },[userData])
 
+/** 
+ * Todo: Implement the serviceworker from /public to cache static assets locally and later for push notifications
+ *  useEffect(() => {
+        window.addEventListener('load', () => {
+            console.log("listener")
+            navigator.serviceWorker.register('/service-worker.js').then((registration) => {
+                console.log('Service Worker registered: ', registration);
+            }).catch((registrationError) => {
+                console.log('Service Worker registration failed: ', registrationError);
+            });
+        });
+    }, [])
+*/
+    
 
 
     return (
@@ -137,13 +150,3 @@ const NCE_Education_App = ({ Component, pageProps }:any) => {
 }
 
 export default NCE_Education_App
-
-/**
- * Removing this functionality because it is interrupting the signup flow which contains a login event
-*
-*useEffect(()=> {
-*    Hub.listen('auth', () => {
-*        console.log("_app.tsx received a login event")//window.location.reload()
-*    })
-*}, [])
-**/

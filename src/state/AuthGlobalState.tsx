@@ -112,4 +112,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
  * This hook provides a convenient way to access and use the authentication context's values.
  * It returns the 'loggedIn' state and the 'setLoggedIn' function.
  */
-export const useAuth = () => useContext(AuthContext)
+export const useAuth = () => {
+    console.log("useAuth call attempted")
+    const userContext = useContext(AuthContext)
+    return(userContext)
+}

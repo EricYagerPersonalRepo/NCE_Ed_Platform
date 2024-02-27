@@ -276,6 +276,7 @@ export const onCreateUserSettings = /* GraphQL */ `subscription OnCreateUserSett
     notificationsEnabled
     darkModeEnabled
     language
+    isAdmin
     createdAt
     updatedAt
     __typename
@@ -304,6 +305,7 @@ export const onUpdateUserSettings = /* GraphQL */ `subscription OnUpdateUserSett
     notificationsEnabled
     darkModeEnabled
     language
+    isAdmin
     createdAt
     updatedAt
     __typename
@@ -332,6 +334,7 @@ export const onDeleteUserSettings = /* GraphQL */ `subscription OnDeleteUserSett
     notificationsEnabled
     darkModeEnabled
     language
+    isAdmin
     createdAt
     updatedAt
     __typename

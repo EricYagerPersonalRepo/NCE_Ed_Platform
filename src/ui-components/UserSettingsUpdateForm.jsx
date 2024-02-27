@@ -197,6 +197,7 @@ export default function UserSettingsUpdateForm(props) {
     notificationsEnabled: false,
     darkModeEnabled: false,
     language: "",
+    isAdmin: false,
   };
   const [studentProfile, setStudentProfile] = React.useState(
     initialValues.studentProfile
@@ -211,6 +212,7 @@ export default function UserSettingsUpdateForm(props) {
     initialValues.darkModeEnabled
   );
   const [language, setLanguage] = React.useState(initialValues.language);
+  const [isAdmin, setIsAdmin] = React.useState(initialValues.isAdmin);
   const autocompleteLength = 10;
   const [errors, setErrors] = React.useState({});
   const resetStateValues = () => {
@@ -223,6 +225,7 @@ export default function UserSettingsUpdateForm(props) {
     setNotificationsEnabled(cleanValues.notificationsEnabled);
     setDarkModeEnabled(cleanValues.darkModeEnabled);
     setLanguage(cleanValues.language);
+    setIsAdmin(cleanValues.isAdmin);
     setErrors({});
   };
   const [userSettingsRecord, setUserSettingsRecord] = React.useState(
@@ -272,6 +275,7 @@ export default function UserSettingsUpdateForm(props) {
     notificationsEnabled: [{ type: "Required" }],
     darkModeEnabled: [{ type: "Required" }],
     language: [],
+    isAdmin: [{ type: "Required" }],
   };
   const runValidationTasks = async (
     fieldName,
@@ -335,6 +339,7 @@ export default function UserSettingsUpdateForm(props) {
           notificationsEnabled,
           darkModeEnabled,
           language: language ?? null,
+          isAdmin,
         };
         const validationResponses = await Promise.all(
           Object.keys(validations).reduce((promises, fieldName) => {
@@ -377,6 +382,7 @@ export default function UserSettingsUpdateForm(props) {
             notificationsEnabled: modelFields.notificationsEnabled,
             darkModeEnabled: modelFields.darkModeEnabled,
             language: modelFields.language ?? null,
+            isAdmin: modelFields.isAdmin,
           };
           await client.graphql({
             query: updateUserSettings.replaceAll("__typename", ""),
@@ -410,6 +416,7 @@ export default function UserSettingsUpdateForm(props) {
               notificationsEnabled,
               darkModeEnabled,
               language,
+              isAdmin,
             };
             const result = onChange(modelFields);
             value = result?.studentProfile ?? value;
@@ -501,6 +508,7 @@ export default function UserSettingsUpdateForm(props) {
               notificationsEnabled: value,
               darkModeEnabled,
               language,
+              isAdmin,
             };
             const result = onChange(modelFields);
             value = result?.notificationsEnabled ?? value;
@@ -530,6 +538,7 @@ export default function UserSettingsUpdateForm(props) {
               notificationsEnabled,
               darkModeEnabled: value,
               language,
+              isAdmin,
             };
             const result = onChange(modelFields);
             value = result?.darkModeEnabled ?? value;
@@ -557,6 +566,7 @@ export default function UserSettingsUpdateForm(props) {
               notificationsEnabled,
               darkModeEnabled,
               language: value,
+              isAdmin,
             };
             const result = onChange(modelFields);
             value = result?.language ?? value;
@@ -571,6 +581,34 @@ export default function UserSettingsUpdateForm(props) {
         hasError={errors.language?.hasError}
         {...getOverrideProps(overrides, "language")}
       ></TextField>
+      <SwitchField
+        label="Is admin"
+        defaultChecked={false}
+        isDisabled={false}
+        isChecked={isAdmin}
+        onChange={(e) => {
+          let value = e.target.checked;
+          if (onChange) {
+            const modelFields = {
+              studentProfile,
+              notificationsEnabled,
+              darkModeEnabled,
+              language,
+              isAdmin: value,
+            };
+            const result = onChange(modelFields);
+            value = result?.isAdmin ?? value;
+          }
+          if (errors.isAdmin?.hasError) {
+            runValidationTasks("isAdmin", value);
+          }
+          setIsAdmin(value);
+        }}
+        onBlur={() => runValidationTasks("isAdmin", isAdmin)}
+        errorMessage={errors.isAdmin?.errorMessage}
+        hasError={errors.isAdmin?.hasError}
+        {...getOverrideProps(overrides, "isAdmin")}
+      ></SwitchField>
       <Flex
         justifyContent="space-between"
         {...getOverrideProps(overrides, "CTAFlex")}
