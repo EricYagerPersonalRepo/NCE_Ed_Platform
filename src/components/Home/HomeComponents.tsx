@@ -47,6 +47,7 @@ export const HomeSplash_Web_Unauthenticated = () => {
                         <HomePageImage_Web />
                     </div>
                 </Grid>
+                
             </Grid>
         </div>
   )

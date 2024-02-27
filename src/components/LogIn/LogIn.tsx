@@ -22,7 +22,7 @@ const LogInForm = ({loggedIn}:any) => {
             router.push("/StudentProfile")
         
         } catch (error:any) {
-            console.error("LogInForm error")
+            console.error("LogInForm error: ", error)
             setError(error.message)
         }
     }

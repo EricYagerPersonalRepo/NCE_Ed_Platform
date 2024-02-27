@@ -1,4 +1,3 @@
-// src/hooks/useSignUpHooks.tsx
 import { useState } from 'react'
 
 /**

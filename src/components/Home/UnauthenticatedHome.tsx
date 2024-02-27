@@ -10,7 +10,6 @@ import { AuthenticatedHomeProps } from '@/src/types/SignUpTypes'
  */
 const UnauthenticatedHome: React.FC<AuthenticatedHomeProps> = ({ isMobile }) => {
     const theme = useTheme()
-    //const isMobile = useMediaQuery(theme.breakpoints.down('sm'))
 
     return (
         <div>

@@ -27,10 +27,6 @@ const AuthenticatedHeader: React.FC<AuthenticatedHeaderProps>= ({avatarUrl}) => 
     const theme = useTheme()
     const isMobile = useMediaQuery(theme.breakpoints.down('sm'))
 
-    useEffect(()=>{
-        console.log("Avatar URL from AuthenticatedHeader: ", avatarUrl)
-    },[avatarUrl])
-
     return (
         <AppBar position="static" style={{ background: 'white' }} elevation={0}>
             <Toolbar>
