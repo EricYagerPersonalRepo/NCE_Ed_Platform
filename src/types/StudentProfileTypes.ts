@@ -38,7 +38,7 @@ export interface UserSettings {
   studentProfile: StudentProfile;
   notificationsEnabled: boolean;
   darkModeEnabled: boolean;
-  language?: string;
+  language: string;
   isAdmin: boolean;
 }
 
@@ -52,4 +52,9 @@ export enum CourseState {
   ACTIVE = "ACTIVE",
   PAUSED = "PAUSED",
   COMPLETED = "COMPLETED",
+}
+
+export interface SettingsHook {
+  settings: UserSettings;
+  setSettings: React.Dispatch<React.SetStateAction<UserSettings>>;
 }

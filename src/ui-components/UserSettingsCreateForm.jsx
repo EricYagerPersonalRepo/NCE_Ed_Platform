@@ -248,7 +248,7 @@ export default function UserSettingsCreateForm(props) {
     ],
     notificationsEnabled: [{ type: "Required" }],
     darkModeEnabled: [{ type: "Required" }],
-    language: [],
+    language: [{ type: "Required" }],
     isAdmin: [{ type: "Required" }],
   };
   const runValidationTasks = async (
@@ -530,7 +530,7 @@ export default function UserSettingsCreateForm(props) {
       ></SwitchField>
       <TextField
         label="Language"
-        isRequired={false}
+        isRequired={true}
         isReadOnly={false}
         value={language}
         onChange={(e) => {

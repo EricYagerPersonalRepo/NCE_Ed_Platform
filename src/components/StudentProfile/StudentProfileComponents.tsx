@@ -125,13 +125,11 @@ export const getFullStudentProfile = /* GraphQL */ `query GetStudentProfile($id:
 
 export const MyAccountView = ({userID, avatarUrl}:any) => {
     const [userInformation, setUserInformation] = useState<any>({})
-    const [userSettings, setUserSettings] = useState<any>({})
-
+    
     useEffect(() => {
         const fetchUserData = async () => {
             if (!userID) return
             else{
-                console.log("User ID Passed to MyAccountView: ", userID)
                 try {
                     const userData: any = await amplifyApiClient.graphql({
                         query: getFullStudentProfile,
@@ -140,7 +138,6 @@ export const MyAccountView = ({userID, avatarUrl}:any) => {
                         }
                     })
                     setUserInformation(userData.data.getStudentProfile)
-                    setUserSettings(userData.data.getStudentProfile.userSettings.items[0])
                 } catch (error) {
                     console.error('Error fetching user data:', error)
                 }
@@ -148,169 +145,6 @@ export const MyAccountView = ({userID, avatarUrl}:any) => {
         }
         fetchUserData()
     }, [userID])
-
-    useEffect(()=>{
-        const userSettingsInput: CreateUserSettingsInput = {
-            id: userID,
-            studentProfileID: userID,
-            notificationsEnabled: true, 
-            darkModeEnabled: false, 
-            language: 'en',
-            isAdmin: false,
-        }
-
-        const checkUserSettings = async () => {
-            console.log("checkUserSettings call initiated")
-            try{
-                const apiCall = await amplifyApiClient.graphql({
-                    query: getUserSettings,
-                    variables: { id: userID }
-                })
-                console.log("checkUserSettings: ", apiCall)
-                return apiCall.data.getUserSettings !== null
-            }catch(error){
-                console.error(error)
-                return false
-            }
-        }
-        
-        
-        const createUserSettingsCall = async() =>{
-            try {
-                const apiCall = await amplifyApiClient.graphql({
-                    query: createUserSettings,
-                    variables: { input: userSettingsInput }
-                })
-                console.log('User Settings Created:', apiCall)
-            } catch (userSettingsCreateError) {
-                console.log('Error Creating User Settings:', userSettingsCreateError)
-            }
-        }
-
-        if(userInformation.id){
-            //using IIFE to ensure the promises created above are fulfilled before action
-            (async () => {
-                try{
-                    console.log("The user information is: ", userInformation)
-                    let userSettingsExist = await checkUserSettings()
-                    console.log("user settings exist: ", userSettingsExist)
-            
-                    if (!userSettingsExist) {
-                        console.log("hit")
-                        createUserSettingsCall()
-                    }
-                }catch(error){
-                    console.error(error)
-                }
-                
-            })()
-        }
-    },[userInformation])
-
-    useEffect(()=>{
-        const userSettingsUpdateCall = async() => {
-            const userSettingsUpdateData = {
-                id:userSettings.id,
-                studentProfileID: userSettings
-
-
-            }
-            try {
-                const apiCall = await amplifyApiClient.graphql({
-                    query: updateUserSettings,
-                    variables: { input: userSettings }
-                })
-                console.log('User Settings Updated:', apiCall)
-            } catch (userSettingsUpdateError) {
-                console.log('Error Creating User Settings:', userSettingsUpdateError)
-            }
-        }
-
-        userSettingsUpdateCall()
-    },[userSettings])
-
-    const SettingsComponent = () => {
-        // Initialize state
-        const [settings, setSettings] = useState({
-            id:userSettings.id,
-            darkModeEnabled: userSettings.darkModeEnabled,
-            language: userSettings.language,
-            notificationsEnabled: userSettings.notificationsEnabled,
-            isAdmin: userSettings.isAdmin
-        })
-    
-        // Handle changes to the switches and select
-        const handleChange = (event:any) => {
-            const { name, value, checked, type } = event.target;
-            setSettings(prevSettings => ({
-                ...prevSettings,
-                [name]: type === 'checkbox' ? checked : value,
-            }));
-        };
-    
-        // Placeholder for saving changes
-        const handleSave = () => {
-            console.log('Saving settings:', settings);
-            setUserSettings(settings); 
-        };
-    
-        return (
-            <Grid item xs={12}>
-                <Paper elevation={3} style={{ padding: 20, width: '100%' }}>
-                    <Typography variant="h6" gutterBottom>
-                        User Settings
-                    </Typography>
-                    <div style={{ marginBottom: 16 }}>
-                        <FormControlLabel
-                            control={
-                                <Switch
-                                    checked={settings.darkModeEnabled}
-                                    onChange={handleChange}
-                                    name="darkModeEnabled"
-                                    color="primary"
-                                />
-                            }
-                            label="Dark Mode"
-                        />
-                    </div>
-                    <div style={{ marginBottom: 16 }}>
-                        <TextField
-                            select
-                            label="Language"
-                            value={settings.language}
-                            onChange={handleChange}
-                            name="language"
-                            variant="outlined"
-                            size="small"
-                            fullWidth
-                        >
-                            <MenuItem value="en">English</MenuItem>
-                            <MenuItem value="es">Spanish</MenuItem>
-                            <MenuItem value="fr">French</MenuItem>
-                            {/* Add more language options as needed */}
-                        </TextField>
-                    </div>
-                    <div style={{ marginBottom: 16 }}>
-                        <FormControlLabel
-                            control={
-                                <Switch
-                                    checked={settings.notificationsEnabled}
-                                    onChange={handleChange}
-                                    name="notificationsEnabled"
-                                    color="primary"
-                                />
-                            }
-                            label="Allow Notifications"
-                        />
-                    </div>
-                    <Button variant="contained" color="primary" onClick={handleSave}>
-                        Save Changes
-                    </Button>
-                </Paper>
-            </Grid>
-        );
-    }
-
 
     return (
         <Grid container spacing={2}>
@@ -322,7 +156,7 @@ export const MyAccountView = ({userID, avatarUrl}:any) => {
             <Grid item xs={12} sm={6} md={8}>
                 <Paper elevation={3} style={{ padding: 20 }}>
                     <Typography variant="h6">Settings</Typography>
-                    <SettingsComponent />
+                    <SettingsComponent userID={userID} />
                 </Paper>
             </Grid>
             <Grid item xs={12} sm={6} md={4}>
@@ -331,7 +165,6 @@ export const MyAccountView = ({userID, avatarUrl}:any) => {
                     <Typography variant="h6">Recent Activity</Typography>
                 </Paper>
             </Grid>
-            {/* Additional sections can be added here */}
         </Grid>
     )
 }
@@ -376,5 +209,167 @@ const AvatarManager = ({ avatarUrl }:any) => {
                 <input type="file" hidden onChange={handleFileChange} />
             </Button>
         </Paper>
+    )
+}
+
+
+const SettingsComponent = ({userID}:any) => {
+    const [userSettings, setUserSettings] = useState<UpdateUserSettingsInput>({
+        id:userID,
+        darkModeEnabled: false,
+        language: 'en',
+        notificationsEnabled: false,
+        isAdmin: false
+    })
+
+    /**
+     * note 27FEB24: Create custom query so apiCall is defined without the StudentProfile object included.
+     * Currently we are explicitly defining the object being passed to setUserSettings hook.
+     */
+    useEffect(() => {
+        const checkAndSetUserSettings = async () => {
+            try{
+                if(userID){
+                    const apiCall = await amplifyApiClient.graphql({
+                        query: getUserSettings, 
+                        variables: { id: userID }
+                    })
+
+                    if(apiCall.data.getUserSettings) {
+                        setUserSettings({
+                            id: apiCall.data.getUserSettings.id,
+                            darkModeEnabled: apiCall.data.getUserSettings.darkModeEnabled,
+                            language: apiCall.data.getUserSettings.language,
+                            notificationsEnabled: apiCall.data.getUserSettings.notificationsEnabled,
+                            isAdmin: apiCall.data.getUserSettings.isAdmin,
+                        })
+                        return true
+                    }
+                    return false
+                }
+                else return false
+                
+            }catch(error){
+                console.error(error)
+                return false
+            }
+        }
+
+        checkAndSetUserSettings()
+
+        const createUserSettingsCall = async() =>{
+            try {
+                const apiCall = await amplifyApiClient.graphql({
+                    query: createUserSettings,
+                    variables: { input: userSettingsInput }
+                })
+                console.log('User Settings Created:', apiCall)
+            } catch (userSettingsCreateError) {
+                console.log('Error Creating User Settings:', userSettingsCreateError)
+            }
+        }
+
+        if(userID){
+            (async () => {
+                try{
+                    let userSettingsExist = await checkAndSetUserSettings()
+                    if (!userSettingsExist) {
+                        console.log("hit")
+                        createUserSettingsCall()
+                    }
+                }catch(error){
+                    console.error(error)
+                }
+                
+            })()
+        }
+        }, [userID])
+
+
+    useEffect(()=>{
+        if(userID){
+            const userSettingsUpdateCall = async() => {
+                try {
+                    await amplifyApiClient.graphql({
+                        query: updateUserSettings,
+                        variables: { input: userSettings }
+                    })
+                } catch (userSettingsUpdateError) {
+                    console.log('Error Creating User Settings:', userSettingsUpdateError)
+                }
+            }
+            userSettingsUpdateCall()
+        }
+    },[userSettings])
+
+    const userSettingsInput: CreateUserSettingsInput = {
+        id: userID,
+        studentProfileID: userID,
+        notificationsEnabled: true, 
+        darkModeEnabled: false, 
+        language: 'en',
+        isAdmin: false,
+    }
+
+
+    const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const { name, value, checked, type } = event.target
+        setUserSettings(prevSettings => ({
+            ...prevSettings,
+            [name]: type === 'checkbox' ? checked : value,
+        }))
+    }
+
+    return (
+        <Grid item xs={12}>
+            <Paper elevation={3} style={{ padding: 20, width: '100%' }}>
+                <Typography variant="h6" gutterBottom>
+                    User Settings
+                </Typography>
+                <div style={{ marginBottom: 16 }}>
+                    <FormControlLabel
+                        control={
+                            <Switch
+                                checked={userSettings.darkModeEnabled ? userSettings.darkModeEnabled : false}
+                                onChange={handleChange}
+                                name="darkModeEnabled"
+                                color="primary"
+                            />
+                        }
+                        label="Dark Mode"
+                    />
+                </div>
+                <div style={{ marginBottom: 16 }}>
+                    <TextField
+                        select
+                        label="Language"
+                        value={userSettings.language}
+                        onChange={handleChange}
+                        name="language"
+                        variant="outlined"
+                        size="small"
+                        fullWidth
+                    >
+                        <MenuItem value="en">English</MenuItem>
+                        <MenuItem value="es">Spanish</MenuItem>
+                        <MenuItem value="fr">French</MenuItem>
+                        {/* Add more language options as needed */}
+                    </TextField>
+                </div>
+                <div style={{ marginBottom: 16 }}>
+                    <FormControlLabel
+                        control={
+                            <Switch
+                                checked={userSettings.notificationsEnabled ? userSettings.notificationsEnabled : false}
+                                onChange={handleChange}
+                                name="notificationsEnabled"
+                                color="primary"
+                            />
+                        }
+                        label="Allow Notifications"
+                    />
+                </div>
+            </Paper>
+        </Grid>
     )
 }

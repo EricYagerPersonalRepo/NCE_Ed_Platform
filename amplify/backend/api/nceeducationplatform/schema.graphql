@@ -41,7 +41,7 @@ type UserSettings @model @auth(rules: [{ allow: public }]) {
   studentProfile: StudentProfile! @belongsTo(fields: ["studentProfileID"])
   notificationsEnabled: Boolean!
   darkModeEnabled: Boolean!
-  language: String
+  language: String!
   isAdmin: Boolean!
 }
 
