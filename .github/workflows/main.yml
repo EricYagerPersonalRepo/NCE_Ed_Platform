@@ -29,7 +29,7 @@ jobs:
           aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
       
       - name: Pull Amplify env
-        run: amplify pull
+        run: amplify pull --appId d6fbjqkxytjd6 --envName staging
 
       - name: Install dependencies
         run: npm ci
