@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import { AppBar, Toolbar, useTheme, useMediaQuery } from '@mui/material'
 import { CommonHeaderComponent, UserAccountButtons_Mobile, UserAccountButtons_Web } from './HeaderComponents'
 import { AuthenticatedHeaderProps } from '@/src/types/HeaderTypes'
