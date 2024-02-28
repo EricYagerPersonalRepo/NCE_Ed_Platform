@@ -1,0 +1,107 @@
+name: NCE Education Platform CI/CD Actions
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+    
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '18.16' # Update to match your project's Node.js version
+
+      - name: Install Amplify CLI
+        run: npm install -g @aws-amplify/cli
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
+
+      - name: Pull Amplify backend configuration
+        run: |
+          amplify pull --appId d6fbjqkxytjd6 --envName staging --yes --providers '{"awscloudformation":{"configLevel":"project","useProfile":false,"accessKeyId":"${{ secrets.AWS_ACCESS_KEY_ID }}","secretAccessKey":"${{ secrets.AWS_SECRET_ACCESS_KEY }}","region":"${{ secrets.AWS_DEFAULT_REGION }}"}}' --no-override
+          
+      - name: Install dependencies
+        run: npm ci
+      
+      - name: Build
+        run: npm run build
+
+      - name: Install global packages
+        run: |
+          npm install -g pm2
+          npm install -g wait-on
+
+      - name: Install test dependencies
+        run: npm install mocha mochawesome mochawesome-merge mochawesome-report-generator
+
+      - name: Start application
+        run: pm2 start npm -- start
+
+      - name: Wait for application
+        run: wait-on http://localhost:3000
+
+      - name: Run component tests
+        run: npx cypress run --component
+
+      - name: Generate test report
+        run: npx cypress run --reporter mochawesome --reporter-options "reportDir=cypress/report/mochawesome-report,overwrite=false,html=false,json=true,timestamp=mmddyyyy_HHMMss"
+
+      - name: Kill pm2 process
+        run: pm2 kill
+
+      - name: Upload test report artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: test-reports
+          path: cypress/report/mochawesome-report
+
+      - name: Upload test screenshots
+        if: failure() # Only upload if tests fail
+        uses: actions/upload-artifact@v2
+        with:
+          name: test-screenshots
+          path: cypress/screenshots
+
+      - name: Upload test videos
+        if: failure() # Only upload if tests fail
+        uses: actions/upload-artifact@v2
+        with:
+          name: test-videos
+          path: cypress/videos
+
+  promote-to-production:
+    needs: build-and-test
+    runs-on: ubuntu-latest
+    if: success()
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          ref: 'main'
+          fetch-depth: 0
+          token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+
+      - name: Configure Git
+        run: |
+          git config user.name "GitHub Actions"
+          git config user.email "actions@github.com"
+
+      - name: Merge main into production
+        run: |
+          git checkout production
+          git merge main --no-edit
+          git push origin production
+          env:
+            GIT_ASKPASS: echo ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+
