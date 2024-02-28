@@ -22,15 +22,16 @@ jobs:
         run: npm install -g @aws-amplify/cli
 
       - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v4
+        uses: aws-actions/configure-aws-credentials@v1
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
+          aws-region: ${{ secrets.AWS_REGION }}
 
       - name: Pull Amplify backend configuration
         run: |
           amplify pull --appId d6fbjqkxytjd6 --envName staging --yes \
+          --providers '{"awscloudformation":{"configLevel":"project","useProfile":false,"accessKeyId":"${{ secrets.AWS_ACCESS_KEY_ID }}","secretAccessKey":"${{ secrets.AWS_SECRET_ACCESS_KEY }}","region":"${{ secrets.AWS_REGION }}"}}' \
           --no-override
           
       - name: Install dependencies
