@@ -34,14 +34,7 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_REGION: ${{ secrets.AWS_REGION }}
         run: |
-          amplify pull --appId d6fbjqkxytjd6 --envName staging --yes \
-          --providers '{"awscloudformation":{"configLevel":"project","useProfile":false,"accessKeyId":"'$AWS_ACCESS_KEY_ID'","secretAccessKey":"'$AWS_SECRET_ACCESS_KEY'","region":"'$AWS_REGION'"}}' \
-          --no-override
-      
-      - name: Pull Amplify backend configuration
-        run: amplify pull --amplify "{\"envName\":\"staging\"}" \
-            --providers "{\"awscloudformation\":{\"configLevel\":\"project\",\"useProfile\":false,\"accessKeyId\":\"$AWS_ACCESS_KEY_ID\",\"secretAccessKey\":\"$AWS_SECRET_ACCESS_KEY\",\"region\":\"$AWS_REGION\"}}" \
-            --yes
+          amplify pull --appId d6fbjqkxytjd6 --envName staging --yes --providers '{"awscloudformation":{"configLevel":"project","useProfile":false,"accessKeyId":"'$AWS_ACCESS_KEY_ID'","secretAccessKey":"'$AWS_SECRET_ACCESS_KEY'","region":"'$AWS_REGION'"}}' --no-override
 
       - name: Install dependencies
         run: npm ci
