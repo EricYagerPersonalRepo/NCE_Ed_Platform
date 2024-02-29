@@ -1,6 +1,6 @@
 import { ConfirmSignUpInput, ConfirmSignUpOutput, SignInInput, SignInOutput, confirmSignUp, getCurrentUser, signIn, signOut } from "aws-amplify/auth"
-import { CreateStudentProfileInput } from "../API"
-import { createStudentProfile } from "../graphql/mutations"
+import { CreateStudentProfileInput, CreateUserSettingsInput } from "../API"
+import { createStudentProfile, createUserSettings } from "../graphql/mutations"
 import { handleConfirmSignUpReturnType } from "../types/SignUpTypes"
 import { generateClient } from "aws-amplify/api"
 
@@ -30,18 +30,55 @@ export const checkAuthStatus = async () => {
  */
 export const handleCreateStudentProfile = async (studentProfileInput:CreateStudentProfileInput) => {
     try {
+        const userSettingsInput: CreateUserSettingsInput = {
+            id: studentProfileInput.cognitoUserID,
+            notificationsEnabled: true, 
+            darkModeEnabled: false, 
+            language: 'en',
+            isAdmin: false,
+        }
+
         const profileResult = await amplifyApiClient.graphql({
             query: createStudentProfile,
             variables: { input: studentProfileInput }
         })
+
+        const userSettingsCall = await amplifyApiClient.graphql({
+            query: createUserSettings,
+            variables: { input: userSettingsInput }
+        })
+
         console.log("Tried to create student profile: ", profileResult)
+        console.log("Tried to create user settings: ", userSettingsCall)
         return({isSignedUp:true, userProfile:profileResult})
     } catch (signInError) {
-        console.log('Error CREATING student profile:', signInError)
+        console.log('Error creating student profile and settings:', signInError)
         return({isSignedUp:false, userProfile:null})
     }
 }
 
+// export const handleCreateInitialUserSettings = async(userID:string) => {
+//     const userSettingsInput: CreateUserSettingsInput = {
+//         id: userID,
+//         studentProfileID: userID,
+//         notificationsEnabled: true, 
+//         darkModeEnabled: false, 
+//         language: 'en',
+//         isAdmin: false,
+//     }
+
+//     try{
+//         const userSettingsCall = await amplifyApiClient.graphql({
+//             query: createUserSettings,
+//             variables: { input: userSettingsInput }
+//         })
+//         console.log("Tried to create user settings: ", userSettingsCall)
+//         return({hasUserSettings:true, userSettings:userSettingsCall})
+//     }
+//     catch(error){
+//         console.error(error)
+//     }
+// }
 /**
  * Asynchronously handles the sign-in process for a user.
  * 

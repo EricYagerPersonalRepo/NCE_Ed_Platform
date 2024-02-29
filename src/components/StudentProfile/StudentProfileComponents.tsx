@@ -1,19 +1,19 @@
 import React, { useEffect, useState } from 'react'
 import { generateClient } from "aws-amplify/api"
 import { getStudentProfile, getUserSettings, listCourseProfiles, listStudentProfiles } from '@/src/graphql/queries'
-import { FormControl, InputLabel, Select, MenuItem, Typography, Grid, Paper, Avatar, Button, List, ListItem, ListItemText, TextField, FormControlLabel, Switch } from '@mui/material'
+import { Box, Tabs, Tab, FormControl, InputLabel, Select, MenuItem, Typography, Grid, Paper, Avatar, Button, List, ListItem, ListItemText, TextField, FormControlLabel, Switch } from '@mui/material'
 import { Course } from '@/src/types/StudentProfileTypes'
 import { downloadAvatarFromS3, uploadFileToS3 } from '@/src/functions/StorageFunctions'
 import { getCurrentUser } from 'aws-amplify/auth'
 import { createUserSettings, updateUserSettings } from '@/src/graphql/mutations'
 import { CreateUserSettingsInput, UpdateUserSettingsInput, UserSettings } from '@/src/API'
-import { use } from 'chai'
-import { UserSettingsUpdateFormInputValues } from '@/src/ui-components/UserSettingsUpdateForm'
+
+
 
 const amplifyApiClient = generateClient()
 
 /**
- * MyCourseView Component - Manages and displays a list of courses and details for a selected course.
+ * StudentCourseView Component - Manages and displays a list of courses and details for a selected course.
  * 
  * This component is responsible for fetching and displaying a list of courses. It allows users to select
  * a course from a dropdown menu to view more detailed information about it, such as its description. The
@@ -28,7 +28,7 @@ const amplifyApiClient = generateClient()
  * of the selected course.
  */
 
-export const MyCourseView = ({userID}:any) => {
+export const StudentCourseView = ({userID}:any) => {
     const [courses, setCourses] = useState<Course[]>([])
     const [selectedCourseId, setSelectedCourseId] = useState('')
 
@@ -79,38 +79,8 @@ export const MyCourseView = ({userID}:any) => {
     )
 }
 
-export const getFullStudentProfile = /* GraphQL */ `query GetStudentProfile($id: ID!) {
-    getStudentProfile(id: $id) {
-      id
-      cognitoUserID
-      name
-      email
-      birthdate
-      courseEnrollments {
-        items {
-            enrollmentDate
-            progress
-            state
-        }
-        }
-      userSettings {
-        items {
-          id
-          darkModeEnabled
-          isAdmin
-          language
-          notificationsEnabled
-        }
-      }
-      createdAt
-      updatedAt
-      __typename
-    }
-  }
-  `
-
 /**
- * MyAccountView Component - Renders the account management dashboard with user-specific details.
+ * UserAccountView Component - Renders the account management dashboard with user-specific details.
  * 
  * This component structures the account dashboard into a grid layout, featuring sections for profile
  * information, settings, avatar management, and recent activity. Each section is presented within its
@@ -123,41 +93,29 @@ export const getFullStudentProfile = /* GraphQL */ `query GetStudentProfile($id:
  * information, settings, avatar management, and a placeholder for recent activity.
  */
 
-export const MyAccountView = ({userID, avatarUrl}:any) => {
-    const [userInformation, setUserInformation] = useState<any>({})
-    
-    useEffect(() => {
-        const fetchUserData = async () => {
-            if (!userID) return
-            else{
-                try {
-                    const userData: any = await amplifyApiClient.graphql({
-                        query: getFullStudentProfile,
-                        variables: {
-                            id: userID
-                        }
-                    })
-                    setUserInformation(userData.data.getStudentProfile)
-                } catch (error) {
-                    console.error('Error fetching user data:', error)
-                }
-            }
-        }
-        fetchUserData()
-    }, [userID])
+export const UserAccountView = ({userID, avatarUrl}:any) => {
+    const [selectedTab, setSelectedTab] = useState(0)
+
+    const handleTabChange = (event:any, newTabValue:any) => {
+        setSelectedTab(newTabValue);
+    }
 
     return (
         <Grid container spacing={2}>
-            <Grid item xs={12}>
-                <Typography variant="h4" gutterBottom>
-                    Account Dashboard
-                </Typography>
-            </Grid>
             <Grid item xs={12} sm={6} md={8}>
-                <Paper elevation={3} style={{ padding: 20 }}>
-                    <Typography variant="h6">Settings</Typography>
-                    <SettingsComponent userID={userID} />
-                </Paper>
+                <Box sx={{ width: '100%', typography: 'body1' }}>
+                    <Tabs value={selectedTab} onChange={handleTabChange} aria-label="settings tabs">
+                        <Tab label="Account Settings" />
+                        <Tab label="User Settings" />
+                    </Tabs>
+                </Box>
+                {selectedTab === 0 && (
+                    <AccountSettings userID={userID} />
+
+                )}
+                {selectedTab === 1 && (
+                    <UserSettingsComponent userID={userID}/>
+                )}
             </Grid>
             <Grid item xs={12} sm={6} md={4}>
                 <AvatarManager avatarUrl={avatarUrl} />
@@ -212,22 +170,72 @@ const AvatarManager = ({ avatarUrl }:any) => {
     )
 }
 
-
-const SettingsComponent = ({userID}:any) => {
-    const [userSettings, setUserSettings] = useState<UpdateUserSettingsInput>({
+const UserSettingsComponent = ({userID}:any) => {
+    const [userSettings, setUserSettings] = useState({
         id:userID,
         darkModeEnabled: false,
         language: 'en',
         notificationsEnabled: false,
         isAdmin: false
     })
+    const [loading, setLoading] = useState(true)
 
-    /**
-     * note 27FEB24: Create custom query so apiCall is defined without the StudentProfile object included.
-     * Currently we are explicitly defining the object being passed to setUserSettings hook.
-     */
     useEffect(() => {
         const checkAndSetUserSettings = async () => {
+            try{
+                if(userID){
+                    const apiCall = await amplifyApiClient.graphql({
+                        query: getStudentProfile, 
+                        variables: { id: userID }
+                    })
+
+                    console.log(apiCall)
+
+                    // if(apiCall.data.getUserSettings) {
+                    //     setUserSettings({
+                    //         id: apiCall.data.getUserSettings.id,
+                    //         darkModeEnabled: apiCall.data.getUserSettings.darkModeEnabled,
+                    //         language: apiCall.data.getUserSettings.language,
+                    //         notificationsEnabled: apiCall.data.getUserSettings.notificationsEnabled,
+                    //         isAdmin: apiCall.data.getUserSettings.isAdmin,
+                    //     })
+                    //     setLoading(false)
+                    // }
+                    // else {
+                    //     console.error("User settings don't exist")
+                    // }
+                }
+            }catch(error){
+                console.error(error)
+                return false
+            }
+        }
+
+        (async () => {
+            try{
+                console.log(userID)
+                checkAndSetUserSettings()
+            }catch(error){
+                console.error(error)
+            }
+        })()
+    }, [userID])
+
+    return(<div>User</div>)
+}
+
+const AccountSettings = ({userID}:any) => {
+    const [accountSettings, setAccountSettings] = useState({
+        id:userID,
+        darkModeEnabled: false,
+        language: 'en',
+        notificationsEnabled: false,
+        isAdmin: false
+    })
+    const [loading, setLoading] = useState(true)
+
+    useEffect(() => {
+        const checkAndSetAccountSettings = async () => {
             try{
                 if(userID){
                     const apiCall = await amplifyApiClient.graphql({
@@ -236,139 +244,115 @@ const SettingsComponent = ({userID}:any) => {
                     })
 
                     if(apiCall.data.getUserSettings) {
-                        setUserSettings({
+                        setAccountSettings({
                             id: apiCall.data.getUserSettings.id,
                             darkModeEnabled: apiCall.data.getUserSettings.darkModeEnabled,
                             language: apiCall.data.getUserSettings.language,
                             notificationsEnabled: apiCall.data.getUserSettings.notificationsEnabled,
                             isAdmin: apiCall.data.getUserSettings.isAdmin,
                         })
-                        return true
+                        setLoading(false)
                     }
-                    return false
+                    else {
+                        console.error("User settings don't exist")
+                    }
                 }
-                else return false
-                
             }catch(error){
                 console.error(error)
                 return false
             }
         }
 
-        checkAndSetUserSettings()
-
-        const createUserSettingsCall = async() =>{
-            try {
-                const apiCall = await amplifyApiClient.graphql({
-                    query: createUserSettings,
-                    variables: { input: userSettingsInput }
-                })
-                console.log('User Settings Created:', apiCall)
-            } catch (userSettingsCreateError) {
-                console.log('Error Creating User Settings:', userSettingsCreateError)
+        (async () => {
+            try{
+                checkAndSetAccountSettings()
+            }catch(error){
+                console.error(error)
             }
-        }
-
-        if(userID){
-            (async () => {
-                try{
-                    let userSettingsExist = await checkAndSetUserSettings()
-                    if (!userSettingsExist) {
-                        console.log("hit")
-                        createUserSettingsCall()
-                    }
-                }catch(error){
-                    console.error(error)
-                }
-                
-            })()
-        }
-        }, [userID])
-
-
-    useEffect(()=>{
-        if(userID){
-            const userSettingsUpdateCall = async() => {
-                try {
-                    await amplifyApiClient.graphql({
-                        query: updateUserSettings,
-                        variables: { input: userSettings }
-                    })
-                } catch (userSettingsUpdateError) {
-                    console.log('Error Creating User Settings:', userSettingsUpdateError)
-                }
-            }
-            userSettingsUpdateCall()
-        }
-    },[userSettings])
-
-    const userSettingsInput: CreateUserSettingsInput = {
-        id: userID,
-        studentProfileID: userID,
-        notificationsEnabled: true, 
-        darkModeEnabled: false, 
-        language: 'en',
-        isAdmin: false,
-    }
-
+        })()
+    }, [userID])
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const { name, value, checked, type } = event.target
-        setUserSettings(prevSettings => ({
-            ...prevSettings,
-            [name]: type === 'checkbox' ? checked : value,
-        }))
+        const { name, value, checked, type } = event.target;
+        const updatedValue = type === 'checkbox' ? checked : value
+
+        const accountSettingsUpdateCall = async() => {
+            try {
+                const updatedSettings = {
+                    ...accountSettings,
+                    [name]: updatedValue,
+                }
+                let apiCall = await amplifyApiClient.graphql({
+                    query: updateUserSettings,
+                    variables: { input: updatedSettings }
+                })
+                console.log(apiCall)
+
+                if(apiCall) {
+                    setAccountSettings({
+                        id:apiCall.data.updateUserSettings.id,
+                        darkModeEnabled: apiCall.data.updateUserSettings.darkModeEnabled,
+                        language: apiCall.data.updateUserSettings.language,
+                        notificationsEnabled: apiCall.data.updateUserSettings.notificationsEnabled,
+                        isAdmin: apiCall.data.updateUserSettings.isAdmin
+                    })
+                    setLoading(false)
+                }
+            } catch (userSettingsUpdateError) {
+                console.log('Error Creating User Settings:', userSettingsUpdateError)
+            }
+        }
+        accountSettingsUpdateCall()
     }
 
     return (
         <Grid item xs={12}>
             <Paper elevation={3} style={{ padding: 20, width: '100%' }}>
-                <Typography variant="h6" gutterBottom>
-                    User Settings
-                </Typography>
-                <div style={{ marginBottom: 16 }}>
-                    <FormControlLabel
-                        control={
-                            <Switch
-                                checked={userSettings.darkModeEnabled ? userSettings.darkModeEnabled : false}
-                                onChange={handleChange}
-                                name="darkModeEnabled"
-                                color="primary"
-                            />
-                        }
-                        label="Dark Mode"
-                    />
-                </div>
-                <div style={{ marginBottom: 16 }}>
-                    <TextField
-                        select
-                        label="Language"
-                        value={userSettings.language}
-                        onChange={handleChange}
-                        name="language"
-                        variant="outlined"
-                        size="small"
-                        fullWidth
-                    >
-                        <MenuItem value="en">English</MenuItem>
-                        <MenuItem value="es">Spanish</MenuItem>
-                        <MenuItem value="fr">French</MenuItem>
-                        {/* Add more language options as needed */}
-                    </TextField>
-                </div>
-                <div style={{ marginBottom: 16 }}>
-                    <FormControlLabel
-                        control={
-                            <Switch
-                                checked={userSettings.notificationsEnabled ? userSettings.notificationsEnabled : false}
-                                onChange={handleChange}
-                                name="notificationsEnabled"
-                                color="primary"
-                            />
-                        }
-                        label="Allow Notifications"
-                    />
-                </div>
+                {!loading && (
+                    <><div style={{ marginBottom: 16 }}>
+                        <FormControlLabel
+                            control={
+                                <Switch
+                                    checked={accountSettings.darkModeEnabled ? accountSettings.darkModeEnabled : false}
+                                    onChange={handleChange}
+                                    name="darkModeEnabled"
+                                    color="primary"
+                                />
+                            }
+                            label="Dark Mode"
+                        />
+                    </div>
+                    <div style={{ marginBottom: 16 }}>
+                        <TextField
+                            select
+                            label="Language"
+                            value={accountSettings.language}
+                            onChange={handleChange}
+                            name="language"
+                            variant="outlined"
+                            size="small"
+                            fullWidth
+                        >
+                            <MenuItem value="en">English</MenuItem>
+                            <MenuItem value="es">Spanish</MenuItem>
+                            <MenuItem value="fr">French</MenuItem>
+                            {/* Add more language options as needed */}
+                        </TextField>
+                    </div>
+                    <div style={{ marginBottom: 16 }}>
+                        <FormControlLabel
+                            control={
+                                <Switch
+                                    checked={accountSettings.notificationsEnabled ? accountSettings.notificationsEnabled : false}
+                                    onChange={handleChange}
+                                    name="notificationsEnabled"
+                                    color="primary"
+                                />
+                            }
+                            label="Allow Notifications"
+                        />
+                    </div></>
+                )}
             </Paper>
         </Grid>
     )

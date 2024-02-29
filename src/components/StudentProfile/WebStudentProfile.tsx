@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { Button, Grid, List, ListItem, Typography } from '@mui/material'
-import { MyAccountView, MyCourseView } from './StudentProfileComponents'
+import { UserAccountView, StudentCourseView } from './StudentProfileComponents'
 
 /**
  * WebStudentProfile Component - Manages and displays the student profile interface within a web application.
@@ -14,7 +14,7 @@ import { MyAccountView, MyCourseView } from './StudentProfileComponents'
  * - A side menu for selecting the view ('Account', 'My Courses', etc.).
  * - Dynamic rendering of the selected view's component in the main content area.
  * 
- * @param {any} avatarUrl - The URL of the student's avatar image, passed to the 'MyAccountView' component.
+ * @param {any} avatarUrl - The URL of the student's avatar image, passed to the 'UserAccountView' component.
  * 
  * @returns {JSX.Element} - A container with a side navigation menu and a main content area that displays the
  *                          selected view's content.
@@ -30,9 +30,9 @@ const WebStudentProfile = ({ userID, avatarUrl }: any) => {
     const renderActiveView = () => {
         switch (activeView) {
             case 'Account':
-                return <MyAccountView userID={userID} avatarUrl={avatarUrl}/>
+                return <UserAccountView userID={userID} avatarUrl={avatarUrl}/>
             case 'My Courses':
-                return <MyCourseView />
+                return <StudentCourseView />
             // Add more cases for other views
             default:
                 return <div>Welcome to Your Dashboard</div>

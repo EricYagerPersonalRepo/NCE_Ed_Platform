@@ -9,6 +9,7 @@ node_modules
 .next
 
 # amplify
+src/ui-components
 
 #amplify-do-not-edit-begin
 amplify/\#current-cloud-backend
@@ -30,7 +31,9 @@ amplify-gradle-config.json
 amplifytools.xcconfig
 .secret-*
 **.sample
+
 #amplify-do-not-edit-end
+
 
 #testing logs
 cypress/reports

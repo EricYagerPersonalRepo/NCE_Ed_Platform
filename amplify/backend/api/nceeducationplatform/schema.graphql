@@ -8,7 +8,6 @@ type StudentProfile
   email: AWSEmail!
   birthdate: AWSDate!
   courseEnrollments: [CourseEnrollment] @hasMany(indexName: "byStudent", fields: ["id"])
-  userSettings: [UserSettings] @hasMany(indexName: "byStudentProfile", fields: ["id"])
 }
 
 type CourseProfile 
@@ -37,8 +36,6 @@ type CourseEnrollment
 
 type UserSettings @model @auth(rules: [{ allow: public }]) {
   id: ID!
-  studentProfileID: ID! @index(name: "byStudentProfile", sortKeyFields: ["id"])
-  studentProfile: StudentProfile! @belongsTo(fields: ["studentProfileID"])
   notificationsEnabled: Boolean!
   darkModeEnabled: Boolean!
   language: String!

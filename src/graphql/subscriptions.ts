@@ -21,10 +21,6 @@ export const onCreateStudentProfile = /* GraphQL */ `subscription OnCreateStuden
       nextToken
       __typename
     }
-    userSettings {
-      nextToken
-      __typename
-    }
     createdAt
     updatedAt
     __typename
@@ -47,10 +43,6 @@ export const onUpdateStudentProfile = /* GraphQL */ `subscription OnUpdateStuden
       nextToken
       __typename
     }
-    userSettings {
-      nextToken
-      __typename
-    }
     createdAt
     updatedAt
     __typename
@@ -70,10 +62,6 @@ export const onDeleteStudentProfile = /* GraphQL */ `subscription OnDeleteStuden
     email
     birthdate
     courseEnrollments {
-      nextToken
-      __typename
-    }
-    userSettings {
       nextToken
       __typename
     }
@@ -262,17 +250,6 @@ export const onCreateUserSettings = /* GraphQL */ `subscription OnCreateUserSett
 ) {
   onCreateUserSettings(filter: $filter) {
     id
-    studentProfileID
-    studentProfile {
-      id
-      cognitoUserID
-      name
-      email
-      birthdate
-      createdAt
-      updatedAt
-      __typename
-    }
     notificationsEnabled
     darkModeEnabled
     language
@@ -291,17 +268,6 @@ export const onUpdateUserSettings = /* GraphQL */ `subscription OnUpdateUserSett
 ) {
   onUpdateUserSettings(filter: $filter) {
     id
-    studentProfileID
-    studentProfile {
-      id
-      cognitoUserID
-      name
-      email
-      birthdate
-      createdAt
-      updatedAt
-      __typename
-    }
     notificationsEnabled
     darkModeEnabled
     language
@@ -320,17 +286,6 @@ export const onDeleteUserSettings = /* GraphQL */ `subscription OnDeleteUserSett
 ) {
   onDeleteUserSettings(filter: $filter) {
     id
-    studentProfileID
-    studentProfile {
-      id
-      cognitoUserID
-      name
-      email
-      birthdate
-      createdAt
-      updatedAt
-      __typename
-    }
     notificationsEnabled
     darkModeEnabled
     language

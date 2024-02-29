@@ -22,10 +22,6 @@ export const createStudentProfile = /* GraphQL */ `mutation CreateStudentProfile
       nextToken
       __typename
     }
-    userSettings {
-      nextToken
-      __typename
-    }
     createdAt
     updatedAt
     __typename
@@ -49,10 +45,6 @@ export const updateStudentProfile = /* GraphQL */ `mutation UpdateStudentProfile
       nextToken
       __typename
     }
-    userSettings {
-      nextToken
-      __typename
-    }
     createdAt
     updatedAt
     __typename
@@ -73,10 +65,6 @@ export const deleteStudentProfile = /* GraphQL */ `mutation DeleteStudentProfile
     email
     birthdate
     courseEnrollments {
-      nextToken
-      __typename
-    }
-    userSettings {
       nextToken
       __typename
     }
@@ -272,17 +260,6 @@ export const createUserSettings = /* GraphQL */ `mutation CreateUserSettings(
 ) {
   createUserSettings(input: $input, condition: $condition) {
     id
-    studentProfileID
-    studentProfile {
-      id
-      cognitoUserID
-      name
-      email
-      birthdate
-      createdAt
-      updatedAt
-      __typename
-    }
     notificationsEnabled
     darkModeEnabled
     language
@@ -302,17 +279,6 @@ export const updateUserSettings = /* GraphQL */ `mutation UpdateUserSettings(
 ) {
   updateUserSettings(input: $input, condition: $condition) {
     id
-    studentProfileID
-    studentProfile {
-      id
-      cognitoUserID
-      name
-      email
-      birthdate
-      createdAt
-      updatedAt
-      __typename
-    }
     notificationsEnabled
     darkModeEnabled
     language
@@ -332,17 +298,6 @@ export const deleteUserSettings = /* GraphQL */ `mutation DeleteUserSettings(
 ) {
   deleteUserSettings(input: $input, condition: $condition) {
     id
-    studentProfileID
-    studentProfile {
-      id
-      cognitoUserID
-      name
-      email
-      birthdate
-      createdAt
-      updatedAt
-      __typename
-    }
     notificationsEnabled
     darkModeEnabled
     language

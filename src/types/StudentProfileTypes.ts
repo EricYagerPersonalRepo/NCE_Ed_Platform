@@ -34,8 +34,6 @@ export interface CourseEnrollment {
 
 export interface UserSettings {
   id: string;
-  studentProfileID: string;
-  studentProfile: StudentProfile;
   notificationsEnabled: boolean;
   darkModeEnabled: boolean;
   language: string;

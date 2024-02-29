@@ -84,7 +84,6 @@ export type StudentProfile = {
   email: string,
   birthdate: string,
   courseEnrollments?: ModelCourseEnrollmentConnection | null,
-  userSettings?: ModelUserSettingsConnection | null,
   createdAt: string,
   updatedAt: string,
 };
@@ -132,25 +131,6 @@ export enum CourseState {
   COMPLETED = "COMPLETED",
 }
 
-
-export type ModelUserSettingsConnection = {
-  __typename: "ModelUserSettingsConnection",
-  items:  Array<UserSettings | null >,
-  nextToken?: string | null,
-};
-
-export type UserSettings = {
-  __typename: "UserSettings",
-  id: string,
-  studentProfileID: string,
-  studentProfile: StudentProfile,
-  notificationsEnabled: boolean,
-  darkModeEnabled: boolean,
-  language: string,
-  isAdmin: boolean,
-  createdAt: string,
-  updatedAt: string,
-};
 
 export type UpdateStudentProfileInput = {
   id: string,
@@ -233,7 +213,6 @@ export type DeleteCourseEnrollmentInput = {
 
 export type CreateUserSettingsInput = {
   id?: string | null,
-  studentProfileID: string,
   notificationsEnabled: boolean,
   darkModeEnabled: boolean,
   language: string,
@@ -241,7 +220,6 @@ export type CreateUserSettingsInput = {
 };
 
 export type ModelUserSettingsConditionInput = {
-  studentProfileID?: ModelIDInput | null,
   notificationsEnabled?: ModelBooleanInput | null,
   darkModeEnabled?: ModelBooleanInput | null,
   language?: ModelStringInput | null,
@@ -258,9 +236,19 @@ export type ModelBooleanInput = {
   attributeType?: ModelAttributeTypes | null,
 };
 
+export type UserSettings = {
+  __typename: "UserSettings",
+  id: string,
+  notificationsEnabled: boolean,
+  darkModeEnabled: boolean,
+  language: string,
+  isAdmin: boolean,
+  createdAt: string,
+  updatedAt: string,
+};
+
 export type UpdateUserSettingsInput = {
   id: string,
-  studentProfileID?: string | null,
   notificationsEnabled?: boolean | null,
   darkModeEnabled?: boolean | null,
   language?: string | null,
@@ -333,7 +321,6 @@ export type ModelIDKeyConditionInput = {
 
 export type ModelUserSettingsFilterInput = {
   id?: ModelIDInput | null,
-  studentProfileID?: ModelIDInput | null,
   notificationsEnabled?: ModelBooleanInput | null,
   darkModeEnabled?: ModelBooleanInput | null,
   language?: ModelStringInput | null,
@@ -341,6 +328,12 @@ export type ModelUserSettingsFilterInput = {
   and?: Array< ModelUserSettingsFilterInput | null > | null,
   or?: Array< ModelUserSettingsFilterInput | null > | null,
   not?: ModelUserSettingsFilterInput | null,
+};
+
+export type ModelUserSettingsConnection = {
+  __typename: "ModelUserSettingsConnection",
+  items:  Array<UserSettings | null >,
+  nextToken?: string | null,
 };
 
 export type ModelSubscriptionStudentProfileFilterInput = {
@@ -404,7 +397,6 @@ export type ModelSubscriptionCourseEnrollmentFilterInput = {
 
 export type ModelSubscriptionUserSettingsFilterInput = {
   id?: ModelSubscriptionIDInput | null,
-  studentProfileID?: ModelSubscriptionIDInput | null,
   notificationsEnabled?: ModelSubscriptionBooleanInput | null,
   darkModeEnabled?: ModelSubscriptionBooleanInput | null,
   language?: ModelSubscriptionStringInput | null,
@@ -435,10 +427,6 @@ export type CreateStudentProfileMutation = {
       __typename: "ModelCourseEnrollmentConnection",
       nextToken?: string | null,
     } | null,
-    userSettings?:  {
-      __typename: "ModelUserSettingsConnection",
-      nextToken?: string | null,
-    } | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -461,10 +449,6 @@ export type UpdateStudentProfileMutation = {
       __typename: "ModelCourseEnrollmentConnection",
       nextToken?: string | null,
     } | null,
-    userSettings?:  {
-      __typename: "ModelUserSettingsConnection",
-      nextToken?: string | null,
-    } | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -485,10 +469,6 @@ export type DeleteStudentProfileMutation = {
     birthdate: string,
     courseEnrollments?:  {
       __typename: "ModelCourseEnrollmentConnection",
-      nextToken?: string | null,
-    } | null,
-    userSettings?:  {
-      __typename: "ModelUserSettingsConnection",
       nextToken?: string | null,
     } | null,
     createdAt: string,
@@ -676,17 +656,6 @@ export type CreateUserSettingsMutation = {
   createUserSettings?:  {
     __typename: "UserSettings",
     id: string,
-    studentProfileID: string,
-    studentProfile:  {
-      __typename: "StudentProfile",
-      id: string,
-      cognitoUserID: string,
-      name: string,
-      email: string,
-      birthdate: string,
-      createdAt: string,
-      updatedAt: string,
-    },
     notificationsEnabled: boolean,
     darkModeEnabled: boolean,
     language: string,
@@ -705,17 +674,6 @@ export type UpdateUserSettingsMutation = {
   updateUserSettings?:  {
     __typename: "UserSettings",
     id: string,
-    studentProfileID: string,
-    studentProfile:  {
-      __typename: "StudentProfile",
-      id: string,
-      cognitoUserID: string,
-      name: string,
-      email: string,
-      birthdate: string,
-      createdAt: string,
-      updatedAt: string,
-    },
     notificationsEnabled: boolean,
     darkModeEnabled: boolean,
     language: string,
@@ -734,17 +692,6 @@ export type DeleteUserSettingsMutation = {
   deleteUserSettings?:  {
     __typename: "UserSettings",
     id: string,
-    studentProfileID: string,
-    studentProfile:  {
-      __typename: "StudentProfile",
-      id: string,
-      cognitoUserID: string,
-      name: string,
-      email: string,
-      birthdate: string,
-      createdAt: string,
-      updatedAt: string,
-    },
     notificationsEnabled: boolean,
     darkModeEnabled: boolean,
     language: string,
@@ -768,10 +715,6 @@ export type GetStudentProfileQuery = {
     birthdate: string,
     courseEnrollments?:  {
       __typename: "ModelCourseEnrollmentConnection",
-      nextToken?: string | null,
-    } | null,
-    userSettings?:  {
-      __typename: "ModelUserSettingsConnection",
       nextToken?: string | null,
     } | null,
     createdAt: string,
@@ -989,17 +932,6 @@ export type GetUserSettingsQuery = {
   getUserSettings?:  {
     __typename: "UserSettings",
     id: string,
-    studentProfileID: string,
-    studentProfile:  {
-      __typename: "StudentProfile",
-      id: string,
-      cognitoUserID: string,
-      name: string,
-      email: string,
-      birthdate: string,
-      createdAt: string,
-      updatedAt: string,
-    },
     notificationsEnabled: boolean,
     darkModeEnabled: boolean,
     language: string,
@@ -1021,34 +953,6 @@ export type ListUserSettingsQuery = {
     items:  Array< {
       __typename: "UserSettings",
       id: string,
-      studentProfileID: string,
-      notificationsEnabled: boolean,
-      darkModeEnabled: boolean,
-      language: string,
-      isAdmin: boolean,
-      createdAt: string,
-      updatedAt: string,
-    } | null >,
-    nextToken?: string | null,
-  } | null,
-};
-
-export type UserSettingsByStudentProfileIDAndIdQueryVariables = {
-  studentProfileID: string,
-  id?: ModelIDKeyConditionInput | null,
-  sortDirection?: ModelSortDirection | null,
-  filter?: ModelUserSettingsFilterInput | null,
-  limit?: number | null,
-  nextToken?: string | null,
-};
-
-export type UserSettingsByStudentProfileIDAndIdQuery = {
-  userSettingsByStudentProfileIDAndId?:  {
-    __typename: "ModelUserSettingsConnection",
-    items:  Array< {
-      __typename: "UserSettings",
-      id: string,
-      studentProfileID: string,
       notificationsEnabled: boolean,
       darkModeEnabled: boolean,
       language: string,
@@ -1076,10 +980,6 @@ export type OnCreateStudentProfileSubscription = {
       __typename: "ModelCourseEnrollmentConnection",
       nextToken?: string | null,
     } | null,
-    userSettings?:  {
-      __typename: "ModelUserSettingsConnection",
-      nextToken?: string | null,
-    } | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -1101,10 +1001,6 @@ export type OnUpdateStudentProfileSubscription = {
       __typename: "ModelCourseEnrollmentConnection",
       nextToken?: string | null,
     } | null,
-    userSettings?:  {
-      __typename: "ModelUserSettingsConnection",
-      nextToken?: string | null,
-    } | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -1124,10 +1020,6 @@ export type OnDeleteStudentProfileSubscription = {
     birthdate: string,
     courseEnrollments?:  {
       __typename: "ModelCourseEnrollmentConnection",
-      nextToken?: string | null,
-    } | null,
-    userSettings?:  {
-      __typename: "ModelUserSettingsConnection",
       nextToken?: string | null,
     } | null,
     createdAt: string,
@@ -1308,17 +1200,6 @@ export type OnCreateUserSettingsSubscription = {
   onCreateUserSettings?:  {
     __typename: "UserSettings",
     id: string,
-    studentProfileID: string,
-    studentProfile:  {
-      __typename: "StudentProfile",
-      id: string,
-      cognitoUserID: string,
-      name: string,
-      email: string,
-      birthdate: string,
-      createdAt: string,
-      updatedAt: string,
-    },
     notificationsEnabled: boolean,
     darkModeEnabled: boolean,
     language: string,
@@ -1336,17 +1217,6 @@ export type OnUpdateUserSettingsSubscription = {
   onUpdateUserSettings?:  {
     __typename: "UserSettings",
     id: string,
-    studentProfileID: string,
-    studentProfile:  {
-      __typename: "StudentProfile",
-      id: string,
-      cognitoUserID: string,
-      name: string,
-      email: string,
-      birthdate: string,
-      createdAt: string,
-      updatedAt: string,
-    },
     notificationsEnabled: boolean,
     darkModeEnabled: boolean,
     language: string,
@@ -1364,17 +1234,6 @@ export type OnDeleteUserSettingsSubscription = {
   onDeleteUserSettings?:  {
     __typename: "UserSettings",
     id: string,
-    studentProfileID: string,
-    studentProfile:  {
-      __typename: "StudentProfile",
-      id: string,
-      cognitoUserID: string,
-      name: string,
-      email: string,
-      birthdate: string,
-      createdAt: string,
-      updatedAt: string,
-    },
     notificationsEnabled: boolean,
     darkModeEnabled: boolean,
     language: string,

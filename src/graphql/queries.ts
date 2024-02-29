@@ -19,10 +19,6 @@ export const getStudentProfile = /* GraphQL */ `query GetStudentProfile($id: ID!
       nextToken
       __typename
     }
-    userSettings {
-      nextToken
-      __typename
-    }
     createdAt
     updatedAt
     __typename
@@ -261,17 +257,6 @@ export const courseEnrollmentsByCourseProfileIDAndId = /* GraphQL */ `query Cour
 export const getUserSettings = /* GraphQL */ `query GetUserSettings($id: ID!) {
   getUserSettings(id: $id) {
     id
-    studentProfileID
-    studentProfile {
-      id
-      cognitoUserID
-      name
-      email
-      birthdate
-      createdAt
-      updatedAt
-      __typename
-    }
     notificationsEnabled
     darkModeEnabled
     language
@@ -293,7 +278,6 @@ export const listUserSettings = /* GraphQL */ `query ListUserSettings(
   listUserSettings(filter: $filter, limit: $limit, nextToken: $nextToken) {
     items {
       id
-      studentProfileID
       notificationsEnabled
       darkModeEnabled
       language
@@ -309,39 +293,4 @@ export const listUserSettings = /* GraphQL */ `query ListUserSettings(
 ` as GeneratedQuery<
   APITypes.ListUserSettingsQueryVariables,
   APITypes.ListUserSettingsQuery
->;
-export const userSettingsByStudentProfileIDAndId = /* GraphQL */ `query UserSettingsByStudentProfileIDAndId(
-  $studentProfileID: ID!
-  $id: ModelIDKeyConditionInput
-  $sortDirection: ModelSortDirection
-  $filter: ModelUserSettingsFilterInput
-  $limit: Int
-  $nextToken: String
-) {
-  userSettingsByStudentProfileIDAndId(
-    studentProfileID: $studentProfileID
-    id: $id
-    sortDirection: $sortDirection
-    filter: $filter
-    limit: $limit
-    nextToken: $nextToken
-  ) {
-    items {
-      id
-      studentProfileID
-      notificationsEnabled
-      darkModeEnabled
-      language
-      isAdmin
-      createdAt
-      updatedAt
-      __typename
-    }
-    nextToken
-    __typename
-  }
-}
-` as GeneratedQuery<
-  APITypes.UserSettingsByStudentProfileIDAndIdQueryVariables,
-  APITypes.UserSettingsByStudentProfileIDAndIdQuery
 >;
