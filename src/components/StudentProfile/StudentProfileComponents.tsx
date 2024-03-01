@@ -1,14 +1,11 @@
 import React, { useEffect, useState } from 'react'
 import { generateClient } from "aws-amplify/api"
-import { getStudentProfile, getUserSettings, listCourseProfiles, listStudentProfiles } from '@/src/graphql/queries'
-import { Box, Tabs, Tab, FormControl, InputLabel, Select, MenuItem, Typography, Grid, Paper, Avatar, Button, List, ListItem, ListItemText, TextField, FormControlLabel, Switch } from '@mui/material'
+import { getStudentProfile, getUserSettings, listCourseProfiles } from '@/src/graphql/queries'
+import { Box, Tabs, Tab, FormControl, InputLabel, Select, MenuItem, Typography, Grid, Paper, Avatar, Button, TextField, FormControlLabel, Switch } from '@mui/material'
 import { Course } from '@/src/types/StudentProfileTypes'
-import { downloadAvatarFromS3, uploadFileToS3 } from '@/src/functions/StorageFunctions'
+import { uploadFileToS3 } from '@/src/functions/StorageFunctions'
 import { getCurrentUser } from 'aws-amplify/auth'
-import { createUserSettings, updateUserSettings } from '@/src/graphql/mutations'
-import { CreateUserSettingsInput, UpdateUserSettingsInput, UserSettings } from '@/src/API'
-
-
+import { updateStudentProfile, updateUserSettings } from '@/src/graphql/mutations'
 
 const amplifyApiClient = generateClient()
 
@@ -80,19 +77,18 @@ export const StudentCourseView = ({userID}:any) => {
 }
 
 /**
- * UserAccountView Component - Renders the account management dashboard with user-specific details.
+ * UserAccountView - A container component for managing user account-related components.
  * 
- * This component structures the account dashboard into a grid layout, featuring sections for profile
- * information, settings, avatar management, and recent activity. Each section is presented within its
- * own card for clear separation and focus. The avatar management section utilizes the AvatarManager
- * component to handle avatar uploads, leveraging the passed `avatarUrl` prop to display the current avatar.
+ * This component renders a tabbed interface for different aspects of the user's account, including account settings, user settings, 
+ * avatar management, and notifications. Based on the selected tab, it conditionally renders the corresponding component, passing 
+ * necessary props such as userID and avatarUrl to them. This architecture enables a modular and organized approach to account management,
+ * with each tab dedicated to a specific aspect of the user's account.
  * 
+ * @param {any} userID - The unique identifier for the user.
  * @param {any} avatarUrl - The URL of the user's current avatar image.
  * 
- * @returns {JSX.Element} - A comprehensive view of the user's account dashboard, including profile
- * information, settings, avatar management, and a placeholder for recent activity.
+ * @returns {JSX.Element} - A grid layout containing tabs for different sections of the user's account and the content of the selected tab.
  */
-
 export const UserAccountView = ({userID, avatarUrl}:any) => {
     const [selectedTab, setSelectedTab] = useState(0)
 
@@ -102,81 +98,55 @@ export const UserAccountView = ({userID, avatarUrl}:any) => {
 
     return (
         <Grid container spacing={2}>
-            <Grid item xs={12} sm={6} md={8}>
+            <Grid item xs={12}>
                 <Box sx={{ width: '100%', typography: 'body1' }}>
                     <Tabs value={selectedTab} onChange={handleTabChange} aria-label="settings tabs">
                         <Tab label="Account Settings" />
                         <Tab label="User Settings" />
+                        <Tab label="Avatar" />
+                        <Tab label="Notifications" />
                     </Tabs>
                 </Box>
-                {selectedTab === 0 && (
-                    <AccountSettings userID={userID} />
+                <Grid item xs={12}>
+                    <Paper elevation={3} style={{ padding: 20, width: '100%' }}>
+                        {selectedTab === 0 && (
+                            <AccountSettingsComponent userID={userID} />
 
-                )}
-                {selectedTab === 1 && (
-                    <UserSettingsComponent userID={userID}/>
-                )}
+                        )}
+                        {selectedTab === 1 && (
+                            <UserSettingsComponent userID={userID}/>
+                        )}
+                        {selectedTab === 2 && (
+                            <AvatarManager avatarUrl={avatarUrl}/>
+                        )}
+                        {selectedTab === 3 && (<div></div>)}
+
+                    </Paper>
+                </Grid>
             </Grid>
-            <Grid item xs={12} sm={6} md={4}>
-                <AvatarManager avatarUrl={avatarUrl} />
-                <Paper elevation={3} style={{ marginTop: 20, padding: 20, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                    <Typography variant="h6">Recent Activity</Typography>
-                </Paper>
-            </Grid>
+            
         </Grid>
     )
 }
 
 /**
- * AvatarManager Component - Manages user avatar uploads and displays the current avatar.
+ * UserSettingsComponent - Manages the display and update of user settings.
  * 
- * This component allows users to upload a new avatar image, which is then uploaded to an S3 bucket.
- * It displays the user's current avatar if available. The component handles file selection and
- * triggers the upload process. Upon successful upload, the avatar is updated and the page is reloaded
- * to reflect the change. The upload process involves fetching the current user's details to construct
- * a target path for the avatar in the S3 bucket, ensuring the avatar is associated with the correct user.
+ * This component is responsible for fetching and displaying the current user's settings, such as name, email, and birthdate, 
+ * based on the provided userID. Users can update their settings, which are then persisted to the backend via a GraphQL API call. 
+ * The component initially fetches the user's settings and displays them in form fields, allowing for modifications. Changes are 
+ * applied by invoking a separate API call to update the backend, ensuring the user's settings are always current and accurately reflected.
  * 
- * @param {any} avatarUrl - The URL of the user's current avatar image.
+ * @param {any} userID - The unique identifier for the user whose settings are to be managed.
  * 
- * @returns {JSX.Element} - A component that includes an avatar display and an upload button for updating the avatar.
+ * @returns {JSX.Element} - A form that displays and allows for the modification of the user's settings.
  */
-const AvatarManager = ({ avatarUrl }:any) => {
-    const handleFileChange:any = async (event:any) => {
-        const file = event.target.files[0]
-        const currentUser = await getCurrentUser()
-        console.log("current user from studentprof: ", currentUser)
-        const userDataResponse = {
-            email: currentUser.signInDetails?.loginId || '',
-            cognitoID: currentUser.userId
-        }
-        const avatarTarget = `avatars/${userDataResponse.cognitoID}/avatar.png`
-
-        if (!file) return
-        
-        const uploadedKey:any = await uploadFileToS3(file, avatarTarget)
-
-        if (uploadedKey)  window.location.reload()
-    }
-
-    return (
-        <Paper elevation={3} style={{ padding: 20 }}>
-            <Typography variant="h6">Avatar</Typography>
-            <Avatar src={avatarUrl} style={{ width: 60, height: 60, margin: 20 }} />
-            <Button variant="contained" component="label">
-                Upload Avatar
-                <input type="file" hidden onChange={handleFileChange} />
-            </Button>
-        </Paper>
-    )
-}
-
-const UserSettingsComponent = ({userID}:any) => {
+export const UserSettingsComponent = ({userID}:any) => {
     const [userSettings, setUserSettings] = useState({
         id:userID,
-        darkModeEnabled: false,
-        language: 'en',
-        notificationsEnabled: false,
-        isAdmin: false
+        birthdate: '',
+        email: '',
+        name: '',
     })
     const [loading, setLoading] = useState(true)
 
@@ -189,21 +159,18 @@ const UserSettingsComponent = ({userID}:any) => {
                         variables: { id: userID }
                     })
 
-                    console.log(apiCall)
-
-                    // if(apiCall.data.getUserSettings) {
-                    //     setUserSettings({
-                    //         id: apiCall.data.getUserSettings.id,
-                    //         darkModeEnabled: apiCall.data.getUserSettings.darkModeEnabled,
-                    //         language: apiCall.data.getUserSettings.language,
-                    //         notificationsEnabled: apiCall.data.getUserSettings.notificationsEnabled,
-                    //         isAdmin: apiCall.data.getUserSettings.isAdmin,
-                    //     })
-                    //     setLoading(false)
-                    // }
-                    // else {
-                    //     console.error("User settings don't exist")
-                    // }
+                    if(apiCall.data.getStudentProfile) {
+                        setUserSettings({
+                            id: userID,
+                            birthdate: apiCall.data.getStudentProfile.birthdate,
+                            email: apiCall.data.getStudentProfile.email,
+                            name: apiCall.data.getStudentProfile.name,
+                        })
+                        setLoading(false)
+                    }
+                    else {
+                        console.error("User settings don't exist")
+                    }
                 }
             }catch(error){
                 console.error(error)
@@ -213,7 +180,6 @@ const UserSettingsComponent = ({userID}:any) => {
 
         (async () => {
             try{
-                console.log(userID)
                 checkAndSetUserSettings()
             }catch(error){
                 console.error(error)
@@ -221,10 +187,87 @@ const UserSettingsComponent = ({userID}:any) => {
         })()
     }, [userID])
 
-    return(<div>User</div>)
+    const handleChange = () => {
+
+        const accountSettingsUpdateCall = async() => {
+            try {
+                let apiCall = await amplifyApiClient.graphql({
+                    query: updateStudentProfile,
+                    variables: { input: userSettings }
+                })
+                console.log(apiCall)
+            } catch (userSettingsUpdateError) {
+                console.log('Error Creating User Settings:', userSettingsUpdateError)
+            }
+        }
+        accountSettingsUpdateCall()
+    }
+
+    return(
+        !loading && (
+            <Box component="form" noValidate autoComplete="off">
+                <TextField
+                    fullWidth
+                    label="Name"
+                    name="name"
+                    variant="outlined"
+                    margin="normal"
+                    value={userSettings.name}
+                    onChange={(event)=>setUserSettings({...userSettings, name:event.target.value})}
+                />
+                <TextField
+                    fullWidth
+                    label="Email"
+                    name="email"
+                    type="email"
+                    variant="outlined"
+                    margin="normal"
+                    value={userSettings.email}
+                    disabled
+                />
+                <TextField
+                    fullWidth
+                    label="Birthdate"
+                    name="birthdate"
+                    type="date"
+                    variant="outlined"
+                    margin="normal"
+                    InputLabelProps={{
+                        shrink: true,
+                    }}
+                    value={userSettings.birthdate}
+                    onChange={(event)=>setUserSettings({...userSettings, birthdate:event.target.value})}
+                />
+                <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={()=>handleChange()}
+                    sx={{ mt: 3, mb: 2 }}
+                >
+                    Save Changes
+                </Button>
+            </Box>
+        )
+    )
 }
 
-const AccountSettings = ({userID}:any) => {
+/**
+ * AccountSettingsComponent - Manages the display and update of account-related settings.
+ * 
+ * This component is designed to allow users to manage their account settings, including toggling dark mode,
+ * selecting a language preference, enabling or disabling notifications, and viewing admin status. 
+ * It fetches the current settings from a GraphQL API upon component mount, using the provided userID, and 
+ * updates the UI accordingly. Users can modify their settings via interactive form elements, and changes are 
+ * persisted to the backend through another GraphQL API call. This ensures that account settings are consistent 
+ * across sessions and devices. The component provides immediate visual feedback for changes and handles loading 
+ * states and potential errors gracefully.
+ * 
+ * @param {any} userID - The unique identifier for the user whose account settings are being managed.
+ * 
+ * @returns {JSX.Element} - A set of form controls for updating user account settings, including dark mode preference, 
+ * language selection, notifications toggle, and admin status indication.
+ */
+export const AccountSettingsComponent = ({userID}:any) => {
     const [accountSettings, setAccountSettings] = useState({
         id:userID,
         darkModeEnabled: false,
@@ -286,7 +329,6 @@ const AccountSettings = ({userID}:any) => {
                     query: updateUserSettings,
                     variables: { input: updatedSettings }
                 })
-                console.log(apiCall)
 
                 if(apiCall) {
                     setAccountSettings({
@@ -306,54 +348,93 @@ const AccountSettings = ({userID}:any) => {
     }
 
     return (
-        <Grid item xs={12}>
-            <Paper elevation={3} style={{ padding: 20, width: '100%' }}>
-                {!loading && (
-                    <><div style={{ marginBottom: 16 }}>
-                        <FormControlLabel
-                            control={
-                                <Switch
-                                    checked={accountSettings.darkModeEnabled ? accountSettings.darkModeEnabled : false}
-                                    onChange={handleChange}
-                                    name="darkModeEnabled"
-                                    color="primary"
-                                />
-                            }
-                            label="Dark Mode"
-                        />
-                    </div>
-                    <div style={{ marginBottom: 16 }}>
-                        <TextField
-                            select
-                            label="Language"
-                            value={accountSettings.language}
+        !loading && (
+            <><div style={{ marginBottom: 16 }}>
+                <FormControlLabel
+                    control={
+                        <Switch
+                            checked={accountSettings.darkModeEnabled ? accountSettings.darkModeEnabled : false}
                             onChange={handleChange}
-                            name="language"
-                            variant="outlined"
-                            size="small"
-                            fullWidth
-                        >
-                            <MenuItem value="en">English</MenuItem>
-                            <MenuItem value="es">Spanish</MenuItem>
-                            <MenuItem value="fr">French</MenuItem>
-                            {/* Add more language options as needed */}
-                        </TextField>
-                    </div>
-                    <div style={{ marginBottom: 16 }}>
-                        <FormControlLabel
-                            control={
-                                <Switch
-                                    checked={accountSettings.notificationsEnabled ? accountSettings.notificationsEnabled : false}
-                                    onChange={handleChange}
-                                    name="notificationsEnabled"
-                                    color="primary"
-                                />
-                            }
-                            label="Allow Notifications"
+                            name="darkModeEnabled"
+                            color="primary"
                         />
-                    </div></>
-                )}
-            </Paper>
-        </Grid>
+                    }
+                    label="Dark Mode"
+                />
+            </div>
+            <div style={{ marginBottom: 16 }}>
+                <TextField
+                    select
+                    label="Language"
+                    value={accountSettings.language}
+                    onChange={handleChange}
+                    name="language"
+                    variant="outlined"
+                    size="small"
+                    fullWidth
+                >
+                    <MenuItem value="en">English</MenuItem>
+                    <MenuItem value="es">Spanish</MenuItem>
+                    <MenuItem value="fr">French</MenuItem>
+                    {/* Add more language options as needed */}
+                </TextField>
+            </div>
+            <div style={{ marginBottom: 16 }}>
+                <FormControlLabel
+                    control={
+                        <Switch
+                            checked={accountSettings.notificationsEnabled ? accountSettings.notificationsEnabled : false}
+                            onChange={handleChange}
+                            name="notificationsEnabled"
+                            color="primary"
+                        />
+                    }
+                    label="Allow Notifications"
+                />
+            </div></>
+        )
+    )
+}
+
+/**
+ * AvatarManager Component - Manages user avatar uploads and displays the current avatar.
+ * 
+ * This component allows users to upload a new avatar image, which is then uploaded to an S3 bucket.
+ * It displays the user's current avatar if available. The component handles file selection and
+ * triggers the upload process. Upon successful upload, the avatar is updated and the page is reloaded
+ * to reflect the change. The upload process involves fetching the current user's details to construct
+ * a target path for the avatar in the S3 bucket, ensuring the avatar is associated with the correct user.
+ * 
+ * @param {any} avatarUrl - The URL of the user's current avatar image.
+ * 
+ * @returns {JSX.Element} - A component that includes an avatar display and an upload button for updating the avatar.
+ */
+export const AvatarManager = ({ avatarUrl }:any) => {
+    const handleFileChange:any = async (event:any) => {
+        const file = event.target.files[0]
+        const currentUser = await getCurrentUser()
+        console.log("current user from studentprof: ", currentUser)
+        const userDataResponse = {
+            email: currentUser.signInDetails?.loginId || '',
+            cognitoID: currentUser.userId
+        }
+        const avatarTarget = `avatars/${userDataResponse.cognitoID}/avatar.png`
+
+        if (!file) return
+        
+        const uploadedKey:any = await uploadFileToS3(file, avatarTarget)
+
+        if (uploadedKey)  window.location.reload()
+    }
+
+    return (
+        <div>
+            <Typography variant="h6">Avatar</Typography>
+            <Avatar src={avatarUrl} style={{ width: 60, height: 60, margin: 20 }} />
+            <Button variant="contained" component="label">
+                Upload Avatar
+                <input type="file" hidden onChange={handleFileChange} />
+            </Button>
+        </div>
     )
 }
