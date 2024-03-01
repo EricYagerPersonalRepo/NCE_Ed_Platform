@@ -8,9 +8,6 @@ node_modules
 # next generated files
 .next
 
-# amplify
-src/ui-components
-
 #amplify-do-not-edit-begin
 amplify/\#current-cloud-backend
 amplify/.config/local-*
