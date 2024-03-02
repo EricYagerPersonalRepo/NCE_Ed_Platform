@@ -30,7 +30,7 @@ jobs:
 
       - name: Pull Amplify backend configuration
         run: |
-          amplify pull --appId d2pnmux7cfrkfc --envName staging --yes --providers '{"awscloudformation":{"configLevel":"project","useProfile":false,"accessKeyId":"${{ secrets.AWS_ACCESS_KEY_ID }}","secretAccessKey":"${{ secrets.AWS_SECRET_ACCESS_KEY }}","region":"${{ secrets.AWS_DEFAULT_REGION }}"}}' --no-override
+          amplify pull --appId d2pnmux7cfrkfc --envName dev --yes --providers '{"awscloudformation":{"configLevel":"project","useProfile":false,"accessKeyId":"${{ secrets.AWS_ACCESS_KEY_ID }}","secretAccessKey":"${{ secrets.AWS_SECRET_ACCESS_KEY }}","region":"${{ secrets.AWS_DEFAULT_REGION }}"}}' --no-override
           
       - name: Install dependencies
         run: npm ci
