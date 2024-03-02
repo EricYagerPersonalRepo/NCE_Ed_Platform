@@ -1,18 +1,17 @@
 export type AmplifyDependentResourcesAttributes = {
   "api": {
-    "avatarHandlerGateway": {
+    "avatarHandlerApiGateway": {
       "ApiId": "string",
       "ApiName": "string",
       "RootUrl": "string"
     },
-    "nceeducationplatform": {
+    "nceed": {
       "GraphQLAPIEndpointOutput": "string",
-      "GraphQLAPIIdOutput": "string",
-      "GraphQLAPIKeyOutput": "string"
+      "GraphQLAPIIdOutput": "string"
     }
   },
   "auth": {
-    "nceeducationplatform6bfa7874": {
+    "nceed07f38101": {
       "AppClientID": "string",
       "AppClientIDWeb": "string",
       "HostedUIDomain": "string",
@@ -25,7 +24,7 @@ export type AmplifyDependentResourcesAttributes = {
     }
   },
   "function": {
-    "nceAvatarHandler": {
+    "nceAvatarHandlerLambdaFunction": {
       "Arn": "string",
       "LambdaExecutionRole": "string",
       "LambdaExecutionRoleArn": "string",
@@ -34,7 +33,7 @@ export type AmplifyDependentResourcesAttributes = {
     }
   },
   "storage": {
-    "NCEEdAvatar": {
+    "nceEdAvatars": {
       "BucketName": "string",
       "Region": "string"
     }

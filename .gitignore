@@ -8,6 +8,12 @@ node_modules
 # next generated files
 .next
 
+
+#testing logs
+cypress/reports
+cypress/reports/mocha
+cypress/screenshots
+
 #amplify-do-not-edit-begin
 amplify/\#current-cloud-backend
 amplify/.config/local-*
@@ -28,11 +34,4 @@ amplify-gradle-config.json
 amplifytools.xcconfig
 .secret-*
 **.sample
-
 #amplify-do-not-edit-end
-
-
-#testing logs
-cypress/reports
-cypress/reports/mocha
-cypress/screenshots

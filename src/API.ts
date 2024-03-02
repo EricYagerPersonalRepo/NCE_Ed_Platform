@@ -2,25 +2,23 @@
 /* eslint-disable */
 //  This file was automatically generated and should not be edited.
 
-export type CreateStudentProfileInput = {
+export type CreateTaskInput = {
   id?: string | null,
-  cognitoUserID: string,
-  name: string,
-  email: string,
-  birthdate: string,
+  title: string,
+  description?: string | null,
+  status?: string | null,
 };
 
-export type ModelStudentProfileConditionInput = {
-  cognitoUserID?: ModelIDInput | null,
-  name?: ModelStringInput | null,
-  email?: ModelStringInput | null,
-  birthdate?: ModelStringInput | null,
-  and?: Array< ModelStudentProfileConditionInput | null > | null,
-  or?: Array< ModelStudentProfileConditionInput | null > | null,
-  not?: ModelStudentProfileConditionInput | null,
+export type ModelTaskConditionInput = {
+  title?: ModelStringInput | null,
+  description?: ModelStringInput | null,
+  status?: ModelStringInput | null,
+  and?: Array< ModelTaskConditionInput | null > | null,
+  or?: Array< ModelTaskConditionInput | null > | null,
+  not?: ModelTaskConditionInput | null,
 };
 
-export type ModelIDInput = {
+export type ModelStringInput = {
   ne?: string | null,
   eq?: string | null,
   le?: string | null,
@@ -60,154 +58,92 @@ export type ModelSizeInput = {
   between?: Array< number | null > | null,
 };
 
-export type ModelStringInput = {
-  ne?: string | null,
-  eq?: string | null,
-  le?: string | null,
-  lt?: string | null,
-  ge?: string | null,
-  gt?: string | null,
-  contains?: string | null,
-  notContains?: string | null,
-  between?: Array< string | null > | null,
-  beginsWith?: string | null,
-  attributeExists?: boolean | null,
-  attributeType?: ModelAttributeTypes | null,
-  size?: ModelSizeInput | null,
+export type Task = {
+  __typename: "Task",
+  id: string,
+  title: string,
+  description?: string | null,
+  status?: string | null,
+  createdAt: string,
+  updatedAt: string,
+};
+
+export type UpdateTaskInput = {
+  id: string,
+  title?: string | null,
+  description?: string | null,
+  status?: string | null,
+};
+
+export type DeleteTaskInput = {
+  id: string,
+};
+
+export type CreatePrivateNoteInput = {
+  id?: string | null,
+  content: string,
+};
+
+export type ModelPrivateNoteConditionInput = {
+  content?: ModelStringInput | null,
+  and?: Array< ModelPrivateNoteConditionInput | null > | null,
+  or?: Array< ModelPrivateNoteConditionInput | null > | null,
+  not?: ModelPrivateNoteConditionInput | null,
+};
+
+export type PrivateNote = {
+  __typename: "PrivateNote",
+  id: string,
+  content: string,
+  createdAt: string,
+  updatedAt: string,
+  owner?: string | null,
+};
+
+export type UpdatePrivateNoteInput = {
+  id: string,
+  content?: string | null,
+};
+
+export type DeletePrivateNoteInput = {
+  id: string,
+};
+
+export type CreateStudentProfileInput = {
+  id?: string | null,
+  name: string,
+  email: string,
+  birthdate: string,
+};
+
+export type ModelStudentProfileConditionInput = {
+  name?: ModelStringInput | null,
+  email?: ModelStringInput | null,
+  birthdate?: ModelStringInput | null,
+  and?: Array< ModelStudentProfileConditionInput | null > | null,
+  or?: Array< ModelStudentProfileConditionInput | null > | null,
+  not?: ModelStudentProfileConditionInput | null,
 };
 
 export type StudentProfile = {
   __typename: "StudentProfile",
   id: string,
-  cognitoUserID: string,
   name: string,
   email: string,
   birthdate: string,
-  courseEnrollments?: ModelCourseEnrollmentConnection | null,
   createdAt: string,
   updatedAt: string,
+  owner?: string | null,
 };
-
-export type ModelCourseEnrollmentConnection = {
-  __typename: "ModelCourseEnrollmentConnection",
-  items:  Array<CourseEnrollment | null >,
-  nextToken?: string | null,
-};
-
-export type CourseEnrollment = {
-  __typename: "CourseEnrollment",
-  id: string,
-  studentProfileID: string,
-  courseProfileID: string,
-  studentProfile: StudentProfile,
-  courseProfile: CourseProfile,
-  enrollmentDate?: string | null,
-  progress?: Progress | null,
-  state?: CourseState | null,
-  createdAt: string,
-  updatedAt: string,
-};
-
-export type CourseProfile = {
-  __typename: "CourseProfile",
-  id: string,
-  title: string,
-  description?: string | null,
-  courseEnrollments?: ModelCourseEnrollmentConnection | null,
-  createdAt: string,
-  updatedAt: string,
-};
-
-export enum Progress {
-  NOT_STARTED = "NOT_STARTED",
-  IN_PROGRESS = "IN_PROGRESS",
-  COMPLETED = "COMPLETED",
-}
-
-
-export enum CourseState {
-  ACTIVE = "ACTIVE",
-  PAUSED = "PAUSED",
-  COMPLETED = "COMPLETED",
-}
-
 
 export type UpdateStudentProfileInput = {
   id: string,
-  cognitoUserID?: string | null,
   name?: string | null,
   email?: string | null,
   birthdate?: string | null,
 };
 
 export type DeleteStudentProfileInput = {
-  id: string,
-};
-
-export type CreateCourseProfileInput = {
-  id?: string | null,
-  title: string,
-  description?: string | null,
-};
-
-export type ModelCourseProfileConditionInput = {
-  title?: ModelStringInput | null,
-  description?: ModelStringInput | null,
-  and?: Array< ModelCourseProfileConditionInput | null > | null,
-  or?: Array< ModelCourseProfileConditionInput | null > | null,
-  not?: ModelCourseProfileConditionInput | null,
-};
-
-export type UpdateCourseProfileInput = {
-  id: string,
-  title?: string | null,
-  description?: string | null,
-};
-
-export type DeleteCourseProfileInput = {
-  id: string,
-};
-
-export type CreateCourseEnrollmentInput = {
-  id?: string | null,
-  studentProfileID: string,
-  courseProfileID: string,
-  enrollmentDate?: string | null,
-  progress?: Progress | null,
-  state?: CourseState | null,
-};
-
-export type ModelCourseEnrollmentConditionInput = {
-  studentProfileID?: ModelIDInput | null,
-  courseProfileID?: ModelIDInput | null,
-  enrollmentDate?: ModelStringInput | null,
-  progress?: ModelProgressInput | null,
-  state?: ModelCourseStateInput | null,
-  and?: Array< ModelCourseEnrollmentConditionInput | null > | null,
-  or?: Array< ModelCourseEnrollmentConditionInput | null > | null,
-  not?: ModelCourseEnrollmentConditionInput | null,
-};
-
-export type ModelProgressInput = {
-  eq?: Progress | null,
-  ne?: Progress | null,
-};
-
-export type ModelCourseStateInput = {
-  eq?: CourseState | null,
-  ne?: CourseState | null,
-};
-
-export type UpdateCourseEnrollmentInput = {
-  id: string,
-  studentProfileID?: string | null,
-  courseProfileID?: string | null,
-  enrollmentDate?: string | null,
-  progress?: Progress | null,
-  state?: CourseState | null,
-};
-
-export type DeleteCourseEnrollmentInput = {
   id: string,
 };
 
@@ -245,6 +181,7 @@ export type UserSettings = {
   isAdmin: boolean,
   createdAt: string,
   updatedAt: string,
+  owner?: string | null,
 };
 
 export type UpdateUserSettingsInput = {
@@ -259,9 +196,54 @@ export type DeleteUserSettingsInput = {
   id: string,
 };
 
+export type ModelTaskFilterInput = {
+  id?: ModelIDInput | null,
+  title?: ModelStringInput | null,
+  description?: ModelStringInput | null,
+  status?: ModelStringInput | null,
+  and?: Array< ModelTaskFilterInput | null > | null,
+  or?: Array< ModelTaskFilterInput | null > | null,
+  not?: ModelTaskFilterInput | null,
+};
+
+export type ModelIDInput = {
+  ne?: string | null,
+  eq?: string | null,
+  le?: string | null,
+  lt?: string | null,
+  ge?: string | null,
+  gt?: string | null,
+  contains?: string | null,
+  notContains?: string | null,
+  between?: Array< string | null > | null,
+  beginsWith?: string | null,
+  attributeExists?: boolean | null,
+  attributeType?: ModelAttributeTypes | null,
+  size?: ModelSizeInput | null,
+};
+
+export type ModelTaskConnection = {
+  __typename: "ModelTaskConnection",
+  items:  Array<Task | null >,
+  nextToken?: string | null,
+};
+
+export type ModelPrivateNoteFilterInput = {
+  id?: ModelIDInput | null,
+  content?: ModelStringInput | null,
+  and?: Array< ModelPrivateNoteFilterInput | null > | null,
+  or?: Array< ModelPrivateNoteFilterInput | null > | null,
+  not?: ModelPrivateNoteFilterInput | null,
+};
+
+export type ModelPrivateNoteConnection = {
+  __typename: "ModelPrivateNoteConnection",
+  items:  Array<PrivateNote | null >,
+  nextToken?: string | null,
+};
+
 export type ModelStudentProfileFilterInput = {
   id?: ModelIDInput | null,
-  cognitoUserID?: ModelIDInput | null,
   name?: ModelStringInput | null,
   email?: ModelStringInput | null,
   birthdate?: ModelStringInput | null,
@@ -274,49 +256,6 @@ export type ModelStudentProfileConnection = {
   __typename: "ModelStudentProfileConnection",
   items:  Array<StudentProfile | null >,
   nextToken?: string | null,
-};
-
-export enum ModelSortDirection {
-  ASC = "ASC",
-  DESC = "DESC",
-}
-
-
-export type ModelCourseProfileFilterInput = {
-  id?: ModelIDInput | null,
-  title?: ModelStringInput | null,
-  description?: ModelStringInput | null,
-  and?: Array< ModelCourseProfileFilterInput | null > | null,
-  or?: Array< ModelCourseProfileFilterInput | null > | null,
-  not?: ModelCourseProfileFilterInput | null,
-};
-
-export type ModelCourseProfileConnection = {
-  __typename: "ModelCourseProfileConnection",
-  items:  Array<CourseProfile | null >,
-  nextToken?: string | null,
-};
-
-export type ModelCourseEnrollmentFilterInput = {
-  id?: ModelIDInput | null,
-  studentProfileID?: ModelIDInput | null,
-  courseProfileID?: ModelIDInput | null,
-  enrollmentDate?: ModelStringInput | null,
-  progress?: ModelProgressInput | null,
-  state?: ModelCourseStateInput | null,
-  and?: Array< ModelCourseEnrollmentFilterInput | null > | null,
-  or?: Array< ModelCourseEnrollmentFilterInput | null > | null,
-  not?: ModelCourseEnrollmentFilterInput | null,
-};
-
-export type ModelIDKeyConditionInput = {
-  eq?: string | null,
-  le?: string | null,
-  lt?: string | null,
-  ge?: string | null,
-  gt?: string | null,
-  between?: Array< string | null > | null,
-  beginsWith?: string | null,
 };
 
 export type ModelUserSettingsFilterInput = {
@@ -336,14 +275,13 @@ export type ModelUserSettingsConnection = {
   nextToken?: string | null,
 };
 
-export type ModelSubscriptionStudentProfileFilterInput = {
+export type ModelSubscriptionTaskFilterInput = {
   id?: ModelSubscriptionIDInput | null,
-  cognitoUserID?: ModelSubscriptionIDInput | null,
-  name?: ModelSubscriptionStringInput | null,
-  email?: ModelSubscriptionStringInput | null,
-  birthdate?: ModelSubscriptionStringInput | null,
-  and?: Array< ModelSubscriptionStudentProfileFilterInput | null > | null,
-  or?: Array< ModelSubscriptionStudentProfileFilterInput | null > | null,
+  title?: ModelSubscriptionStringInput | null,
+  description?: ModelSubscriptionStringInput | null,
+  status?: ModelSubscriptionStringInput | null,
+  and?: Array< ModelSubscriptionTaskFilterInput | null > | null,
+  or?: Array< ModelSubscriptionTaskFilterInput | null > | null,
 };
 
 export type ModelSubscriptionIDInput = {
@@ -376,23 +314,20 @@ export type ModelSubscriptionStringInput = {
   notIn?: Array< string | null > | null,
 };
 
-export type ModelSubscriptionCourseProfileFilterInput = {
+export type ModelSubscriptionPrivateNoteFilterInput = {
   id?: ModelSubscriptionIDInput | null,
-  title?: ModelSubscriptionStringInput | null,
-  description?: ModelSubscriptionStringInput | null,
-  and?: Array< ModelSubscriptionCourseProfileFilterInput | null > | null,
-  or?: Array< ModelSubscriptionCourseProfileFilterInput | null > | null,
+  content?: ModelSubscriptionStringInput | null,
+  and?: Array< ModelSubscriptionPrivateNoteFilterInput | null > | null,
+  or?: Array< ModelSubscriptionPrivateNoteFilterInput | null > | null,
 };
 
-export type ModelSubscriptionCourseEnrollmentFilterInput = {
+export type ModelSubscriptionStudentProfileFilterInput = {
   id?: ModelSubscriptionIDInput | null,
-  studentProfileID?: ModelSubscriptionIDInput | null,
-  courseProfileID?: ModelSubscriptionIDInput | null,
-  enrollmentDate?: ModelSubscriptionStringInput | null,
-  progress?: ModelSubscriptionStringInput | null,
-  state?: ModelSubscriptionStringInput | null,
-  and?: Array< ModelSubscriptionCourseEnrollmentFilterInput | null > | null,
-  or?: Array< ModelSubscriptionCourseEnrollmentFilterInput | null > | null,
+  name?: ModelSubscriptionStringInput | null,
+  email?: ModelSubscriptionStringInput | null,
+  birthdate?: ModelSubscriptionStringInput | null,
+  and?: Array< ModelSubscriptionStudentProfileFilterInput | null > | null,
+  or?: Array< ModelSubscriptionStudentProfileFilterInput | null > | null,
 };
 
 export type ModelSubscriptionUserSettingsFilterInput = {
@@ -410,6 +345,105 @@ export type ModelSubscriptionBooleanInput = {
   eq?: boolean | null,
 };
 
+export type CreateTaskMutationVariables = {
+  input: CreateTaskInput,
+  condition?: ModelTaskConditionInput | null,
+};
+
+export type CreateTaskMutation = {
+  createTask?:  {
+    __typename: "Task",
+    id: string,
+    title: string,
+    description?: string | null,
+    status?: string | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type UpdateTaskMutationVariables = {
+  input: UpdateTaskInput,
+  condition?: ModelTaskConditionInput | null,
+};
+
+export type UpdateTaskMutation = {
+  updateTask?:  {
+    __typename: "Task",
+    id: string,
+    title: string,
+    description?: string | null,
+    status?: string | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type DeleteTaskMutationVariables = {
+  input: DeleteTaskInput,
+  condition?: ModelTaskConditionInput | null,
+};
+
+export type DeleteTaskMutation = {
+  deleteTask?:  {
+    __typename: "Task",
+    id: string,
+    title: string,
+    description?: string | null,
+    status?: string | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type CreatePrivateNoteMutationVariables = {
+  input: CreatePrivateNoteInput,
+  condition?: ModelPrivateNoteConditionInput | null,
+};
+
+export type CreatePrivateNoteMutation = {
+  createPrivateNote?:  {
+    __typename: "PrivateNote",
+    id: string,
+    content: string,
+    createdAt: string,
+    updatedAt: string,
+    owner?: string | null,
+  } | null,
+};
+
+export type UpdatePrivateNoteMutationVariables = {
+  input: UpdatePrivateNoteInput,
+  condition?: ModelPrivateNoteConditionInput | null,
+};
+
+export type UpdatePrivateNoteMutation = {
+  updatePrivateNote?:  {
+    __typename: "PrivateNote",
+    id: string,
+    content: string,
+    createdAt: string,
+    updatedAt: string,
+    owner?: string | null,
+  } | null,
+};
+
+export type DeletePrivateNoteMutationVariables = {
+  input: DeletePrivateNoteInput,
+  condition?: ModelPrivateNoteConditionInput | null,
+};
+
+export type DeletePrivateNoteMutation = {
+  deletePrivateNote?:  {
+    __typename: "PrivateNote",
+    id: string,
+    content: string,
+    createdAt: string,
+    updatedAt: string,
+    owner?: string | null,
+  } | null,
+};
+
 export type CreateStudentProfileMutationVariables = {
   input: CreateStudentProfileInput,
   condition?: ModelStudentProfileConditionInput | null,
@@ -419,16 +453,12 @@ export type CreateStudentProfileMutation = {
   createStudentProfile?:  {
     __typename: "StudentProfile",
     id: string,
-    cognitoUserID: string,
     name: string,
     email: string,
     birthdate: string,
-    courseEnrollments?:  {
-      __typename: "ModelCourseEnrollmentConnection",
-      nextToken?: string | null,
-    } | null,
     createdAt: string,
     updatedAt: string,
+    owner?: string | null,
   } | null,
 };
 
@@ -441,16 +471,12 @@ export type UpdateStudentProfileMutation = {
   updateStudentProfile?:  {
     __typename: "StudentProfile",
     id: string,
-    cognitoUserID: string,
     name: string,
     email: string,
     birthdate: string,
-    courseEnrollments?:  {
-      __typename: "ModelCourseEnrollmentConnection",
-      nextToken?: string | null,
-    } | null,
     createdAt: string,
     updatedAt: string,
+    owner?: string | null,
   } | null,
 };
 
@@ -463,187 +489,12 @@ export type DeleteStudentProfileMutation = {
   deleteStudentProfile?:  {
     __typename: "StudentProfile",
     id: string,
-    cognitoUserID: string,
     name: string,
     email: string,
     birthdate: string,
-    courseEnrollments?:  {
-      __typename: "ModelCourseEnrollmentConnection",
-      nextToken?: string | null,
-    } | null,
     createdAt: string,
     updatedAt: string,
-  } | null,
-};
-
-export type CreateCourseProfileMutationVariables = {
-  input: CreateCourseProfileInput,
-  condition?: ModelCourseProfileConditionInput | null,
-};
-
-export type CreateCourseProfileMutation = {
-  createCourseProfile?:  {
-    __typename: "CourseProfile",
-    id: string,
-    title: string,
-    description?: string | null,
-    courseEnrollments?:  {
-      __typename: "ModelCourseEnrollmentConnection",
-      nextToken?: string | null,
-    } | null,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type UpdateCourseProfileMutationVariables = {
-  input: UpdateCourseProfileInput,
-  condition?: ModelCourseProfileConditionInput | null,
-};
-
-export type UpdateCourseProfileMutation = {
-  updateCourseProfile?:  {
-    __typename: "CourseProfile",
-    id: string,
-    title: string,
-    description?: string | null,
-    courseEnrollments?:  {
-      __typename: "ModelCourseEnrollmentConnection",
-      nextToken?: string | null,
-    } | null,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type DeleteCourseProfileMutationVariables = {
-  input: DeleteCourseProfileInput,
-  condition?: ModelCourseProfileConditionInput | null,
-};
-
-export type DeleteCourseProfileMutation = {
-  deleteCourseProfile?:  {
-    __typename: "CourseProfile",
-    id: string,
-    title: string,
-    description?: string | null,
-    courseEnrollments?:  {
-      __typename: "ModelCourseEnrollmentConnection",
-      nextToken?: string | null,
-    } | null,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type CreateCourseEnrollmentMutationVariables = {
-  input: CreateCourseEnrollmentInput,
-  condition?: ModelCourseEnrollmentConditionInput | null,
-};
-
-export type CreateCourseEnrollmentMutation = {
-  createCourseEnrollment?:  {
-    __typename: "CourseEnrollment",
-    id: string,
-    studentProfileID: string,
-    courseProfileID: string,
-    studentProfile:  {
-      __typename: "StudentProfile",
-      id: string,
-      cognitoUserID: string,
-      name: string,
-      email: string,
-      birthdate: string,
-      createdAt: string,
-      updatedAt: string,
-    },
-    courseProfile:  {
-      __typename: "CourseProfile",
-      id: string,
-      title: string,
-      description?: string | null,
-      createdAt: string,
-      updatedAt: string,
-    },
-    enrollmentDate?: string | null,
-    progress?: Progress | null,
-    state?: CourseState | null,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type UpdateCourseEnrollmentMutationVariables = {
-  input: UpdateCourseEnrollmentInput,
-  condition?: ModelCourseEnrollmentConditionInput | null,
-};
-
-export type UpdateCourseEnrollmentMutation = {
-  updateCourseEnrollment?:  {
-    __typename: "CourseEnrollment",
-    id: string,
-    studentProfileID: string,
-    courseProfileID: string,
-    studentProfile:  {
-      __typename: "StudentProfile",
-      id: string,
-      cognitoUserID: string,
-      name: string,
-      email: string,
-      birthdate: string,
-      createdAt: string,
-      updatedAt: string,
-    },
-    courseProfile:  {
-      __typename: "CourseProfile",
-      id: string,
-      title: string,
-      description?: string | null,
-      createdAt: string,
-      updatedAt: string,
-    },
-    enrollmentDate?: string | null,
-    progress?: Progress | null,
-    state?: CourseState | null,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type DeleteCourseEnrollmentMutationVariables = {
-  input: DeleteCourseEnrollmentInput,
-  condition?: ModelCourseEnrollmentConditionInput | null,
-};
-
-export type DeleteCourseEnrollmentMutation = {
-  deleteCourseEnrollment?:  {
-    __typename: "CourseEnrollment",
-    id: string,
-    studentProfileID: string,
-    courseProfileID: string,
-    studentProfile:  {
-      __typename: "StudentProfile",
-      id: string,
-      cognitoUserID: string,
-      name: string,
-      email: string,
-      birthdate: string,
-      createdAt: string,
-      updatedAt: string,
-    },
-    courseProfile:  {
-      __typename: "CourseProfile",
-      id: string,
-      title: string,
-      description?: string | null,
-      createdAt: string,
-      updatedAt: string,
-    },
-    enrollmentDate?: string | null,
-    progress?: Progress | null,
-    state?: CourseState | null,
-    createdAt: string,
-    updatedAt: string,
+    owner?: string | null,
   } | null,
 };
 
@@ -662,6 +513,7 @@ export type CreateUserSettingsMutation = {
     isAdmin: boolean,
     createdAt: string,
     updatedAt: string,
+    owner?: string | null,
   } | null,
 };
 
@@ -680,6 +532,7 @@ export type UpdateUserSettingsMutation = {
     isAdmin: boolean,
     createdAt: string,
     updatedAt: string,
+    owner?: string | null,
   } | null,
 };
 
@@ -698,6 +551,81 @@ export type DeleteUserSettingsMutation = {
     isAdmin: boolean,
     createdAt: string,
     updatedAt: string,
+    owner?: string | null,
+  } | null,
+};
+
+export type GetTaskQueryVariables = {
+  id: string,
+};
+
+export type GetTaskQuery = {
+  getTask?:  {
+    __typename: "Task",
+    id: string,
+    title: string,
+    description?: string | null,
+    status?: string | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type ListTasksQueryVariables = {
+  filter?: ModelTaskFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+};
+
+export type ListTasksQuery = {
+  listTasks?:  {
+    __typename: "ModelTaskConnection",
+    items:  Array< {
+      __typename: "Task",
+      id: string,
+      title: string,
+      description?: string | null,
+      status?: string | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null >,
+    nextToken?: string | null,
+  } | null,
+};
+
+export type GetPrivateNoteQueryVariables = {
+  id: string,
+};
+
+export type GetPrivateNoteQuery = {
+  getPrivateNote?:  {
+    __typename: "PrivateNote",
+    id: string,
+    content: string,
+    createdAt: string,
+    updatedAt: string,
+    owner?: string | null,
+  } | null,
+};
+
+export type ListPrivateNotesQueryVariables = {
+  filter?: ModelPrivateNoteFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+};
+
+export type ListPrivateNotesQuery = {
+  listPrivateNotes?:  {
+    __typename: "ModelPrivateNoteConnection",
+    items:  Array< {
+      __typename: "PrivateNote",
+      id: string,
+      content: string,
+      createdAt: string,
+      updatedAt: string,
+      owner?: string | null,
+    } | null >,
+    nextToken?: string | null,
   } | null,
 };
 
@@ -709,16 +637,12 @@ export type GetStudentProfileQuery = {
   getStudentProfile?:  {
     __typename: "StudentProfile",
     id: string,
-    cognitoUserID: string,
     name: string,
     email: string,
     birthdate: string,
-    courseEnrollments?:  {
-      __typename: "ModelCourseEnrollmentConnection",
-      nextToken?: string | null,
-    } | null,
     createdAt: string,
     updatedAt: string,
+    owner?: string | null,
   } | null,
 };
 
@@ -734,191 +658,12 @@ export type ListStudentProfilesQuery = {
     items:  Array< {
       __typename: "StudentProfile",
       id: string,
-      cognitoUserID: string,
       name: string,
       email: string,
       birthdate: string,
       createdAt: string,
       updatedAt: string,
-    } | null >,
-    nextToken?: string | null,
-  } | null,
-};
-
-export type StudentProfilesByCognitoUserIDQueryVariables = {
-  cognitoUserID: string,
-  sortDirection?: ModelSortDirection | null,
-  filter?: ModelStudentProfileFilterInput | null,
-  limit?: number | null,
-  nextToken?: string | null,
-};
-
-export type StudentProfilesByCognitoUserIDQuery = {
-  studentProfilesByCognitoUserID?:  {
-    __typename: "ModelStudentProfileConnection",
-    items:  Array< {
-      __typename: "StudentProfile",
-      id: string,
-      cognitoUserID: string,
-      name: string,
-      email: string,
-      birthdate: string,
-      createdAt: string,
-      updatedAt: string,
-    } | null >,
-    nextToken?: string | null,
-  } | null,
-};
-
-export type GetCourseProfileQueryVariables = {
-  id: string,
-};
-
-export type GetCourseProfileQuery = {
-  getCourseProfile?:  {
-    __typename: "CourseProfile",
-    id: string,
-    title: string,
-    description?: string | null,
-    courseEnrollments?:  {
-      __typename: "ModelCourseEnrollmentConnection",
-      nextToken?: string | null,
-    } | null,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type ListCourseProfilesQueryVariables = {
-  filter?: ModelCourseProfileFilterInput | null,
-  limit?: number | null,
-  nextToken?: string | null,
-};
-
-export type ListCourseProfilesQuery = {
-  listCourseProfiles?:  {
-    __typename: "ModelCourseProfileConnection",
-    items:  Array< {
-      __typename: "CourseProfile",
-      id: string,
-      title: string,
-      description?: string | null,
-      createdAt: string,
-      updatedAt: string,
-    } | null >,
-    nextToken?: string | null,
-  } | null,
-};
-
-export type GetCourseEnrollmentQueryVariables = {
-  id: string,
-};
-
-export type GetCourseEnrollmentQuery = {
-  getCourseEnrollment?:  {
-    __typename: "CourseEnrollment",
-    id: string,
-    studentProfileID: string,
-    courseProfileID: string,
-    studentProfile:  {
-      __typename: "StudentProfile",
-      id: string,
-      cognitoUserID: string,
-      name: string,
-      email: string,
-      birthdate: string,
-      createdAt: string,
-      updatedAt: string,
-    },
-    courseProfile:  {
-      __typename: "CourseProfile",
-      id: string,
-      title: string,
-      description?: string | null,
-      createdAt: string,
-      updatedAt: string,
-    },
-    enrollmentDate?: string | null,
-    progress?: Progress | null,
-    state?: CourseState | null,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type ListCourseEnrollmentsQueryVariables = {
-  filter?: ModelCourseEnrollmentFilterInput | null,
-  limit?: number | null,
-  nextToken?: string | null,
-};
-
-export type ListCourseEnrollmentsQuery = {
-  listCourseEnrollments?:  {
-    __typename: "ModelCourseEnrollmentConnection",
-    items:  Array< {
-      __typename: "CourseEnrollment",
-      id: string,
-      studentProfileID: string,
-      courseProfileID: string,
-      enrollmentDate?: string | null,
-      progress?: Progress | null,
-      state?: CourseState | null,
-      createdAt: string,
-      updatedAt: string,
-    } | null >,
-    nextToken?: string | null,
-  } | null,
-};
-
-export type CourseEnrollmentsByStudentProfileIDAndIdQueryVariables = {
-  studentProfileID: string,
-  id?: ModelIDKeyConditionInput | null,
-  sortDirection?: ModelSortDirection | null,
-  filter?: ModelCourseEnrollmentFilterInput | null,
-  limit?: number | null,
-  nextToken?: string | null,
-};
-
-export type CourseEnrollmentsByStudentProfileIDAndIdQuery = {
-  courseEnrollmentsByStudentProfileIDAndId?:  {
-    __typename: "ModelCourseEnrollmentConnection",
-    items:  Array< {
-      __typename: "CourseEnrollment",
-      id: string,
-      studentProfileID: string,
-      courseProfileID: string,
-      enrollmentDate?: string | null,
-      progress?: Progress | null,
-      state?: CourseState | null,
-      createdAt: string,
-      updatedAt: string,
-    } | null >,
-    nextToken?: string | null,
-  } | null,
-};
-
-export type CourseEnrollmentsByCourseProfileIDAndIdQueryVariables = {
-  courseProfileID: string,
-  id?: ModelIDKeyConditionInput | null,
-  sortDirection?: ModelSortDirection | null,
-  filter?: ModelCourseEnrollmentFilterInput | null,
-  limit?: number | null,
-  nextToken?: string | null,
-};
-
-export type CourseEnrollmentsByCourseProfileIDAndIdQuery = {
-  courseEnrollmentsByCourseProfileIDAndId?:  {
-    __typename: "ModelCourseEnrollmentConnection",
-    items:  Array< {
-      __typename: "CourseEnrollment",
-      id: string,
-      studentProfileID: string,
-      courseProfileID: string,
-      enrollmentDate?: string | null,
-      progress?: Progress | null,
-      state?: CourseState | null,
-      createdAt: string,
-      updatedAt: string,
+      owner?: string | null,
     } | null >,
     nextToken?: string | null,
   } | null,
@@ -938,6 +683,7 @@ export type GetUserSettingsQuery = {
     isAdmin: boolean,
     createdAt: string,
     updatedAt: string,
+    owner?: string | null,
   } | null,
 };
 
@@ -959,241 +705,165 @@ export type ListUserSettingsQuery = {
       isAdmin: boolean,
       createdAt: string,
       updatedAt: string,
+      owner?: string | null,
     } | null >,
     nextToken?: string | null,
   } | null,
 };
 
+export type OnCreateTaskSubscriptionVariables = {
+  filter?: ModelSubscriptionTaskFilterInput | null,
+};
+
+export type OnCreateTaskSubscription = {
+  onCreateTask?:  {
+    __typename: "Task",
+    id: string,
+    title: string,
+    description?: string | null,
+    status?: string | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnUpdateTaskSubscriptionVariables = {
+  filter?: ModelSubscriptionTaskFilterInput | null,
+};
+
+export type OnUpdateTaskSubscription = {
+  onUpdateTask?:  {
+    __typename: "Task",
+    id: string,
+    title: string,
+    description?: string | null,
+    status?: string | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnDeleteTaskSubscriptionVariables = {
+  filter?: ModelSubscriptionTaskFilterInput | null,
+};
+
+export type OnDeleteTaskSubscription = {
+  onDeleteTask?:  {
+    __typename: "Task",
+    id: string,
+    title: string,
+    description?: string | null,
+    status?: string | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnCreatePrivateNoteSubscriptionVariables = {
+  filter?: ModelSubscriptionPrivateNoteFilterInput | null,
+  owner?: string | null,
+};
+
+export type OnCreatePrivateNoteSubscription = {
+  onCreatePrivateNote?:  {
+    __typename: "PrivateNote",
+    id: string,
+    content: string,
+    createdAt: string,
+    updatedAt: string,
+    owner?: string | null,
+  } | null,
+};
+
+export type OnUpdatePrivateNoteSubscriptionVariables = {
+  filter?: ModelSubscriptionPrivateNoteFilterInput | null,
+  owner?: string | null,
+};
+
+export type OnUpdatePrivateNoteSubscription = {
+  onUpdatePrivateNote?:  {
+    __typename: "PrivateNote",
+    id: string,
+    content: string,
+    createdAt: string,
+    updatedAt: string,
+    owner?: string | null,
+  } | null,
+};
+
+export type OnDeletePrivateNoteSubscriptionVariables = {
+  filter?: ModelSubscriptionPrivateNoteFilterInput | null,
+  owner?: string | null,
+};
+
+export type OnDeletePrivateNoteSubscription = {
+  onDeletePrivateNote?:  {
+    __typename: "PrivateNote",
+    id: string,
+    content: string,
+    createdAt: string,
+    updatedAt: string,
+    owner?: string | null,
+  } | null,
+};
+
 export type OnCreateStudentProfileSubscriptionVariables = {
   filter?: ModelSubscriptionStudentProfileFilterInput | null,
+  owner?: string | null,
 };
 
 export type OnCreateStudentProfileSubscription = {
   onCreateStudentProfile?:  {
     __typename: "StudentProfile",
     id: string,
-    cognitoUserID: string,
     name: string,
     email: string,
     birthdate: string,
-    courseEnrollments?:  {
-      __typename: "ModelCourseEnrollmentConnection",
-      nextToken?: string | null,
-    } | null,
     createdAt: string,
     updatedAt: string,
+    owner?: string | null,
   } | null,
 };
 
 export type OnUpdateStudentProfileSubscriptionVariables = {
   filter?: ModelSubscriptionStudentProfileFilterInput | null,
+  owner?: string | null,
 };
 
 export type OnUpdateStudentProfileSubscription = {
   onUpdateStudentProfile?:  {
     __typename: "StudentProfile",
     id: string,
-    cognitoUserID: string,
     name: string,
     email: string,
     birthdate: string,
-    courseEnrollments?:  {
-      __typename: "ModelCourseEnrollmentConnection",
-      nextToken?: string | null,
-    } | null,
     createdAt: string,
     updatedAt: string,
+    owner?: string | null,
   } | null,
 };
 
 export type OnDeleteStudentProfileSubscriptionVariables = {
   filter?: ModelSubscriptionStudentProfileFilterInput | null,
+  owner?: string | null,
 };
 
 export type OnDeleteStudentProfileSubscription = {
   onDeleteStudentProfile?:  {
     __typename: "StudentProfile",
     id: string,
-    cognitoUserID: string,
     name: string,
     email: string,
     birthdate: string,
-    courseEnrollments?:  {
-      __typename: "ModelCourseEnrollmentConnection",
-      nextToken?: string | null,
-    } | null,
     createdAt: string,
     updatedAt: string,
-  } | null,
-};
-
-export type OnCreateCourseProfileSubscriptionVariables = {
-  filter?: ModelSubscriptionCourseProfileFilterInput | null,
-};
-
-export type OnCreateCourseProfileSubscription = {
-  onCreateCourseProfile?:  {
-    __typename: "CourseProfile",
-    id: string,
-    title: string,
-    description?: string | null,
-    courseEnrollments?:  {
-      __typename: "ModelCourseEnrollmentConnection",
-      nextToken?: string | null,
-    } | null,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type OnUpdateCourseProfileSubscriptionVariables = {
-  filter?: ModelSubscriptionCourseProfileFilterInput | null,
-};
-
-export type OnUpdateCourseProfileSubscription = {
-  onUpdateCourseProfile?:  {
-    __typename: "CourseProfile",
-    id: string,
-    title: string,
-    description?: string | null,
-    courseEnrollments?:  {
-      __typename: "ModelCourseEnrollmentConnection",
-      nextToken?: string | null,
-    } | null,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type OnDeleteCourseProfileSubscriptionVariables = {
-  filter?: ModelSubscriptionCourseProfileFilterInput | null,
-};
-
-export type OnDeleteCourseProfileSubscription = {
-  onDeleteCourseProfile?:  {
-    __typename: "CourseProfile",
-    id: string,
-    title: string,
-    description?: string | null,
-    courseEnrollments?:  {
-      __typename: "ModelCourseEnrollmentConnection",
-      nextToken?: string | null,
-    } | null,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type OnCreateCourseEnrollmentSubscriptionVariables = {
-  filter?: ModelSubscriptionCourseEnrollmentFilterInput | null,
-};
-
-export type OnCreateCourseEnrollmentSubscription = {
-  onCreateCourseEnrollment?:  {
-    __typename: "CourseEnrollment",
-    id: string,
-    studentProfileID: string,
-    courseProfileID: string,
-    studentProfile:  {
-      __typename: "StudentProfile",
-      id: string,
-      cognitoUserID: string,
-      name: string,
-      email: string,
-      birthdate: string,
-      createdAt: string,
-      updatedAt: string,
-    },
-    courseProfile:  {
-      __typename: "CourseProfile",
-      id: string,
-      title: string,
-      description?: string | null,
-      createdAt: string,
-      updatedAt: string,
-    },
-    enrollmentDate?: string | null,
-    progress?: Progress | null,
-    state?: CourseState | null,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type OnUpdateCourseEnrollmentSubscriptionVariables = {
-  filter?: ModelSubscriptionCourseEnrollmentFilterInput | null,
-};
-
-export type OnUpdateCourseEnrollmentSubscription = {
-  onUpdateCourseEnrollment?:  {
-    __typename: "CourseEnrollment",
-    id: string,
-    studentProfileID: string,
-    courseProfileID: string,
-    studentProfile:  {
-      __typename: "StudentProfile",
-      id: string,
-      cognitoUserID: string,
-      name: string,
-      email: string,
-      birthdate: string,
-      createdAt: string,
-      updatedAt: string,
-    },
-    courseProfile:  {
-      __typename: "CourseProfile",
-      id: string,
-      title: string,
-      description?: string | null,
-      createdAt: string,
-      updatedAt: string,
-    },
-    enrollmentDate?: string | null,
-    progress?: Progress | null,
-    state?: CourseState | null,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type OnDeleteCourseEnrollmentSubscriptionVariables = {
-  filter?: ModelSubscriptionCourseEnrollmentFilterInput | null,
-};
-
-export type OnDeleteCourseEnrollmentSubscription = {
-  onDeleteCourseEnrollment?:  {
-    __typename: "CourseEnrollment",
-    id: string,
-    studentProfileID: string,
-    courseProfileID: string,
-    studentProfile:  {
-      __typename: "StudentProfile",
-      id: string,
-      cognitoUserID: string,
-      name: string,
-      email: string,
-      birthdate: string,
-      createdAt: string,
-      updatedAt: string,
-    },
-    courseProfile:  {
-      __typename: "CourseProfile",
-      id: string,
-      title: string,
-      description?: string | null,
-      createdAt: string,
-      updatedAt: string,
-    },
-    enrollmentDate?: string | null,
-    progress?: Progress | null,
-    state?: CourseState | null,
-    createdAt: string,
-    updatedAt: string,
+    owner?: string | null,
   } | null,
 };
 
 export type OnCreateUserSettingsSubscriptionVariables = {
   filter?: ModelSubscriptionUserSettingsFilterInput | null,
+  owner?: string | null,
 };
 
 export type OnCreateUserSettingsSubscription = {
@@ -1206,11 +876,13 @@ export type OnCreateUserSettingsSubscription = {
     isAdmin: boolean,
     createdAt: string,
     updatedAt: string,
+    owner?: string | null,
   } | null,
 };
 
 export type OnUpdateUserSettingsSubscriptionVariables = {
   filter?: ModelSubscriptionUserSettingsFilterInput | null,
+  owner?: string | null,
 };
 
 export type OnUpdateUserSettingsSubscription = {
@@ -1223,11 +895,13 @@ export type OnUpdateUserSettingsSubscription = {
     isAdmin: boolean,
     createdAt: string,
     updatedAt: string,
+    owner?: string | null,
   } | null,
 };
 
 export type OnDeleteUserSettingsSubscriptionVariables = {
   filter?: ModelSubscriptionUserSettingsFilterInput | null,
+  owner?: string | null,
 };
 
 export type OnDeleteUserSettingsSubscription = {
@@ -1240,5 +914,6 @@ export type OnDeleteUserSettingsSubscription = {
     isAdmin: boolean,
     createdAt: string,
     updatedAt: string,
+    owner?: string | null,
   } | null,
 };

@@ -1,6 +1,6 @@
 projects:
-  nceeducationplatform:
-    schemaPath: amplify/backend/api/nceeducationplatform/build/schema.graphql
+  nceed:
+    schemaPath: amplify/backend/api/nceed/build/schema.graphql
     includes:
       - src/graphql/**/*.ts
     excludes:
@@ -11,6 +11,8 @@ projects:
         codeGenTarget: typescript
         generatedFileName: src/API.ts
         docsFilePath: src/graphql
+        region: us-east-1
+        apiId: null
         maxDepth: 2
 extensions:
   amplify:

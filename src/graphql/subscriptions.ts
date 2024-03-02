@@ -8,21 +8,114 @@ type GeneratedSubscription<InputType, OutputType> = string & {
   __generatedSubscriptionOutput: OutputType;
 };
 
+export const onCreateTask = /* GraphQL */ `subscription OnCreateTask($filter: ModelSubscriptionTaskFilterInput) {
+  onCreateTask(filter: $filter) {
+    id
+    title
+    description
+    status
+    createdAt
+    updatedAt
+    __typename
+  }
+}
+` as GeneratedSubscription<
+  APITypes.OnCreateTaskSubscriptionVariables,
+  APITypes.OnCreateTaskSubscription
+>;
+export const onUpdateTask = /* GraphQL */ `subscription OnUpdateTask($filter: ModelSubscriptionTaskFilterInput) {
+  onUpdateTask(filter: $filter) {
+    id
+    title
+    description
+    status
+    createdAt
+    updatedAt
+    __typename
+  }
+}
+` as GeneratedSubscription<
+  APITypes.OnUpdateTaskSubscriptionVariables,
+  APITypes.OnUpdateTaskSubscription
+>;
+export const onDeleteTask = /* GraphQL */ `subscription OnDeleteTask($filter: ModelSubscriptionTaskFilterInput) {
+  onDeleteTask(filter: $filter) {
+    id
+    title
+    description
+    status
+    createdAt
+    updatedAt
+    __typename
+  }
+}
+` as GeneratedSubscription<
+  APITypes.OnDeleteTaskSubscriptionVariables,
+  APITypes.OnDeleteTaskSubscription
+>;
+export const onCreatePrivateNote = /* GraphQL */ `subscription OnCreatePrivateNote(
+  $filter: ModelSubscriptionPrivateNoteFilterInput
+  $owner: String
+) {
+  onCreatePrivateNote(filter: $filter, owner: $owner) {
+    id
+    content
+    createdAt
+    updatedAt
+    owner
+    __typename
+  }
+}
+` as GeneratedSubscription<
+  APITypes.OnCreatePrivateNoteSubscriptionVariables,
+  APITypes.OnCreatePrivateNoteSubscription
+>;
+export const onUpdatePrivateNote = /* GraphQL */ `subscription OnUpdatePrivateNote(
+  $filter: ModelSubscriptionPrivateNoteFilterInput
+  $owner: String
+) {
+  onUpdatePrivateNote(filter: $filter, owner: $owner) {
+    id
+    content
+    createdAt
+    updatedAt
+    owner
+    __typename
+  }
+}
+` as GeneratedSubscription<
+  APITypes.OnUpdatePrivateNoteSubscriptionVariables,
+  APITypes.OnUpdatePrivateNoteSubscription
+>;
+export const onDeletePrivateNote = /* GraphQL */ `subscription OnDeletePrivateNote(
+  $filter: ModelSubscriptionPrivateNoteFilterInput
+  $owner: String
+) {
+  onDeletePrivateNote(filter: $filter, owner: $owner) {
+    id
+    content
+    createdAt
+    updatedAt
+    owner
+    __typename
+  }
+}
+` as GeneratedSubscription<
+  APITypes.OnDeletePrivateNoteSubscriptionVariables,
+  APITypes.OnDeletePrivateNoteSubscription
+>;
 export const onCreateStudentProfile = /* GraphQL */ `subscription OnCreateStudentProfile(
   $filter: ModelSubscriptionStudentProfileFilterInput
+  $owner: String
 ) {
-  onCreateStudentProfile(filter: $filter) {
+  onCreateStudentProfile(filter: $filter, owner: $owner) {
     id
-    cognitoUserID
     name
     email
     birthdate
-    courseEnrollments {
-      nextToken
-      __typename
-    }
     createdAt
     updatedAt
+    owner
     __typename
   }
 }
@@ -32,19 +125,16 @@ export const onCreateStudentProfile = /* GraphQL */ `subscription OnCreateStuden
 >;
 export const onUpdateStudentProfile = /* GraphQL */ `subscription OnUpdateStudentProfile(
   $filter: ModelSubscriptionStudentProfileFilterInput
+  $owner: String
 ) {
-  onUpdateStudentProfile(filter: $filter) {
+  onUpdateStudentProfile(filter: $filter, owner: $owner) {
     id
-    cognitoUserID
     name
     email
     birthdate
-    courseEnrollments {
-      nextToken
-      __typename
-    }
     createdAt
     updatedAt
+    owner
     __typename
   }
 }
@@ -54,19 +144,16 @@ export const onUpdateStudentProfile = /* GraphQL */ `subscription OnUpdateStuden
 >;
 export const onDeleteStudentProfile = /* GraphQL */ `subscription OnDeleteStudentProfile(
   $filter: ModelSubscriptionStudentProfileFilterInput
+  $owner: String
 ) {
-  onDeleteStudentProfile(filter: $filter) {
+  onDeleteStudentProfile(filter: $filter, owner: $owner) {
     id
-    cognitoUserID
     name
     email
     birthdate
-    courseEnrollments {
-      nextToken
-      __typename
-    }
     createdAt
     updatedAt
+    owner
     __typename
   }
 }
@@ -74,181 +161,11 @@ export const onDeleteStudentProfile = /* GraphQL */ `subscription OnDeleteStuden
   APITypes.OnDeleteStudentProfileSubscriptionVariables,
   APITypes.OnDeleteStudentProfileSubscription
 >;
-export const onCreateCourseProfile = /* GraphQL */ `subscription OnCreateCourseProfile(
-  $filter: ModelSubscriptionCourseProfileFilterInput
-) {
-  onCreateCourseProfile(filter: $filter) {
-    id
-    title
-    description
-    courseEnrollments {
-      nextToken
-      __typename
-    }
-    createdAt
-    updatedAt
-    __typename
-  }
-}
-` as GeneratedSubscription<
-  APITypes.OnCreateCourseProfileSubscriptionVariables,
-  APITypes.OnCreateCourseProfileSubscription
->;
-export const onUpdateCourseProfile = /* GraphQL */ `subscription OnUpdateCourseProfile(
-  $filter: ModelSubscriptionCourseProfileFilterInput
-) {
-  onUpdateCourseProfile(filter: $filter) {
-    id
-    title
-    description
-    courseEnrollments {
-      nextToken
-      __typename
-    }
-    createdAt
-    updatedAt
-    __typename
-  }
-}
-` as GeneratedSubscription<
-  APITypes.OnUpdateCourseProfileSubscriptionVariables,
-  APITypes.OnUpdateCourseProfileSubscription
->;
-export const onDeleteCourseProfile = /* GraphQL */ `subscription OnDeleteCourseProfile(
-  $filter: ModelSubscriptionCourseProfileFilterInput
-) {
-  onDeleteCourseProfile(filter: $filter) {
-    id
-    title
-    description
-    courseEnrollments {
-      nextToken
-      __typename
-    }
-    createdAt
-    updatedAt
-    __typename
-  }
-}
-` as GeneratedSubscription<
-  APITypes.OnDeleteCourseProfileSubscriptionVariables,
-  APITypes.OnDeleteCourseProfileSubscription
->;
-export const onCreateCourseEnrollment = /* GraphQL */ `subscription OnCreateCourseEnrollment(
-  $filter: ModelSubscriptionCourseEnrollmentFilterInput
-) {
-  onCreateCourseEnrollment(filter: $filter) {
-    id
-    studentProfileID
-    courseProfileID
-    studentProfile {
-      id
-      cognitoUserID
-      name
-      email
-      birthdate
-      createdAt
-      updatedAt
-      __typename
-    }
-    courseProfile {
-      id
-      title
-      description
-      createdAt
-      updatedAt
-      __typename
-    }
-    enrollmentDate
-    progress
-    state
-    createdAt
-    updatedAt
-    __typename
-  }
-}
-` as GeneratedSubscription<
-  APITypes.OnCreateCourseEnrollmentSubscriptionVariables,
-  APITypes.OnCreateCourseEnrollmentSubscription
->;
-export const onUpdateCourseEnrollment = /* GraphQL */ `subscription OnUpdateCourseEnrollment(
-  $filter: ModelSubscriptionCourseEnrollmentFilterInput
-) {
-  onUpdateCourseEnrollment(filter: $filter) {
-    id
-    studentProfileID
-    courseProfileID
-    studentProfile {
-      id
-      cognitoUserID
-      name
-      email
-      birthdate
-      createdAt
-      updatedAt
-      __typename
-    }
-    courseProfile {
-      id
-      title
-      description
-      createdAt
-      updatedAt
-      __typename
-    }
-    enrollmentDate
-    progress
-    state
-    createdAt
-    updatedAt
-    __typename
-  }
-}
-` as GeneratedSubscription<
-  APITypes.OnUpdateCourseEnrollmentSubscriptionVariables,
-  APITypes.OnUpdateCourseEnrollmentSubscription
->;
-export const onDeleteCourseEnrollment = /* GraphQL */ `subscription OnDeleteCourseEnrollment(
-  $filter: ModelSubscriptionCourseEnrollmentFilterInput
-) {
-  onDeleteCourseEnrollment(filter: $filter) {
-    id
-    studentProfileID
-    courseProfileID
-    studentProfile {
-      id
-      cognitoUserID
-      name
-      email
-      birthdate
-      createdAt
-      updatedAt
-      __typename
-    }
-    courseProfile {
-      id
-      title
-      description
-      createdAt
-      updatedAt
-      __typename
-    }
-    enrollmentDate
-    progress
-    state
-    createdAt
-    updatedAt
-    __typename
-  }
-}
-` as GeneratedSubscription<
-  APITypes.OnDeleteCourseEnrollmentSubscriptionVariables,
-  APITypes.OnDeleteCourseEnrollmentSubscription
->;
 export const onCreateUserSettings = /* GraphQL */ `subscription OnCreateUserSettings(
   $filter: ModelSubscriptionUserSettingsFilterInput
+  $owner: String
 ) {
-  onCreateUserSettings(filter: $filter) {
+  onCreateUserSettings(filter: $filter, owner: $owner) {
     id
     notificationsEnabled
     darkModeEnabled
@@ -256,6 +173,7 @@ export const onCreateUserSettings = /* GraphQL */ `subscription OnCreateUserSett
     isAdmin
     createdAt
     updatedAt
+    owner
     __typename
   }
 }
@@ -265,8 +183,9 @@ export const onCreateUserSettings = /* GraphQL */ `subscription OnCreateUserSett
 >;
 export const onUpdateUserSettings = /* GraphQL */ `subscription OnUpdateUserSettings(
   $filter: ModelSubscriptionUserSettingsFilterInput
+  $owner: String
 ) {
-  onUpdateUserSettings(filter: $filter) {
+  onUpdateUserSettings(filter: $filter, owner: $owner) {
     id
     notificationsEnabled
     darkModeEnabled
@@ -274,6 +193,7 @@ export const onUpdateUserSettings = /* GraphQL */ `subscription OnUpdateUserSett
     isAdmin
     createdAt
     updatedAt
+    owner
     __typename
   }
 }
@@ -283,8 +203,9 @@ export const onUpdateUserSettings = /* GraphQL */ `subscription OnUpdateUserSett
 >;
 export const onDeleteUserSettings = /* GraphQL */ `subscription OnDeleteUserSettings(
   $filter: ModelSubscriptionUserSettingsFilterInput
+  $owner: String
 ) {
-  onDeleteUserSettings(filter: $filter) {
+  onDeleteUserSettings(filter: $filter, owner: $owner) {
     id
     notificationsEnabled
     darkModeEnabled
@@ -292,6 +213,7 @@ export const onDeleteUserSettings = /* GraphQL */ `subscription OnDeleteUserSett
     isAdmin
     createdAt
     updatedAt
+    owner
     __typename
   }
 }

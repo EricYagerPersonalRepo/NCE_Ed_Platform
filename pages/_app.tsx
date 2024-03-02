@@ -88,7 +88,7 @@ const NCE_Education_App = ({ Component, pageProps }:any) => {
                     setLoggedIn(true)
                     setUserData({
                         email:data.payload.data.username,
-                        cognitoID:data.payload.data.userId
+                        cognitoID:data.payload.data.id
                     })
                     break;
                 case "signedOut":

@@ -1,0 +1,12 @@
+{
+  "version": 1,
+  "paths": {
+    "/avatar/{userID}": {
+      "name": "/avatar/{userID}",
+      "lambdaFunction": "nceAvatarHandlerLambdaFunction",
+      "permissions": {
+        "setting": "open"
+      }
+    }
+  }
+}

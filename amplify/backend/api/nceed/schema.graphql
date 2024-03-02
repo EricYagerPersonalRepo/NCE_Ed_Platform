@@ -1,0 +1,44 @@
+type Task
+  @model
+  @auth(
+    rules: [
+      { allow: groups, groups: ["Managers"], operations: [create, update, read, delete] }
+      { allow: groups, groups: ["Employees"], operations: [read] }
+    ]
+  ) {
+  id: ID!
+  title: String!
+  description: String
+  status: String
+}
+
+type PrivateNote @model @auth(rules: [{ allow: owner }]) {
+  id: ID!
+  content: String!
+}
+
+type StudentProfile 
+  @model 
+  @auth(rules: [
+    { allow: owner}
+  ]
+  ){
+  id: ID!
+  name: String!
+  email: AWSEmail!
+  birthdate: AWSDate!
+}
+
+type UserSettings 
+  @model 
+  @auth(rules: [
+    { allow: owner }
+    { allow: groups, groups: ["Admins"], operations: [create, update, read, delete] }
+  ]
+  ){
+  id: ID!
+  notificationsEnabled: Boolean!
+  darkModeEnabled: Boolean!
+  language: String!
+  isAdmin: Boolean!
+}

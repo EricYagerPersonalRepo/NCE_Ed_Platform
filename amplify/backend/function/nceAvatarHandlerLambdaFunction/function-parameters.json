@@ -1,0 +1,28 @@
+{
+  "permissions": {
+    "api": {
+      "nceed": [
+        "Query",
+        "Mutation",
+        "Subscription"
+      ]
+    },
+    "auth": {
+      "nceed07f38101": [
+        "create",
+        "read",
+        "update",
+        "delete"
+      ]
+    },
+    "storage": {
+      "nceEdAvatars": [
+        "create",
+        "read",
+        "update",
+        "delete"
+      ]
+    }
+  },
+  "lambdaLayers": []
+}

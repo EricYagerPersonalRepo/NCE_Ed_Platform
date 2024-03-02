@@ -1,31 +1,38 @@
 {
-  "staging": {
+  "dev": {
     "awscloudformation": {
-      "AuthRoleName": "amplify-nceeducationplatform-staging-212417-authRole",
-      "UnauthRoleArn": "arn:aws:iam::179682925980:role/amplify-nceeducationplatform-staging-212417-unauthRole",
-      "AuthRoleArn": "arn:aws:iam::179682925980:role/amplify-nceeducationplatform-staging-212417-authRole",
+      "AuthRoleName": "amplify-nceed-dev-60353-authRole",
+      "UnauthRoleArn": "arn:aws:iam::179682925980:role/amplify-nceed-dev-60353-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::179682925980:role/amplify-nceed-dev-60353-authRole",
       "Region": "us-east-1",
-      "DeploymentBucketName": "amplify-nceeducationplatform-staging-212417-deployment",
-      "UnauthRoleName": "amplify-nceeducationplatform-staging-212417-unauthRole",
-      "StackName": "amplify-nceeducationplatform-staging-212417",
-      "StackId": "arn:aws:cloudformation:us-east-1:179682925980:stack/amplify-nceeducationplatform-staging-212417/24cc0e60-9610-11ee-acbf-0e03a3620857",
-      "AmplifyAppId": "d6fbjqkxytjd6"
+      "DeploymentBucketName": "amplify-nceed-dev-60353-deployment",
+      "UnauthRoleName": "amplify-nceed-dev-60353-unauthRole",
+      "StackName": "amplify-nceed-dev-60353",
+      "StackId": "arn:aws:cloudformation:us-east-1:179682925980:stack/amplify-nceed-dev-60353/8f6f68f0-d884-11ee-a9e0-122700f02b2d",
+      "AmplifyAppId": "d2pnmux7cfrkfc",
+      "APIGatewayAuthURL": "https://s3.amazonaws.com/amplify-nceed-dev-60353-deployment/amplify-cfn-templates/api/APIGatewayAuthStack.json"
     },
     "categories": {
-      "api": {
-        "nceeducationplatform": {},
-        "avatarHandlerGateway": {}
-      },
       "auth": {
-        "nceeducationplatform6bfa7874": {}
+        "nceed07f38101": {}
+      },
+      "hosting": {
+        "amplifyhosting": {
+          "appId": "d2pnmux7cfrkfc",
+          "type": "cicd"
+        }
+      },
+      "api": {
+        "nceed": {},
+        "avatarHandlerApiGateway": {}
       },
       "storage": {
-        "NCEEdAvatar": {}
+        "nceEdAvatars": {}
       },
       "function": {
-        "nceAvatarHandler": {
-          "deploymentBucketName": "amplify-nceeducationplatform-staging-212417-deployment",
-          "s3Key": "amplify-builds/nceAvatarHandler-4e334764482f59782f79-build.zip"
+        "nceAvatarHandlerLambdaFunction": {
+          "deploymentBucketName": "amplify-nceed-dev-60353-deployment",
+          "s3Key": "amplify-builds/nceAvatarHandlerLambdaFunction-634458564171435a314f-build.zip"
         }
       }
     }
