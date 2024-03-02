@@ -1,0 +1,173 @@
+const AWS = require('aws-sdk');
+const S3 = new AWS.S3();
+const { getCache, setCache } = require('./cache');
+
+exports.handler = async (event) => {
+    const httpMethod = event.httpMethod;
+    const { userID } = event.pathParameters;
+
+    switch (httpMethod) {
+        case 'GET':
+            return handleGetRequest(userID);
+        case 'PUT':
+            return handlePutRequest(event, userID);
+        case 'DELETE':
+            return handleDeleteRequest(userID);
+        default:
+            return {
+                statusCode: 400,
+                body: JSON.stringify({ message: 'Unsupported request method' }),
+            };
+    }
+};
+
+async function handleGetRequest(userID) {
+    let avatar;
+    try {
+        avatar = await getCache(userID);
+        if (!avatar) {
+            const s3Response = await S3.getObject({
+                Bucket: 'nce-ed-avatar-bucket212417-staging',
+                Key: `public/user_files/${userID}/avatar.png`,
+            }).promise();
+
+            avatar = s3Response.Body;
+            await setCache(userID, avatar);
+        }
+
+        return {
+            statusCode: 200,
+            headers: { 'Content-Type': 'image/png' },
+            body: avatar.toString('base64'),
+            isBase64Encoded: true,
+        };
+    } catch (error) {
+        console.error('Error fetching avatar:', error);
+        return { statusCode: 500, body: 'Internal Server Error' };
+    }
+}
+
+async function handlePutRequest(event, userID) {
+    console.log(`Received event: ${JSON.stringify(event)}`);
+    const imageData = event.body; 
+    const objectKey = `public/user_files/${userID}/avatar.png`;
+
+    try {
+        await S3.putObject({
+            Bucket: 'nce-ed-avatar-bucket212417-staging',
+            Key: objectKey,
+            Body: Buffer.from(imageData, 'base64'), // Convert base64 to binary
+            ContentType: 'image/png',
+        }).promise();
+
+        return {
+            statusCode: 200,
+            body: JSON.stringify({ message: 'Avatar updated successfully' }),
+        };
+    } catch (error) {
+        console.error('Error updating avatar:', error);
+        return { statusCode: 500, body: JSON.stringify({ message: 'Internal Server Error', error: error.toString() }) };
+    }
+}
+
+async function handleDeleteRequest(userID) {
+    console.log('Deleting avatar for userID:', userID);
+    const objectKey = `public/user_files/${userID}/avatar.png`;
+
+    try {
+        await S3.deleteObject({
+            Bucket: 'nce-ed-avatar-bucket212417-staging',
+            Key: objectKey,
+        }).promise();
+
+        return {
+            statusCode: 200,
+            body: JSON.stringify({ message: 'Avatar deleted successfully' }),
+        };
+    } catch (error) {
+        console.error('Error deleting avatar:', error);
+        return { statusCode: 500, body: JSON.stringify({ message: 'Internal Server Error', error: error.toString() }) };
+    }
+}
+
+
+
+
+
+
+
+const cache = {};
+
+// Sets an item in the cache with an expiration time (in milliseconds)
+exports.setCache = async (key, value, ttl = 3600000) => { // Default TTL of 1 hour
+    const expireAt = Date.now() + ttl;
+    cache[key] = { value, expireAt };
+};
+
+// Retrieves an item from the cache, considering expiration
+exports.getCache = async (key) => {
+    const item = cache[key];
+    if (item && Date.now() < item.expireAt) {
+        return item.value;
+    } else {
+        // Optionally clean up expired item
+        delete cache[key];
+        return null;
+    }
+};
+
+/**
+ * Tech Debt:
+ * This will work temporarily for a low userbase
+ * 
+ * TODO: Implement elasticache
+ */
+
+
+
+
+
+
+
+ test_events/delete_event.json:
+
+ {
+    "httpMethod": "DELETE",
+    "pathParameters": {
+        "userID": "user123"
+    },
+    "queryStringParameters": null,
+    "headers": {},
+    "body": null,
+    "isBase64Encoded": false
+}
+
+
+test_events/get_event.json:
+{
+  "httpMethod": "GET",
+  "pathParameters": {
+    "userID": "user123"
+  },
+  "queryStringParameters": null,
+  "headers": {
+    "Content-Type": "image/png"
+  },
+  "body": null,
+  "isBase64Encoded": false
+}
+
+
+test_events/put_event.json:
+{
+  "httpMethod": "PUT",
+  "path": "public/avatars/{userID}",
+  "pathParameters": {
+    "userID": "user123"
+  },
+  "headers": {
+    "Content-Type": "image/png"
+  },
+  "body": "iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==",
+  "isBase64Encoded": true
+}

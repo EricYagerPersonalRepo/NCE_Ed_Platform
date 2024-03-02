@@ -1,0 +1,12 @@
+{
+    "httpMethod": "GET",
+    "pathParameters": {
+      "userID": "user123"
+    },
+    "queryStringParameters": null,
+    "headers": {
+      "Content-Type": "image/png"
+    },
+    "body": null,
+    "isBase64Encoded": false
+}
