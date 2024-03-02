@@ -16,7 +16,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: '18.16' # Update to match your project's Node.js version
+          node-version: '18.16'
 
       - name: Install Amplify CLI
         run: npm install -g @aws-amplify/cli
@@ -30,7 +30,7 @@ jobs:
 
       - name: Pull Amplify backend configuration
         run: |
-          amplify pull --appId d6fbjqkxytjd6 --envName staging --yes --providers '{"awscloudformation":{"configLevel":"project","useProfile":false,"accessKeyId":"${{ secrets.AWS_ACCESS_KEY_ID }}","secretAccessKey":"${{ secrets.AWS_SECRET_ACCESS_KEY }}","region":"${{ secrets.AWS_DEFAULT_REGION }}"}}' --no-override
+          amplify pull --appId d2pnmux7cfrkfc --envName staging --yes --providers '{"awscloudformation":{"configLevel":"project","useProfile":false,"accessKeyId":"${{ secrets.AWS_ACCESS_KEY_ID }}","secretAccessKey":"${{ secrets.AWS_SECRET_ACCESS_KEY }}","region":"${{ secrets.AWS_DEFAULT_REGION }}"}}' --no-override
           
       - name: Install dependencies
         run: npm ci
@@ -68,14 +68,14 @@ jobs:
           path: cypress/report/mochawesome-report
 
       - name: Upload test screenshots
-        if: failure() # Only upload if tests fail
+        if: failure() 
         uses: actions/upload-artifact@v2
         with:
           name: test-screenshots
           path: cypress/screenshots
 
       - name: Upload test videos
-        if: failure() # Only upload if tests fail
+        if: failure() 
         uses: actions/upload-artifact@v2
         with:
           name: test-videos
@@ -89,7 +89,7 @@ jobs:
       - uses: actions/checkout@v2
         with:
           ref: 'main'
-          fetch-depth: 0 # Fetches all history for all branches and tags
+          fetch-depth: 0 
           token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
 
       - name: Configure Git

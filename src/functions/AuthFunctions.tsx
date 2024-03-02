@@ -30,7 +30,6 @@ export const checkAuthStatus = async () => {
  */
 export const handleCreateStudentProfile = async (studentProfileInput:CreateNCEStudentProfileInput) => {
     try {
-        console.log(studentProfileInput)
         const userSettingsInput: CreateNCEUserSettingsInput = {
             id: studentProfileInput.id,
             notificationsEnabled: true, 
