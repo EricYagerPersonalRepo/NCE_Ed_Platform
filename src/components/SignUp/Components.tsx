@@ -449,9 +449,10 @@ export function TwoFactorAuthForm({ signUpHooks, handleConfirmSignup }: { signUp
         
         try {
             const signInResult = await handleSignIn({ username,password })
+            console.log(signInResult)
 
             if (signInResult.isSignedIn) {
-                const profileInput= { id: signUpHooks.cognitoUserID, cognitoUserID:signUpHooks.cognitoUserID, name:signUpHooks.name, email:signUpHooks.username, birthdate:signUpHooks.birthday }
+                const profileInput= { id: signUpHooks.id, name:signUpHooks.name, email:signUpHooks.username, birthdate:signUpHooks.birthday }
                 const profileResult = await handleCreateStudentProfile(profileInput)
                 //const userSettingsResult:any = await handleCreateInitialUserSettings(signUpHooks.cognitoUserID)
                 if (profileResult.isSignedUp) {

@@ -19,6 +19,7 @@ interface SignUpFormErrors {
  * @returns {object} An object containing state variables and their corresponding setter functions.
  */
 export const useSignUpHooks = () => {
+    const [id, setId] = useState('')
     const [birthday, setBirthday] = useState('')
     const [name, setName] = useState('')
     const [city, setCity] = useState('')
@@ -44,12 +45,12 @@ export const useSignUpHooks = () => {
     const [tfaOpen, setTfaOpen] = useState(false)
     const [tabValue, setTabValue] = useState(0)
     const [formComplete, setFormComplete] = useState(false)
-    const [cognitoUserID, setCognitoUserID] = useState('')
     const [userSignedIn, setUserSignedIn] = useState(false)
 
     // You can also include any functions that update these states here.
 
     return {
+        id, setId,
         birthday, setBirthday,
         name, setName,
         city, setCity,
@@ -75,7 +76,6 @@ export const useSignUpHooks = () => {
         tfaOpen, setTfaOpen,
         tabValue, setTabValue,
         formComplete, setFormComplete,
-        cognitoUserID, setCognitoUserID,
         userSignedIn, setUserSignedIn,
     }
 }

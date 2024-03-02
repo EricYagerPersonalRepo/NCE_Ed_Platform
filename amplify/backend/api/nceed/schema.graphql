@@ -17,7 +17,7 @@ type PrivateNote @model @auth(rules: [{ allow: owner }]) {
   content: String!
 }
 
-type StudentProfile 
+type NCEStudentProfile 
   @model 
   @auth(rules: [
     { allow: owner}
@@ -29,7 +29,7 @@ type StudentProfile
   birthdate: AWSDate!
 }
 
-type UserSettings 
+type NCEUserSettings 
   @model 
   @auth(rules: [
     { allow: owner }

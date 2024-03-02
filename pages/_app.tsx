@@ -70,7 +70,7 @@ const NCE_Education_App = ({ Component, pageProps }:any) => {
             if(loggedIn){
                 const currentUser = await getCurrentUser()
                 const userDataResponse = {
-                    email: currentUser.signInDetails?.loginId || '', // Fallback to an empty string if undefined
+                    email: currentUser.signInDetails?.loginId || '',
                     cognitoID: currentUser.userId
                 }
                 

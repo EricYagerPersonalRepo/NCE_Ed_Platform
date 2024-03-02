@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { Button, Grid, List, ListItem, Typography } from '@mui/material'
-import { UserAccountView, StudentCourseView } from './StudentProfileComponents'
+import { UserAccountView } from './StudentProfileComponents'
 
 /**
  * WebStudentProfile Component - Manages and displays the student profile interface within a web application.
@@ -31,9 +31,8 @@ const WebStudentProfile = ({ userID, avatarUrl }: any) => {
         switch (activeView) {
             case 'Account':
                 return <UserAccountView userID={userID} avatarUrl={avatarUrl}/>
-            case 'My Courses':
-                return <StudentCourseView />
-            // Add more cases for other views
+            /*case 'My Courses':
+                return <StudentCourseView />*/
             default:
                 return <div>Welcome to Your Dashboard</div>
         }

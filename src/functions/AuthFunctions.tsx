@@ -1,6 +1,6 @@
 import { ConfirmSignUpInput, ConfirmSignUpOutput, SignInInput, SignInOutput, confirmSignUp, getCurrentUser, signIn, signOut } from "aws-amplify/auth"
-import { CreateStudentProfileInput, CreateUserSettingsInput } from "../API"
-import { createStudentProfile, createUserSettings } from "../graphql/mutations"
+import { CreateNCEStudentProfileInput, CreateNCEUserSettingsInput } from "../API"
+import { createNCEStudentProfile, createNCEUserSettings } from "../graphql/mutations"
 import { handleConfirmSignUpReturnType } from "../types/SignUpTypes"
 import { generateClient } from "aws-amplify/api"
 
@@ -25,13 +25,14 @@ export const checkAuthStatus = async () => {
 /**
  * Asynchronously creates a student profile in the system.
  * 
- * @param {CreateStudentProfileInput} studentProfileInput - The input object containing user profile details.
+ * @param {CreateNCEStudentProfileInput} studentProfileInput - The input object containing user profile details.
  * @returns {Promise<{isSignedUp: boolean, userProfile: any}>} A promise that resolves to an object indicating if the profile was successfully created and the user profile data.
  */
-export const handleCreateStudentProfile = async (studentProfileInput:CreateStudentProfileInput) => {
+export const handleCreateStudentProfile = async (studentProfileInput:CreateNCEStudentProfileInput) => {
     try {
-        const userSettingsInput: CreateUserSettingsInput = {
-            id: studentProfileInput.cognitoUserID,
+        console.log(studentProfileInput)
+        const userSettingsInput: CreateNCEUserSettingsInput = {
+            id: studentProfileInput.id,
             notificationsEnabled: true, 
             darkModeEnabled: false, 
             language: 'en',
@@ -39,12 +40,12 @@ export const handleCreateStudentProfile = async (studentProfileInput:CreateStude
         }
 
         const profileResult = await amplifyApiClient.graphql({
-            query: createStudentProfile,
+            query: createNCEStudentProfile,
             variables: { input: studentProfileInput }
         })
 
         const userSettingsCall = await amplifyApiClient.graphql({
-            query: createUserSettings,
+            query: createNCEUserSettings,
             variables: { input: userSettingsInput }
         })
 

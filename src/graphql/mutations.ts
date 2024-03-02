@@ -113,11 +113,11 @@ export const deletePrivateNote = /* GraphQL */ `mutation DeletePrivateNote(
   APITypes.DeletePrivateNoteMutationVariables,
   APITypes.DeletePrivateNoteMutation
 >;
-export const createStudentProfile = /* GraphQL */ `mutation CreateStudentProfile(
-  $input: CreateStudentProfileInput!
-  $condition: ModelStudentProfileConditionInput
+export const createNCEStudentProfile = /* GraphQL */ `mutation CreateNCEStudentProfile(
+  $input: CreateNCEStudentProfileInput!
+  $condition: ModelNCEStudentProfileConditionInput
 ) {
-  createStudentProfile(input: $input, condition: $condition) {
+  createNCEStudentProfile(input: $input, condition: $condition) {
     id
     name
     email
@@ -129,14 +129,14 @@ export const createStudentProfile = /* GraphQL */ `mutation CreateStudentProfile
   }
 }
 ` as GeneratedMutation<
-  APITypes.CreateStudentProfileMutationVariables,
-  APITypes.CreateStudentProfileMutation
+  APITypes.CreateNCEStudentProfileMutationVariables,
+  APITypes.CreateNCEStudentProfileMutation
 >;
-export const updateStudentProfile = /* GraphQL */ `mutation UpdateStudentProfile(
-  $input: UpdateStudentProfileInput!
-  $condition: ModelStudentProfileConditionInput
+export const updateNCEStudentProfile = /* GraphQL */ `mutation UpdateNCEStudentProfile(
+  $input: UpdateNCEStudentProfileInput!
+  $condition: ModelNCEStudentProfileConditionInput
 ) {
-  updateStudentProfile(input: $input, condition: $condition) {
+  updateNCEStudentProfile(input: $input, condition: $condition) {
     id
     name
     email
@@ -148,14 +148,14 @@ export const updateStudentProfile = /* GraphQL */ `mutation UpdateStudentProfile
   }
 }
 ` as GeneratedMutation<
-  APITypes.UpdateStudentProfileMutationVariables,
-  APITypes.UpdateStudentProfileMutation
+  APITypes.UpdateNCEStudentProfileMutationVariables,
+  APITypes.UpdateNCEStudentProfileMutation
 >;
-export const deleteStudentProfile = /* GraphQL */ `mutation DeleteStudentProfile(
-  $input: DeleteStudentProfileInput!
-  $condition: ModelStudentProfileConditionInput
+export const deleteNCEStudentProfile = /* GraphQL */ `mutation DeleteNCEStudentProfile(
+  $input: DeleteNCEStudentProfileInput!
+  $condition: ModelNCEStudentProfileConditionInput
 ) {
-  deleteStudentProfile(input: $input, condition: $condition) {
+  deleteNCEStudentProfile(input: $input, condition: $condition) {
     id
     name
     email
@@ -167,14 +167,14 @@ export const deleteStudentProfile = /* GraphQL */ `mutation DeleteStudentProfile
   }
 }
 ` as GeneratedMutation<
-  APITypes.DeleteStudentProfileMutationVariables,
-  APITypes.DeleteStudentProfileMutation
+  APITypes.DeleteNCEStudentProfileMutationVariables,
+  APITypes.DeleteNCEStudentProfileMutation
 >;
-export const createUserSettings = /* GraphQL */ `mutation CreateUserSettings(
-  $input: CreateUserSettingsInput!
-  $condition: ModelUserSettingsConditionInput
+export const createNCEUserSettings = /* GraphQL */ `mutation CreateNCEUserSettings(
+  $input: CreateNCEUserSettingsInput!
+  $condition: ModelNCEUserSettingsConditionInput
 ) {
-  createUserSettings(input: $input, condition: $condition) {
+  createNCEUserSettings(input: $input, condition: $condition) {
     id
     notificationsEnabled
     darkModeEnabled
@@ -187,14 +187,14 @@ export const createUserSettings = /* GraphQL */ `mutation CreateUserSettings(
   }
 }
 ` as GeneratedMutation<
-  APITypes.CreateUserSettingsMutationVariables,
-  APITypes.CreateUserSettingsMutation
+  APITypes.CreateNCEUserSettingsMutationVariables,
+  APITypes.CreateNCEUserSettingsMutation
 >;
-export const updateUserSettings = /* GraphQL */ `mutation UpdateUserSettings(
-  $input: UpdateUserSettingsInput!
-  $condition: ModelUserSettingsConditionInput
+export const updateNCEUserSettings = /* GraphQL */ `mutation UpdateNCEUserSettings(
+  $input: UpdateNCEUserSettingsInput!
+  $condition: ModelNCEUserSettingsConditionInput
 ) {
-  updateUserSettings(input: $input, condition: $condition) {
+  updateNCEUserSettings(input: $input, condition: $condition) {
     id
     notificationsEnabled
     darkModeEnabled
@@ -207,14 +207,14 @@ export const updateUserSettings = /* GraphQL */ `mutation UpdateUserSettings(
   }
 }
 ` as GeneratedMutation<
-  APITypes.UpdateUserSettingsMutationVariables,
-  APITypes.UpdateUserSettingsMutation
+  APITypes.UpdateNCEUserSettingsMutationVariables,
+  APITypes.UpdateNCEUserSettingsMutation
 >;
-export const deleteUserSettings = /* GraphQL */ `mutation DeleteUserSettings(
-  $input: DeleteUserSettingsInput!
-  $condition: ModelUserSettingsConditionInput
+export const deleteNCEUserSettings = /* GraphQL */ `mutation DeleteNCEUserSettings(
+  $input: DeleteNCEUserSettingsInput!
+  $condition: ModelNCEUserSettingsConditionInput
 ) {
-  deleteUserSettings(input: $input, condition: $condition) {
+  deleteNCEUserSettings(input: $input, condition: $condition) {
     id
     notificationsEnabled
     darkModeEnabled
@@ -227,6 +227,6 @@ export const deleteUserSettings = /* GraphQL */ `mutation DeleteUserSettings(
   }
 }
 ` as GeneratedMutation<
-  APITypes.DeleteUserSettingsMutationVariables,
-  APITypes.DeleteUserSettingsMutation
+  APITypes.DeleteNCEUserSettingsMutationVariables,
+  APITypes.DeleteNCEUserSettingsMutation
 >;

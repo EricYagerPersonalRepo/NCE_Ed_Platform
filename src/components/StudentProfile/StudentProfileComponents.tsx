@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react'
 import { generateClient } from "aws-amplify/api"
-import { getStudentProfile, getUserSettings, listCourseProfiles } from '@/src/graphql/queries'
+import { getNCEStudentProfile, getNCEUserSettings } from '@/src/graphql/queries'
 import { Box, Tabs, Tab, FormControl, InputLabel, Select, MenuItem, Typography, Grid, Paper, Avatar, Button, TextField, FormControlLabel, Switch } from '@mui/material'
 import { Course } from '@/src/types/StudentProfileTypes'
 import { uploadFileToS3 } from '@/src/functions/StorageFunctions'
 import { getCurrentUser } from 'aws-amplify/auth'
-import { updateStudentProfile, updateUserSettings } from '@/src/graphql/mutations'
+import { updateNCEStudentProfile, updateNCEUserSettings } from '@/src/graphql/mutations'
 
 const amplifyApiClient = generateClient()
 
@@ -23,7 +23,7 @@ const amplifyApiClient = generateClient()
  * 
  * @returns {JSX.Element} - A component that provides a dropdown list of courses and displays the description
  * of the selected course.
- */
+ *
 
 export const StudentCourseView = ({userID}:any) => {
     const [courses, setCourses] = useState<Course[]>([])
@@ -75,6 +75,7 @@ export const StudentCourseView = ({userID}:any) => {
         </div>
     )
 }
+*/
 
 /**
  * UserAccountView - A container component for managing user account-related components.
@@ -155,16 +156,16 @@ export const UserSettingsComponent = ({userID}:any) => {
             try{
                 if(userID){
                     const apiCall = await amplifyApiClient.graphql({
-                        query: getStudentProfile, 
+                        query: getNCEStudentProfile, 
                         variables: { id: userID }
                     })
 
-                    if(apiCall.data.getStudentProfile) {
+                    if(apiCall.data.getNCEStudentProfile) {
                         setUserSettings({
                             id: userID,
-                            birthdate: apiCall.data.getStudentProfile.birthdate,
-                            email: apiCall.data.getStudentProfile.email,
-                            name: apiCall.data.getStudentProfile.name,
+                            birthdate: apiCall.data.getNCEStudentProfile.birthdate,
+                            email: apiCall.data.getNCEStudentProfile.email,
+                            name: apiCall.data.getNCEStudentProfile.name,
                         })
                         setLoading(false)
                     }
@@ -192,7 +193,7 @@ export const UserSettingsComponent = ({userID}:any) => {
         const accountSettingsUpdateCall = async() => {
             try {
                 let apiCall = await amplifyApiClient.graphql({
-                    query: updateStudentProfile,
+                    query: updateNCEStudentProfile,
                     variables: { input: userSettings }
                 })
                 console.log(apiCall)
@@ -282,17 +283,17 @@ export const AccountSettingsComponent = ({userID}:any) => {
             try{
                 if(userID){
                     const apiCall = await amplifyApiClient.graphql({
-                        query: getUserSettings, 
+                        query: getNCEUserSettings, 
                         variables: { id: userID }
                     })
 
-                    if(apiCall.data.getUserSettings) {
+                    if(apiCall.data.getNCEUserSettings) {
                         setAccountSettings({
-                            id: apiCall.data.getUserSettings.id,
-                            darkModeEnabled: apiCall.data.getUserSettings.darkModeEnabled,
-                            language: apiCall.data.getUserSettings.language,
-                            notificationsEnabled: apiCall.data.getUserSettings.notificationsEnabled,
-                            isAdmin: apiCall.data.getUserSettings.isAdmin,
+                            id: apiCall.data.getNCEUserSettings.id,
+                            darkModeEnabled: apiCall.data.getNCEUserSettings.darkModeEnabled,
+                            language: apiCall.data.getNCEUserSettings.language,
+                            notificationsEnabled: apiCall.data.getNCEUserSettings.notificationsEnabled,
+                            isAdmin: apiCall.data.getNCEUserSettings.isAdmin,
                         })
                         setLoading(false)
                     }
@@ -326,17 +327,17 @@ export const AccountSettingsComponent = ({userID}:any) => {
                     [name]: updatedValue,
                 }
                 let apiCall = await amplifyApiClient.graphql({
-                    query: updateUserSettings,
+                    query: updateNCEUserSettings,
                     variables: { input: updatedSettings }
                 })
 
                 if(apiCall) {
                     setAccountSettings({
-                        id:apiCall.data.updateUserSettings.id,
-                        darkModeEnabled: apiCall.data.updateUserSettings.darkModeEnabled,
-                        language: apiCall.data.updateUserSettings.language,
-                        notificationsEnabled: apiCall.data.updateUserSettings.notificationsEnabled,
-                        isAdmin: apiCall.data.updateUserSettings.isAdmin
+                        id:apiCall.data.updateNCEUserSettings.id,
+                        darkModeEnabled: apiCall.data.updateNCEUserSettings.darkModeEnabled,
+                        language: apiCall.data.updateNCEUserSettings.language,
+                        notificationsEnabled: apiCall.data.updateNCEUserSettings.notificationsEnabled,
+                        isAdmin: apiCall.data.updateNCEUserSettings.isAdmin
                     })
                     setLoading(false)
                 }

@@ -57,6 +57,8 @@ export interface AuthenticatedHomeProps {
 }
 
 export interface SignUpHooks {
+    id: string;
+    setId: (value: string) => void;
     birthday: string;
     setBirthday: (value: string) => void;
     name: string;
@@ -77,7 +79,7 @@ export interface SignUpHooks {
     setShowPassword: (value: boolean) => void;
     showConfirmPassword: boolean;
     setShowConfirmPassword: (value: boolean) => void;
-    error: SignUpFormErrors; // Assuming SignUpFormErrors is already defined elsewhere in your code
+    error: SignUpFormErrors;
     setError: (value: SignUpFormErrors) => void;
     age: number;
     setAge: (value: number) => void;

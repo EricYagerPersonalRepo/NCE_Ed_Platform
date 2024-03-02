@@ -76,8 +76,8 @@ export const listPrivateNotes = /* GraphQL */ `query ListPrivateNotes(
   APITypes.ListPrivateNotesQueryVariables,
   APITypes.ListPrivateNotesQuery
 >;
-export const getStudentProfile = /* GraphQL */ `query GetStudentProfile($id: ID!) {
-  getStudentProfile(id: $id) {
+export const getNCEStudentProfile = /* GraphQL */ `query GetNCEStudentProfile($id: ID!) {
+  getNCEStudentProfile(id: $id) {
     id
     name
     email
@@ -89,15 +89,19 @@ export const getStudentProfile = /* GraphQL */ `query GetStudentProfile($id: ID!
   }
 }
 ` as GeneratedQuery<
-  APITypes.GetStudentProfileQueryVariables,
-  APITypes.GetStudentProfileQuery
+  APITypes.GetNCEStudentProfileQueryVariables,
+  APITypes.GetNCEStudentProfileQuery
 >;
-export const listStudentProfiles = /* GraphQL */ `query ListStudentProfiles(
-  $filter: ModelStudentProfileFilterInput
+export const listNCEStudentProfiles = /* GraphQL */ `query ListNCEStudentProfiles(
+  $filter: ModelNCEStudentProfileFilterInput
   $limit: Int
   $nextToken: String
 ) {
-  listStudentProfiles(filter: $filter, limit: $limit, nextToken: $nextToken) {
+  listNCEStudentProfiles(
+    filter: $filter
+    limit: $limit
+    nextToken: $nextToken
+  ) {
     items {
       id
       name
@@ -113,11 +117,11 @@ export const listStudentProfiles = /* GraphQL */ `query ListStudentProfiles(
   }
 }
 ` as GeneratedQuery<
-  APITypes.ListStudentProfilesQueryVariables,
-  APITypes.ListStudentProfilesQuery
+  APITypes.ListNCEStudentProfilesQueryVariables,
+  APITypes.ListNCEStudentProfilesQuery
 >;
-export const getUserSettings = /* GraphQL */ `query GetUserSettings($id: ID!) {
-  getUserSettings(id: $id) {
+export const getNCEUserSettings = /* GraphQL */ `query GetNCEUserSettings($id: ID!) {
+  getNCEUserSettings(id: $id) {
     id
     notificationsEnabled
     darkModeEnabled
@@ -130,15 +134,15 @@ export const getUserSettings = /* GraphQL */ `query GetUserSettings($id: ID!) {
   }
 }
 ` as GeneratedQuery<
-  APITypes.GetUserSettingsQueryVariables,
-  APITypes.GetUserSettingsQuery
+  APITypes.GetNCEUserSettingsQueryVariables,
+  APITypes.GetNCEUserSettingsQuery
 >;
-export const listUserSettings = /* GraphQL */ `query ListUserSettings(
-  $filter: ModelUserSettingsFilterInput
+export const listNCEUserSettings = /* GraphQL */ `query ListNCEUserSettings(
+  $filter: ModelNCEUserSettingsFilterInput
   $limit: Int
   $nextToken: String
 ) {
-  listUserSettings(filter: $filter, limit: $limit, nextToken: $nextToken) {
+  listNCEUserSettings(filter: $filter, limit: $limit, nextToken: $nextToken) {
     items {
       id
       notificationsEnabled
@@ -155,6 +159,6 @@ export const listUserSettings = /* GraphQL */ `query ListUserSettings(
   }
 }
 ` as GeneratedQuery<
-  APITypes.ListUserSettingsQueryVariables,
-  APITypes.ListUserSettingsQuery
+  APITypes.ListNCEUserSettingsQueryVariables,
+  APITypes.ListNCEUserSettingsQuery
 >;

@@ -109,24 +109,24 @@ export type DeletePrivateNoteInput = {
   id: string,
 };
 
-export type CreateStudentProfileInput = {
+export type CreateNCEStudentProfileInput = {
   id?: string | null,
   name: string,
   email: string,
   birthdate: string,
 };
 
-export type ModelStudentProfileConditionInput = {
+export type ModelNCEStudentProfileConditionInput = {
   name?: ModelStringInput | null,
   email?: ModelStringInput | null,
   birthdate?: ModelStringInput | null,
-  and?: Array< ModelStudentProfileConditionInput | null > | null,
-  or?: Array< ModelStudentProfileConditionInput | null > | null,
-  not?: ModelStudentProfileConditionInput | null,
+  and?: Array< ModelNCEStudentProfileConditionInput | null > | null,
+  or?: Array< ModelNCEStudentProfileConditionInput | null > | null,
+  not?: ModelNCEStudentProfileConditionInput | null,
 };
 
-export type StudentProfile = {
-  __typename: "StudentProfile",
+export type NCEStudentProfile = {
+  __typename: "NCEStudentProfile",
   id: string,
   name: string,
   email: string,
@@ -136,18 +136,18 @@ export type StudentProfile = {
   owner?: string | null,
 };
 
-export type UpdateStudentProfileInput = {
+export type UpdateNCEStudentProfileInput = {
   id: string,
   name?: string | null,
   email?: string | null,
   birthdate?: string | null,
 };
 
-export type DeleteStudentProfileInput = {
+export type DeleteNCEStudentProfileInput = {
   id: string,
 };
 
-export type CreateUserSettingsInput = {
+export type CreateNCEUserSettingsInput = {
   id?: string | null,
   notificationsEnabled: boolean,
   darkModeEnabled: boolean,
@@ -155,14 +155,14 @@ export type CreateUserSettingsInput = {
   isAdmin: boolean,
 };
 
-export type ModelUserSettingsConditionInput = {
+export type ModelNCEUserSettingsConditionInput = {
   notificationsEnabled?: ModelBooleanInput | null,
   darkModeEnabled?: ModelBooleanInput | null,
   language?: ModelStringInput | null,
   isAdmin?: ModelBooleanInput | null,
-  and?: Array< ModelUserSettingsConditionInput | null > | null,
-  or?: Array< ModelUserSettingsConditionInput | null > | null,
-  not?: ModelUserSettingsConditionInput | null,
+  and?: Array< ModelNCEUserSettingsConditionInput | null > | null,
+  or?: Array< ModelNCEUserSettingsConditionInput | null > | null,
+  not?: ModelNCEUserSettingsConditionInput | null,
 };
 
 export type ModelBooleanInput = {
@@ -172,8 +172,8 @@ export type ModelBooleanInput = {
   attributeType?: ModelAttributeTypes | null,
 };
 
-export type UserSettings = {
-  __typename: "UserSettings",
+export type NCEUserSettings = {
+  __typename: "NCEUserSettings",
   id: string,
   notificationsEnabled: boolean,
   darkModeEnabled: boolean,
@@ -184,7 +184,7 @@ export type UserSettings = {
   owner?: string | null,
 };
 
-export type UpdateUserSettingsInput = {
+export type UpdateNCEUserSettingsInput = {
   id: string,
   notificationsEnabled?: boolean | null,
   darkModeEnabled?: boolean | null,
@@ -192,7 +192,7 @@ export type UpdateUserSettingsInput = {
   isAdmin?: boolean | null,
 };
 
-export type DeleteUserSettingsInput = {
+export type DeleteNCEUserSettingsInput = {
   id: string,
 };
 
@@ -242,36 +242,36 @@ export type ModelPrivateNoteConnection = {
   nextToken?: string | null,
 };
 
-export type ModelStudentProfileFilterInput = {
+export type ModelNCEStudentProfileFilterInput = {
   id?: ModelIDInput | null,
   name?: ModelStringInput | null,
   email?: ModelStringInput | null,
   birthdate?: ModelStringInput | null,
-  and?: Array< ModelStudentProfileFilterInput | null > | null,
-  or?: Array< ModelStudentProfileFilterInput | null > | null,
-  not?: ModelStudentProfileFilterInput | null,
+  and?: Array< ModelNCEStudentProfileFilterInput | null > | null,
+  or?: Array< ModelNCEStudentProfileFilterInput | null > | null,
+  not?: ModelNCEStudentProfileFilterInput | null,
 };
 
-export type ModelStudentProfileConnection = {
-  __typename: "ModelStudentProfileConnection",
-  items:  Array<StudentProfile | null >,
+export type ModelNCEStudentProfileConnection = {
+  __typename: "ModelNCEStudentProfileConnection",
+  items:  Array<NCEStudentProfile | null >,
   nextToken?: string | null,
 };
 
-export type ModelUserSettingsFilterInput = {
+export type ModelNCEUserSettingsFilterInput = {
   id?: ModelIDInput | null,
   notificationsEnabled?: ModelBooleanInput | null,
   darkModeEnabled?: ModelBooleanInput | null,
   language?: ModelStringInput | null,
   isAdmin?: ModelBooleanInput | null,
-  and?: Array< ModelUserSettingsFilterInput | null > | null,
-  or?: Array< ModelUserSettingsFilterInput | null > | null,
-  not?: ModelUserSettingsFilterInput | null,
+  and?: Array< ModelNCEUserSettingsFilterInput | null > | null,
+  or?: Array< ModelNCEUserSettingsFilterInput | null > | null,
+  not?: ModelNCEUserSettingsFilterInput | null,
 };
 
-export type ModelUserSettingsConnection = {
-  __typename: "ModelUserSettingsConnection",
-  items:  Array<UserSettings | null >,
+export type ModelNCEUserSettingsConnection = {
+  __typename: "ModelNCEUserSettingsConnection",
+  items:  Array<NCEUserSettings | null >,
   nextToken?: string | null,
 };
 
@@ -321,23 +321,23 @@ export type ModelSubscriptionPrivateNoteFilterInput = {
   or?: Array< ModelSubscriptionPrivateNoteFilterInput | null > | null,
 };
 
-export type ModelSubscriptionStudentProfileFilterInput = {
+export type ModelSubscriptionNCEStudentProfileFilterInput = {
   id?: ModelSubscriptionIDInput | null,
   name?: ModelSubscriptionStringInput | null,
   email?: ModelSubscriptionStringInput | null,
   birthdate?: ModelSubscriptionStringInput | null,
-  and?: Array< ModelSubscriptionStudentProfileFilterInput | null > | null,
-  or?: Array< ModelSubscriptionStudentProfileFilterInput | null > | null,
+  and?: Array< ModelSubscriptionNCEStudentProfileFilterInput | null > | null,
+  or?: Array< ModelSubscriptionNCEStudentProfileFilterInput | null > | null,
 };
 
-export type ModelSubscriptionUserSettingsFilterInput = {
+export type ModelSubscriptionNCEUserSettingsFilterInput = {
   id?: ModelSubscriptionIDInput | null,
   notificationsEnabled?: ModelSubscriptionBooleanInput | null,
   darkModeEnabled?: ModelSubscriptionBooleanInput | null,
   language?: ModelSubscriptionStringInput | null,
   isAdmin?: ModelSubscriptionBooleanInput | null,
-  and?: Array< ModelSubscriptionUserSettingsFilterInput | null > | null,
-  or?: Array< ModelSubscriptionUserSettingsFilterInput | null > | null,
+  and?: Array< ModelSubscriptionNCEUserSettingsFilterInput | null > | null,
+  or?: Array< ModelSubscriptionNCEUserSettingsFilterInput | null > | null,
 };
 
 export type ModelSubscriptionBooleanInput = {
@@ -444,14 +444,14 @@ export type DeletePrivateNoteMutation = {
   } | null,
 };
 
-export type CreateStudentProfileMutationVariables = {
-  input: CreateStudentProfileInput,
-  condition?: ModelStudentProfileConditionInput | null,
+export type CreateNCEStudentProfileMutationVariables = {
+  input: CreateNCEStudentProfileInput,
+  condition?: ModelNCEStudentProfileConditionInput | null,
 };
 
-export type CreateStudentProfileMutation = {
-  createStudentProfile?:  {
-    __typename: "StudentProfile",
+export type CreateNCEStudentProfileMutation = {
+  createNCEStudentProfile?:  {
+    __typename: "NCEStudentProfile",
     id: string,
     name: string,
     email: string,
@@ -462,14 +462,14 @@ export type CreateStudentProfileMutation = {
   } | null,
 };
 
-export type UpdateStudentProfileMutationVariables = {
-  input: UpdateStudentProfileInput,
-  condition?: ModelStudentProfileConditionInput | null,
+export type UpdateNCEStudentProfileMutationVariables = {
+  input: UpdateNCEStudentProfileInput,
+  condition?: ModelNCEStudentProfileConditionInput | null,
 };
 
-export type UpdateStudentProfileMutation = {
-  updateStudentProfile?:  {
-    __typename: "StudentProfile",
+export type UpdateNCEStudentProfileMutation = {
+  updateNCEStudentProfile?:  {
+    __typename: "NCEStudentProfile",
     id: string,
     name: string,
     email: string,
@@ -480,14 +480,14 @@ export type UpdateStudentProfileMutation = {
   } | null,
 };
 
-export type DeleteStudentProfileMutationVariables = {
-  input: DeleteStudentProfileInput,
-  condition?: ModelStudentProfileConditionInput | null,
+export type DeleteNCEStudentProfileMutationVariables = {
+  input: DeleteNCEStudentProfileInput,
+  condition?: ModelNCEStudentProfileConditionInput | null,
 };
 
-export type DeleteStudentProfileMutation = {
-  deleteStudentProfile?:  {
-    __typename: "StudentProfile",
+export type DeleteNCEStudentProfileMutation = {
+  deleteNCEStudentProfile?:  {
+    __typename: "NCEStudentProfile",
     id: string,
     name: string,
     email: string,
@@ -498,14 +498,14 @@ export type DeleteStudentProfileMutation = {
   } | null,
 };
 
-export type CreateUserSettingsMutationVariables = {
-  input: CreateUserSettingsInput,
-  condition?: ModelUserSettingsConditionInput | null,
+export type CreateNCEUserSettingsMutationVariables = {
+  input: CreateNCEUserSettingsInput,
+  condition?: ModelNCEUserSettingsConditionInput | null,
 };
 
-export type CreateUserSettingsMutation = {
-  createUserSettings?:  {
-    __typename: "UserSettings",
+export type CreateNCEUserSettingsMutation = {
+  createNCEUserSettings?:  {
+    __typename: "NCEUserSettings",
     id: string,
     notificationsEnabled: boolean,
     darkModeEnabled: boolean,
@@ -517,14 +517,14 @@ export type CreateUserSettingsMutation = {
   } | null,
 };
 
-export type UpdateUserSettingsMutationVariables = {
-  input: UpdateUserSettingsInput,
-  condition?: ModelUserSettingsConditionInput | null,
+export type UpdateNCEUserSettingsMutationVariables = {
+  input: UpdateNCEUserSettingsInput,
+  condition?: ModelNCEUserSettingsConditionInput | null,
 };
 
-export type UpdateUserSettingsMutation = {
-  updateUserSettings?:  {
-    __typename: "UserSettings",
+export type UpdateNCEUserSettingsMutation = {
+  updateNCEUserSettings?:  {
+    __typename: "NCEUserSettings",
     id: string,
     notificationsEnabled: boolean,
     darkModeEnabled: boolean,
@@ -536,14 +536,14 @@ export type UpdateUserSettingsMutation = {
   } | null,
 };
 
-export type DeleteUserSettingsMutationVariables = {
-  input: DeleteUserSettingsInput,
-  condition?: ModelUserSettingsConditionInput | null,
+export type DeleteNCEUserSettingsMutationVariables = {
+  input: DeleteNCEUserSettingsInput,
+  condition?: ModelNCEUserSettingsConditionInput | null,
 };
 
-export type DeleteUserSettingsMutation = {
-  deleteUserSettings?:  {
-    __typename: "UserSettings",
+export type DeleteNCEUserSettingsMutation = {
+  deleteNCEUserSettings?:  {
+    __typename: "NCEUserSettings",
     id: string,
     notificationsEnabled: boolean,
     darkModeEnabled: boolean,
@@ -629,13 +629,13 @@ export type ListPrivateNotesQuery = {
   } | null,
 };
 
-export type GetStudentProfileQueryVariables = {
+export type GetNCEStudentProfileQueryVariables = {
   id: string,
 };
 
-export type GetStudentProfileQuery = {
-  getStudentProfile?:  {
-    __typename: "StudentProfile",
+export type GetNCEStudentProfileQuery = {
+  getNCEStudentProfile?:  {
+    __typename: "NCEStudentProfile",
     id: string,
     name: string,
     email: string,
@@ -646,17 +646,17 @@ export type GetStudentProfileQuery = {
   } | null,
 };
 
-export type ListStudentProfilesQueryVariables = {
-  filter?: ModelStudentProfileFilterInput | null,
+export type ListNCEStudentProfilesQueryVariables = {
+  filter?: ModelNCEStudentProfileFilterInput | null,
   limit?: number | null,
   nextToken?: string | null,
 };
 
-export type ListStudentProfilesQuery = {
-  listStudentProfiles?:  {
-    __typename: "ModelStudentProfileConnection",
+export type ListNCEStudentProfilesQuery = {
+  listNCEStudentProfiles?:  {
+    __typename: "ModelNCEStudentProfileConnection",
     items:  Array< {
-      __typename: "StudentProfile",
+      __typename: "NCEStudentProfile",
       id: string,
       name: string,
       email: string,
@@ -669,13 +669,13 @@ export type ListStudentProfilesQuery = {
   } | null,
 };
 
-export type GetUserSettingsQueryVariables = {
+export type GetNCEUserSettingsQueryVariables = {
   id: string,
 };
 
-export type GetUserSettingsQuery = {
-  getUserSettings?:  {
-    __typename: "UserSettings",
+export type GetNCEUserSettingsQuery = {
+  getNCEUserSettings?:  {
+    __typename: "NCEUserSettings",
     id: string,
     notificationsEnabled: boolean,
     darkModeEnabled: boolean,
@@ -687,17 +687,17 @@ export type GetUserSettingsQuery = {
   } | null,
 };
 
-export type ListUserSettingsQueryVariables = {
-  filter?: ModelUserSettingsFilterInput | null,
+export type ListNCEUserSettingsQueryVariables = {
+  filter?: ModelNCEUserSettingsFilterInput | null,
   limit?: number | null,
   nextToken?: string | null,
 };
 
-export type ListUserSettingsQuery = {
-  listUserSettings?:  {
-    __typename: "ModelUserSettingsConnection",
+export type ListNCEUserSettingsQuery = {
+  listNCEUserSettings?:  {
+    __typename: "ModelNCEUserSettingsConnection",
     items:  Array< {
-      __typename: "UserSettings",
+      __typename: "NCEUserSettings",
       id: string,
       notificationsEnabled: boolean,
       darkModeEnabled: boolean,
@@ -807,14 +807,14 @@ export type OnDeletePrivateNoteSubscription = {
   } | null,
 };
 
-export type OnCreateStudentProfileSubscriptionVariables = {
-  filter?: ModelSubscriptionStudentProfileFilterInput | null,
+export type OnCreateNCEStudentProfileSubscriptionVariables = {
+  filter?: ModelSubscriptionNCEStudentProfileFilterInput | null,
   owner?: string | null,
 };
 
-export type OnCreateStudentProfileSubscription = {
-  onCreateStudentProfile?:  {
-    __typename: "StudentProfile",
+export type OnCreateNCEStudentProfileSubscription = {
+  onCreateNCEStudentProfile?:  {
+    __typename: "NCEStudentProfile",
     id: string,
     name: string,
     email: string,
@@ -825,14 +825,14 @@ export type OnCreateStudentProfileSubscription = {
   } | null,
 };
 
-export type OnUpdateStudentProfileSubscriptionVariables = {
-  filter?: ModelSubscriptionStudentProfileFilterInput | null,
+export type OnUpdateNCEStudentProfileSubscriptionVariables = {
+  filter?: ModelSubscriptionNCEStudentProfileFilterInput | null,
   owner?: string | null,
 };
 
-export type OnUpdateStudentProfileSubscription = {
-  onUpdateStudentProfile?:  {
-    __typename: "StudentProfile",
+export type OnUpdateNCEStudentProfileSubscription = {
+  onUpdateNCEStudentProfile?:  {
+    __typename: "NCEStudentProfile",
     id: string,
     name: string,
     email: string,
@@ -843,14 +843,14 @@ export type OnUpdateStudentProfileSubscription = {
   } | null,
 };
 
-export type OnDeleteStudentProfileSubscriptionVariables = {
-  filter?: ModelSubscriptionStudentProfileFilterInput | null,
+export type OnDeleteNCEStudentProfileSubscriptionVariables = {
+  filter?: ModelSubscriptionNCEStudentProfileFilterInput | null,
   owner?: string | null,
 };
 
-export type OnDeleteStudentProfileSubscription = {
-  onDeleteStudentProfile?:  {
-    __typename: "StudentProfile",
+export type OnDeleteNCEStudentProfileSubscription = {
+  onDeleteNCEStudentProfile?:  {
+    __typename: "NCEStudentProfile",
     id: string,
     name: string,
     email: string,
@@ -861,14 +861,14 @@ export type OnDeleteStudentProfileSubscription = {
   } | null,
 };
 
-export type OnCreateUserSettingsSubscriptionVariables = {
-  filter?: ModelSubscriptionUserSettingsFilterInput | null,
+export type OnCreateNCEUserSettingsSubscriptionVariables = {
+  filter?: ModelSubscriptionNCEUserSettingsFilterInput | null,
   owner?: string | null,
 };
 
-export type OnCreateUserSettingsSubscription = {
-  onCreateUserSettings?:  {
-    __typename: "UserSettings",
+export type OnCreateNCEUserSettingsSubscription = {
+  onCreateNCEUserSettings?:  {
+    __typename: "NCEUserSettings",
     id: string,
     notificationsEnabled: boolean,
     darkModeEnabled: boolean,
@@ -880,14 +880,14 @@ export type OnCreateUserSettingsSubscription = {
   } | null,
 };
 
-export type OnUpdateUserSettingsSubscriptionVariables = {
-  filter?: ModelSubscriptionUserSettingsFilterInput | null,
+export type OnUpdateNCEUserSettingsSubscriptionVariables = {
+  filter?: ModelSubscriptionNCEUserSettingsFilterInput | null,
   owner?: string | null,
 };
 
-export type OnUpdateUserSettingsSubscription = {
-  onUpdateUserSettings?:  {
-    __typename: "UserSettings",
+export type OnUpdateNCEUserSettingsSubscription = {
+  onUpdateNCEUserSettings?:  {
+    __typename: "NCEUserSettings",
     id: string,
     notificationsEnabled: boolean,
     darkModeEnabled: boolean,
@@ -899,14 +899,14 @@ export type OnUpdateUserSettingsSubscription = {
   } | null,
 };
 
-export type OnDeleteUserSettingsSubscriptionVariables = {
-  filter?: ModelSubscriptionUserSettingsFilterInput | null,
+export type OnDeleteNCEUserSettingsSubscriptionVariables = {
+  filter?: ModelSubscriptionNCEUserSettingsFilterInput | null,
   owner?: string | null,
 };
 
-export type OnDeleteUserSettingsSubscription = {
-  onDeleteUserSettings?:  {
-    __typename: "UserSettings",
+export type OnDeleteNCEUserSettingsSubscription = {
+  onDeleteNCEUserSettings?:  {
+    __typename: "NCEUserSettings",
     id: string,
     notificationsEnabled: boolean,
     darkModeEnabled: boolean,

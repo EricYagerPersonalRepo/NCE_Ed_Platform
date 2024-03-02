@@ -104,11 +104,11 @@ export const onDeletePrivateNote = /* GraphQL */ `subscription OnDeletePrivateNo
   APITypes.OnDeletePrivateNoteSubscriptionVariables,
   APITypes.OnDeletePrivateNoteSubscription
 >;
-export const onCreateStudentProfile = /* GraphQL */ `subscription OnCreateStudentProfile(
-  $filter: ModelSubscriptionStudentProfileFilterInput
+export const onCreateNCEStudentProfile = /* GraphQL */ `subscription OnCreateNCEStudentProfile(
+  $filter: ModelSubscriptionNCEStudentProfileFilterInput
   $owner: String
 ) {
-  onCreateStudentProfile(filter: $filter, owner: $owner) {
+  onCreateNCEStudentProfile(filter: $filter, owner: $owner) {
     id
     name
     email
@@ -120,14 +120,14 @@ export const onCreateStudentProfile = /* GraphQL */ `subscription OnCreateStuden
   }
 }
 ` as GeneratedSubscription<
-  APITypes.OnCreateStudentProfileSubscriptionVariables,
-  APITypes.OnCreateStudentProfileSubscription
+  APITypes.OnCreateNCEStudentProfileSubscriptionVariables,
+  APITypes.OnCreateNCEStudentProfileSubscription
 >;
-export const onUpdateStudentProfile = /* GraphQL */ `subscription OnUpdateStudentProfile(
-  $filter: ModelSubscriptionStudentProfileFilterInput
+export const onUpdateNCEStudentProfile = /* GraphQL */ `subscription OnUpdateNCEStudentProfile(
+  $filter: ModelSubscriptionNCEStudentProfileFilterInput
   $owner: String
 ) {
-  onUpdateStudentProfile(filter: $filter, owner: $owner) {
+  onUpdateNCEStudentProfile(filter: $filter, owner: $owner) {
     id
     name
     email
@@ -139,14 +139,14 @@ export const onUpdateStudentProfile = /* GraphQL */ `subscription OnUpdateStuden
   }
 }
 ` as GeneratedSubscription<
-  APITypes.OnUpdateStudentProfileSubscriptionVariables,
-  APITypes.OnUpdateStudentProfileSubscription
+  APITypes.OnUpdateNCEStudentProfileSubscriptionVariables,
+  APITypes.OnUpdateNCEStudentProfileSubscription
 >;
-export const onDeleteStudentProfile = /* GraphQL */ `subscription OnDeleteStudentProfile(
-  $filter: ModelSubscriptionStudentProfileFilterInput
+export const onDeleteNCEStudentProfile = /* GraphQL */ `subscription OnDeleteNCEStudentProfile(
+  $filter: ModelSubscriptionNCEStudentProfileFilterInput
   $owner: String
 ) {
-  onDeleteStudentProfile(filter: $filter, owner: $owner) {
+  onDeleteNCEStudentProfile(filter: $filter, owner: $owner) {
     id
     name
     email
@@ -158,14 +158,14 @@ export const onDeleteStudentProfile = /* GraphQL */ `subscription OnDeleteStuden
   }
 }
 ` as GeneratedSubscription<
-  APITypes.OnDeleteStudentProfileSubscriptionVariables,
-  APITypes.OnDeleteStudentProfileSubscription
+  APITypes.OnDeleteNCEStudentProfileSubscriptionVariables,
+  APITypes.OnDeleteNCEStudentProfileSubscription
 >;
-export const onCreateUserSettings = /* GraphQL */ `subscription OnCreateUserSettings(
-  $filter: ModelSubscriptionUserSettingsFilterInput
+export const onCreateNCEUserSettings = /* GraphQL */ `subscription OnCreateNCEUserSettings(
+  $filter: ModelSubscriptionNCEUserSettingsFilterInput
   $owner: String
 ) {
-  onCreateUserSettings(filter: $filter, owner: $owner) {
+  onCreateNCEUserSettings(filter: $filter, owner: $owner) {
     id
     notificationsEnabled
     darkModeEnabled
@@ -178,14 +178,14 @@ export const onCreateUserSettings = /* GraphQL */ `subscription OnCreateUserSett
   }
 }
 ` as GeneratedSubscription<
-  APITypes.OnCreateUserSettingsSubscriptionVariables,
-  APITypes.OnCreateUserSettingsSubscription
+  APITypes.OnCreateNCEUserSettingsSubscriptionVariables,
+  APITypes.OnCreateNCEUserSettingsSubscription
 >;
-export const onUpdateUserSettings = /* GraphQL */ `subscription OnUpdateUserSettings(
-  $filter: ModelSubscriptionUserSettingsFilterInput
+export const onUpdateNCEUserSettings = /* GraphQL */ `subscription OnUpdateNCEUserSettings(
+  $filter: ModelSubscriptionNCEUserSettingsFilterInput
   $owner: String
 ) {
-  onUpdateUserSettings(filter: $filter, owner: $owner) {
+  onUpdateNCEUserSettings(filter: $filter, owner: $owner) {
     id
     notificationsEnabled
     darkModeEnabled
@@ -198,14 +198,14 @@ export const onUpdateUserSettings = /* GraphQL */ `subscription OnUpdateUserSett
   }
 }
 ` as GeneratedSubscription<
-  APITypes.OnUpdateUserSettingsSubscriptionVariables,
-  APITypes.OnUpdateUserSettingsSubscription
+  APITypes.OnUpdateNCEUserSettingsSubscriptionVariables,
+  APITypes.OnUpdateNCEUserSettingsSubscription
 >;
-export const onDeleteUserSettings = /* GraphQL */ `subscription OnDeleteUserSettings(
-  $filter: ModelSubscriptionUserSettingsFilterInput
+export const onDeleteNCEUserSettings = /* GraphQL */ `subscription OnDeleteNCEUserSettings(
+  $filter: ModelSubscriptionNCEUserSettingsFilterInput
   $owner: String
 ) {
-  onDeleteUserSettings(filter: $filter, owner: $owner) {
+  onDeleteNCEUserSettings(filter: $filter, owner: $owner) {
     id
     notificationsEnabled
     darkModeEnabled
@@ -218,6 +218,6 @@ export const onDeleteUserSettings = /* GraphQL */ `subscription OnDeleteUserSett
   }
 }
 ` as GeneratedSubscription<
-  APITypes.OnDeleteUserSettingsSubscriptionVariables,
-  APITypes.OnDeleteUserSettingsSubscription
+  APITypes.OnDeleteNCEUserSettingsSubscriptionVariables,
+  APITypes.OnDeleteNCEUserSettingsSubscription
 >;

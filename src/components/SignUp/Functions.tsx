@@ -9,7 +9,7 @@ export const handlePostTfaWorkflow = async ({signUpHooks}:any) => {
         const signInResult = await handleSignIn({ username,password })
 
         if (signInResult.isSignedIn) {
-            const profileInput= { id:signUpHooks.cognitoUserID, cognitoUserID:signUpHooks.cognitoUserID, name:signUpHooks.name, email:signUpHooks.username, birthdate:signUpHooks.birthday }
+            const profileInput= { id:signUpHooks.id, name:signUpHooks.name, email:signUpHooks.username, birthdate:signUpHooks.birthday }
             const profileResult = await handleCreateStudentProfile(profileInput)
             if (profileResult.isSignedUp) {
                 console.log("Signed up!")//window.location.href = '/StudentProfile'
@@ -51,7 +51,7 @@ export async function handleSignUp(signUpHooks:SignUpHooks) {
         }
 
         if(response.userId){
-            signUpHooks.setCognitoUserID(response.userId)
+            signUpHooks.setId(response.userId)
         }
     } catch (e:any) {
         let errorMessage = ThrowSignUpError(e.name)
