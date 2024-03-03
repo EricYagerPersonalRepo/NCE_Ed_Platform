@@ -8,111 +8,6 @@ type GeneratedMutation<InputType, OutputType> = string & {
   __generatedMutationOutput: OutputType;
 };
 
-export const createTask = /* GraphQL */ `mutation CreateTask(
-  $input: CreateTaskInput!
-  $condition: ModelTaskConditionInput
-) {
-  createTask(input: $input, condition: $condition) {
-    id
-    title
-    description
-    status
-    createdAt
-    updatedAt
-    __typename
-  }
-}
-` as GeneratedMutation<
-  APITypes.CreateTaskMutationVariables,
-  APITypes.CreateTaskMutation
->;
-export const updateTask = /* GraphQL */ `mutation UpdateTask(
-  $input: UpdateTaskInput!
-  $condition: ModelTaskConditionInput
-) {
-  updateTask(input: $input, condition: $condition) {
-    id
-    title
-    description
-    status
-    createdAt
-    updatedAt
-    __typename
-  }
-}
-` as GeneratedMutation<
-  APITypes.UpdateTaskMutationVariables,
-  APITypes.UpdateTaskMutation
->;
-export const deleteTask = /* GraphQL */ `mutation DeleteTask(
-  $input: DeleteTaskInput!
-  $condition: ModelTaskConditionInput
-) {
-  deleteTask(input: $input, condition: $condition) {
-    id
-    title
-    description
-    status
-    createdAt
-    updatedAt
-    __typename
-  }
-}
-` as GeneratedMutation<
-  APITypes.DeleteTaskMutationVariables,
-  APITypes.DeleteTaskMutation
->;
-export const createPrivateNote = /* GraphQL */ `mutation CreatePrivateNote(
-  $input: CreatePrivateNoteInput!
-  $condition: ModelPrivateNoteConditionInput
-) {
-  createPrivateNote(input: $input, condition: $condition) {
-    id
-    content
-    createdAt
-    updatedAt
-    owner
-    __typename
-  }
-}
-` as GeneratedMutation<
-  APITypes.CreatePrivateNoteMutationVariables,
-  APITypes.CreatePrivateNoteMutation
->;
-export const updatePrivateNote = /* GraphQL */ `mutation UpdatePrivateNote(
-  $input: UpdatePrivateNoteInput!
-  $condition: ModelPrivateNoteConditionInput
-) {
-  updatePrivateNote(input: $input, condition: $condition) {
-    id
-    content
-    createdAt
-    updatedAt
-    owner
-    __typename
-  }
-}
-` as GeneratedMutation<
-  APITypes.UpdatePrivateNoteMutationVariables,
-  APITypes.UpdatePrivateNoteMutation
->;
-export const deletePrivateNote = /* GraphQL */ `mutation DeletePrivateNote(
-  $input: DeletePrivateNoteInput!
-  $condition: ModelPrivateNoteConditionInput
-) {
-  deletePrivateNote(input: $input, condition: $condition) {
-    id
-    content
-    createdAt
-    updatedAt
-    owner
-    __typename
-  }
-}
-` as GeneratedMutation<
-  APITypes.DeletePrivateNoteMutationVariables,
-  APITypes.DeletePrivateNoteMutation
->;
 export const createNCEStudentProfile = /* GraphQL */ `mutation CreateNCEStudentProfile(
   $input: CreateNCEStudentProfileInput!
   $condition: ModelNCEStudentProfileConditionInput
@@ -229,4 +124,106 @@ export const deleteNCEUserSettings = /* GraphQL */ `mutation DeleteNCEUserSettin
 ` as GeneratedMutation<
   APITypes.DeleteNCEUserSettingsMutationVariables,
   APITypes.DeleteNCEUserSettingsMutation
+>;
+export const createBroadcastNotification = /* GraphQL */ `mutation CreateBroadcastNotification(
+  $input: CreateBroadcastNotificationInput!
+  $condition: ModelBroadcastNotificationConditionInput
+) {
+  createBroadcastNotification(input: $input, condition: $condition) {
+    id
+    message
+    createdAt
+    type
+    updatedAt
+    __typename
+  }
+}
+` as GeneratedMutation<
+  APITypes.CreateBroadcastNotificationMutationVariables,
+  APITypes.CreateBroadcastNotificationMutation
+>;
+export const updateBroadcastNotification = /* GraphQL */ `mutation UpdateBroadcastNotification(
+  $input: UpdateBroadcastNotificationInput!
+  $condition: ModelBroadcastNotificationConditionInput
+) {
+  updateBroadcastNotification(input: $input, condition: $condition) {
+    id
+    message
+    createdAt
+    type
+    updatedAt
+    __typename
+  }
+}
+` as GeneratedMutation<
+  APITypes.UpdateBroadcastNotificationMutationVariables,
+  APITypes.UpdateBroadcastNotificationMutation
+>;
+export const deleteBroadcastNotification = /* GraphQL */ `mutation DeleteBroadcastNotification(
+  $input: DeleteBroadcastNotificationInput!
+  $condition: ModelBroadcastNotificationConditionInput
+) {
+  deleteBroadcastNotification(input: $input, condition: $condition) {
+    id
+    message
+    createdAt
+    type
+    updatedAt
+    __typename
+  }
+}
+` as GeneratedMutation<
+  APITypes.DeleteBroadcastNotificationMutationVariables,
+  APITypes.DeleteBroadcastNotificationMutation
+>;
+export const createUserNotificationRead = /* GraphQL */ `mutation CreateUserNotificationRead(
+  $input: CreateUserNotificationReadInput!
+  $condition: ModelUserNotificationReadConditionInput
+) {
+  createUserNotificationRead(input: $input, condition: $condition) {
+    id
+    notificationID
+    readAt
+    createdAt
+    updatedAt
+    __typename
+  }
+}
+` as GeneratedMutation<
+  APITypes.CreateUserNotificationReadMutationVariables,
+  APITypes.CreateUserNotificationReadMutation
+>;
+export const updateUserNotificationRead = /* GraphQL */ `mutation UpdateUserNotificationRead(
+  $input: UpdateUserNotificationReadInput!
+  $condition: ModelUserNotificationReadConditionInput
+) {
+  updateUserNotificationRead(input: $input, condition: $condition) {
+    id
+    notificationID
+    readAt
+    createdAt
+    updatedAt
+    __typename
+  }
+}
+` as GeneratedMutation<
+  APITypes.UpdateUserNotificationReadMutationVariables,
+  APITypes.UpdateUserNotificationReadMutation
+>;
+export const deleteUserNotificationRead = /* GraphQL */ `mutation DeleteUserNotificationRead(
+  $input: DeleteUserNotificationReadInput!
+  $condition: ModelUserNotificationReadConditionInput
+) {
+  deleteUserNotificationRead(input: $input, condition: $condition) {
+    id
+    notificationID
+    readAt
+    createdAt
+    updatedAt
+    __typename
+  }
+}
+` as GeneratedMutation<
+  APITypes.DeleteUserNotificationReadMutationVariables,
+  APITypes.DeleteUserNotificationReadMutation
 >;

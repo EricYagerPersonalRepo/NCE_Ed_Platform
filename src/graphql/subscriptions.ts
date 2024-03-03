@@ -8,102 +8,6 @@ type GeneratedSubscription<InputType, OutputType> = string & {
   __generatedSubscriptionOutput: OutputType;
 };
 
-export const onCreateTask = /* GraphQL */ `subscription OnCreateTask($filter: ModelSubscriptionTaskFilterInput) {
-  onCreateTask(filter: $filter) {
-    id
-    title
-    description
-    status
-    createdAt
-    updatedAt
-    __typename
-  }
-}
-` as GeneratedSubscription<
-  APITypes.OnCreateTaskSubscriptionVariables,
-  APITypes.OnCreateTaskSubscription
->;
-export const onUpdateTask = /* GraphQL */ `subscription OnUpdateTask($filter: ModelSubscriptionTaskFilterInput) {
-  onUpdateTask(filter: $filter) {
-    id
-    title
-    description
-    status
-    createdAt
-    updatedAt
-    __typename
-  }
-}
-` as GeneratedSubscription<
-  APITypes.OnUpdateTaskSubscriptionVariables,
-  APITypes.OnUpdateTaskSubscription
->;
-export const onDeleteTask = /* GraphQL */ `subscription OnDeleteTask($filter: ModelSubscriptionTaskFilterInput) {
-  onDeleteTask(filter: $filter) {
-    id
-    title
-    description
-    status
-    createdAt
-    updatedAt
-    __typename
-  }
-}
-` as GeneratedSubscription<
-  APITypes.OnDeleteTaskSubscriptionVariables,
-  APITypes.OnDeleteTaskSubscription
->;
-export const onCreatePrivateNote = /* GraphQL */ `subscription OnCreatePrivateNote(
-  $filter: ModelSubscriptionPrivateNoteFilterInput
-  $owner: String
-) {
-  onCreatePrivateNote(filter: $filter, owner: $owner) {
-    id
-    content
-    createdAt
-    updatedAt
-    owner
-    __typename
-  }
-}
-` as GeneratedSubscription<
-  APITypes.OnCreatePrivateNoteSubscriptionVariables,
-  APITypes.OnCreatePrivateNoteSubscription
->;
-export const onUpdatePrivateNote = /* GraphQL */ `subscription OnUpdatePrivateNote(
-  $filter: ModelSubscriptionPrivateNoteFilterInput
-  $owner: String
-) {
-  onUpdatePrivateNote(filter: $filter, owner: $owner) {
-    id
-    content
-    createdAt
-    updatedAt
-    owner
-    __typename
-  }
-}
-` as GeneratedSubscription<
-  APITypes.OnUpdatePrivateNoteSubscriptionVariables,
-  APITypes.OnUpdatePrivateNoteSubscription
->;
-export const onDeletePrivateNote = /* GraphQL */ `subscription OnDeletePrivateNote(
-  $filter: ModelSubscriptionPrivateNoteFilterInput
-  $owner: String
-) {
-  onDeletePrivateNote(filter: $filter, owner: $owner) {
-    id
-    content
-    createdAt
-    updatedAt
-    owner
-    __typename
-  }
-}
-` as GeneratedSubscription<
-  APITypes.OnDeletePrivateNoteSubscriptionVariables,
-  APITypes.OnDeletePrivateNoteSubscription
->;
 export const onCreateNCEStudentProfile = /* GraphQL */ `subscription OnCreateNCEStudentProfile(
   $filter: ModelSubscriptionNCEStudentProfileFilterInput
   $owner: String
@@ -220,4 +124,100 @@ export const onDeleteNCEUserSettings = /* GraphQL */ `subscription OnDeleteNCEUs
 ` as GeneratedSubscription<
   APITypes.OnDeleteNCEUserSettingsSubscriptionVariables,
   APITypes.OnDeleteNCEUserSettingsSubscription
+>;
+export const onCreateBroadcastNotification = /* GraphQL */ `subscription OnCreateBroadcastNotification(
+  $filter: ModelSubscriptionBroadcastNotificationFilterInput
+) {
+  onCreateBroadcastNotification(filter: $filter) {
+    id
+    message
+    createdAt
+    type
+    updatedAt
+    __typename
+  }
+}
+` as GeneratedSubscription<
+  APITypes.OnCreateBroadcastNotificationSubscriptionVariables,
+  APITypes.OnCreateBroadcastNotificationSubscription
+>;
+export const onUpdateBroadcastNotification = /* GraphQL */ `subscription OnUpdateBroadcastNotification(
+  $filter: ModelSubscriptionBroadcastNotificationFilterInput
+) {
+  onUpdateBroadcastNotification(filter: $filter) {
+    id
+    message
+    createdAt
+    type
+    updatedAt
+    __typename
+  }
+}
+` as GeneratedSubscription<
+  APITypes.OnUpdateBroadcastNotificationSubscriptionVariables,
+  APITypes.OnUpdateBroadcastNotificationSubscription
+>;
+export const onDeleteBroadcastNotification = /* GraphQL */ `subscription OnDeleteBroadcastNotification(
+  $filter: ModelSubscriptionBroadcastNotificationFilterInput
+) {
+  onDeleteBroadcastNotification(filter: $filter) {
+    id
+    message
+    createdAt
+    type
+    updatedAt
+    __typename
+  }
+}
+` as GeneratedSubscription<
+  APITypes.OnDeleteBroadcastNotificationSubscriptionVariables,
+  APITypes.OnDeleteBroadcastNotificationSubscription
+>;
+export const onCreateUserNotificationRead = /* GraphQL */ `subscription OnCreateUserNotificationRead(
+  $filter: ModelSubscriptionUserNotificationReadFilterInput
+) {
+  onCreateUserNotificationRead(filter: $filter) {
+    id
+    notificationID
+    readAt
+    createdAt
+    updatedAt
+    __typename
+  }
+}
+` as GeneratedSubscription<
+  APITypes.OnCreateUserNotificationReadSubscriptionVariables,
+  APITypes.OnCreateUserNotificationReadSubscription
+>;
+export const onUpdateUserNotificationRead = /* GraphQL */ `subscription OnUpdateUserNotificationRead(
+  $filter: ModelSubscriptionUserNotificationReadFilterInput
+) {
+  onUpdateUserNotificationRead(filter: $filter) {
+    id
+    notificationID
+    readAt
+    createdAt
+    updatedAt
+    __typename
+  }
+}
+` as GeneratedSubscription<
+  APITypes.OnUpdateUserNotificationReadSubscriptionVariables,
+  APITypes.OnUpdateUserNotificationReadSubscription
+>;
+export const onDeleteUserNotificationRead = /* GraphQL */ `subscription OnDeleteUserNotificationRead(
+  $filter: ModelSubscriptionUserNotificationReadFilterInput
+) {
+  onDeleteUserNotificationRead(filter: $filter) {
+    id
+    notificationID
+    readAt
+    createdAt
+    updatedAt
+    __typename
+  }
+}
+` as GeneratedSubscription<
+  APITypes.OnDeleteUserNotificationReadSubscriptionVariables,
+  APITypes.OnDeleteUserNotificationReadSubscription
 >;

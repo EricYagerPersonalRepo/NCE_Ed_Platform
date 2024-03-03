@@ -8,74 +8,6 @@ type GeneratedQuery<InputType, OutputType> = string & {
   __generatedQueryOutput: OutputType;
 };
 
-export const getTask = /* GraphQL */ `query GetTask($id: ID!) {
-  getTask(id: $id) {
-    id
-    title
-    description
-    status
-    createdAt
-    updatedAt
-    __typename
-  }
-}
-` as GeneratedQuery<APITypes.GetTaskQueryVariables, APITypes.GetTaskQuery>;
-export const listTasks = /* GraphQL */ `query ListTasks(
-  $filter: ModelTaskFilterInput
-  $limit: Int
-  $nextToken: String
-) {
-  listTasks(filter: $filter, limit: $limit, nextToken: $nextToken) {
-    items {
-      id
-      title
-      description
-      status
-      createdAt
-      updatedAt
-      __typename
-    }
-    nextToken
-    __typename
-  }
-}
-` as GeneratedQuery<APITypes.ListTasksQueryVariables, APITypes.ListTasksQuery>;
-export const getPrivateNote = /* GraphQL */ `query GetPrivateNote($id: ID!) {
-  getPrivateNote(id: $id) {
-    id
-    content
-    createdAt
-    updatedAt
-    owner
-    __typename
-  }
-}
-` as GeneratedQuery<
-  APITypes.GetPrivateNoteQueryVariables,
-  APITypes.GetPrivateNoteQuery
->;
-export const listPrivateNotes = /* GraphQL */ `query ListPrivateNotes(
-  $filter: ModelPrivateNoteFilterInput
-  $limit: Int
-  $nextToken: String
-) {
-  listPrivateNotes(filter: $filter, limit: $limit, nextToken: $nextToken) {
-    items {
-      id
-      content
-      createdAt
-      updatedAt
-      owner
-      __typename
-    }
-    nextToken
-    __typename
-  }
-}
-` as GeneratedQuery<
-  APITypes.ListPrivateNotesQueryVariables,
-  APITypes.ListPrivateNotesQuery
->;
 export const getNCEStudentProfile = /* GraphQL */ `query GetNCEStudentProfile($id: ID!) {
   getNCEStudentProfile(id: $id) {
     id
@@ -161,4 +93,84 @@ export const listNCEUserSettings = /* GraphQL */ `query ListNCEUserSettings(
 ` as GeneratedQuery<
   APITypes.ListNCEUserSettingsQueryVariables,
   APITypes.ListNCEUserSettingsQuery
+>;
+export const getBroadcastNotification = /* GraphQL */ `query GetBroadcastNotification($id: ID!) {
+  getBroadcastNotification(id: $id) {
+    id
+    message
+    createdAt
+    type
+    updatedAt
+    __typename
+  }
+}
+` as GeneratedQuery<
+  APITypes.GetBroadcastNotificationQueryVariables,
+  APITypes.GetBroadcastNotificationQuery
+>;
+export const listBroadcastNotifications = /* GraphQL */ `query ListBroadcastNotifications(
+  $filter: ModelBroadcastNotificationFilterInput
+  $limit: Int
+  $nextToken: String
+) {
+  listBroadcastNotifications(
+    filter: $filter
+    limit: $limit
+    nextToken: $nextToken
+  ) {
+    items {
+      id
+      message
+      createdAt
+      type
+      updatedAt
+      __typename
+    }
+    nextToken
+    __typename
+  }
+}
+` as GeneratedQuery<
+  APITypes.ListBroadcastNotificationsQueryVariables,
+  APITypes.ListBroadcastNotificationsQuery
+>;
+export const getUserNotificationRead = /* GraphQL */ `query GetUserNotificationRead($id: ID!) {
+  getUserNotificationRead(id: $id) {
+    id
+    notificationID
+    readAt
+    createdAt
+    updatedAt
+    __typename
+  }
+}
+` as GeneratedQuery<
+  APITypes.GetUserNotificationReadQueryVariables,
+  APITypes.GetUserNotificationReadQuery
+>;
+export const listUserNotificationReads = /* GraphQL */ `query ListUserNotificationReads(
+  $filter: ModelUserNotificationReadFilterInput
+  $limit: Int
+  $nextToken: String
+) {
+  listUserNotificationReads(
+    filter: $filter
+    limit: $limit
+    nextToken: $nextToken
+  ) {
+    items {
+      id
+      notificationID
+      readAt
+      createdAt
+      updatedAt
+      __typename
+    }
+    nextToken
+    __typename
+  }
+}
+` as GeneratedQuery<
+  APITypes.ListUserNotificationReadsQueryVariables,
+  APITypes.ListUserNotificationReadsQuery
 >;

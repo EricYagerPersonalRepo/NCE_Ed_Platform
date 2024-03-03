@@ -2,20 +2,20 @@
 /* eslint-disable */
 //  This file was automatically generated and should not be edited.
 
-export type CreateTaskInput = {
+export type CreateNCEStudentProfileInput = {
   id?: string | null,
-  title: string,
-  description?: string | null,
-  status?: string | null,
+  name: string,
+  email: string,
+  birthdate: string,
 };
 
-export type ModelTaskConditionInput = {
-  title?: ModelStringInput | null,
-  description?: ModelStringInput | null,
-  status?: ModelStringInput | null,
-  and?: Array< ModelTaskConditionInput | null > | null,
-  or?: Array< ModelTaskConditionInput | null > | null,
-  not?: ModelTaskConditionInput | null,
+export type ModelNCEStudentProfileConditionInput = {
+  name?: ModelStringInput | null,
+  email?: ModelStringInput | null,
+  birthdate?: ModelStringInput | null,
+  and?: Array< ModelNCEStudentProfileConditionInput | null > | null,
+  or?: Array< ModelNCEStudentProfileConditionInput | null > | null,
+  not?: ModelNCEStudentProfileConditionInput | null,
 };
 
 export type ModelStringInput = {
@@ -56,73 +56,6 @@ export type ModelSizeInput = {
   ge?: number | null,
   gt?: number | null,
   between?: Array< number | null > | null,
-};
-
-export type Task = {
-  __typename: "Task",
-  id: string,
-  title: string,
-  description?: string | null,
-  status?: string | null,
-  createdAt: string,
-  updatedAt: string,
-};
-
-export type UpdateTaskInput = {
-  id: string,
-  title?: string | null,
-  description?: string | null,
-  status?: string | null,
-};
-
-export type DeleteTaskInput = {
-  id: string,
-};
-
-export type CreatePrivateNoteInput = {
-  id?: string | null,
-  content: string,
-};
-
-export type ModelPrivateNoteConditionInput = {
-  content?: ModelStringInput | null,
-  and?: Array< ModelPrivateNoteConditionInput | null > | null,
-  or?: Array< ModelPrivateNoteConditionInput | null > | null,
-  not?: ModelPrivateNoteConditionInput | null,
-};
-
-export type PrivateNote = {
-  __typename: "PrivateNote",
-  id: string,
-  content: string,
-  createdAt: string,
-  updatedAt: string,
-  owner?: string | null,
-};
-
-export type UpdatePrivateNoteInput = {
-  id: string,
-  content?: string | null,
-};
-
-export type DeletePrivateNoteInput = {
-  id: string,
-};
-
-export type CreateNCEStudentProfileInput = {
-  id?: string | null,
-  name: string,
-  email: string,
-  birthdate: string,
-};
-
-export type ModelNCEStudentProfileConditionInput = {
-  name?: ModelStringInput | null,
-  email?: ModelStringInput | null,
-  birthdate?: ModelStringInput | null,
-  and?: Array< ModelNCEStudentProfileConditionInput | null > | null,
-  or?: Array< ModelNCEStudentProfileConditionInput | null > | null,
-  not?: ModelNCEStudentProfileConditionInput | null,
 };
 
 export type NCEStudentProfile = {
@@ -196,14 +129,66 @@ export type DeleteNCEUserSettingsInput = {
   id: string,
 };
 
-export type ModelTaskFilterInput = {
-  id?: ModelIDInput | null,
-  title?: ModelStringInput | null,
-  description?: ModelStringInput | null,
-  status?: ModelStringInput | null,
-  and?: Array< ModelTaskFilterInput | null > | null,
-  or?: Array< ModelTaskFilterInput | null > | null,
-  not?: ModelTaskFilterInput | null,
+export type CreateBroadcastNotificationInput = {
+  id?: string | null,
+  message: string,
+  createdAt?: string | null,
+  type: NotificationType,
+};
+
+export enum NotificationType {
+  MESSAGE = "MESSAGE",
+  ALERT = "ALERT",
+  REMINDER = "REMINDER",
+}
+
+
+export type ModelBroadcastNotificationConditionInput = {
+  message?: ModelStringInput | null,
+  createdAt?: ModelStringInput | null,
+  type?: ModelNotificationTypeInput | null,
+  and?: Array< ModelBroadcastNotificationConditionInput | null > | null,
+  or?: Array< ModelBroadcastNotificationConditionInput | null > | null,
+  not?: ModelBroadcastNotificationConditionInput | null,
+};
+
+export type ModelNotificationTypeInput = {
+  eq?: NotificationType | null,
+  ne?: NotificationType | null,
+};
+
+export type BroadcastNotification = {
+  __typename: "BroadcastNotification",
+  id: string,
+  message: string,
+  createdAt: string,
+  type: NotificationType,
+  updatedAt: string,
+};
+
+export type UpdateBroadcastNotificationInput = {
+  id: string,
+  message?: string | null,
+  createdAt?: string | null,
+  type?: NotificationType | null,
+};
+
+export type DeleteBroadcastNotificationInput = {
+  id: string,
+};
+
+export type CreateUserNotificationReadInput = {
+  id?: string | null,
+  notificationID: string,
+  readAt?: string | null,
+};
+
+export type ModelUserNotificationReadConditionInput = {
+  notificationID?: ModelIDInput | null,
+  readAt?: ModelStringInput | null,
+  and?: Array< ModelUserNotificationReadConditionInput | null > | null,
+  or?: Array< ModelUserNotificationReadConditionInput | null > | null,
+  not?: ModelUserNotificationReadConditionInput | null,
 };
 
 export type ModelIDInput = {
@@ -222,24 +207,23 @@ export type ModelIDInput = {
   size?: ModelSizeInput | null,
 };
 
-export type ModelTaskConnection = {
-  __typename: "ModelTaskConnection",
-  items:  Array<Task | null >,
-  nextToken?: string | null,
+export type UserNotificationRead = {
+  __typename: "UserNotificationRead",
+  id: string,
+  notificationID: string,
+  readAt?: string | null,
+  createdAt: string,
+  updatedAt: string,
 };
 
-export type ModelPrivateNoteFilterInput = {
-  id?: ModelIDInput | null,
-  content?: ModelStringInput | null,
-  and?: Array< ModelPrivateNoteFilterInput | null > | null,
-  or?: Array< ModelPrivateNoteFilterInput | null > | null,
-  not?: ModelPrivateNoteFilterInput | null,
+export type UpdateUserNotificationReadInput = {
+  id: string,
+  notificationID?: string | null,
+  readAt?: string | null,
 };
 
-export type ModelPrivateNoteConnection = {
-  __typename: "ModelPrivateNoteConnection",
-  items:  Array<PrivateNote | null >,
-  nextToken?: string | null,
+export type DeleteUserNotificationReadInput = {
+  id: string,
 };
 
 export type ModelNCEStudentProfileFilterInput = {
@@ -275,13 +259,44 @@ export type ModelNCEUserSettingsConnection = {
   nextToken?: string | null,
 };
 
-export type ModelSubscriptionTaskFilterInput = {
+export type ModelBroadcastNotificationFilterInput = {
+  id?: ModelIDInput | null,
+  message?: ModelStringInput | null,
+  createdAt?: ModelStringInput | null,
+  type?: ModelNotificationTypeInput | null,
+  and?: Array< ModelBroadcastNotificationFilterInput | null > | null,
+  or?: Array< ModelBroadcastNotificationFilterInput | null > | null,
+  not?: ModelBroadcastNotificationFilterInput | null,
+};
+
+export type ModelBroadcastNotificationConnection = {
+  __typename: "ModelBroadcastNotificationConnection",
+  items:  Array<BroadcastNotification | null >,
+  nextToken?: string | null,
+};
+
+export type ModelUserNotificationReadFilterInput = {
+  id?: ModelIDInput | null,
+  notificationID?: ModelIDInput | null,
+  readAt?: ModelStringInput | null,
+  and?: Array< ModelUserNotificationReadFilterInput | null > | null,
+  or?: Array< ModelUserNotificationReadFilterInput | null > | null,
+  not?: ModelUserNotificationReadFilterInput | null,
+};
+
+export type ModelUserNotificationReadConnection = {
+  __typename: "ModelUserNotificationReadConnection",
+  items:  Array<UserNotificationRead | null >,
+  nextToken?: string | null,
+};
+
+export type ModelSubscriptionNCEStudentProfileFilterInput = {
   id?: ModelSubscriptionIDInput | null,
-  title?: ModelSubscriptionStringInput | null,
-  description?: ModelSubscriptionStringInput | null,
-  status?: ModelSubscriptionStringInput | null,
-  and?: Array< ModelSubscriptionTaskFilterInput | null > | null,
-  or?: Array< ModelSubscriptionTaskFilterInput | null > | null,
+  name?: ModelSubscriptionStringInput | null,
+  email?: ModelSubscriptionStringInput | null,
+  birthdate?: ModelSubscriptionStringInput | null,
+  and?: Array< ModelSubscriptionNCEStudentProfileFilterInput | null > | null,
+  or?: Array< ModelSubscriptionNCEStudentProfileFilterInput | null > | null,
 };
 
 export type ModelSubscriptionIDInput = {
@@ -314,22 +329,6 @@ export type ModelSubscriptionStringInput = {
   notIn?: Array< string | null > | null,
 };
 
-export type ModelSubscriptionPrivateNoteFilterInput = {
-  id?: ModelSubscriptionIDInput | null,
-  content?: ModelSubscriptionStringInput | null,
-  and?: Array< ModelSubscriptionPrivateNoteFilterInput | null > | null,
-  or?: Array< ModelSubscriptionPrivateNoteFilterInput | null > | null,
-};
-
-export type ModelSubscriptionNCEStudentProfileFilterInput = {
-  id?: ModelSubscriptionIDInput | null,
-  name?: ModelSubscriptionStringInput | null,
-  email?: ModelSubscriptionStringInput | null,
-  birthdate?: ModelSubscriptionStringInput | null,
-  and?: Array< ModelSubscriptionNCEStudentProfileFilterInput | null > | null,
-  or?: Array< ModelSubscriptionNCEStudentProfileFilterInput | null > | null,
-};
-
 export type ModelSubscriptionNCEUserSettingsFilterInput = {
   id?: ModelSubscriptionIDInput | null,
   notificationsEnabled?: ModelSubscriptionBooleanInput | null,
@@ -345,103 +344,21 @@ export type ModelSubscriptionBooleanInput = {
   eq?: boolean | null,
 };
 
-export type CreateTaskMutationVariables = {
-  input: CreateTaskInput,
-  condition?: ModelTaskConditionInput | null,
+export type ModelSubscriptionBroadcastNotificationFilterInput = {
+  id?: ModelSubscriptionIDInput | null,
+  message?: ModelSubscriptionStringInput | null,
+  createdAt?: ModelSubscriptionStringInput | null,
+  type?: ModelSubscriptionStringInput | null,
+  and?: Array< ModelSubscriptionBroadcastNotificationFilterInput | null > | null,
+  or?: Array< ModelSubscriptionBroadcastNotificationFilterInput | null > | null,
 };
 
-export type CreateTaskMutation = {
-  createTask?:  {
-    __typename: "Task",
-    id: string,
-    title: string,
-    description?: string | null,
-    status?: string | null,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type UpdateTaskMutationVariables = {
-  input: UpdateTaskInput,
-  condition?: ModelTaskConditionInput | null,
-};
-
-export type UpdateTaskMutation = {
-  updateTask?:  {
-    __typename: "Task",
-    id: string,
-    title: string,
-    description?: string | null,
-    status?: string | null,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type DeleteTaskMutationVariables = {
-  input: DeleteTaskInput,
-  condition?: ModelTaskConditionInput | null,
-};
-
-export type DeleteTaskMutation = {
-  deleteTask?:  {
-    __typename: "Task",
-    id: string,
-    title: string,
-    description?: string | null,
-    status?: string | null,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type CreatePrivateNoteMutationVariables = {
-  input: CreatePrivateNoteInput,
-  condition?: ModelPrivateNoteConditionInput | null,
-};
-
-export type CreatePrivateNoteMutation = {
-  createPrivateNote?:  {
-    __typename: "PrivateNote",
-    id: string,
-    content: string,
-    createdAt: string,
-    updatedAt: string,
-    owner?: string | null,
-  } | null,
-};
-
-export type UpdatePrivateNoteMutationVariables = {
-  input: UpdatePrivateNoteInput,
-  condition?: ModelPrivateNoteConditionInput | null,
-};
-
-export type UpdatePrivateNoteMutation = {
-  updatePrivateNote?:  {
-    __typename: "PrivateNote",
-    id: string,
-    content: string,
-    createdAt: string,
-    updatedAt: string,
-    owner?: string | null,
-  } | null,
-};
-
-export type DeletePrivateNoteMutationVariables = {
-  input: DeletePrivateNoteInput,
-  condition?: ModelPrivateNoteConditionInput | null,
-};
-
-export type DeletePrivateNoteMutation = {
-  deletePrivateNote?:  {
-    __typename: "PrivateNote",
-    id: string,
-    content: string,
-    createdAt: string,
-    updatedAt: string,
-    owner?: string | null,
-  } | null,
+export type ModelSubscriptionUserNotificationReadFilterInput = {
+  id?: ModelSubscriptionIDInput | null,
+  notificationID?: ModelSubscriptionIDInput | null,
+  readAt?: ModelSubscriptionStringInput | null,
+  and?: Array< ModelSubscriptionUserNotificationReadFilterInput | null > | null,
+  or?: Array< ModelSubscriptionUserNotificationReadFilterInput | null > | null,
 };
 
 export type CreateNCEStudentProfileMutationVariables = {
@@ -555,77 +472,99 @@ export type DeleteNCEUserSettingsMutation = {
   } | null,
 };
 
-export type GetTaskQueryVariables = {
-  id: string,
+export type CreateBroadcastNotificationMutationVariables = {
+  input: CreateBroadcastNotificationInput,
+  condition?: ModelBroadcastNotificationConditionInput | null,
 };
 
-export type GetTaskQuery = {
-  getTask?:  {
-    __typename: "Task",
+export type CreateBroadcastNotificationMutation = {
+  createBroadcastNotification?:  {
+    __typename: "BroadcastNotification",
     id: string,
-    title: string,
-    description?: string | null,
-    status?: string | null,
+    message: string,
+    createdAt: string,
+    type: NotificationType,
+    updatedAt: string,
+  } | null,
+};
+
+export type UpdateBroadcastNotificationMutationVariables = {
+  input: UpdateBroadcastNotificationInput,
+  condition?: ModelBroadcastNotificationConditionInput | null,
+};
+
+export type UpdateBroadcastNotificationMutation = {
+  updateBroadcastNotification?:  {
+    __typename: "BroadcastNotification",
+    id: string,
+    message: string,
+    createdAt: string,
+    type: NotificationType,
+    updatedAt: string,
+  } | null,
+};
+
+export type DeleteBroadcastNotificationMutationVariables = {
+  input: DeleteBroadcastNotificationInput,
+  condition?: ModelBroadcastNotificationConditionInput | null,
+};
+
+export type DeleteBroadcastNotificationMutation = {
+  deleteBroadcastNotification?:  {
+    __typename: "BroadcastNotification",
+    id: string,
+    message: string,
+    createdAt: string,
+    type: NotificationType,
+    updatedAt: string,
+  } | null,
+};
+
+export type CreateUserNotificationReadMutationVariables = {
+  input: CreateUserNotificationReadInput,
+  condition?: ModelUserNotificationReadConditionInput | null,
+};
+
+export type CreateUserNotificationReadMutation = {
+  createUserNotificationRead?:  {
+    __typename: "UserNotificationRead",
+    id: string,
+    notificationID: string,
+    readAt?: string | null,
     createdAt: string,
     updatedAt: string,
   } | null,
 };
 
-export type ListTasksQueryVariables = {
-  filter?: ModelTaskFilterInput | null,
-  limit?: number | null,
-  nextToken?: string | null,
+export type UpdateUserNotificationReadMutationVariables = {
+  input: UpdateUserNotificationReadInput,
+  condition?: ModelUserNotificationReadConditionInput | null,
 };
 
-export type ListTasksQuery = {
-  listTasks?:  {
-    __typename: "ModelTaskConnection",
-    items:  Array< {
-      __typename: "Task",
-      id: string,
-      title: string,
-      description?: string | null,
-      status?: string | null,
-      createdAt: string,
-      updatedAt: string,
-    } | null >,
-    nextToken?: string | null,
-  } | null,
-};
-
-export type GetPrivateNoteQueryVariables = {
-  id: string,
-};
-
-export type GetPrivateNoteQuery = {
-  getPrivateNote?:  {
-    __typename: "PrivateNote",
+export type UpdateUserNotificationReadMutation = {
+  updateUserNotificationRead?:  {
+    __typename: "UserNotificationRead",
     id: string,
-    content: string,
+    notificationID: string,
+    readAt?: string | null,
     createdAt: string,
     updatedAt: string,
-    owner?: string | null,
   } | null,
 };
 
-export type ListPrivateNotesQueryVariables = {
-  filter?: ModelPrivateNoteFilterInput | null,
-  limit?: number | null,
-  nextToken?: string | null,
+export type DeleteUserNotificationReadMutationVariables = {
+  input: DeleteUserNotificationReadInput,
+  condition?: ModelUserNotificationReadConditionInput | null,
 };
 
-export type ListPrivateNotesQuery = {
-  listPrivateNotes?:  {
-    __typename: "ModelPrivateNoteConnection",
-    items:  Array< {
-      __typename: "PrivateNote",
-      id: string,
-      content: string,
-      createdAt: string,
-      updatedAt: string,
-      owner?: string | null,
-    } | null >,
-    nextToken?: string | null,
+export type DeleteUserNotificationReadMutation = {
+  deleteUserNotificationRead?:  {
+    __typename: "UserNotificationRead",
+    id: string,
+    notificationID: string,
+    readAt?: string | null,
+    createdAt: string,
+    updatedAt: string,
   } | null,
 };
 
@@ -711,99 +650,75 @@ export type ListNCEUserSettingsQuery = {
   } | null,
 };
 
-export type OnCreateTaskSubscriptionVariables = {
-  filter?: ModelSubscriptionTaskFilterInput | null,
+export type GetBroadcastNotificationQueryVariables = {
+  id: string,
 };
 
-export type OnCreateTaskSubscription = {
-  onCreateTask?:  {
-    __typename: "Task",
+export type GetBroadcastNotificationQuery = {
+  getBroadcastNotification?:  {
+    __typename: "BroadcastNotification",
     id: string,
-    title: string,
-    description?: string | null,
-    status?: string | null,
+    message: string,
+    createdAt: string,
+    type: NotificationType,
+    updatedAt: string,
+  } | null,
+};
+
+export type ListBroadcastNotificationsQueryVariables = {
+  filter?: ModelBroadcastNotificationFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+};
+
+export type ListBroadcastNotificationsQuery = {
+  listBroadcastNotifications?:  {
+    __typename: "ModelBroadcastNotificationConnection",
+    items:  Array< {
+      __typename: "BroadcastNotification",
+      id: string,
+      message: string,
+      createdAt: string,
+      type: NotificationType,
+      updatedAt: string,
+    } | null >,
+    nextToken?: string | null,
+  } | null,
+};
+
+export type GetUserNotificationReadQueryVariables = {
+  id: string,
+};
+
+export type GetUserNotificationReadQuery = {
+  getUserNotificationRead?:  {
+    __typename: "UserNotificationRead",
+    id: string,
+    notificationID: string,
+    readAt?: string | null,
     createdAt: string,
     updatedAt: string,
   } | null,
 };
 
-export type OnUpdateTaskSubscriptionVariables = {
-  filter?: ModelSubscriptionTaskFilterInput | null,
+export type ListUserNotificationReadsQueryVariables = {
+  filter?: ModelUserNotificationReadFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
 };
 
-export type OnUpdateTaskSubscription = {
-  onUpdateTask?:  {
-    __typename: "Task",
-    id: string,
-    title: string,
-    description?: string | null,
-    status?: string | null,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type OnDeleteTaskSubscriptionVariables = {
-  filter?: ModelSubscriptionTaskFilterInput | null,
-};
-
-export type OnDeleteTaskSubscription = {
-  onDeleteTask?:  {
-    __typename: "Task",
-    id: string,
-    title: string,
-    description?: string | null,
-    status?: string | null,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type OnCreatePrivateNoteSubscriptionVariables = {
-  filter?: ModelSubscriptionPrivateNoteFilterInput | null,
-  owner?: string | null,
-};
-
-export type OnCreatePrivateNoteSubscription = {
-  onCreatePrivateNote?:  {
-    __typename: "PrivateNote",
-    id: string,
-    content: string,
-    createdAt: string,
-    updatedAt: string,
-    owner?: string | null,
-  } | null,
-};
-
-export type OnUpdatePrivateNoteSubscriptionVariables = {
-  filter?: ModelSubscriptionPrivateNoteFilterInput | null,
-  owner?: string | null,
-};
-
-export type OnUpdatePrivateNoteSubscription = {
-  onUpdatePrivateNote?:  {
-    __typename: "PrivateNote",
-    id: string,
-    content: string,
-    createdAt: string,
-    updatedAt: string,
-    owner?: string | null,
-  } | null,
-};
-
-export type OnDeletePrivateNoteSubscriptionVariables = {
-  filter?: ModelSubscriptionPrivateNoteFilterInput | null,
-  owner?: string | null,
-};
-
-export type OnDeletePrivateNoteSubscription = {
-  onDeletePrivateNote?:  {
-    __typename: "PrivateNote",
-    id: string,
-    content: string,
-    createdAt: string,
-    updatedAt: string,
-    owner?: string | null,
+export type ListUserNotificationReadsQuery = {
+  listUserNotificationReads?:  {
+    __typename: "ModelUserNotificationReadConnection",
+    items:  Array< {
+      __typename: "UserNotificationRead",
+      id: string,
+      notificationID: string,
+      readAt?: string | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null >,
+    nextToken?: string | null,
   } | null,
 };
 
@@ -915,5 +830,95 @@ export type OnDeleteNCEUserSettingsSubscription = {
     createdAt: string,
     updatedAt: string,
     owner?: string | null,
+  } | null,
+};
+
+export type OnCreateBroadcastNotificationSubscriptionVariables = {
+  filter?: ModelSubscriptionBroadcastNotificationFilterInput | null,
+};
+
+export type OnCreateBroadcastNotificationSubscription = {
+  onCreateBroadcastNotification?:  {
+    __typename: "BroadcastNotification",
+    id: string,
+    message: string,
+    createdAt: string,
+    type: NotificationType,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnUpdateBroadcastNotificationSubscriptionVariables = {
+  filter?: ModelSubscriptionBroadcastNotificationFilterInput | null,
+};
+
+export type OnUpdateBroadcastNotificationSubscription = {
+  onUpdateBroadcastNotification?:  {
+    __typename: "BroadcastNotification",
+    id: string,
+    message: string,
+    createdAt: string,
+    type: NotificationType,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnDeleteBroadcastNotificationSubscriptionVariables = {
+  filter?: ModelSubscriptionBroadcastNotificationFilterInput | null,
+};
+
+export type OnDeleteBroadcastNotificationSubscription = {
+  onDeleteBroadcastNotification?:  {
+    __typename: "BroadcastNotification",
+    id: string,
+    message: string,
+    createdAt: string,
+    type: NotificationType,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnCreateUserNotificationReadSubscriptionVariables = {
+  filter?: ModelSubscriptionUserNotificationReadFilterInput | null,
+};
+
+export type OnCreateUserNotificationReadSubscription = {
+  onCreateUserNotificationRead?:  {
+    __typename: "UserNotificationRead",
+    id: string,
+    notificationID: string,
+    readAt?: string | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnUpdateUserNotificationReadSubscriptionVariables = {
+  filter?: ModelSubscriptionUserNotificationReadFilterInput | null,
+};
+
+export type OnUpdateUserNotificationReadSubscription = {
+  onUpdateUserNotificationRead?:  {
+    __typename: "UserNotificationRead",
+    id: string,
+    notificationID: string,
+    readAt?: string | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnDeleteUserNotificationReadSubscriptionVariables = {
+  filter?: ModelSubscriptionUserNotificationReadFilterInput | null,
+};
+
+export type OnDeleteUserNotificationReadSubscription = {
+  onDeleteUserNotificationRead?:  {
+    __typename: "UserNotificationRead",
+    id: string,
+    notificationID: string,
+    readAt?: string | null,
+    createdAt: string,
+    updatedAt: string,
   } | null,
 };
