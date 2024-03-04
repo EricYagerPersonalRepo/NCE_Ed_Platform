@@ -244,13 +244,13 @@ export const Authenticated_UserHeaderMenu = ({anchorEl, open, handleClose}:any) 
     const router = useRouter()
     
 
-    const handleMyCourses = () => {
+    const handleSettingsClick = () => {
         handleClose() // Close the menu
         router.push('/StudentProfile') // Redirect to the Account page
     }
 
-    const handleLogout = async () => {
-        const logger = new ConsoleLogger('handleLogout in Authenticated_UserHeaderMenu')
+    const handleLogoutClick = async () => {
+        const logger = new ConsoleLogger('handleLogoutClick in Authenticated_UserHeaderMenu')
         try {
             await signOut()
             handleClose()
@@ -268,10 +268,10 @@ export const Authenticated_UserHeaderMenu = ({anchorEl, open, handleClose}:any) 
             open={open}
             onClose={handleClose}
         >
-            <MenuItem onClick={handleMyCourses}>
-                <Button color="inherit">My Courses</Button>
+            <MenuItem onClick={handleSettingsClick}>
+                <Button color="inherit">Settings</Button>
             </MenuItem>
-            <MenuItem onClick={handleLogout}>
+            <MenuItem onClick={handleLogoutClick}>
                 <Button color="inherit">Logout</Button>
             </MenuItem>
         </Menu>
