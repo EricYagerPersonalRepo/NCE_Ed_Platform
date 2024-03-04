@@ -2,7 +2,7 @@ import React from 'react';
 import { Container} from '@mui/material';
 import {LogInForm} from '@/src/components/LogIn';
 
-const LogIn = ({loggedIn}:any) => {
+const LogIn = () => {
   return (
     <Container maxWidth="sm">
       <LogInForm />
