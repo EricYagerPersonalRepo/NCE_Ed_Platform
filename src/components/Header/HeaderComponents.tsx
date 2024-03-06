@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react'
-import { Avatar, Button, Grid, IconButton, Menu, MenuItem, Typography } from '@mui/material'
-import { AccountCircle, MoreVert } from '@mui/icons-material'
+import { Avatar, Badge, Button, Grid, IconButton, Menu, MenuItem, Typography } from '@mui/material'
+import { AccountCircle, MoreVert, Notifications } from '@mui/icons-material'
 import { useRouter } from 'next/router'
 import { signOut } from 'aws-amplify/auth'
 import { loginButtonStyle, signUpButtonStyle } from '@/src/style/HeaderStyle'
 import { ConsoleLogger } from 'aws-amplify/utils'
+import { getBroadcastNotificationsQuery } from '@/src/functions/Notifications'
 
 /**
  * CommonHeaderComponent - Displays the brand image in the header.
@@ -48,16 +49,16 @@ export const CommonHeaderComponent: React.FC = () => {
  */
 
 export const UnauthenticatedHeaderMenuOptions = ({isMobile}:any) => {
-    const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
-    const open = Boolean(anchorEl)
+    const [anchorElUser, setanchorElUser] = useState<null | HTMLElement>(null)
+    const open = Boolean(anchorElUser)
     const router = useRouter()
 
-    const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-        setAnchorEl(event.currentTarget)
+    const handleUserClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+        setanchorElUser(event.currentTarget)
     }
 
-    const handleClose = () => {
-        setAnchorEl(null)
+    const handleUserClose = () => {
+        setanchorElUser(null)
     }
 
     const handleLoginClick = () => {
@@ -76,17 +77,17 @@ export const UnauthenticatedHeaderMenuOptions = ({isMobile}:any) => {
                         aria-label="more"
                         aria-controls="long-menu"
                         aria-haspopup="true"
-                        onClick={handleClick}
+                        onClick={handleUserClick}
                         color="default"
                     >
                         <MoreVert />
                     </IconButton>
                     <Menu
                         id="long-menu"
-                        anchorEl={anchorEl}
+                        anchorEl={anchorElUser}
                         keepMounted
                         open={open}
-                        onClose={handleClose}
+                        onClose={handleUserClose}
                     >
                         <MenuItem onClick={handleSignUpClick}>
                             <Button color="inherit">Sign Up</Button>
@@ -140,35 +141,85 @@ export const UnauthenticatedHeaderButtons_Mobile: React.FC = () => {
  * 
  * This component renders an avatar icon button in the web application's header for authenticated users.
  * The avatar is conditionally rendered based on the `avatarUrl` prop. If an avatar URL is provided, it
- * displays the user's avatar; otherwise, it defaults to a generic account circle icon. Clicking the avatar
+ * displays the user's avatar otherwise, it defaults to a generic account circle icon. Clicking the avatar
  * icon triggers a dropdown menu with user account-related actions. The component manages the dropdown's
  * open/close state using local component state and provides handlers for opening and closing the menu.
  * 
- * @param {any} avatarUrl - The URL of the user's avatar image. If present, the avatar is displayed; otherwise, a default icon is used.
+ * @param {any} avatarUrl - The URL of the user's avatar image. If present, the avatar is displayed otherwise, a default icon is used.
  * 
  * @returns {JSX.Element} - A container with an avatar icon button that toggles a dropdown menu for user account actions.
  */
 
 export const UserAccountButtons_Web = ({ avatarUrl }: any) => {
-    const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
-    const open = Boolean(anchorEl)
+    const [anchorElUser, setanchorElUser] = useState<null | HTMLElement>(null)
+    const [anchorElNotifications, setanchorElNotifications] = useState<null | HTMLElement>(null)
+    const [notifications, setNotifications] = useState([])
 
-    const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-        setAnchorEl(event.currentTarget)
+    const open = Boolean(anchorElUser)
+
+    const handleUserClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+        setanchorElUser(event.currentTarget)
     }
 
-    const handleClose = () => {
-        setAnchorEl(null)
+    const handleUserClose = () => {
+        setanchorElUser(null)
     }
+
+    const handleNotificationClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+        setanchorElNotifications(event.currentTarget)
+    }
+
+    const handleNotificationsClose = () => {
+        setanchorElNotifications(null)
+    }
+
+    useEffect(()=>{
+        const fetchNotifications = async () => {
+            try {
+                const payload:any = await getBroadcastNotificationsQuery()
+                setNotifications(payload)
+            } catch (error) {
+                console.error(error)
+            }
+        }
+    
+        fetchNotifications()
+    },[])
+
+    
 
     return (
         <Grid container justifyContent="flex-end" style={{ flexGrow: 1 }}>
             <Grid item>
                 <IconButton
+                    aria-label="notifications"
+                    color="inherit"
+                    onClick={handleNotificationClick}
+                    style={{marginRight:"30px"}}
+                >
+                    <Badge badgeContent={notificationsDropDown.length} color="error">
+                        <Notifications color="action"/>
+                    </Badge>
+                </IconButton>
+                <Menu
+                    id="notification-menu"
+                    anchorEl={anchorElNotifications}
+                    keepMounted
+                    open={Boolean(anchorElNotifications)}
+                    onClose={handleNotificationsClose}
+                >
+                {notifications.map((notification:any, index) => (
+                    <MenuItem key={index} >
+                        {notification.message}
+                    </MenuItem>
+                ))}
+                </Menu>
+
+                <IconButton
                     aria-label="account of current user"
                     aria-controls="menu-appbar"
                     aria-haspopup="true"
-                    onClick={handleClick}
+                    onClick={handleUserClick}
                     color="inherit"
                 >
                     {avatarUrl ? (
@@ -179,12 +230,13 @@ export const UserAccountButtons_Web = ({ avatarUrl }: any) => {
                         </Avatar>
                     )}
                 </IconButton>
-                <Authenticated_UserHeaderMenu anchorEl={anchorEl} open={open} handleClose={handleClose} />
+                <Authenticated_UserHeaderMenu anchorElUser={anchorElUser} open={open} handleUserClose={handleUserClose} />
             </Grid>
         </Grid>
     )
 }
 
+{/*<Avatar src={avatarUrl} />*/}
 /**
  * Component for displaying user account options for mobile view.
  * 
@@ -193,15 +245,15 @@ export const UserAccountButtons_Web = ({ avatarUrl }: any) => {
  * It handles the opening and closing of the dropdown menu for mobile layouts.
  */
 export const UserAccountButtons_Mobile: React.FC = () => {
-    const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
-    const open = Boolean(anchorEl)
+    const [anchorElUser, setanchorElUser] = useState<null | HTMLElement>(null)
+    const open = Boolean(anchorElUser)
 
-    const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-        setAnchorEl(event.currentTarget)
+    const handleUserClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+        setanchorElUser(event.currentTarget)
     }
 
-    const handleClose = () => {
-        setAnchorEl(null)
+    const handleUserClose = () => {
+        setanchorElUser(null)
     }
 
     return (
@@ -211,12 +263,12 @@ export const UserAccountButtons_Mobile: React.FC = () => {
                     aria-label="more"
                     aria-controls="long-menu"
                     aria-haspopup="true"
-                    onClick={handleClick}
+                    onClick={handleUserClick}
                     color="default"
                 >
                     <MoreVert />
                 </IconButton>
-                <Authenticated_UserHeaderMenu anchorEl = {anchorEl} open={open} handleClose={handleClose}/>
+                <Authenticated_UserHeaderMenu anchorElUser = {anchorElUser} open={open} handleUserClose={handleUserClose}/>
             </Grid>
         </Grid>
     )
@@ -227,25 +279,25 @@ export const UserAccountButtons_Mobile: React.FC = () => {
  * 
  * This component provides a dropdown menu for authenticated users, offering navigation options to
  * "My Courses" and a logout functionality. The menu is triggered by an IconButton in the parent
- * component and utilizes the `anchorEl` prop for positioning. The `open` prop controls the visibility
- * of the dropdown, and the `handleClose` function is used to close the menu upon selecting an option
+ * component and utilizes the `anchorElUser` prop for positioning. The `open` prop controls the visibility
+ * of the dropdown, and the `handleUserClose` function is used to close the menu upon selecting an option
  * or clicking outside. Navigation is handled using the Next.js `useRouter` hook, ensuring a seamless
  * SPA experience. The logout functionality is implemented with an async `signOut` function, which, upon
  * success, redirects the user to the homepage.
  * 
- * @param {any} anchorEl - The element to anchor the dropdown menu to.
+ * @param {any} anchorElUser - The element to anchor the dropdown menu to.
  * @param {any} open - A boolean controlling the visibility of the dropdown menu.
- * @param {any} handleClose - A function to close the dropdown menu.
+ * @param {any} handleUserClose - A function to close the dropdown menu.
  * 
  * @returns {JSX.Element} - A dropdown menu with options for "My Courses" and "Logout" for authenticated users.
  */
 
-export const Authenticated_UserHeaderMenu = ({anchorEl, open, handleClose}:any) => {
+export const Authenticated_UserHeaderMenu = ({anchorElUser, open, handleUserClose}:any) => {
     const router = useRouter()
     
 
     const handleSettingsClick = () => {
-        handleClose() // Close the menu
+        handleUserClose() // Close the menu
         router.push('/StudentProfile') // Redirect to the Account page
     }
 
@@ -253,7 +305,7 @@ export const Authenticated_UserHeaderMenu = ({anchorEl, open, handleClose}:any) 
         const logger = new ConsoleLogger('handleLogoutClick in Authenticated_UserHeaderMenu')
         try {
             await signOut()
-            handleClose()
+            handleUserClose()
             router.push('/')
         } catch (error) {
             logger.error(error)
@@ -261,19 +313,52 @@ export const Authenticated_UserHeaderMenu = ({anchorEl, open, handleClose}:any) 
     }
 
     return(
+        <div id="authenticated-user-menu">
+            <Menu
+                id="long-menu"
+                anchorEl={anchorElUser}
+                keepMounted
+                open={open}
+                onClose={handleUserClose}
+            >
+                <MenuItem onClick={handleSettingsClick}>
+                    <Button color="inherit">Settings</Button>
+                </MenuItem>
+                <MenuItem onClick={handleLogoutClick}>
+                    <Button color="inherit">Logout</Button>
+                </MenuItem>
+            </Menu>
+            <Menu
+                id="long-menu"
+                anchorEl={anchorElUser}
+                keepMounted
+                open={open}
+                onClose={handleUserClose}
+            >
+                <MenuItem onClick={handleSettingsClick}>
+                    <Button color="inherit">Settings</Button>
+                </MenuItem>
+                <MenuItem onClick={handleLogoutClick}>
+                    <Button color="inherit">Logout</Button>
+                </MenuItem>
+            </Menu>
+        </div>
+    )
+}
+
+export const notificationsDropDown = async({anchorElNotifications, open, handleNotificationsClose}:any) => {
+    return(
         <Menu
-            id="long-menu"
-            anchorEl={anchorEl}
-            keepMounted
-            open={open}
-            onClose={handleClose}
+          id="notification-menu"
+          anchorEl={anchorElNotifications}
+          keepMounted
+          open={anchorElNotifications}
+          onClose={handleNotificationsClose}
         >
-            <MenuItem onClick={handleSettingsClick}>
-                <Button color="inherit">Settings</Button>
-            </MenuItem>
-            <MenuItem onClick={handleLogoutClick}>
-                <Button color="inherit">Logout</Button>
-            </MenuItem>
+          {/* Placeholder MenuItems, replace with your logic for notifications */}
+          <MenuItem onClick={handleNotificationsClose}>Notification 1</MenuItem>
+          <MenuItem onClick={handleNotificationsClose}>Notification 2</MenuItem>
+          <MenuItem onClick={handleNotificationsClose}>Notification 3</MenuItem>
         </Menu>
     )
 }

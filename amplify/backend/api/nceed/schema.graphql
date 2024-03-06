@@ -29,6 +29,7 @@ type BroadcastNotification
   { allow: private, operations: [read] }
 ]){
   id: ID!
+  title: String
   message: String!
   createdAt: AWSDateTime!
   type: NotificationType!

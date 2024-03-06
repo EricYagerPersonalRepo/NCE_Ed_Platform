@@ -130,6 +130,7 @@ export const onCreateBroadcastNotification = /* GraphQL */ `subscription OnCreat
 ) {
   onCreateBroadcastNotification(filter: $filter) {
     id
+    title
     message
     createdAt
     type
@@ -146,6 +147,7 @@ export const onUpdateBroadcastNotification = /* GraphQL */ `subscription OnUpdat
 ) {
   onUpdateBroadcastNotification(filter: $filter) {
     id
+    title
     message
     createdAt
     type
@@ -162,6 +164,7 @@ export const onDeleteBroadcastNotification = /* GraphQL */ `subscription OnDelet
 ) {
   onDeleteBroadcastNotification(filter: $filter) {
     id
+    title
     message
     createdAt
     type

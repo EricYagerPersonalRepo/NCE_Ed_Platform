@@ -2,7 +2,7 @@ import React, { useEffect } from 'react'
 import { Container, Grid, Modal } from '@mui/material'
 import { BirthdayInput, EmailInput, NameInput, PasswordInput, ZipInput, TwoFactorAuthForm } from './Components'
 import { useSignUpHooks } from '@/src/state/SignUpHooks'
-import { handleConfirmSignup } from './Functions'
+import { handleConfirmSignup } from '@/src/functions/SignUp'
 
 /**
  * MobileSignUp Component - Manages the sign-up process for mobile users with a step-by-step navigation approach.

@@ -1,8 +1,8 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react'
-import { checkAuthStatus } from '../functions/AuthFunctions'
+import { checkAuthStatus } from '../functions/AuthX'
 import { getCurrentUser } from 'aws-amplify/auth';
-import { getPresignedUrl } from '../functions/AmplifyFunctions';
-import { uploadFileToS3 } from '../functions/StorageFunctions';
+import { getPresignedUrl } from '../functions/Amplify';
+import { uploadFileToS3 } from '../functions/Storage';
 
 /**
  * Type definition for the AuthContext.

@@ -131,6 +131,7 @@ export type DeleteNCEUserSettingsInput = {
 
 export type CreateBroadcastNotificationInput = {
   id?: string | null,
+  title?: string | null,
   message: string,
   createdAt?: string | null,
   type: NotificationType,
@@ -144,6 +145,7 @@ export enum NotificationType {
 
 
 export type ModelBroadcastNotificationConditionInput = {
+  title?: ModelStringInput | null,
   message?: ModelStringInput | null,
   createdAt?: ModelStringInput | null,
   type?: ModelNotificationTypeInput | null,
@@ -160,6 +162,7 @@ export type ModelNotificationTypeInput = {
 export type BroadcastNotification = {
   __typename: "BroadcastNotification",
   id: string,
+  title?: string | null,
   message: string,
   createdAt: string,
   type: NotificationType,
@@ -168,6 +171,7 @@ export type BroadcastNotification = {
 
 export type UpdateBroadcastNotificationInput = {
   id: string,
+  title?: string | null,
   message?: string | null,
   createdAt?: string | null,
   type?: NotificationType | null,
@@ -261,6 +265,7 @@ export type ModelNCEUserSettingsConnection = {
 
 export type ModelBroadcastNotificationFilterInput = {
   id?: ModelIDInput | null,
+  title?: ModelStringInput | null,
   message?: ModelStringInput | null,
   createdAt?: ModelStringInput | null,
   type?: ModelNotificationTypeInput | null,
@@ -346,6 +351,7 @@ export type ModelSubscriptionBooleanInput = {
 
 export type ModelSubscriptionBroadcastNotificationFilterInput = {
   id?: ModelSubscriptionIDInput | null,
+  title?: ModelSubscriptionStringInput | null,
   message?: ModelSubscriptionStringInput | null,
   createdAt?: ModelSubscriptionStringInput | null,
   type?: ModelSubscriptionStringInput | null,
@@ -481,6 +487,7 @@ export type CreateBroadcastNotificationMutation = {
   createBroadcastNotification?:  {
     __typename: "BroadcastNotification",
     id: string,
+    title?: string | null,
     message: string,
     createdAt: string,
     type: NotificationType,
@@ -497,6 +504,7 @@ export type UpdateBroadcastNotificationMutation = {
   updateBroadcastNotification?:  {
     __typename: "BroadcastNotification",
     id: string,
+    title?: string | null,
     message: string,
     createdAt: string,
     type: NotificationType,
@@ -513,6 +521,7 @@ export type DeleteBroadcastNotificationMutation = {
   deleteBroadcastNotification?:  {
     __typename: "BroadcastNotification",
     id: string,
+    title?: string | null,
     message: string,
     createdAt: string,
     type: NotificationType,
@@ -658,6 +667,7 @@ export type GetBroadcastNotificationQuery = {
   getBroadcastNotification?:  {
     __typename: "BroadcastNotification",
     id: string,
+    title?: string | null,
     message: string,
     createdAt: string,
     type: NotificationType,
@@ -677,6 +687,7 @@ export type ListBroadcastNotificationsQuery = {
     items:  Array< {
       __typename: "BroadcastNotification",
       id: string,
+      title?: string | null,
       message: string,
       createdAt: string,
       type: NotificationType,
@@ -841,6 +852,7 @@ export type OnCreateBroadcastNotificationSubscription = {
   onCreateBroadcastNotification?:  {
     __typename: "BroadcastNotification",
     id: string,
+    title?: string | null,
     message: string,
     createdAt: string,
     type: NotificationType,
@@ -856,6 +868,7 @@ export type OnUpdateBroadcastNotificationSubscription = {
   onUpdateBroadcastNotification?:  {
     __typename: "BroadcastNotification",
     id: string,
+    title?: string | null,
     message: string,
     createdAt: string,
     type: NotificationType,
@@ -871,6 +884,7 @@ export type OnDeleteBroadcastNotificationSubscription = {
   onDeleteBroadcastNotification?:  {
     __typename: "BroadcastNotification",
     id: string,
+    title?: string | null,
     message: string,
     createdAt: string,
     type: NotificationType,

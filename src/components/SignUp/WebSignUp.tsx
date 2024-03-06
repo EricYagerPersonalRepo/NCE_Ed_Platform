@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react'
 import {  Grid, Container, Tabs, Tab, Modal } from '@mui/material'
-import { handleConfirmSignup } from './Functions'
+import { handleConfirmSignup } from '@/src/functions/SignUp'
 import { useSignUpHooks } from '@/src/state/SignUpHooks'
 import { BirthdayInput, EmailInput, NameInput, PasswordInput, ZipInput,  SignUpTabItem, TwoFactorAuthForm } from './Components'
 

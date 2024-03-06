@@ -131,6 +131,7 @@ export const createBroadcastNotification = /* GraphQL */ `mutation CreateBroadca
 ) {
   createBroadcastNotification(input: $input, condition: $condition) {
     id
+    title
     message
     createdAt
     type
@@ -148,6 +149,7 @@ export const updateBroadcastNotification = /* GraphQL */ `mutation UpdateBroadca
 ) {
   updateBroadcastNotification(input: $input, condition: $condition) {
     id
+    title
     message
     createdAt
     type
@@ -165,6 +167,7 @@ export const deleteBroadcastNotification = /* GraphQL */ `mutation DeleteBroadca
 ) {
   deleteBroadcastNotification(input: $input, condition: $condition) {
     id
+    title
     message
     createdAt
     type

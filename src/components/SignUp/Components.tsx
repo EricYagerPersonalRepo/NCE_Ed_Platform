@@ -2,14 +2,14 @@ import React, { useEffect, useRef, useState } from 'react'
 import { TextField, Button, Grid, FormControl, InputLabel, Input, InputAdornment, IconButton, FormHelperText, Typography, Box, CircularProgress  } from '@mui/material'
 import Visibility from '@mui/icons-material/Visibility'
 import VisibilityOff from '@mui/icons-material/VisibilityOff'
-import { ageCaluclatedFromInputBirthday, allowedZipCodes } from '@/src/functions/SignUpFunctions'
+import { ageCaluclatedFromInputBirthday, allowedZipCodes } from '@/src/functions/SignUp'
 import { ErrorOutline, CheckCircle } from '@mui/icons-material'
 import { birthdayPattern, emailPattern, namePattern, SignUpTabItemProps, SignUpTabPanelProps, zipCodePattern } from '@/src/types/SignUpTypes'
-import { fetchCityState } from '@/src/functions/AuthFunctions'
+import { fetchCityState } from '@/src/functions/AuthX'
 import { tfaModalStyle } from '@/styles/AuthStyles'
-import { handleCreateStudentProfile, handleSignIn } from '../../functions/AuthFunctions'
+import { handleCreateStudentProfile, handleSignIn } from '../../functions/AuthX'
 import { useSignUpHooks } from '@/src/state/SignUpHooks'
-import { handleSignUp } from './Functions'
+import { handleSignUp } from '@/src/functions/SignUp'
 
 /**
  * BirthdayInput Component - Manages the input and validation of a user's birthday during sign-up.

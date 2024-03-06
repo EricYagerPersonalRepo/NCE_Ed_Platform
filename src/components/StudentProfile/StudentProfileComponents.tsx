@@ -3,7 +3,7 @@ import { generateClient } from "aws-amplify/api"
 import { getNCEStudentProfile, getNCEUserSettings } from '@/src/graphql/queries'
 import { Box, Tabs, Tab, FormControl, InputLabel, Select, MenuItem, Typography, Grid, Paper, Avatar, Button, TextField, FormControlLabel, Switch } from '@mui/material'
 import { Course } from '@/src/types/StudentProfileTypes'
-import { uploadFileToS3 } from '@/src/functions/StorageFunctions'
+import { uploadFileToS3 } from '@/src/functions/Storage'
 import { getCurrentUser } from 'aws-amplify/auth'
 import { updateNCEStudentProfile, updateNCEUserSettings } from '@/src/graphql/mutations'
 

@@ -5,14 +5,14 @@ import '@aws-amplify/ui-react/styles.css'
 import { Amplify } from 'aws-amplify'
 import { ThemeProvider } from '@aws-amplify/ui-react'
 import studioTheme from '@/src/style/GlobalStyle'
-import { checkAuthStatus } from '@/src/functions/AuthFunctions'
+import { checkAuthStatus } from '@/src/functions/AuthX'
 import { Header } from '@/src/components/Header'
 import { AuthProvider } from '@/src/state/AuthGlobalState'
 import { useMediaQuery, useTheme } from '@mui/material'
 import { useRouter } from 'next/router'
 import { Hub } from 'aws-amplify/utils'
 import { getCurrentUser } from 'aws-amplify/auth'
-import { getPresignedUrl } from '@/src/functions/AmplifyFunctions'
+import { getPresignedUrl } from '@/src/functions/Amplify'
 
 Amplify.configure(amplifyconfiguration, {ssr: true})
 
@@ -115,22 +115,6 @@ const NCE_Education_App = ({ Component, pageProps }:any) => {
         }
         avatarUrlResponse()
     },[userData])
-
-/** 
- * Todo: Implement the serviceworker from /public to cache static assets locally and later for push notifications
- *  useEffect(() => {
-        window.addEventListener('load', () => {
-            console.log("listener")
-            navigator.serviceWorker.register('/service-worker.js').then((registration) => {
-                console.log('Service Worker registered: ', registration);
-            }).catch((registrationError) => {
-                console.log('Service Worker registration failed: ', registrationError);
-            });
-        });
-    }, [])
-*/
-    
-
 
     return (
         <AuthProvider>

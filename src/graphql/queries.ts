@@ -97,6 +97,7 @@ export const listNCEUserSettings = /* GraphQL */ `query ListNCEUserSettings(
 export const getBroadcastNotification = /* GraphQL */ `query GetBroadcastNotification($id: ID!) {
   getBroadcastNotification(id: $id) {
     id
+    title
     message
     createdAt
     type
@@ -120,6 +121,7 @@ export const listBroadcastNotifications = /* GraphQL */ `query ListBroadcastNoti
   ) {
     items {
       id
+      title
       message
       createdAt
       type
