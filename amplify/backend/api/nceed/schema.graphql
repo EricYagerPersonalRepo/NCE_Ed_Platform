@@ -33,13 +33,14 @@ type BroadcastNotification
   message: String!
   createdAt: AWSDateTime!
   type: NotificationType!
+  redirect: String
 }
 
 type UserNotificationRead 
 @model 
 @auth(rules: [
   { allow: groups, groups: ["Admins"], operations: [create, update, read, delete] }
-  { allow: private, operations: [read, update] }
+  { allow: owner, operations: [create, read, update] }
 ]){
   id: ID!
   notificationID: ID!

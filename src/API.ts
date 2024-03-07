@@ -135,6 +135,7 @@ export type CreateBroadcastNotificationInput = {
   message: string,
   createdAt?: string | null,
   type: NotificationType,
+  redirect?: string | null,
 };
 
 export enum NotificationType {
@@ -149,6 +150,7 @@ export type ModelBroadcastNotificationConditionInput = {
   message?: ModelStringInput | null,
   createdAt?: ModelStringInput | null,
   type?: ModelNotificationTypeInput | null,
+  redirect?: ModelStringInput | null,
   and?: Array< ModelBroadcastNotificationConditionInput | null > | null,
   or?: Array< ModelBroadcastNotificationConditionInput | null > | null,
   not?: ModelBroadcastNotificationConditionInput | null,
@@ -166,6 +168,7 @@ export type BroadcastNotification = {
   message: string,
   createdAt: string,
   type: NotificationType,
+  redirect?: string | null,
   updatedAt: string,
 };
 
@@ -175,6 +178,7 @@ export type UpdateBroadcastNotificationInput = {
   message?: string | null,
   createdAt?: string | null,
   type?: NotificationType | null,
+  redirect?: string | null,
 };
 
 export type DeleteBroadcastNotificationInput = {
@@ -218,6 +222,7 @@ export type UserNotificationRead = {
   readAt?: string | null,
   createdAt: string,
   updatedAt: string,
+  owner?: string | null,
 };
 
 export type UpdateUserNotificationReadInput = {
@@ -269,6 +274,7 @@ export type ModelBroadcastNotificationFilterInput = {
   message?: ModelStringInput | null,
   createdAt?: ModelStringInput | null,
   type?: ModelNotificationTypeInput | null,
+  redirect?: ModelStringInput | null,
   and?: Array< ModelBroadcastNotificationFilterInput | null > | null,
   or?: Array< ModelBroadcastNotificationFilterInput | null > | null,
   not?: ModelBroadcastNotificationFilterInput | null,
@@ -355,6 +361,7 @@ export type ModelSubscriptionBroadcastNotificationFilterInput = {
   message?: ModelSubscriptionStringInput | null,
   createdAt?: ModelSubscriptionStringInput | null,
   type?: ModelSubscriptionStringInput | null,
+  redirect?: ModelSubscriptionStringInput | null,
   and?: Array< ModelSubscriptionBroadcastNotificationFilterInput | null > | null,
   or?: Array< ModelSubscriptionBroadcastNotificationFilterInput | null > | null,
 };
@@ -491,6 +498,7 @@ export type CreateBroadcastNotificationMutation = {
     message: string,
     createdAt: string,
     type: NotificationType,
+    redirect?: string | null,
     updatedAt: string,
   } | null,
 };
@@ -508,6 +516,7 @@ export type UpdateBroadcastNotificationMutation = {
     message: string,
     createdAt: string,
     type: NotificationType,
+    redirect?: string | null,
     updatedAt: string,
   } | null,
 };
@@ -525,6 +534,7 @@ export type DeleteBroadcastNotificationMutation = {
     message: string,
     createdAt: string,
     type: NotificationType,
+    redirect?: string | null,
     updatedAt: string,
   } | null,
 };
@@ -542,6 +552,7 @@ export type CreateUserNotificationReadMutation = {
     readAt?: string | null,
     createdAt: string,
     updatedAt: string,
+    owner?: string | null,
   } | null,
 };
 
@@ -558,6 +569,7 @@ export type UpdateUserNotificationReadMutation = {
     readAt?: string | null,
     createdAt: string,
     updatedAt: string,
+    owner?: string | null,
   } | null,
 };
 
@@ -574,6 +586,7 @@ export type DeleteUserNotificationReadMutation = {
     readAt?: string | null,
     createdAt: string,
     updatedAt: string,
+    owner?: string | null,
   } | null,
 };
 
@@ -671,6 +684,7 @@ export type GetBroadcastNotificationQuery = {
     message: string,
     createdAt: string,
     type: NotificationType,
+    redirect?: string | null,
     updatedAt: string,
   } | null,
 };
@@ -691,6 +705,7 @@ export type ListBroadcastNotificationsQuery = {
       message: string,
       createdAt: string,
       type: NotificationType,
+      redirect?: string | null,
       updatedAt: string,
     } | null >,
     nextToken?: string | null,
@@ -709,6 +724,7 @@ export type GetUserNotificationReadQuery = {
     readAt?: string | null,
     createdAt: string,
     updatedAt: string,
+    owner?: string | null,
   } | null,
 };
 
@@ -728,6 +744,7 @@ export type ListUserNotificationReadsQuery = {
       readAt?: string | null,
       createdAt: string,
       updatedAt: string,
+      owner?: string | null,
     } | null >,
     nextToken?: string | null,
   } | null,
@@ -856,6 +873,7 @@ export type OnCreateBroadcastNotificationSubscription = {
     message: string,
     createdAt: string,
     type: NotificationType,
+    redirect?: string | null,
     updatedAt: string,
   } | null,
 };
@@ -872,6 +890,7 @@ export type OnUpdateBroadcastNotificationSubscription = {
     message: string,
     createdAt: string,
     type: NotificationType,
+    redirect?: string | null,
     updatedAt: string,
   } | null,
 };
@@ -888,12 +907,14 @@ export type OnDeleteBroadcastNotificationSubscription = {
     message: string,
     createdAt: string,
     type: NotificationType,
+    redirect?: string | null,
     updatedAt: string,
   } | null,
 };
 
 export type OnCreateUserNotificationReadSubscriptionVariables = {
   filter?: ModelSubscriptionUserNotificationReadFilterInput | null,
+  owner?: string | null,
 };
 
 export type OnCreateUserNotificationReadSubscription = {
@@ -904,11 +925,13 @@ export type OnCreateUserNotificationReadSubscription = {
     readAt?: string | null,
     createdAt: string,
     updatedAt: string,
+    owner?: string | null,
   } | null,
 };
 
 export type OnUpdateUserNotificationReadSubscriptionVariables = {
   filter?: ModelSubscriptionUserNotificationReadFilterInput | null,
+  owner?: string | null,
 };
 
 export type OnUpdateUserNotificationReadSubscription = {
@@ -919,11 +942,13 @@ export type OnUpdateUserNotificationReadSubscription = {
     readAt?: string | null,
     createdAt: string,
     updatedAt: string,
+    owner?: string | null,
   } | null,
 };
 
 export type OnDeleteUserNotificationReadSubscriptionVariables = {
   filter?: ModelSubscriptionUserNotificationReadFilterInput | null,
+  owner?: string | null,
 };
 
 export type OnDeleteUserNotificationReadSubscription = {
@@ -934,5 +959,6 @@ export type OnDeleteUserNotificationReadSubscription = {
     readAt?: string | null,
     createdAt: string,
     updatedAt: string,
+    owner?: string | null,
   } | null,
 };

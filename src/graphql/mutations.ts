@@ -135,6 +135,7 @@ export const createBroadcastNotification = /* GraphQL */ `mutation CreateBroadca
     message
     createdAt
     type
+    redirect
     updatedAt
     __typename
   }
@@ -153,6 +154,7 @@ export const updateBroadcastNotification = /* GraphQL */ `mutation UpdateBroadca
     message
     createdAt
     type
+    redirect
     updatedAt
     __typename
   }
@@ -171,6 +173,7 @@ export const deleteBroadcastNotification = /* GraphQL */ `mutation DeleteBroadca
     message
     createdAt
     type
+    redirect
     updatedAt
     __typename
   }
@@ -189,6 +192,7 @@ export const createUserNotificationRead = /* GraphQL */ `mutation CreateUserNoti
     readAt
     createdAt
     updatedAt
+    owner
     __typename
   }
 }
@@ -206,6 +210,7 @@ export const updateUserNotificationRead = /* GraphQL */ `mutation UpdateUserNoti
     readAt
     createdAt
     updatedAt
+    owner
     __typename
   }
 }
@@ -223,6 +228,7 @@ export const deleteUserNotificationRead = /* GraphQL */ `mutation DeleteUserNoti
     readAt
     createdAt
     updatedAt
+    owner
     __typename
   }
 }

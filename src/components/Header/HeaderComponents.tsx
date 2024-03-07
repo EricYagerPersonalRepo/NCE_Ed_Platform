@@ -1,11 +1,15 @@
 import React, { useEffect, useState } from 'react'
-import { Avatar, Badge, Button, Grid, IconButton, Menu, MenuItem, Typography } from '@mui/material'
+import { Avatar, Badge, Box, Button, Grid, IconButton, Menu, MenuItem, Typography, setRef } from '@mui/material'
 import { AccountCircle, MoreVert, Notifications } from '@mui/icons-material'
 import { useRouter } from 'next/router'
 import { signOut } from 'aws-amplify/auth'
 import { loginButtonStyle, signUpButtonStyle } from '@/src/style/HeaderStyle'
 import { ConsoleLogger } from 'aws-amplify/utils'
-import { getBroadcastNotificationsQuery } from '@/src/functions/Notifications'
+import { getBroadcastNotificationsQuery, markNotificationAsRead } from '@/src/functions/Notifications'
+import { formatDistanceToNow } from 'date-fns'
+import { amplifyApiClient } from '@/src/functions/AuthX'
+import { onCreateBroadcastNotification } from '@/src/graphql/subscriptions'
+import { Notification } from '@/src/types/HeaderTypes'
 
 /**
  * CommonHeaderComponent - Displays the brand image in the header.
@@ -153,7 +157,9 @@ export const UnauthenticatedHeaderButtons_Mobile: React.FC = () => {
 export const UserAccountButtons_Web = ({ avatarUrl }: any) => {
     const [anchorElUser, setanchorElUser] = useState<null | HTMLElement>(null)
     const [anchorElNotifications, setanchorElNotifications] = useState<null | HTMLElement>(null)
-    const [notifications, setNotifications] = useState([])
+    const [notifications, setNotifications] = useState<Notification[]>([])
+    const [notificationsLength, setNotificationsLength] = useState(0)
+    const [refreshSwitch, setRefreshSwitch] = useState(false)
 
     const open = Boolean(anchorElUser)
 
@@ -173,18 +179,64 @@ export const UserAccountButtons_Web = ({ avatarUrl }: any) => {
         setanchorElNotifications(null)
     }
 
+    /**
+     * 
+     * @param notificationID I'm using the refreshSwitch just to trigger the useEffect below to try to live refresh the notifications
+     * read and notification count
+     */
+    const handleNotificationClickEvent = async(notificationID:string) => {
+        const notifications:any = await fetchNotifications()
+        notifications && markNotificationAsRead(notificationID)
+        setRefreshSwitch(!refreshSwitch)
+    }
+
     useEffect(()=>{
-        const fetchNotifications = async () => {
-            try {
-                const payload:any = await getBroadcastNotificationsQuery()
-                setNotifications(payload)
-            } catch (error) {
-                console.error(error)
-            }
+        fetchNotifications()
+    },[refreshSwitch])
+
+    const fetchNotifications = async () => {
+        try {
+            const { newNotificationsCount, notificationsPayload }:any = await getBroadcastNotificationsQuery()
+            setNotifications(notificationsPayload)
+            setNotificationsLength(newNotificationsCount)
+            return notificationsPayload
+        } catch (error) {
+            console.error(error)
+            return null
         }
-    
+    }
+
+    useEffect(()=>{
         fetchNotifications()
     },[])
+
+    useEffect(() => {
+        const createNotificationSub = amplifyApiClient.graphql({ query: onCreateBroadcastNotification }).subscribe({
+            next: ({ data }) => {
+                const newNotification = data.onCreateBroadcastNotification
+    
+                const readNotificationIds = new Set()
+    
+                const notificationToAdd: Notification = {
+                    id: newNotification.id,
+                    title: newNotification.title || null,
+                    message: newNotification.message,
+                    createdAt: newNotification.createdAt,
+                    read: readNotificationIds.has(newNotification.id),
+                    target: newNotification.redirect || null,
+                }
+    
+                setNotifications(notifications => [notificationToAdd, ...notifications])
+                fetchNotifications()
+            },
+            error: (error) => console.warn(error)
+        })
+    
+        return () => {
+            createNotificationSub.unsubscribe()
+        }
+    }, [])
+    
 
     
 
@@ -197,7 +249,7 @@ export const UserAccountButtons_Web = ({ avatarUrl }: any) => {
                     onClick={handleNotificationClick}
                     style={{marginRight:"30px"}}
                 >
-                    <Badge badgeContent={notificationsDropDown.length} color="error">
+                    <Badge badgeContent={notificationsLength} color="error">
                         <Notifications color="action"/>
                     </Badge>
                 </IconButton>
@@ -207,12 +259,38 @@ export const UserAccountButtons_Web = ({ avatarUrl }: any) => {
                     keepMounted
                     open={Boolean(anchorElNotifications)}
                     onClose={handleNotificationsClose}
+                    sx={{width: 300}}
                 >
-                {notifications.map((notification:any, index) => (
-                    <MenuItem key={index} >
-                        {notification.message}
-                    </MenuItem>
-                ))}
+                    {notifications.map((notification:any, index) => (
+                        <MenuItem 
+                            key={index} 
+                            sx={{ 
+                            width: 280, 
+                            whiteSpace: 'normal',
+                            backgroundColor: notification.read ? 'inherit' : '#f0f0f0', // Light grey for unread notifications
+                            }}
+                            onClick={() => handleNotificationClickEvent(notification.id)}
+                        >
+                            <Box display="flex" flexDirection="column" sx={{ maxWidth: '100%' }}>
+                                <Typography variant="body1" component="p" sx={{
+                                    display: '-webkit-box',
+                                    overflow: 'hidden',
+                                    textOverflow: 'ellipsis',
+                                    WebkitLineClamp: 2,
+                                    WebkitBoxOrient: 'vertical',
+                                    wordBreak: 'break-word',
+                                    whiteSpace: 'normal',
+                                    fontWeight: notification.read ? 'normal' : 'bold', // Bold for unread messages
+                                }}>
+                                    {notification.message}
+                                </Typography>
+                                <Typography component="p" variant="body2" style={{ color: 'gray' }}>
+                                    {formatDistanceToNow(new Date(notification.createdAt), { addSuffix: true })}
+                                </Typography>
+                            </Box>
+                        </MenuItem>
+                        ))}
+
                 </Menu>
 
                 <IconButton

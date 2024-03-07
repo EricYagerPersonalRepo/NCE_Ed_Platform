@@ -101,6 +101,7 @@ export const getBroadcastNotification = /* GraphQL */ `query GetBroadcastNotific
     message
     createdAt
     type
+    redirect
     updatedAt
     __typename
   }
@@ -125,6 +126,7 @@ export const listBroadcastNotifications = /* GraphQL */ `query ListBroadcastNoti
       message
       createdAt
       type
+      redirect
       updatedAt
       __typename
     }
@@ -143,6 +145,7 @@ export const getUserNotificationRead = /* GraphQL */ `query GetUserNotificationR
     readAt
     createdAt
     updatedAt
+    owner
     __typename
   }
 }
@@ -166,6 +169,7 @@ export const listUserNotificationReads = /* GraphQL */ `query ListUserNotificati
       readAt
       createdAt
       updatedAt
+      owner
       __typename
     }
     nextToken

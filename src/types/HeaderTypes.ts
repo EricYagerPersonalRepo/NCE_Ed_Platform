@@ -12,3 +12,12 @@ export interface HeaderProps {
     userData?: UserDataProps
     avatarUrl?: String | undefined
 }
+
+export interface Notification {
+    id: string;
+    title: string | null;
+    message: string;
+    createdAt: string;
+    read: boolean;
+    target?: string | null;
+}

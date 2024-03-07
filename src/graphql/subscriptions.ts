@@ -134,6 +134,7 @@ export const onCreateBroadcastNotification = /* GraphQL */ `subscription OnCreat
     message
     createdAt
     type
+    redirect
     updatedAt
     __typename
   }
@@ -151,6 +152,7 @@ export const onUpdateBroadcastNotification = /* GraphQL */ `subscription OnUpdat
     message
     createdAt
     type
+    redirect
     updatedAt
     __typename
   }
@@ -168,6 +170,7 @@ export const onDeleteBroadcastNotification = /* GraphQL */ `subscription OnDelet
     message
     createdAt
     type
+    redirect
     updatedAt
     __typename
   }
@@ -178,13 +181,15 @@ export const onDeleteBroadcastNotification = /* GraphQL */ `subscription OnDelet
 >;
 export const onCreateUserNotificationRead = /* GraphQL */ `subscription OnCreateUserNotificationRead(
   $filter: ModelSubscriptionUserNotificationReadFilterInput
+  $owner: String
 ) {
-  onCreateUserNotificationRead(filter: $filter) {
+  onCreateUserNotificationRead(filter: $filter, owner: $owner) {
     id
     notificationID
     readAt
     createdAt
     updatedAt
+    owner
     __typename
   }
 }
@@ -194,13 +199,15 @@ export const onCreateUserNotificationRead = /* GraphQL */ `subscription OnCreate
 >;
 export const onUpdateUserNotificationRead = /* GraphQL */ `subscription OnUpdateUserNotificationRead(
   $filter: ModelSubscriptionUserNotificationReadFilterInput
+  $owner: String
 ) {
-  onUpdateUserNotificationRead(filter: $filter) {
+  onUpdateUserNotificationRead(filter: $filter, owner: $owner) {
     id
     notificationID
     readAt
     createdAt
     updatedAt
+    owner
     __typename
   }
 }
@@ -210,13 +217,15 @@ export const onUpdateUserNotificationRead = /* GraphQL */ `subscription OnUpdate
 >;
 export const onDeleteUserNotificationRead = /* GraphQL */ `subscription OnDeleteUserNotificationRead(
   $filter: ModelSubscriptionUserNotificationReadFilterInput
+  $owner: String
 ) {
-  onDeleteUserNotificationRead(filter: $filter) {
+  onDeleteUserNotificationRead(filter: $filter, owner: $owner) {
     id
     notificationID
     readAt
     createdAt
     updatedAt
+    owner
     __typename
   }
 }
