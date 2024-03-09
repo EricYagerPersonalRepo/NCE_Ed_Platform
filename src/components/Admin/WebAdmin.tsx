@@ -18,6 +18,7 @@ const WebAdministrativeView = () => {
         variables: { input: 
             {
                 title:title, 
+                targetStudent: "",
                 message:message, 
                 type:type 
             }
