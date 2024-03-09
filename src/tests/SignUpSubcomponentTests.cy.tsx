@@ -1,5 +1,5 @@
 import React from 'react'
-import { SignUpTabItem, SignUpTabPanel, TwoFactorAuthForm } from '../Components'
+import { SignUpTabItem, SignUpTabPanel, TwoFactorAuthForm } from '../components/SignUp/Components'
 import { TextField } from '@mui/material'
 import { mount } from 'cypress/react18'
 import { Button } from '@aws-amplify/ui-react'
