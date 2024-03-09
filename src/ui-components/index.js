@@ -8,8 +8,6 @@ export { default as BroadcastNotificationCreateForm } from "./BroadcastNotificat
 export { default as BroadcastNotificationUpdateForm } from "./BroadcastNotificationUpdateForm";
 export { default as CourseCreateForm } from "./CourseCreateForm";
 export { default as CourseUpdateForm } from "./CourseUpdateForm";
-export { default as ModuleCreateForm } from "./ModuleCreateForm";
-export { default as ModuleUpdateForm } from "./ModuleUpdateForm";
 export { default as NCEStudentProfileCreateForm } from "./NCEStudentProfileCreateForm";
 export { default as NCEStudentProfileUpdateForm } from "./NCEStudentProfileUpdateForm";
 export { default as NCEUserSettingsCreateForm } from "./NCEUserSettingsCreateForm";

@@ -294,9 +294,31 @@ export type Module = {
   id: string,
   title: string,
   description?: string | null,
+  courseID: string,
+  course: Course,
+  lessons?: ModelLessonConnection | null,
   createdAt: string,
   updatedAt: string,
   courseModulesId?: string | null,
+};
+
+export type ModelLessonConnection = {
+  __typename: "ModelLessonConnection",
+  items:  Array<Lesson | null >,
+  nextToken?: string | null,
+};
+
+export type Lesson = {
+  __typename: "Lesson",
+  id: string,
+  title: string,
+  content?: string | null,
+  videoURL?: string | null,
+  moduleID: string,
+  module: Module,
+  createdAt: string,
+  updatedAt: string,
+  moduleLessonsId?: string | null,
 };
 
 export type UpdateCourseInput = {
@@ -316,12 +338,14 @@ export type CreateModuleInput = {
   id?: string | null,
   title: string,
   description?: string | null,
+  courseID: string,
   courseModulesId?: string | null,
 };
 
 export type ModelModuleConditionInput = {
   title?: ModelStringInput | null,
   description?: ModelStringInput | null,
+  courseID?: ModelIDInput | null,
   and?: Array< ModelModuleConditionInput | null > | null,
   or?: Array< ModelModuleConditionInput | null > | null,
   not?: ModelModuleConditionInput | null,
@@ -332,10 +356,44 @@ export type UpdateModuleInput = {
   id: string,
   title?: string | null,
   description?: string | null,
+  courseID?: string | null,
   courseModulesId?: string | null,
 };
 
 export type DeleteModuleInput = {
+  id: string,
+};
+
+export type CreateLessonInput = {
+  id?: string | null,
+  title: string,
+  content?: string | null,
+  videoURL?: string | null,
+  moduleID: string,
+  moduleLessonsId?: string | null,
+};
+
+export type ModelLessonConditionInput = {
+  title?: ModelStringInput | null,
+  content?: ModelStringInput | null,
+  videoURL?: ModelStringInput | null,
+  moduleID?: ModelIDInput | null,
+  and?: Array< ModelLessonConditionInput | null > | null,
+  or?: Array< ModelLessonConditionInput | null > | null,
+  not?: ModelLessonConditionInput | null,
+  moduleLessonsId?: ModelIDInput | null,
+};
+
+export type UpdateLessonInput = {
+  id: string,
+  title?: string | null,
+  content?: string | null,
+  videoURL?: string | null,
+  moduleID?: string | null,
+  moduleLessonsId?: string | null,
+};
+
+export type DeleteLessonInput = {
   id: string,
 };
 
@@ -428,10 +486,23 @@ export type ModelModuleFilterInput = {
   id?: ModelIDInput | null,
   title?: ModelStringInput | null,
   description?: ModelStringInput | null,
+  courseID?: ModelIDInput | null,
   and?: Array< ModelModuleFilterInput | null > | null,
   or?: Array< ModelModuleFilterInput | null > | null,
   not?: ModelModuleFilterInput | null,
   courseModulesId?: ModelIDInput | null,
+};
+
+export type ModelLessonFilterInput = {
+  id?: ModelIDInput | null,
+  title?: ModelStringInput | null,
+  content?: ModelStringInput | null,
+  videoURL?: ModelStringInput | null,
+  moduleID?: ModelIDInput | null,
+  and?: Array< ModelLessonFilterInput | null > | null,
+  or?: Array< ModelLessonFilterInput | null > | null,
+  not?: ModelLessonFilterInput | null,
+  moduleLessonsId?: ModelIDInput | null,
 };
 
 export enum ModelSortDirection {
@@ -439,6 +510,16 @@ export enum ModelSortDirection {
   DESC = "DESC",
 }
 
+
+export type ModelIDKeyConditionInput = {
+  eq?: string | null,
+  le?: string | null,
+  lt?: string | null,
+  ge?: string | null,
+  gt?: string | null,
+  between?: Array< string | null > | null,
+  beginsWith?: string | null,
+};
 
 export type ModelSubscriptionNCEStudentProfileFilterInput = {
   id?: ModelSubscriptionIDInput | null,
@@ -529,8 +610,19 @@ export type ModelSubscriptionModuleFilterInput = {
   id?: ModelSubscriptionIDInput | null,
   title?: ModelSubscriptionStringInput | null,
   description?: ModelSubscriptionStringInput | null,
+  courseID?: ModelSubscriptionIDInput | null,
   and?: Array< ModelSubscriptionModuleFilterInput | null > | null,
   or?: Array< ModelSubscriptionModuleFilterInput | null > | null,
+};
+
+export type ModelSubscriptionLessonFilterInput = {
+  id?: ModelSubscriptionIDInput | null,
+  title?: ModelSubscriptionStringInput | null,
+  content?: ModelSubscriptionStringInput | null,
+  videoURL?: ModelSubscriptionStringInput | null,
+  moduleID?: ModelSubscriptionIDInput | null,
+  and?: Array< ModelSubscriptionLessonFilterInput | null > | null,
+  or?: Array< ModelSubscriptionLessonFilterInput | null > | null,
 };
 
 export type CreateNCEStudentProfileMutationVariables = {
@@ -832,6 +924,22 @@ export type CreateModuleMutation = {
     id: string,
     title: string,
     description?: string | null,
+    courseID: string,
+    course:  {
+      __typename: "Course",
+      id: string,
+      title: string,
+      description?: string | null,
+      subject: CourseSubject,
+      difficulty?: string | null,
+      creator: string,
+      createdAt: string,
+      updatedAt: string,
+    },
+    lessons?:  {
+      __typename: "ModelLessonConnection",
+      nextToken?: string | null,
+    } | null,
     createdAt: string,
     updatedAt: string,
     courseModulesId?: string | null,
@@ -849,6 +957,22 @@ export type UpdateModuleMutation = {
     id: string,
     title: string,
     description?: string | null,
+    courseID: string,
+    course:  {
+      __typename: "Course",
+      id: string,
+      title: string,
+      description?: string | null,
+      subject: CourseSubject,
+      difficulty?: string | null,
+      creator: string,
+      createdAt: string,
+      updatedAt: string,
+    },
+    lessons?:  {
+      __typename: "ModelLessonConnection",
+      nextToken?: string | null,
+    } | null,
     createdAt: string,
     updatedAt: string,
     courseModulesId?: string | null,
@@ -866,9 +990,112 @@ export type DeleteModuleMutation = {
     id: string,
     title: string,
     description?: string | null,
+    courseID: string,
+    course:  {
+      __typename: "Course",
+      id: string,
+      title: string,
+      description?: string | null,
+      subject: CourseSubject,
+      difficulty?: string | null,
+      creator: string,
+      createdAt: string,
+      updatedAt: string,
+    },
+    lessons?:  {
+      __typename: "ModelLessonConnection",
+      nextToken?: string | null,
+    } | null,
     createdAt: string,
     updatedAt: string,
     courseModulesId?: string | null,
+  } | null,
+};
+
+export type CreateLessonMutationVariables = {
+  input: CreateLessonInput,
+  condition?: ModelLessonConditionInput | null,
+};
+
+export type CreateLessonMutation = {
+  createLesson?:  {
+    __typename: "Lesson",
+    id: string,
+    title: string,
+    content?: string | null,
+    videoURL?: string | null,
+    moduleID: string,
+    module:  {
+      __typename: "Module",
+      id: string,
+      title: string,
+      description?: string | null,
+      courseID: string,
+      createdAt: string,
+      updatedAt: string,
+      courseModulesId?: string | null,
+    },
+    createdAt: string,
+    updatedAt: string,
+    moduleLessonsId?: string | null,
+  } | null,
+};
+
+export type UpdateLessonMutationVariables = {
+  input: UpdateLessonInput,
+  condition?: ModelLessonConditionInput | null,
+};
+
+export type UpdateLessonMutation = {
+  updateLesson?:  {
+    __typename: "Lesson",
+    id: string,
+    title: string,
+    content?: string | null,
+    videoURL?: string | null,
+    moduleID: string,
+    module:  {
+      __typename: "Module",
+      id: string,
+      title: string,
+      description?: string | null,
+      courseID: string,
+      createdAt: string,
+      updatedAt: string,
+      courseModulesId?: string | null,
+    },
+    createdAt: string,
+    updatedAt: string,
+    moduleLessonsId?: string | null,
+  } | null,
+};
+
+export type DeleteLessonMutationVariables = {
+  input: DeleteLessonInput,
+  condition?: ModelLessonConditionInput | null,
+};
+
+export type DeleteLessonMutation = {
+  deleteLesson?:  {
+    __typename: "Lesson",
+    id: string,
+    title: string,
+    content?: string | null,
+    videoURL?: string | null,
+    moduleID: string,
+    module:  {
+      __typename: "Module",
+      id: string,
+      title: string,
+      description?: string | null,
+      courseID: string,
+      createdAt: string,
+      updatedAt: string,
+      courseModulesId?: string | null,
+    },
+    createdAt: string,
+    updatedAt: string,
+    moduleLessonsId?: string | null,
   } | null,
 };
 
@@ -1090,6 +1317,22 @@ export type GetModuleQuery = {
     id: string,
     title: string,
     description?: string | null,
+    courseID: string,
+    course:  {
+      __typename: "Course",
+      id: string,
+      title: string,
+      description?: string | null,
+      subject: CourseSubject,
+      difficulty?: string | null,
+      creator: string,
+      createdAt: string,
+      updatedAt: string,
+    },
+    lessons?:  {
+      __typename: "ModelLessonConnection",
+      nextToken?: string | null,
+    } | null,
     createdAt: string,
     updatedAt: string,
     courseModulesId?: string | null,
@@ -1110,9 +1353,62 @@ export type ListModulesQuery = {
       id: string,
       title: string,
       description?: string | null,
+      courseID: string,
       createdAt: string,
       updatedAt: string,
       courseModulesId?: string | null,
+    } | null >,
+    nextToken?: string | null,
+  } | null,
+};
+
+export type GetLessonQueryVariables = {
+  id: string,
+};
+
+export type GetLessonQuery = {
+  getLesson?:  {
+    __typename: "Lesson",
+    id: string,
+    title: string,
+    content?: string | null,
+    videoURL?: string | null,
+    moduleID: string,
+    module:  {
+      __typename: "Module",
+      id: string,
+      title: string,
+      description?: string | null,
+      courseID: string,
+      createdAt: string,
+      updatedAt: string,
+      courseModulesId?: string | null,
+    },
+    createdAt: string,
+    updatedAt: string,
+    moduleLessonsId?: string | null,
+  } | null,
+};
+
+export type ListLessonsQueryVariables = {
+  filter?: ModelLessonFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+};
+
+export type ListLessonsQuery = {
+  listLessons?:  {
+    __typename: "ModelLessonConnection",
+    items:  Array< {
+      __typename: "Lesson",
+      id: string,
+      title: string,
+      content?: string | null,
+      videoURL?: string | null,
+      moduleID: string,
+      createdAt: string,
+      updatedAt: string,
+      moduleLessonsId?: string | null,
     } | null >,
     nextToken?: string | null,
   } | null,
@@ -1139,6 +1435,59 @@ export type CoursesByCreatorQuery = {
       creator: string,
       createdAt: string,
       updatedAt: string,
+    } | null >,
+    nextToken?: string | null,
+  } | null,
+};
+
+export type ModulesByCourseIDAndIdQueryVariables = {
+  courseID: string,
+  id?: ModelIDKeyConditionInput | null,
+  sortDirection?: ModelSortDirection | null,
+  filter?: ModelModuleFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+};
+
+export type ModulesByCourseIDAndIdQuery = {
+  modulesByCourseIDAndId?:  {
+    __typename: "ModelModuleConnection",
+    items:  Array< {
+      __typename: "Module",
+      id: string,
+      title: string,
+      description?: string | null,
+      courseID: string,
+      createdAt: string,
+      updatedAt: string,
+      courseModulesId?: string | null,
+    } | null >,
+    nextToken?: string | null,
+  } | null,
+};
+
+export type LessonsByModuleIDAndIdQueryVariables = {
+  moduleID: string,
+  id?: ModelIDKeyConditionInput | null,
+  sortDirection?: ModelSortDirection | null,
+  filter?: ModelLessonFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+};
+
+export type LessonsByModuleIDAndIdQuery = {
+  lessonsByModuleIDAndId?:  {
+    __typename: "ModelLessonConnection",
+    items:  Array< {
+      __typename: "Lesson",
+      id: string,
+      title: string,
+      content?: string | null,
+      videoURL?: string | null,
+      moduleID: string,
+      createdAt: string,
+      updatedAt: string,
+      moduleLessonsId?: string | null,
     } | null >,
     nextToken?: string | null,
   } | null,
@@ -1436,6 +1785,22 @@ export type OnCreateModuleSubscription = {
     id: string,
     title: string,
     description?: string | null,
+    courseID: string,
+    course:  {
+      __typename: "Course",
+      id: string,
+      title: string,
+      description?: string | null,
+      subject: CourseSubject,
+      difficulty?: string | null,
+      creator: string,
+      createdAt: string,
+      updatedAt: string,
+    },
+    lessons?:  {
+      __typename: "ModelLessonConnection",
+      nextToken?: string | null,
+    } | null,
     createdAt: string,
     updatedAt: string,
     courseModulesId?: string | null,
@@ -1452,6 +1817,22 @@ export type OnUpdateModuleSubscription = {
     id: string,
     title: string,
     description?: string | null,
+    courseID: string,
+    course:  {
+      __typename: "Course",
+      id: string,
+      title: string,
+      description?: string | null,
+      subject: CourseSubject,
+      difficulty?: string | null,
+      creator: string,
+      createdAt: string,
+      updatedAt: string,
+    },
+    lessons?:  {
+      __typename: "ModelLessonConnection",
+      nextToken?: string | null,
+    } | null,
     createdAt: string,
     updatedAt: string,
     courseModulesId?: string | null,
@@ -1468,8 +1849,108 @@ export type OnDeleteModuleSubscription = {
     id: string,
     title: string,
     description?: string | null,
+    courseID: string,
+    course:  {
+      __typename: "Course",
+      id: string,
+      title: string,
+      description?: string | null,
+      subject: CourseSubject,
+      difficulty?: string | null,
+      creator: string,
+      createdAt: string,
+      updatedAt: string,
+    },
+    lessons?:  {
+      __typename: "ModelLessonConnection",
+      nextToken?: string | null,
+    } | null,
     createdAt: string,
     updatedAt: string,
     courseModulesId?: string | null,
+  } | null,
+};
+
+export type OnCreateLessonSubscriptionVariables = {
+  filter?: ModelSubscriptionLessonFilterInput | null,
+};
+
+export type OnCreateLessonSubscription = {
+  onCreateLesson?:  {
+    __typename: "Lesson",
+    id: string,
+    title: string,
+    content?: string | null,
+    videoURL?: string | null,
+    moduleID: string,
+    module:  {
+      __typename: "Module",
+      id: string,
+      title: string,
+      description?: string | null,
+      courseID: string,
+      createdAt: string,
+      updatedAt: string,
+      courseModulesId?: string | null,
+    },
+    createdAt: string,
+    updatedAt: string,
+    moduleLessonsId?: string | null,
+  } | null,
+};
+
+export type OnUpdateLessonSubscriptionVariables = {
+  filter?: ModelSubscriptionLessonFilterInput | null,
+};
+
+export type OnUpdateLessonSubscription = {
+  onUpdateLesson?:  {
+    __typename: "Lesson",
+    id: string,
+    title: string,
+    content?: string | null,
+    videoURL?: string | null,
+    moduleID: string,
+    module:  {
+      __typename: "Module",
+      id: string,
+      title: string,
+      description?: string | null,
+      courseID: string,
+      createdAt: string,
+      updatedAt: string,
+      courseModulesId?: string | null,
+    },
+    createdAt: string,
+    updatedAt: string,
+    moduleLessonsId?: string | null,
+  } | null,
+};
+
+export type OnDeleteLessonSubscriptionVariables = {
+  filter?: ModelSubscriptionLessonFilterInput | null,
+};
+
+export type OnDeleteLessonSubscription = {
+  onDeleteLesson?:  {
+    __typename: "Lesson",
+    id: string,
+    title: string,
+    content?: string | null,
+    videoURL?: string | null,
+    moduleID: string,
+    module:  {
+      __typename: "Module",
+      id: string,
+      title: string,
+      description?: string | null,
+      courseID: string,
+      createdAt: string,
+      updatedAt: string,
+      courseModulesId?: string | null,
+    },
+    createdAt: string,
+    updatedAt: string,
+    moduleLessonsId?: string | null,
   } | null,
 };

@@ -230,6 +230,22 @@ export const getModule = /* GraphQL */ `query GetModule($id: ID!) {
     id
     title
     description
+    courseID
+    course {
+      id
+      title
+      description
+      subject
+      difficulty
+      creator
+      createdAt
+      updatedAt
+      __typename
+    }
+    lessons {
+      nextToken
+      __typename
+    }
     createdAt
     updatedAt
     courseModulesId
@@ -247,6 +263,7 @@ export const listModules = /* GraphQL */ `query ListModules(
       id
       title
       description
+      courseID
       createdAt
       updatedAt
       courseModulesId
@@ -259,6 +276,55 @@ export const listModules = /* GraphQL */ `query ListModules(
 ` as GeneratedQuery<
   APITypes.ListModulesQueryVariables,
   APITypes.ListModulesQuery
+>;
+export const getLesson = /* GraphQL */ `query GetLesson($id: ID!) {
+  getLesson(id: $id) {
+    id
+    title
+    content
+    videoURL
+    moduleID
+    module {
+      id
+      title
+      description
+      courseID
+      createdAt
+      updatedAt
+      courseModulesId
+      __typename
+    }
+    createdAt
+    updatedAt
+    moduleLessonsId
+    __typename
+  }
+}
+` as GeneratedQuery<APITypes.GetLessonQueryVariables, APITypes.GetLessonQuery>;
+export const listLessons = /* GraphQL */ `query ListLessons(
+  $filter: ModelLessonFilterInput
+  $limit: Int
+  $nextToken: String
+) {
+  listLessons(filter: $filter, limit: $limit, nextToken: $nextToken) {
+    items {
+      id
+      title
+      content
+      videoURL
+      moduleID
+      createdAt
+      updatedAt
+      moduleLessonsId
+      __typename
+    }
+    nextToken
+    __typename
+  }
+}
+` as GeneratedQuery<
+  APITypes.ListLessonsQueryVariables,
+  APITypes.ListLessonsQuery
 >;
 export const coursesByCreator = /* GraphQL */ `query CoursesByCreator(
   $creator: ID!
@@ -292,4 +358,73 @@ export const coursesByCreator = /* GraphQL */ `query CoursesByCreator(
 ` as GeneratedQuery<
   APITypes.CoursesByCreatorQueryVariables,
   APITypes.CoursesByCreatorQuery
+>;
+export const modulesByCourseIDAndId = /* GraphQL */ `query ModulesByCourseIDAndId(
+  $courseID: ID!
+  $id: ModelIDKeyConditionInput
+  $sortDirection: ModelSortDirection
+  $filter: ModelModuleFilterInput
+  $limit: Int
+  $nextToken: String
+) {
+  modulesByCourseIDAndId(
+    courseID: $courseID
+    id: $id
+    sortDirection: $sortDirection
+    filter: $filter
+    limit: $limit
+    nextToken: $nextToken
+  ) {
+    items {
+      id
+      title
+      description
+      courseID
+      createdAt
+      updatedAt
+      courseModulesId
+      __typename
+    }
+    nextToken
+    __typename
+  }
+}
+` as GeneratedQuery<
+  APITypes.ModulesByCourseIDAndIdQueryVariables,
+  APITypes.ModulesByCourseIDAndIdQuery
+>;
+export const lessonsByModuleIDAndId = /* GraphQL */ `query LessonsByModuleIDAndId(
+  $moduleID: ID!
+  $id: ModelIDKeyConditionInput
+  $sortDirection: ModelSortDirection
+  $filter: ModelLessonFilterInput
+  $limit: Int
+  $nextToken: String
+) {
+  lessonsByModuleIDAndId(
+    moduleID: $moduleID
+    id: $id
+    sortDirection: $sortDirection
+    filter: $filter
+    limit: $limit
+    nextToken: $nextToken
+  ) {
+    items {
+      id
+      title
+      content
+      videoURL
+      moduleID
+      createdAt
+      updatedAt
+      moduleLessonsId
+      __typename
+    }
+    nextToken
+    __typename
+  }
+}
+` as GeneratedQuery<
+  APITypes.LessonsByModuleIDAndIdQueryVariables,
+  APITypes.LessonsByModuleIDAndIdQuery
 >;

@@ -104,38 +104,8 @@ type Lesson
   videoURL: String
   moduleID: ID! @index(name: "byModule", sortKeyFields: ["id"])
   module: Module! @belongsTo(fields: ["moduleID"])
-  quizzes: [Quiz] @hasMany
-  exercises: [Exercise] @hasMany # STEM-specific interactive exercises
-}
-
-type Exercise 
-@model 
-@auth([
-  { allow: groups, groups: ["Admins"], operations: [create, update, delete, read] }
-  { allow: groups, groups: ["Instructors"], operations: [create, update, read] }
-  { allow: groups, groups: ["Students"], operations: [read] }
-]){
-  id: ID!
-  question: String!
-  solution: String
-  lessonID: ID! @index(name: "byLesson", sortKeyFields: ["id"])
-  lesson: Lesson! @belongsTo(fields: ["lessonID"])
-  exerciseType: ExerciseType!
-  data: AWSJSON # For dynamic content or problem parameters
-}
-
-type Quiz 
-@model 
-@auth([
-  { allow: groups, groups: ["Admins"], operations: [create, update, delete, read] }
-  { allow: groups, groups: ["Instructors"], operations: [create, update, read] }
-  { allow: groups, groups: ["Students"], operations: [read] }
-]){
-  id: ID!
-  title: String!
-  lessonID: ID! @index(name: "byLesson", sortKeyFields: ["id"])
-  lesson: Lesson! @belongsTo(fields: ["lessonID"])
-  #questions: [Question] @hasMany
+  #quizzes: [Quiz] @hasMany
+  #exercises: [Exercise] @hasMany # STEM-specific interactive exercises
 }
 
 enum CourseSubject {

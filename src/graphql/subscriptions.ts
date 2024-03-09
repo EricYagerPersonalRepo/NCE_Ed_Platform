@@ -304,6 +304,22 @@ export const onCreateModule = /* GraphQL */ `subscription OnCreateModule($filter
     id
     title
     description
+    courseID
+    course {
+      id
+      title
+      description
+      subject
+      difficulty
+      creator
+      createdAt
+      updatedAt
+      __typename
+    }
+    lessons {
+      nextToken
+      __typename
+    }
     createdAt
     updatedAt
     courseModulesId
@@ -319,6 +335,22 @@ export const onUpdateModule = /* GraphQL */ `subscription OnUpdateModule($filter
     id
     title
     description
+    courseID
+    course {
+      id
+      title
+      description
+      subject
+      difficulty
+      creator
+      createdAt
+      updatedAt
+      __typename
+    }
+    lessons {
+      nextToken
+      __typename
+    }
     createdAt
     updatedAt
     courseModulesId
@@ -334,6 +366,22 @@ export const onDeleteModule = /* GraphQL */ `subscription OnDeleteModule($filter
     id
     title
     description
+    courseID
+    course {
+      id
+      title
+      description
+      subject
+      difficulty
+      creator
+      createdAt
+      updatedAt
+      __typename
+    }
+    lessons {
+      nextToken
+      __typename
+    }
     createdAt
     updatedAt
     courseModulesId
@@ -343,4 +391,85 @@ export const onDeleteModule = /* GraphQL */ `subscription OnDeleteModule($filter
 ` as GeneratedSubscription<
   APITypes.OnDeleteModuleSubscriptionVariables,
   APITypes.OnDeleteModuleSubscription
+>;
+export const onCreateLesson = /* GraphQL */ `subscription OnCreateLesson($filter: ModelSubscriptionLessonFilterInput) {
+  onCreateLesson(filter: $filter) {
+    id
+    title
+    content
+    videoURL
+    moduleID
+    module {
+      id
+      title
+      description
+      courseID
+      createdAt
+      updatedAt
+      courseModulesId
+      __typename
+    }
+    createdAt
+    updatedAt
+    moduleLessonsId
+    __typename
+  }
+}
+` as GeneratedSubscription<
+  APITypes.OnCreateLessonSubscriptionVariables,
+  APITypes.OnCreateLessonSubscription
+>;
+export const onUpdateLesson = /* GraphQL */ `subscription OnUpdateLesson($filter: ModelSubscriptionLessonFilterInput) {
+  onUpdateLesson(filter: $filter) {
+    id
+    title
+    content
+    videoURL
+    moduleID
+    module {
+      id
+      title
+      description
+      courseID
+      createdAt
+      updatedAt
+      courseModulesId
+      __typename
+    }
+    createdAt
+    updatedAt
+    moduleLessonsId
+    __typename
+  }
+}
+` as GeneratedSubscription<
+  APITypes.OnUpdateLessonSubscriptionVariables,
+  APITypes.OnUpdateLessonSubscription
+>;
+export const onDeleteLesson = /* GraphQL */ `subscription OnDeleteLesson($filter: ModelSubscriptionLessonFilterInput) {
+  onDeleteLesson(filter: $filter) {
+    id
+    title
+    content
+    videoURL
+    moduleID
+    module {
+      id
+      title
+      description
+      courseID
+      createdAt
+      updatedAt
+      courseModulesId
+      __typename
+    }
+    createdAt
+    updatedAt
+    moduleLessonsId
+    __typename
+  }
+}
+` as GeneratedSubscription<
+  APITypes.OnDeleteLessonSubscriptionVariables,
+  APITypes.OnDeleteLessonSubscription
 >;
