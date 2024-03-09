@@ -1,8 +1,8 @@
 import React, { useEffect} from 'react'
 import { mount } from 'cypress/react18'
-import { fetchCityState } from '../functions/AuthX'
-import { BirthdayInput, EmailInput, NameInput, PasswordInput, ZipInput } from '../components/SignUp'
-import { useSignUpHooks } from '../state/SignUpHooks'
+import { fetchCityState } from '../../functions/AuthX'
+import { BirthdayInput, EmailInput, NameInput, PasswordInput, ZipInput } from '../../components/SignUp'
+import { useSignUpHooks } from '../../state/SignUpHooks'
 
 export const BirthdayInputTestWrapper = ({ testData, testError }: any) => {
   const signUpHooks = useSignUpHooks()
