@@ -131,7 +131,8 @@ export type DeleteNCEUserSettingsInput = {
 
 export type CreateBroadcastNotificationInput = {
   id?: string | null,
-  title?: string | null,
+  targetStudent: string,
+  title: string,
   message: string,
   createdAt?: string | null,
   type: NotificationType,
@@ -146,6 +147,7 @@ export enum NotificationType {
 
 
 export type ModelBroadcastNotificationConditionInput = {
+  targetStudent?: ModelStringInput | null,
   title?: ModelStringInput | null,
   message?: ModelStringInput | null,
   createdAt?: ModelStringInput | null,
@@ -164,7 +166,8 @@ export type ModelNotificationTypeInput = {
 export type BroadcastNotification = {
   __typename: "BroadcastNotification",
   id: string,
-  title?: string | null,
+  targetStudent: string,
+  title: string,
   message: string,
   createdAt: string,
   type: NotificationType,
@@ -174,6 +177,7 @@ export type BroadcastNotification = {
 
 export type UpdateBroadcastNotificationInput = {
   id: string,
+  targetStudent?: string | null,
   title?: string | null,
   message?: string | null,
   createdAt?: string | null,
@@ -235,6 +239,106 @@ export type DeleteUserNotificationReadInput = {
   id: string,
 };
 
+export type CreateCourseInput = {
+  id?: string | null,
+  title: string,
+  description?: string | null,
+  subject: CourseSubject,
+  difficulty?: string | null,
+  creator: string,
+};
+
+export enum CourseSubject {
+  MATH = "MATH",
+  COMPUTER_SCIENCE = "COMPUTER_SCIENCE",
+}
+
+
+export type ModelCourseConditionInput = {
+  title?: ModelStringInput | null,
+  description?: ModelStringInput | null,
+  subject?: ModelCourseSubjectInput | null,
+  difficulty?: ModelStringInput | null,
+  creator?: ModelIDInput | null,
+  and?: Array< ModelCourseConditionInput | null > | null,
+  or?: Array< ModelCourseConditionInput | null > | null,
+  not?: ModelCourseConditionInput | null,
+};
+
+export type ModelCourseSubjectInput = {
+  eq?: CourseSubject | null,
+  ne?: CourseSubject | null,
+};
+
+export type Course = {
+  __typename: "Course",
+  id: string,
+  title: string,
+  description?: string | null,
+  subject: CourseSubject,
+  difficulty?: string | null,
+  creator: string,
+  modules?: ModelModuleConnection | null,
+  createdAt: string,
+  updatedAt: string,
+};
+
+export type ModelModuleConnection = {
+  __typename: "ModelModuleConnection",
+  items:  Array<Module | null >,
+  nextToken?: string | null,
+};
+
+export type Module = {
+  __typename: "Module",
+  id: string,
+  title: string,
+  description?: string | null,
+  createdAt: string,
+  updatedAt: string,
+  courseModulesId?: string | null,
+};
+
+export type UpdateCourseInput = {
+  id: string,
+  title?: string | null,
+  description?: string | null,
+  subject?: CourseSubject | null,
+  difficulty?: string | null,
+  creator?: string | null,
+};
+
+export type DeleteCourseInput = {
+  id: string,
+};
+
+export type CreateModuleInput = {
+  id?: string | null,
+  title: string,
+  description?: string | null,
+  courseModulesId?: string | null,
+};
+
+export type ModelModuleConditionInput = {
+  title?: ModelStringInput | null,
+  description?: ModelStringInput | null,
+  and?: Array< ModelModuleConditionInput | null > | null,
+  or?: Array< ModelModuleConditionInput | null > | null,
+  not?: ModelModuleConditionInput | null,
+  courseModulesId?: ModelIDInput | null,
+};
+
+export type UpdateModuleInput = {
+  id: string,
+  title?: string | null,
+  description?: string | null,
+  courseModulesId?: string | null,
+};
+
+export type DeleteModuleInput = {
+  id: string,
+};
+
 export type ModelNCEStudentProfileFilterInput = {
   id?: ModelIDInput | null,
   name?: ModelStringInput | null,
@@ -270,6 +374,7 @@ export type ModelNCEUserSettingsConnection = {
 
 export type ModelBroadcastNotificationFilterInput = {
   id?: ModelIDInput | null,
+  targetStudent?: ModelStringInput | null,
   title?: ModelStringInput | null,
   message?: ModelStringInput | null,
   createdAt?: ModelStringInput | null,
@@ -300,6 +405,40 @@ export type ModelUserNotificationReadConnection = {
   items:  Array<UserNotificationRead | null >,
   nextToken?: string | null,
 };
+
+export type ModelCourseFilterInput = {
+  id?: ModelIDInput | null,
+  title?: ModelStringInput | null,
+  description?: ModelStringInput | null,
+  subject?: ModelCourseSubjectInput | null,
+  difficulty?: ModelStringInput | null,
+  creator?: ModelIDInput | null,
+  and?: Array< ModelCourseFilterInput | null > | null,
+  or?: Array< ModelCourseFilterInput | null > | null,
+  not?: ModelCourseFilterInput | null,
+};
+
+export type ModelCourseConnection = {
+  __typename: "ModelCourseConnection",
+  items:  Array<Course | null >,
+  nextToken?: string | null,
+};
+
+export type ModelModuleFilterInput = {
+  id?: ModelIDInput | null,
+  title?: ModelStringInput | null,
+  description?: ModelStringInput | null,
+  and?: Array< ModelModuleFilterInput | null > | null,
+  or?: Array< ModelModuleFilterInput | null > | null,
+  not?: ModelModuleFilterInput | null,
+  courseModulesId?: ModelIDInput | null,
+};
+
+export enum ModelSortDirection {
+  ASC = "ASC",
+  DESC = "DESC",
+}
+
 
 export type ModelSubscriptionNCEStudentProfileFilterInput = {
   id?: ModelSubscriptionIDInput | null,
@@ -357,6 +496,7 @@ export type ModelSubscriptionBooleanInput = {
 
 export type ModelSubscriptionBroadcastNotificationFilterInput = {
   id?: ModelSubscriptionIDInput | null,
+  targetStudent?: ModelSubscriptionStringInput | null,
   title?: ModelSubscriptionStringInput | null,
   message?: ModelSubscriptionStringInput | null,
   createdAt?: ModelSubscriptionStringInput | null,
@@ -372,6 +512,25 @@ export type ModelSubscriptionUserNotificationReadFilterInput = {
   readAt?: ModelSubscriptionStringInput | null,
   and?: Array< ModelSubscriptionUserNotificationReadFilterInput | null > | null,
   or?: Array< ModelSubscriptionUserNotificationReadFilterInput | null > | null,
+};
+
+export type ModelSubscriptionCourseFilterInput = {
+  id?: ModelSubscriptionIDInput | null,
+  title?: ModelSubscriptionStringInput | null,
+  description?: ModelSubscriptionStringInput | null,
+  subject?: ModelSubscriptionStringInput | null,
+  difficulty?: ModelSubscriptionStringInput | null,
+  creator?: ModelSubscriptionIDInput | null,
+  and?: Array< ModelSubscriptionCourseFilterInput | null > | null,
+  or?: Array< ModelSubscriptionCourseFilterInput | null > | null,
+};
+
+export type ModelSubscriptionModuleFilterInput = {
+  id?: ModelSubscriptionIDInput | null,
+  title?: ModelSubscriptionStringInput | null,
+  description?: ModelSubscriptionStringInput | null,
+  and?: Array< ModelSubscriptionModuleFilterInput | null > | null,
+  or?: Array< ModelSubscriptionModuleFilterInput | null > | null,
 };
 
 export type CreateNCEStudentProfileMutationVariables = {
@@ -494,7 +653,8 @@ export type CreateBroadcastNotificationMutation = {
   createBroadcastNotification?:  {
     __typename: "BroadcastNotification",
     id: string,
-    title?: string | null,
+    targetStudent: string,
+    title: string,
     message: string,
     createdAt: string,
     type: NotificationType,
@@ -512,7 +672,8 @@ export type UpdateBroadcastNotificationMutation = {
   updateBroadcastNotification?:  {
     __typename: "BroadcastNotification",
     id: string,
-    title?: string | null,
+    targetStudent: string,
+    title: string,
     message: string,
     createdAt: string,
     type: NotificationType,
@@ -530,7 +691,8 @@ export type DeleteBroadcastNotificationMutation = {
   deleteBroadcastNotification?:  {
     __typename: "BroadcastNotification",
     id: string,
-    title?: string | null,
+    targetStudent: string,
+    title: string,
     message: string,
     createdAt: string,
     type: NotificationType,
@@ -587,6 +749,126 @@ export type DeleteUserNotificationReadMutation = {
     createdAt: string,
     updatedAt: string,
     owner?: string | null,
+  } | null,
+};
+
+export type CreateCourseMutationVariables = {
+  input: CreateCourseInput,
+  condition?: ModelCourseConditionInput | null,
+};
+
+export type CreateCourseMutation = {
+  createCourse?:  {
+    __typename: "Course",
+    id: string,
+    title: string,
+    description?: string | null,
+    subject: CourseSubject,
+    difficulty?: string | null,
+    creator: string,
+    modules?:  {
+      __typename: "ModelModuleConnection",
+      nextToken?: string | null,
+    } | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type UpdateCourseMutationVariables = {
+  input: UpdateCourseInput,
+  condition?: ModelCourseConditionInput | null,
+};
+
+export type UpdateCourseMutation = {
+  updateCourse?:  {
+    __typename: "Course",
+    id: string,
+    title: string,
+    description?: string | null,
+    subject: CourseSubject,
+    difficulty?: string | null,
+    creator: string,
+    modules?:  {
+      __typename: "ModelModuleConnection",
+      nextToken?: string | null,
+    } | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type DeleteCourseMutationVariables = {
+  input: DeleteCourseInput,
+  condition?: ModelCourseConditionInput | null,
+};
+
+export type DeleteCourseMutation = {
+  deleteCourse?:  {
+    __typename: "Course",
+    id: string,
+    title: string,
+    description?: string | null,
+    subject: CourseSubject,
+    difficulty?: string | null,
+    creator: string,
+    modules?:  {
+      __typename: "ModelModuleConnection",
+      nextToken?: string | null,
+    } | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type CreateModuleMutationVariables = {
+  input: CreateModuleInput,
+  condition?: ModelModuleConditionInput | null,
+};
+
+export type CreateModuleMutation = {
+  createModule?:  {
+    __typename: "Module",
+    id: string,
+    title: string,
+    description?: string | null,
+    createdAt: string,
+    updatedAt: string,
+    courseModulesId?: string | null,
+  } | null,
+};
+
+export type UpdateModuleMutationVariables = {
+  input: UpdateModuleInput,
+  condition?: ModelModuleConditionInput | null,
+};
+
+export type UpdateModuleMutation = {
+  updateModule?:  {
+    __typename: "Module",
+    id: string,
+    title: string,
+    description?: string | null,
+    createdAt: string,
+    updatedAt: string,
+    courseModulesId?: string | null,
+  } | null,
+};
+
+export type DeleteModuleMutationVariables = {
+  input: DeleteModuleInput,
+  condition?: ModelModuleConditionInput | null,
+};
+
+export type DeleteModuleMutation = {
+  deleteModule?:  {
+    __typename: "Module",
+    id: string,
+    title: string,
+    description?: string | null,
+    createdAt: string,
+    updatedAt: string,
+    courseModulesId?: string | null,
   } | null,
 };
 
@@ -680,7 +962,8 @@ export type GetBroadcastNotificationQuery = {
   getBroadcastNotification?:  {
     __typename: "BroadcastNotification",
     id: string,
-    title?: string | null,
+    targetStudent: string,
+    title: string,
     message: string,
     createdAt: string,
     type: NotificationType,
@@ -701,7 +984,8 @@ export type ListBroadcastNotificationsQuery = {
     items:  Array< {
       __typename: "BroadcastNotification",
       id: string,
-      title?: string | null,
+      targetStudent: string,
+      title: string,
       message: string,
       createdAt: string,
       type: NotificationType,
@@ -745,6 +1029,116 @@ export type ListUserNotificationReadsQuery = {
       createdAt: string,
       updatedAt: string,
       owner?: string | null,
+    } | null >,
+    nextToken?: string | null,
+  } | null,
+};
+
+export type GetCourseQueryVariables = {
+  id: string,
+};
+
+export type GetCourseQuery = {
+  getCourse?:  {
+    __typename: "Course",
+    id: string,
+    title: string,
+    description?: string | null,
+    subject: CourseSubject,
+    difficulty?: string | null,
+    creator: string,
+    modules?:  {
+      __typename: "ModelModuleConnection",
+      nextToken?: string | null,
+    } | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type ListCoursesQueryVariables = {
+  filter?: ModelCourseFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+};
+
+export type ListCoursesQuery = {
+  listCourses?:  {
+    __typename: "ModelCourseConnection",
+    items:  Array< {
+      __typename: "Course",
+      id: string,
+      title: string,
+      description?: string | null,
+      subject: CourseSubject,
+      difficulty?: string | null,
+      creator: string,
+      createdAt: string,
+      updatedAt: string,
+    } | null >,
+    nextToken?: string | null,
+  } | null,
+};
+
+export type GetModuleQueryVariables = {
+  id: string,
+};
+
+export type GetModuleQuery = {
+  getModule?:  {
+    __typename: "Module",
+    id: string,
+    title: string,
+    description?: string | null,
+    createdAt: string,
+    updatedAt: string,
+    courseModulesId?: string | null,
+  } | null,
+};
+
+export type ListModulesQueryVariables = {
+  filter?: ModelModuleFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+};
+
+export type ListModulesQuery = {
+  listModules?:  {
+    __typename: "ModelModuleConnection",
+    items:  Array< {
+      __typename: "Module",
+      id: string,
+      title: string,
+      description?: string | null,
+      createdAt: string,
+      updatedAt: string,
+      courseModulesId?: string | null,
+    } | null >,
+    nextToken?: string | null,
+  } | null,
+};
+
+export type CoursesByCreatorQueryVariables = {
+  creator: string,
+  sortDirection?: ModelSortDirection | null,
+  filter?: ModelCourseFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+};
+
+export type CoursesByCreatorQuery = {
+  coursesByCreator?:  {
+    __typename: "ModelCourseConnection",
+    items:  Array< {
+      __typename: "Course",
+      id: string,
+      title: string,
+      description?: string | null,
+      subject: CourseSubject,
+      difficulty?: string | null,
+      creator: string,
+      createdAt: string,
+      updatedAt: string,
     } | null >,
     nextToken?: string | null,
   } | null,
@@ -869,7 +1263,8 @@ export type OnCreateBroadcastNotificationSubscription = {
   onCreateBroadcastNotification?:  {
     __typename: "BroadcastNotification",
     id: string,
-    title?: string | null,
+    targetStudent: string,
+    title: string,
     message: string,
     createdAt: string,
     type: NotificationType,
@@ -886,7 +1281,8 @@ export type OnUpdateBroadcastNotificationSubscription = {
   onUpdateBroadcastNotification?:  {
     __typename: "BroadcastNotification",
     id: string,
-    title?: string | null,
+    targetStudent: string,
+    title: string,
     message: string,
     createdAt: string,
     type: NotificationType,
@@ -903,7 +1299,8 @@ export type OnDeleteBroadcastNotificationSubscription = {
   onDeleteBroadcastNotification?:  {
     __typename: "BroadcastNotification",
     id: string,
-    title?: string | null,
+    targetStudent: string,
+    title: string,
     message: string,
     createdAt: string,
     type: NotificationType,
@@ -960,5 +1357,119 @@ export type OnDeleteUserNotificationReadSubscription = {
     createdAt: string,
     updatedAt: string,
     owner?: string | null,
+  } | null,
+};
+
+export type OnCreateCourseSubscriptionVariables = {
+  filter?: ModelSubscriptionCourseFilterInput | null,
+};
+
+export type OnCreateCourseSubscription = {
+  onCreateCourse?:  {
+    __typename: "Course",
+    id: string,
+    title: string,
+    description?: string | null,
+    subject: CourseSubject,
+    difficulty?: string | null,
+    creator: string,
+    modules?:  {
+      __typename: "ModelModuleConnection",
+      nextToken?: string | null,
+    } | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnUpdateCourseSubscriptionVariables = {
+  filter?: ModelSubscriptionCourseFilterInput | null,
+};
+
+export type OnUpdateCourseSubscription = {
+  onUpdateCourse?:  {
+    __typename: "Course",
+    id: string,
+    title: string,
+    description?: string | null,
+    subject: CourseSubject,
+    difficulty?: string | null,
+    creator: string,
+    modules?:  {
+      __typename: "ModelModuleConnection",
+      nextToken?: string | null,
+    } | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnDeleteCourseSubscriptionVariables = {
+  filter?: ModelSubscriptionCourseFilterInput | null,
+};
+
+export type OnDeleteCourseSubscription = {
+  onDeleteCourse?:  {
+    __typename: "Course",
+    id: string,
+    title: string,
+    description?: string | null,
+    subject: CourseSubject,
+    difficulty?: string | null,
+    creator: string,
+    modules?:  {
+      __typename: "ModelModuleConnection",
+      nextToken?: string | null,
+    } | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnCreateModuleSubscriptionVariables = {
+  filter?: ModelSubscriptionModuleFilterInput | null,
+};
+
+export type OnCreateModuleSubscription = {
+  onCreateModule?:  {
+    __typename: "Module",
+    id: string,
+    title: string,
+    description?: string | null,
+    createdAt: string,
+    updatedAt: string,
+    courseModulesId?: string | null,
+  } | null,
+};
+
+export type OnUpdateModuleSubscriptionVariables = {
+  filter?: ModelSubscriptionModuleFilterInput | null,
+};
+
+export type OnUpdateModuleSubscription = {
+  onUpdateModule?:  {
+    __typename: "Module",
+    id: string,
+    title: string,
+    description?: string | null,
+    createdAt: string,
+    updatedAt: string,
+    courseModulesId?: string | null,
+  } | null,
+};
+
+export type OnDeleteModuleSubscriptionVariables = {
+  filter?: ModelSubscriptionModuleFilterInput | null,
+};
+
+export type OnDeleteModuleSubscription = {
+  onDeleteModule?:  {
+    __typename: "Module",
+    id: string,
+    title: string,
+    description?: string | null,
+    createdAt: string,
+    updatedAt: string,
+    courseModulesId?: string | null,
   } | null,
 };

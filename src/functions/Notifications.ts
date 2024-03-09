@@ -3,9 +3,15 @@ import { ListBroadcastNotificationsQuery, ListUserNotificationReadsQuery } from 
 import { amplifyApiClient } from "./AuthX"
 import { listBroadcastNotifications, listUserNotificationReads } from "../graphql/queries"
 import { createUserNotificationRead } from "../graphql/mutations"
+import { generateClient } from 'aws-amplify/api'
+import { useQuery } from "@tanstack/react-query"
+
+
+const client = generateClient()
 
 export const getBroadcastNotificationsQuery = async () => {
     try {
+
         const broadcastResponse = await amplifyApiClient.graphql({
             query: listBroadcastNotifications, 
             variables: {}

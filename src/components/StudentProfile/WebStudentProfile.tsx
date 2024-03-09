@@ -20,7 +20,7 @@ import { UserAccountView } from './StudentProfileComponents'
  *                          selected view's content.
  */
 
-const WebStudentProfile = ({ userID, avatarUrl }: any) => {
+const WebStudentProfile = ({ userID, avatarUrl, router }: any) => {
     const [activeView, setActiveView] = useState('Account')
 
     const handleMenuClick = (view: string) => {

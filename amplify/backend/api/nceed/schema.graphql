@@ -1,3 +1,5 @@
+# BEGIN STUDENT PROFILE AND SETTINGS SCHEMA DEFINITIONS
+
 type NCEStudentProfile 
   @model 
   @auth(rules: [
@@ -22,6 +24,8 @@ type NCEUserSettings
   isAdmin: Boolean!
 }
 
+# BEGIN NOTIFICATION SCHEMA DEFINITIONS
+
 type BroadcastNotification 
 @model 
 @auth(rules: [
@@ -29,7 +33,8 @@ type BroadcastNotification
   { allow: private, operations: [read] }
 ]){
   id: ID!
-  title: String
+  targetStudent: String!
+  title: String!
   message: String!
   createdAt: AWSDateTime!
   type: NotificationType!
@@ -51,4 +56,64 @@ enum NotificationType {
   MESSAGE
   ALERT
   REMINDER
+}
+
+# BEGIN COURSE SCHEMA DEFINITIONS
+
+type Course 
+@model
+@auth(rules: [
+  { allow: groups, groups: ["Admins"], operations: [create, update, delete, read] }
+  { allow: groups, groups: ["Instructors"], operations: [create, update, read] }
+  { allow: groups, groups: ["Students"], operations: [read] }
+]){
+  id: ID!
+  title: String!
+  description: String
+  subject: CourseSubject!
+  difficulty: String
+  creator: ID! @index
+  modules: [Module] @hasMany
+}
+
+type Module 
+@model 
+@auth(rules:[
+  { allow: groups, groups: ["Admins"], operations: [create, update, delete, read] }
+  { allow: groups, groups: ["Instructors"], operations: [create, update, read] }
+  { allow: groups, groups: ["Students"], operations: [read] }
+]){
+  id: ID!
+  title: String!
+  description: String
+  courseID: ID! @index(name: "byCourse", sortKeyFields: ["id"])
+  course: Course! @belongsTo(fields: ["courseID"])
+  lessons: [Lesson] @hasMany
+}
+
+type Lesson 
+@model 
+@auth(rules:[
+  { allow: groups, groups: ["Admins"], operations: [create, update, delete, read] }
+  { allow: groups, groups: ["Instructors"], operations: [create, update, read] }
+  { allow: groups, groups: ["Students"], operations: [read] }
+]){
+  id: ID!
+  title: String!
+  content: AWSJSON # Use AWSJSON for complex content structures
+  videoURL: String
+  moduleID: ID! @index(name: "byModule", sortKeyFields: ["id"])
+  #module: Module! @belongsTo(fields: ["moduleID"])
+  #quizzes: [Quiz] @hasMany
+  #exercises: [Exercise] @hasMany # STEM-specific interactive exercises
+}
+
+enum CourseSubject {
+  MATH
+  COMPUTER_SCIENCE
+}
+
+enum ExerciseType {
+  CODING
+  PROBLEM_SOLVING
 }

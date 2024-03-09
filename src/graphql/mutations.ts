@@ -131,6 +131,7 @@ export const createBroadcastNotification = /* GraphQL */ `mutation CreateBroadca
 ) {
   createBroadcastNotification(input: $input, condition: $condition) {
     id
+    targetStudent
     title
     message
     createdAt
@@ -150,6 +151,7 @@ export const updateBroadcastNotification = /* GraphQL */ `mutation UpdateBroadca
 ) {
   updateBroadcastNotification(input: $input, condition: $condition) {
     id
+    targetStudent
     title
     message
     createdAt
@@ -169,6 +171,7 @@ export const deleteBroadcastNotification = /* GraphQL */ `mutation DeleteBroadca
 ) {
   deleteBroadcastNotification(input: $input, condition: $condition) {
     id
+    targetStudent
     title
     message
     createdAt
@@ -235,4 +238,130 @@ export const deleteUserNotificationRead = /* GraphQL */ `mutation DeleteUserNoti
 ` as GeneratedMutation<
   APITypes.DeleteUserNotificationReadMutationVariables,
   APITypes.DeleteUserNotificationReadMutation
+>;
+export const createCourse = /* GraphQL */ `mutation CreateCourse(
+  $input: CreateCourseInput!
+  $condition: ModelCourseConditionInput
+) {
+  createCourse(input: $input, condition: $condition) {
+    id
+    title
+    description
+    subject
+    difficulty
+    creator
+    modules {
+      nextToken
+      __typename
+    }
+    createdAt
+    updatedAt
+    __typename
+  }
+}
+` as GeneratedMutation<
+  APITypes.CreateCourseMutationVariables,
+  APITypes.CreateCourseMutation
+>;
+export const updateCourse = /* GraphQL */ `mutation UpdateCourse(
+  $input: UpdateCourseInput!
+  $condition: ModelCourseConditionInput
+) {
+  updateCourse(input: $input, condition: $condition) {
+    id
+    title
+    description
+    subject
+    difficulty
+    creator
+    modules {
+      nextToken
+      __typename
+    }
+    createdAt
+    updatedAt
+    __typename
+  }
+}
+` as GeneratedMutation<
+  APITypes.UpdateCourseMutationVariables,
+  APITypes.UpdateCourseMutation
+>;
+export const deleteCourse = /* GraphQL */ `mutation DeleteCourse(
+  $input: DeleteCourseInput!
+  $condition: ModelCourseConditionInput
+) {
+  deleteCourse(input: $input, condition: $condition) {
+    id
+    title
+    description
+    subject
+    difficulty
+    creator
+    modules {
+      nextToken
+      __typename
+    }
+    createdAt
+    updatedAt
+    __typename
+  }
+}
+` as GeneratedMutation<
+  APITypes.DeleteCourseMutationVariables,
+  APITypes.DeleteCourseMutation
+>;
+export const createModule = /* GraphQL */ `mutation CreateModule(
+  $input: CreateModuleInput!
+  $condition: ModelModuleConditionInput
+) {
+  createModule(input: $input, condition: $condition) {
+    id
+    title
+    description
+    createdAt
+    updatedAt
+    courseModulesId
+    __typename
+  }
+}
+` as GeneratedMutation<
+  APITypes.CreateModuleMutationVariables,
+  APITypes.CreateModuleMutation
+>;
+export const updateModule = /* GraphQL */ `mutation UpdateModule(
+  $input: UpdateModuleInput!
+  $condition: ModelModuleConditionInput
+) {
+  updateModule(input: $input, condition: $condition) {
+    id
+    title
+    description
+    createdAt
+    updatedAt
+    courseModulesId
+    __typename
+  }
+}
+` as GeneratedMutation<
+  APITypes.UpdateModuleMutationVariables,
+  APITypes.UpdateModuleMutation
+>;
+export const deleteModule = /* GraphQL */ `mutation DeleteModule(
+  $input: DeleteModuleInput!
+  $condition: ModelModuleConditionInput
+) {
+  deleteModule(input: $input, condition: $condition) {
+    id
+    title
+    description
+    createdAt
+    updatedAt
+    courseModulesId
+    __typename
+  }
+}
+` as GeneratedMutation<
+  APITypes.DeleteModuleMutationVariables,
+  APITypes.DeleteModuleMutation
 >;

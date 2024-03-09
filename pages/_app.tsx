@@ -13,6 +13,10 @@ import { useRouter } from 'next/router'
 import { Hub } from 'aws-amplify/utils'
 import { getCurrentUser } from 'aws-amplify/auth'
 import { getPresignedUrl } from '@/src/functions/Amplify'
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+//import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+
+const queryClient = new QueryClient()
 
 Amplify.configure(amplifyconfiguration, {ssr: true})
 
@@ -117,19 +121,21 @@ const NCE_Education_App = ({ Component, pageProps }:any) => {
     },[userData])
 
     return (
-        <AuthProvider>
-            <Head>
-                <title>NCE Education App</title>
-            </Head>
-            <ThemeProvider theme={studioTheme}>
-                {
-                    loggedIn ? <Header loggedIn={loggedIn} avatarUrl={avatarUrl} userData={userData} isMobile={isMobile} />
-                    :
-                    <Header />
-                }
-                <Component {...pageProps} loggedIn={loggedIn} avatarUrl={avatarUrl} userData={userData} isMobile={isMobile} router={router}/>
-            </ThemeProvider>
-        </AuthProvider>
+        <QueryClientProvider client={queryClient}>
+            {/*<AuthProvider>*/}
+                <Head>
+                    <title>NCE Education App</title>
+                </Head>
+                <ThemeProvider theme={studioTheme}>
+                    {
+                        loggedIn ? <Header loggedIn={loggedIn} avatarUrl={avatarUrl} userData={userData} isMobile={isMobile} />
+                        :
+                        <Header />
+                    }
+                    <Component {...pageProps} loggedIn={loggedIn} avatarUrl={avatarUrl} userData={userData} isMobile={isMobile} router={router}/>
+                </ThemeProvider>
+            {/*</AuthProvider>*/}
+        </QueryClientProvider>
     )
 }
 

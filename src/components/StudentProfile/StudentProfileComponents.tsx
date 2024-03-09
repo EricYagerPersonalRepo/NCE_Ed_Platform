@@ -1,11 +1,14 @@
 import React, { useEffect, useState } from 'react'
 import { generateClient } from "aws-amplify/api"
 import { getNCEStudentProfile, getNCEUserSettings } from '@/src/graphql/queries'
-import { Box, Tabs, Tab, FormControl, InputLabel, Select, MenuItem, Typography, Grid, Paper, Avatar, Button, TextField, FormControlLabel, Switch } from '@mui/material'
+import { Box, Tabs, Tab, FormControl, InputLabel, Select, MenuItem, Typography, Grid, Paper, Avatar, Button, TextField, FormControlLabel, Switch, CircularProgress } from '@mui/material'
 import { Course } from '@/src/types/StudentProfileTypes'
 import { uploadFileToS3 } from '@/src/functions/Storage'
 import { getCurrentUser } from 'aws-amplify/auth'
 import { updateNCEStudentProfile, updateNCEUserSettings } from '@/src/graphql/mutations'
+import { Cancel, CheckCircle } from '@mui/icons-material'
+import { green, red } from '@mui/material/colors'
+import { Router, useRouter } from 'next/router'
 
 const amplifyApiClient = generateClient()
 
@@ -90,12 +93,36 @@ export const StudentCourseView = ({userID}:any) => {
  * 
  * @returns {JSX.Element} - A grid layout containing tabs for different sections of the user's account and the content of the selected tab.
  */
-export const UserAccountView = ({userID, avatarUrl}:any) => {
+export const UserAccountView = ({userID, avatarUrl, router}:any) => {
     const [selectedTab, setSelectedTab] = useState(0)
 
     const handleTabChange = (event:any, newTabValue:any) => {
-        setSelectedTab(newTabValue);
+        setSelectedTab(newTabValue)
     }
+
+    const tabNameToIndex:any = {
+        accountSettings: 0,
+        userSettings: 1,
+        avatar: 2,
+        notifications: 3,
+      }
+
+    useEffect(() => {
+        const handleHashChange = () => {
+            const hash = window.location.hash.replace('#', '')
+            const tabIndex = tabNameToIndex[hash]
+            if (tabIndex !== undefined) setSelectedTab(tabIndex)
+        }
+
+        // Listen for hash changes
+        window.addEventListener('hashchange', handleHashChange, false)
+        
+        // Call once on component mount in case there's already a hash
+        handleHashChange()
+
+        // Cleanup
+        return () => window.removeEventListener('hashchange', handleHashChange, false)
+    }, [])
 
     return (
         <Grid container spacing={2}>
@@ -150,6 +177,9 @@ export const UserSettingsComponent = ({userID}:any) => {
         name: '',
     })
     const [loading, setLoading] = useState(true)
+    const [saveChangesLoading, setSaveChangesLoading] = useState(false)
+    const [saveError, setSaveError] = useState(false)
+    const [saveErrorText, setSaveErrorText] = useState("")
 
     useEffect(() => {
         const checkAndSetUserSettings = async () => {
@@ -189,19 +219,41 @@ export const UserSettingsComponent = ({userID}:any) => {
     }, [userID])
 
     const handleChange = () => {
-
+        setSaveChangesLoading(true)
         const accountSettingsUpdateCall = async() => {
             try {
-                let apiCall = await amplifyApiClient.graphql({
+                const updateCall = await amplifyApiClient.graphql({
                     query: updateNCEStudentProfile,
                     variables: { input: userSettings }
                 })
-                console.log(apiCall)
+                return(updateCall)
             } catch (userSettingsUpdateError) {
                 console.log('Error Creating User Settings:', userSettingsUpdateError)
+                return(null)
             }
         }
-        accountSettingsUpdateCall()
+        try{
+            const updateCall = accountSettingsUpdateCall()
+            if(updateCall !== null) {
+                setTimeout(() => {
+                    setSaveChangesLoading(false)
+                }, 1250)
+            } else {
+                setSaveChangesLoading(false)
+            }
+        }catch(error:any){
+            setSaveErrorText(error)
+            setSaveChangesLoading(false)
+            setSaveError(true)
+        }
+    }
+
+    const SaveStatusIndicator = () => {
+        if(saveError){
+            return(<Cancel style={{ color: red[500] }} />)
+        }else{
+            return(<CheckCircle style={{ color: green[500] }} />)
+        }
     }
 
     return(
@@ -245,8 +297,16 @@ export const UserSettingsComponent = ({userID}:any) => {
                     onClick={()=>handleChange()}
                     sx={{ mt: 3, mb: 2 }}
                 >
-                    Save Changes
+                    Save Changes 
+                    {saveChangesLoading ? (
+                    <CircularProgress size={24} />
+                    ) : (
+                    <SaveStatusIndicator />
+                )}
                 </Button>
+                {saveErrorText!=="" && <Typography variant="caption" color="red">{saveErrorText}</Typography>}
+                
+
             </Box>
         )
     )
@@ -317,7 +377,7 @@ export const AccountSettingsComponent = ({userID}:any) => {
     }, [userID])
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const { name, value, checked, type } = event.target;
+        const { name, value, checked, type } = event.target
         const updatedValue = type === 'checkbox' ? checked : value
 
         const accountSettingsUpdateCall = async() => {
@@ -411,6 +471,8 @@ export const AccountSettingsComponent = ({userID}:any) => {
  * @returns {JSX.Element} - A component that includes an avatar display and an upload button for updating the avatar.
  */
 export const AvatarManager = ({ avatarUrl }:any) => {
+    const router=useRouter()
+
     const handleFileChange:any = async (event:any) => {
         const file = event.target.files[0]
         const currentUser = await getCurrentUser()
@@ -425,7 +487,10 @@ export const AvatarManager = ({ avatarUrl }:any) => {
         
         const uploadedKey:any = await uploadFileToS3(file, avatarTarget)
 
-        if (uploadedKey)  window.location.reload()
+        if (uploadedKey) {
+            window.location.href+="#avatar"
+            window.location.reload()
+        }
     }
 
     return (

@@ -20,6 +20,7 @@
     "@mui/icons-material": "^5.15.1",
     "@mui/material": "^5.15.1",
     "@mui/utils": "^5.15.11",
+    "@tanstack/react-query": "^5.25.0",
     "aws-amplify": "^6.0.6",
     "cypress": "^13.6.2",
     "date-fns": "^3.3.1",

@@ -130,6 +130,7 @@ export const onCreateBroadcastNotification = /* GraphQL */ `subscription OnCreat
 ) {
   onCreateBroadcastNotification(filter: $filter) {
     id
+    targetStudent
     title
     message
     createdAt
@@ -148,6 +149,7 @@ export const onUpdateBroadcastNotification = /* GraphQL */ `subscription OnUpdat
 ) {
   onUpdateBroadcastNotification(filter: $filter) {
     id
+    targetStudent
     title
     message
     createdAt
@@ -166,6 +168,7 @@ export const onDeleteBroadcastNotification = /* GraphQL */ `subscription OnDelet
 ) {
   onDeleteBroadcastNotification(filter: $filter) {
     id
+    targetStudent
     title
     message
     createdAt
@@ -232,4 +235,112 @@ export const onDeleteUserNotificationRead = /* GraphQL */ `subscription OnDelete
 ` as GeneratedSubscription<
   APITypes.OnDeleteUserNotificationReadSubscriptionVariables,
   APITypes.OnDeleteUserNotificationReadSubscription
+>;
+export const onCreateCourse = /* GraphQL */ `subscription OnCreateCourse($filter: ModelSubscriptionCourseFilterInput) {
+  onCreateCourse(filter: $filter) {
+    id
+    title
+    description
+    subject
+    difficulty
+    creator
+    modules {
+      nextToken
+      __typename
+    }
+    createdAt
+    updatedAt
+    __typename
+  }
+}
+` as GeneratedSubscription<
+  APITypes.OnCreateCourseSubscriptionVariables,
+  APITypes.OnCreateCourseSubscription
+>;
+export const onUpdateCourse = /* GraphQL */ `subscription OnUpdateCourse($filter: ModelSubscriptionCourseFilterInput) {
+  onUpdateCourse(filter: $filter) {
+    id
+    title
+    description
+    subject
+    difficulty
+    creator
+    modules {
+      nextToken
+      __typename
+    }
+    createdAt
+    updatedAt
+    __typename
+  }
+}
+` as GeneratedSubscription<
+  APITypes.OnUpdateCourseSubscriptionVariables,
+  APITypes.OnUpdateCourseSubscription
+>;
+export const onDeleteCourse = /* GraphQL */ `subscription OnDeleteCourse($filter: ModelSubscriptionCourseFilterInput) {
+  onDeleteCourse(filter: $filter) {
+    id
+    title
+    description
+    subject
+    difficulty
+    creator
+    modules {
+      nextToken
+      __typename
+    }
+    createdAt
+    updatedAt
+    __typename
+  }
+}
+` as GeneratedSubscription<
+  APITypes.OnDeleteCourseSubscriptionVariables,
+  APITypes.OnDeleteCourseSubscription
+>;
+export const onCreateModule = /* GraphQL */ `subscription OnCreateModule($filter: ModelSubscriptionModuleFilterInput) {
+  onCreateModule(filter: $filter) {
+    id
+    title
+    description
+    createdAt
+    updatedAt
+    courseModulesId
+    __typename
+  }
+}
+` as GeneratedSubscription<
+  APITypes.OnCreateModuleSubscriptionVariables,
+  APITypes.OnCreateModuleSubscription
+>;
+export const onUpdateModule = /* GraphQL */ `subscription OnUpdateModule($filter: ModelSubscriptionModuleFilterInput) {
+  onUpdateModule(filter: $filter) {
+    id
+    title
+    description
+    createdAt
+    updatedAt
+    courseModulesId
+    __typename
+  }
+}
+` as GeneratedSubscription<
+  APITypes.OnUpdateModuleSubscriptionVariables,
+  APITypes.OnUpdateModuleSubscription
+>;
+export const onDeleteModule = /* GraphQL */ `subscription OnDeleteModule($filter: ModelSubscriptionModuleFilterInput) {
+  onDeleteModule(filter: $filter) {
+    id
+    title
+    description
+    createdAt
+    updatedAt
+    courseModulesId
+    __typename
+  }
+}
+` as GeneratedSubscription<
+  APITypes.OnDeleteModuleSubscriptionVariables,
+  APITypes.OnDeleteModuleSubscription
 >;
