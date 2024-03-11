@@ -208,7 +208,7 @@ export const UserAccountButtons_Web = ({ avatarUrl }: any) => {
 
     useEffect(()=>{
         fetchNotifications()
-    },[])
+    },[]) 
 
     useEffect(() => {
         const createNotificationSub = amplifyApiClient.graphql({ query: onCreateBroadcastNotification }).subscribe({
