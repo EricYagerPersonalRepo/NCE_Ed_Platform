@@ -8,10 +8,14 @@ export { default as BroadcastNotificationCreateForm } from "./BroadcastNotificat
 export { default as BroadcastNotificationUpdateForm } from "./BroadcastNotificationUpdateForm";
 export { default as CourseCreateForm } from "./CourseCreateForm";
 export { default as CourseUpdateForm } from "./CourseUpdateForm";
+export { default as EnrollmentCreateForm } from "./EnrollmentCreateForm";
+export { default as EnrollmentUpdateForm } from "./EnrollmentUpdateForm";
 export { default as NCEStudentProfileCreateForm } from "./NCEStudentProfileCreateForm";
 export { default as NCEStudentProfileUpdateForm } from "./NCEStudentProfileUpdateForm";
 export { default as NCEUserSettingsCreateForm } from "./NCEUserSettingsCreateForm";
 export { default as NCEUserSettingsUpdateForm } from "./NCEUserSettingsUpdateForm";
+export { default as QuestionCreateForm } from "./QuestionCreateForm";
+export { default as QuestionUpdateForm } from "./QuestionUpdateForm";
 export { default as UserNotificationReadCreateForm } from "./UserNotificationReadCreateForm";
 export { default as UserNotificationReadUpdateForm } from "./UserNotificationReadUpdateForm";
 export { default as studioTheme } from "./studioTheme";

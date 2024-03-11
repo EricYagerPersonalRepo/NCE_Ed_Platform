@@ -409,6 +409,10 @@ export const onCreateLesson = /* GraphQL */ `subscription OnCreateLesson($filter
       courseModulesId
       __typename
     }
+    quizzes {
+      nextToken
+      __typename
+    }
     createdAt
     updatedAt
     moduleLessonsId
@@ -434,6 +438,10 @@ export const onUpdateLesson = /* GraphQL */ `subscription OnUpdateLesson($filter
       createdAt
       updatedAt
       courseModulesId
+      __typename
+    }
+    quizzes {
+      nextToken
       __typename
     }
     createdAt
@@ -463,6 +471,10 @@ export const onDeleteLesson = /* GraphQL */ `subscription OnDeleteLesson($filter
       courseModulesId
       __typename
     }
+    quizzes {
+      nextToken
+      __typename
+    }
     createdAt
     updatedAt
     moduleLessonsId
@@ -472,4 +484,184 @@ export const onDeleteLesson = /* GraphQL */ `subscription OnDeleteLesson($filter
 ` as GeneratedSubscription<
   APITypes.OnDeleteLessonSubscriptionVariables,
   APITypes.OnDeleteLessonSubscription
+>;
+export const onCreateQuiz = /* GraphQL */ `subscription OnCreateQuiz($filter: ModelSubscriptionQuizFilterInput) {
+  onCreateQuiz(filter: $filter) {
+    id
+    title
+    lessonID
+    lesson {
+      id
+      title
+      content
+      videoURL
+      moduleID
+      createdAt
+      updatedAt
+      moduleLessonsId
+      __typename
+    }
+    createdAt
+    updatedAt
+    lessonQuizzesId
+    __typename
+  }
+}
+` as GeneratedSubscription<
+  APITypes.OnCreateQuizSubscriptionVariables,
+  APITypes.OnCreateQuizSubscription
+>;
+export const onUpdateQuiz = /* GraphQL */ `subscription OnUpdateQuiz($filter: ModelSubscriptionQuizFilterInput) {
+  onUpdateQuiz(filter: $filter) {
+    id
+    title
+    lessonID
+    lesson {
+      id
+      title
+      content
+      videoURL
+      moduleID
+      createdAt
+      updatedAt
+      moduleLessonsId
+      __typename
+    }
+    createdAt
+    updatedAt
+    lessonQuizzesId
+    __typename
+  }
+}
+` as GeneratedSubscription<
+  APITypes.OnUpdateQuizSubscriptionVariables,
+  APITypes.OnUpdateQuizSubscription
+>;
+export const onDeleteQuiz = /* GraphQL */ `subscription OnDeleteQuiz($filter: ModelSubscriptionQuizFilterInput) {
+  onDeleteQuiz(filter: $filter) {
+    id
+    title
+    lessonID
+    lesson {
+      id
+      title
+      content
+      videoURL
+      moduleID
+      createdAt
+      updatedAt
+      moduleLessonsId
+      __typename
+    }
+    createdAt
+    updatedAt
+    lessonQuizzesId
+    __typename
+  }
+}
+` as GeneratedSubscription<
+  APITypes.OnDeleteQuizSubscriptionVariables,
+  APITypes.OnDeleteQuizSubscription
+>;
+export const onCreateQuestion = /* GraphQL */ `subscription OnCreateQuestion($filter: ModelSubscriptionQuestionFilterInput) {
+  onCreateQuestion(filter: $filter) {
+    id
+    text
+    options
+    correctAnswer
+    createdAt
+    updatedAt
+    __typename
+  }
+}
+` as GeneratedSubscription<
+  APITypes.OnCreateQuestionSubscriptionVariables,
+  APITypes.OnCreateQuestionSubscription
+>;
+export const onUpdateQuestion = /* GraphQL */ `subscription OnUpdateQuestion($filter: ModelSubscriptionQuestionFilterInput) {
+  onUpdateQuestion(filter: $filter) {
+    id
+    text
+    options
+    correctAnswer
+    createdAt
+    updatedAt
+    __typename
+  }
+}
+` as GeneratedSubscription<
+  APITypes.OnUpdateQuestionSubscriptionVariables,
+  APITypes.OnUpdateQuestionSubscription
+>;
+export const onDeleteQuestion = /* GraphQL */ `subscription OnDeleteQuestion($filter: ModelSubscriptionQuestionFilterInput) {
+  onDeleteQuestion(filter: $filter) {
+    id
+    text
+    options
+    correctAnswer
+    createdAt
+    updatedAt
+    __typename
+  }
+}
+` as GeneratedSubscription<
+  APITypes.OnDeleteQuestionSubscriptionVariables,
+  APITypes.OnDeleteQuestionSubscription
+>;
+export const onCreateEnrollment = /* GraphQL */ `subscription OnCreateEnrollment(
+  $filter: ModelSubscriptionEnrollmentFilterInput
+) {
+  onCreateEnrollment(filter: $filter) {
+    id
+    userID
+    courseID
+    progress
+    completed
+    achievements
+    createdAt
+    updatedAt
+    __typename
+  }
+}
+` as GeneratedSubscription<
+  APITypes.OnCreateEnrollmentSubscriptionVariables,
+  APITypes.OnCreateEnrollmentSubscription
+>;
+export const onUpdateEnrollment = /* GraphQL */ `subscription OnUpdateEnrollment(
+  $filter: ModelSubscriptionEnrollmentFilterInput
+) {
+  onUpdateEnrollment(filter: $filter) {
+    id
+    userID
+    courseID
+    progress
+    completed
+    achievements
+    createdAt
+    updatedAt
+    __typename
+  }
+}
+` as GeneratedSubscription<
+  APITypes.OnUpdateEnrollmentSubscriptionVariables,
+  APITypes.OnUpdateEnrollmentSubscription
+>;
+export const onDeleteEnrollment = /* GraphQL */ `subscription OnDeleteEnrollment(
+  $filter: ModelSubscriptionEnrollmentFilterInput
+) {
+  onDeleteEnrollment(filter: $filter) {
+    id
+    userID
+    courseID
+    progress
+    completed
+    achievements
+    createdAt
+    updatedAt
+    __typename
+  }
+}
+` as GeneratedSubscription<
+  APITypes.OnDeleteEnrollmentSubscriptionVariables,
+  APITypes.OnDeleteEnrollmentSubscription
 >;

@@ -105,40 +105,6 @@
       "type": "cicd"
     }
   },
-  "parameters": {
-    "AMPLIFY_function_nceAvatarHandlerLambdaFunction_deploymentBucketName": {
-      "usedBy": [
-        {
-          "category": "function",
-          "resourceName": "nceAvatarHandlerLambdaFunction"
-        }
-      ]
-    },
-    "AMPLIFY_function_nceAvatarHandlerLambdaFunction_s3Key": {
-      "usedBy": [
-        {
-          "category": "function",
-          "resourceName": "nceAvatarHandlerLambdaFunction"
-        }
-      ]
-    },
-    "AMPLIFY_hosting_amplifyhosting_appId": {
-      "usedBy": [
-        {
-          "category": "hosting",
-          "resourceName": "amplifyhosting"
-        }
-      ]
-    },
-    "AMPLIFY_hosting_amplifyhosting_type": {
-      "usedBy": [
-        {
-          "category": "hosting",
-          "resourceName": "amplifyhosting"
-        }
-      ]
-    }
-  },
   "storage": {
     "nceEdAvatars": {
       "dependsOn": [],

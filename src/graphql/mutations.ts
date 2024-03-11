@@ -433,6 +433,10 @@ export const createLesson = /* GraphQL */ `mutation CreateLesson(
       courseModulesId
       __typename
     }
+    quizzes {
+      nextToken
+      __typename
+    }
     createdAt
     updatedAt
     moduleLessonsId
@@ -461,6 +465,10 @@ export const updateLesson = /* GraphQL */ `mutation UpdateLesson(
       createdAt
       updatedAt
       courseModulesId
+      __typename
+    }
+    quizzes {
+      nextToken
       __typename
     }
     createdAt
@@ -493,6 +501,10 @@ export const deleteLesson = /* GraphQL */ `mutation DeleteLesson(
       courseModulesId
       __typename
     }
+    quizzes {
+      nextToken
+      __typename
+    }
     createdAt
     updatedAt
     moduleLessonsId
@@ -502,4 +514,205 @@ export const deleteLesson = /* GraphQL */ `mutation DeleteLesson(
 ` as GeneratedMutation<
   APITypes.DeleteLessonMutationVariables,
   APITypes.DeleteLessonMutation
+>;
+export const createQuiz = /* GraphQL */ `mutation CreateQuiz(
+  $input: CreateQuizInput!
+  $condition: ModelQuizConditionInput
+) {
+  createQuiz(input: $input, condition: $condition) {
+    id
+    title
+    lessonID
+    lesson {
+      id
+      title
+      content
+      videoURL
+      moduleID
+      createdAt
+      updatedAt
+      moduleLessonsId
+      __typename
+    }
+    createdAt
+    updatedAt
+    lessonQuizzesId
+    __typename
+  }
+}
+` as GeneratedMutation<
+  APITypes.CreateQuizMutationVariables,
+  APITypes.CreateQuizMutation
+>;
+export const updateQuiz = /* GraphQL */ `mutation UpdateQuiz(
+  $input: UpdateQuizInput!
+  $condition: ModelQuizConditionInput
+) {
+  updateQuiz(input: $input, condition: $condition) {
+    id
+    title
+    lessonID
+    lesson {
+      id
+      title
+      content
+      videoURL
+      moduleID
+      createdAt
+      updatedAt
+      moduleLessonsId
+      __typename
+    }
+    createdAt
+    updatedAt
+    lessonQuizzesId
+    __typename
+  }
+}
+` as GeneratedMutation<
+  APITypes.UpdateQuizMutationVariables,
+  APITypes.UpdateQuizMutation
+>;
+export const deleteQuiz = /* GraphQL */ `mutation DeleteQuiz(
+  $input: DeleteQuizInput!
+  $condition: ModelQuizConditionInput
+) {
+  deleteQuiz(input: $input, condition: $condition) {
+    id
+    title
+    lessonID
+    lesson {
+      id
+      title
+      content
+      videoURL
+      moduleID
+      createdAt
+      updatedAt
+      moduleLessonsId
+      __typename
+    }
+    createdAt
+    updatedAt
+    lessonQuizzesId
+    __typename
+  }
+}
+` as GeneratedMutation<
+  APITypes.DeleteQuizMutationVariables,
+  APITypes.DeleteQuizMutation
+>;
+export const createQuestion = /* GraphQL */ `mutation CreateQuestion(
+  $input: CreateQuestionInput!
+  $condition: ModelQuestionConditionInput
+) {
+  createQuestion(input: $input, condition: $condition) {
+    id
+    text
+    options
+    correctAnswer
+    createdAt
+    updatedAt
+    __typename
+  }
+}
+` as GeneratedMutation<
+  APITypes.CreateQuestionMutationVariables,
+  APITypes.CreateQuestionMutation
+>;
+export const updateQuestion = /* GraphQL */ `mutation UpdateQuestion(
+  $input: UpdateQuestionInput!
+  $condition: ModelQuestionConditionInput
+) {
+  updateQuestion(input: $input, condition: $condition) {
+    id
+    text
+    options
+    correctAnswer
+    createdAt
+    updatedAt
+    __typename
+  }
+}
+` as GeneratedMutation<
+  APITypes.UpdateQuestionMutationVariables,
+  APITypes.UpdateQuestionMutation
+>;
+export const deleteQuestion = /* GraphQL */ `mutation DeleteQuestion(
+  $input: DeleteQuestionInput!
+  $condition: ModelQuestionConditionInput
+) {
+  deleteQuestion(input: $input, condition: $condition) {
+    id
+    text
+    options
+    correctAnswer
+    createdAt
+    updatedAt
+    __typename
+  }
+}
+` as GeneratedMutation<
+  APITypes.DeleteQuestionMutationVariables,
+  APITypes.DeleteQuestionMutation
+>;
+export const createEnrollment = /* GraphQL */ `mutation CreateEnrollment(
+  $input: CreateEnrollmentInput!
+  $condition: ModelEnrollmentConditionInput
+) {
+  createEnrollment(input: $input, condition: $condition) {
+    id
+    userID
+    courseID
+    progress
+    completed
+    achievements
+    createdAt
+    updatedAt
+    __typename
+  }
+}
+` as GeneratedMutation<
+  APITypes.CreateEnrollmentMutationVariables,
+  APITypes.CreateEnrollmentMutation
+>;
+export const updateEnrollment = /* GraphQL */ `mutation UpdateEnrollment(
+  $input: UpdateEnrollmentInput!
+  $condition: ModelEnrollmentConditionInput
+) {
+  updateEnrollment(input: $input, condition: $condition) {
+    id
+    userID
+    courseID
+    progress
+    completed
+    achievements
+    createdAt
+    updatedAt
+    __typename
+  }
+}
+` as GeneratedMutation<
+  APITypes.UpdateEnrollmentMutationVariables,
+  APITypes.UpdateEnrollmentMutation
+>;
+export const deleteEnrollment = /* GraphQL */ `mutation DeleteEnrollment(
+  $input: DeleteEnrollmentInput!
+  $condition: ModelEnrollmentConditionInput
+) {
+  deleteEnrollment(input: $input, condition: $condition) {
+    id
+    userID
+    courseID
+    progress
+    completed
+    achievements
+    createdAt
+    updatedAt
+    __typename
+  }
+}
+` as GeneratedMutation<
+  APITypes.DeleteEnrollmentMutationVariables,
+  APITypes.DeleteEnrollmentMutation
 >;
