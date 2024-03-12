@@ -437,6 +437,10 @@ export const createLesson = /* GraphQL */ `mutation CreateLesson(
       nextToken
       __typename
     }
+    exercises {
+      nextToken
+      __typename
+    }
     createdAt
     updatedAt
     moduleLessonsId
@@ -468,6 +472,10 @@ export const updateLesson = /* GraphQL */ `mutation UpdateLesson(
       __typename
     }
     quizzes {
+      nextToken
+      __typename
+    }
+    exercises {
       nextToken
       __typename
     }
@@ -505,6 +513,10 @@ export const deleteLesson = /* GraphQL */ `mutation DeleteLesson(
       nextToken
       __typename
     }
+    exercises {
+      nextToken
+      __typename
+    }
     createdAt
     updatedAt
     moduleLessonsId
@@ -514,6 +526,102 @@ export const deleteLesson = /* GraphQL */ `mutation DeleteLesson(
 ` as GeneratedMutation<
   APITypes.DeleteLessonMutationVariables,
   APITypes.DeleteLessonMutation
+>;
+export const createExercise = /* GraphQL */ `mutation CreateExercise(
+  $input: CreateExerciseInput!
+  $condition: ModelExerciseConditionInput
+) {
+  createExercise(input: $input, condition: $condition) {
+    id
+    question
+    solution
+    lessonID
+    lesson {
+      id
+      title
+      content
+      videoURL
+      moduleID
+      createdAt
+      updatedAt
+      moduleLessonsId
+      __typename
+    }
+    exerciseType
+    data
+    createdAt
+    updatedAt
+    lessonExercisesId
+    __typename
+  }
+}
+` as GeneratedMutation<
+  APITypes.CreateExerciseMutationVariables,
+  APITypes.CreateExerciseMutation
+>;
+export const updateExercise = /* GraphQL */ `mutation UpdateExercise(
+  $input: UpdateExerciseInput!
+  $condition: ModelExerciseConditionInput
+) {
+  updateExercise(input: $input, condition: $condition) {
+    id
+    question
+    solution
+    lessonID
+    lesson {
+      id
+      title
+      content
+      videoURL
+      moduleID
+      createdAt
+      updatedAt
+      moduleLessonsId
+      __typename
+    }
+    exerciseType
+    data
+    createdAt
+    updatedAt
+    lessonExercisesId
+    __typename
+  }
+}
+` as GeneratedMutation<
+  APITypes.UpdateExerciseMutationVariables,
+  APITypes.UpdateExerciseMutation
+>;
+export const deleteExercise = /* GraphQL */ `mutation DeleteExercise(
+  $input: DeleteExerciseInput!
+  $condition: ModelExerciseConditionInput
+) {
+  deleteExercise(input: $input, condition: $condition) {
+    id
+    question
+    solution
+    lessonID
+    lesson {
+      id
+      title
+      content
+      videoURL
+      moduleID
+      createdAt
+      updatedAt
+      moduleLessonsId
+      __typename
+    }
+    exerciseType
+    data
+    createdAt
+    updatedAt
+    lessonExercisesId
+    __typename
+  }
+}
+` as GeneratedMutation<
+  APITypes.DeleteExerciseMutationVariables,
+  APITypes.DeleteExerciseMutation
 >;
 export const createQuiz = /* GraphQL */ `mutation CreateQuiz(
   $input: CreateQuizInput!
@@ -532,6 +640,10 @@ export const createQuiz = /* GraphQL */ `mutation CreateQuiz(
       createdAt
       updatedAt
       moduleLessonsId
+      __typename
+    }
+    questions {
+      nextToken
       __typename
     }
     createdAt
@@ -563,6 +675,10 @@ export const updateQuiz = /* GraphQL */ `mutation UpdateQuiz(
       moduleLessonsId
       __typename
     }
+    questions {
+      nextToken
+      __typename
+    }
     createdAt
     updatedAt
     lessonQuizzesId
@@ -592,6 +708,10 @@ export const deleteQuiz = /* GraphQL */ `mutation DeleteQuiz(
       moduleLessonsId
       __typename
     }
+    questions {
+      nextToken
+      __typename
+    }
     createdAt
     updatedAt
     lessonQuizzesId
@@ -611,8 +731,19 @@ export const createQuestion = /* GraphQL */ `mutation CreateQuestion(
     text
     options
     correctAnswer
+    quizID
+    quiz {
+      id
+      title
+      lessonID
+      createdAt
+      updatedAt
+      lessonQuizzesId
+      __typename
+    }
     createdAt
     updatedAt
+    quizQuestionsId
     __typename
   }
 }
@@ -629,8 +760,19 @@ export const updateQuestion = /* GraphQL */ `mutation UpdateQuestion(
     text
     options
     correctAnswer
+    quizID
+    quiz {
+      id
+      title
+      lessonID
+      createdAt
+      updatedAt
+      lessonQuizzesId
+      __typename
+    }
     createdAt
     updatedAt
+    quizQuestionsId
     __typename
   }
 }
@@ -647,8 +789,19 @@ export const deleteQuestion = /* GraphQL */ `mutation DeleteQuestion(
     text
     options
     correctAnswer
+    quizID
+    quiz {
+      id
+      title
+      lessonID
+      createdAt
+      updatedAt
+      lessonQuizzesId
+      __typename
+    }
     createdAt
     updatedAt
+    quizQuestionsId
     __typename
   }
 }

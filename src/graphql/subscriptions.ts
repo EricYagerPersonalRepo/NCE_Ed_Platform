@@ -413,6 +413,10 @@ export const onCreateLesson = /* GraphQL */ `subscription OnCreateLesson($filter
       nextToken
       __typename
     }
+    exercises {
+      nextToken
+      __typename
+    }
     createdAt
     updatedAt
     moduleLessonsId
@@ -441,6 +445,10 @@ export const onUpdateLesson = /* GraphQL */ `subscription OnUpdateLesson($filter
       __typename
     }
     quizzes {
+      nextToken
+      __typename
+    }
+    exercises {
       nextToken
       __typename
     }
@@ -475,6 +483,10 @@ export const onDeleteLesson = /* GraphQL */ `subscription OnDeleteLesson($filter
       nextToken
       __typename
     }
+    exercises {
+      nextToken
+      __typename
+    }
     createdAt
     updatedAt
     moduleLessonsId
@@ -484,6 +496,93 @@ export const onDeleteLesson = /* GraphQL */ `subscription OnDeleteLesson($filter
 ` as GeneratedSubscription<
   APITypes.OnDeleteLessonSubscriptionVariables,
   APITypes.OnDeleteLessonSubscription
+>;
+export const onCreateExercise = /* GraphQL */ `subscription OnCreateExercise($filter: ModelSubscriptionExerciseFilterInput) {
+  onCreateExercise(filter: $filter) {
+    id
+    question
+    solution
+    lessonID
+    lesson {
+      id
+      title
+      content
+      videoURL
+      moduleID
+      createdAt
+      updatedAt
+      moduleLessonsId
+      __typename
+    }
+    exerciseType
+    data
+    createdAt
+    updatedAt
+    lessonExercisesId
+    __typename
+  }
+}
+` as GeneratedSubscription<
+  APITypes.OnCreateExerciseSubscriptionVariables,
+  APITypes.OnCreateExerciseSubscription
+>;
+export const onUpdateExercise = /* GraphQL */ `subscription OnUpdateExercise($filter: ModelSubscriptionExerciseFilterInput) {
+  onUpdateExercise(filter: $filter) {
+    id
+    question
+    solution
+    lessonID
+    lesson {
+      id
+      title
+      content
+      videoURL
+      moduleID
+      createdAt
+      updatedAt
+      moduleLessonsId
+      __typename
+    }
+    exerciseType
+    data
+    createdAt
+    updatedAt
+    lessonExercisesId
+    __typename
+  }
+}
+` as GeneratedSubscription<
+  APITypes.OnUpdateExerciseSubscriptionVariables,
+  APITypes.OnUpdateExerciseSubscription
+>;
+export const onDeleteExercise = /* GraphQL */ `subscription OnDeleteExercise($filter: ModelSubscriptionExerciseFilterInput) {
+  onDeleteExercise(filter: $filter) {
+    id
+    question
+    solution
+    lessonID
+    lesson {
+      id
+      title
+      content
+      videoURL
+      moduleID
+      createdAt
+      updatedAt
+      moduleLessonsId
+      __typename
+    }
+    exerciseType
+    data
+    createdAt
+    updatedAt
+    lessonExercisesId
+    __typename
+  }
+}
+` as GeneratedSubscription<
+  APITypes.OnDeleteExerciseSubscriptionVariables,
+  APITypes.OnDeleteExerciseSubscription
 >;
 export const onCreateQuiz = /* GraphQL */ `subscription OnCreateQuiz($filter: ModelSubscriptionQuizFilterInput) {
   onCreateQuiz(filter: $filter) {
@@ -499,6 +598,10 @@ export const onCreateQuiz = /* GraphQL */ `subscription OnCreateQuiz($filter: Mo
       createdAt
       updatedAt
       moduleLessonsId
+      __typename
+    }
+    questions {
+      nextToken
       __typename
     }
     createdAt
@@ -527,6 +630,10 @@ export const onUpdateQuiz = /* GraphQL */ `subscription OnUpdateQuiz($filter: Mo
       moduleLessonsId
       __typename
     }
+    questions {
+      nextToken
+      __typename
+    }
     createdAt
     updatedAt
     lessonQuizzesId
@@ -553,6 +660,10 @@ export const onDeleteQuiz = /* GraphQL */ `subscription OnDeleteQuiz($filter: Mo
       moduleLessonsId
       __typename
     }
+    questions {
+      nextToken
+      __typename
+    }
     createdAt
     updatedAt
     lessonQuizzesId
@@ -569,8 +680,19 @@ export const onCreateQuestion = /* GraphQL */ `subscription OnCreateQuestion($fi
     text
     options
     correctAnswer
+    quizID
+    quiz {
+      id
+      title
+      lessonID
+      createdAt
+      updatedAt
+      lessonQuizzesId
+      __typename
+    }
     createdAt
     updatedAt
+    quizQuestionsId
     __typename
   }
 }
@@ -584,8 +706,19 @@ export const onUpdateQuestion = /* GraphQL */ `subscription OnUpdateQuestion($fi
     text
     options
     correctAnswer
+    quizID
+    quiz {
+      id
+      title
+      lessonID
+      createdAt
+      updatedAt
+      lessonQuizzesId
+      __typename
+    }
     createdAt
     updatedAt
+    quizQuestionsId
     __typename
   }
 }
@@ -599,8 +732,19 @@ export const onDeleteQuestion = /* GraphQL */ `subscription OnDeleteQuestion($fi
     text
     options
     correctAnswer
+    quizID
+    quiz {
+      id
+      title
+      lessonID
+      createdAt
+      updatedAt
+      lessonQuizzesId
+      __typename
+    }
     createdAt
     updatedAt
+    quizQuestionsId
     __typename
   }
 }

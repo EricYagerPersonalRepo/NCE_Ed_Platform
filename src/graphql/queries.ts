@@ -298,6 +298,10 @@ export const getLesson = /* GraphQL */ `query GetLesson($id: ID!) {
       nextToken
       __typename
     }
+    exercises {
+      nextToken
+      __typename
+    }
     createdAt
     updatedAt
     moduleLessonsId
@@ -330,6 +334,61 @@ export const listLessons = /* GraphQL */ `query ListLessons(
   APITypes.ListLessonsQueryVariables,
   APITypes.ListLessonsQuery
 >;
+export const getExercise = /* GraphQL */ `query GetExercise($id: ID!) {
+  getExercise(id: $id) {
+    id
+    question
+    solution
+    lessonID
+    lesson {
+      id
+      title
+      content
+      videoURL
+      moduleID
+      createdAt
+      updatedAt
+      moduleLessonsId
+      __typename
+    }
+    exerciseType
+    data
+    createdAt
+    updatedAt
+    lessonExercisesId
+    __typename
+  }
+}
+` as GeneratedQuery<
+  APITypes.GetExerciseQueryVariables,
+  APITypes.GetExerciseQuery
+>;
+export const listExercises = /* GraphQL */ `query ListExercises(
+  $filter: ModelExerciseFilterInput
+  $limit: Int
+  $nextToken: String
+) {
+  listExercises(filter: $filter, limit: $limit, nextToken: $nextToken) {
+    items {
+      id
+      question
+      solution
+      lessonID
+      exerciseType
+      data
+      createdAt
+      updatedAt
+      lessonExercisesId
+      __typename
+    }
+    nextToken
+    __typename
+  }
+}
+` as GeneratedQuery<
+  APITypes.ListExercisesQueryVariables,
+  APITypes.ListExercisesQuery
+>;
 export const getQuiz = /* GraphQL */ `query GetQuiz($id: ID!) {
   getQuiz(id: $id) {
     id
@@ -344,6 +403,10 @@ export const getQuiz = /* GraphQL */ `query GetQuiz($id: ID!) {
       createdAt
       updatedAt
       moduleLessonsId
+      __typename
+    }
+    questions {
+      nextToken
       __typename
     }
     createdAt
@@ -382,8 +445,19 @@ export const getQuestion = /* GraphQL */ `query GetQuestion($id: ID!) {
     text
     options
     correctAnswer
+    quizID
+    quiz {
+      id
+      title
+      lessonID
+      createdAt
+      updatedAt
+      lessonQuizzesId
+      __typename
+    }
     createdAt
     updatedAt
+    quizQuestionsId
     __typename
   }
 }
@@ -402,8 +476,10 @@ export const listQuestions = /* GraphQL */ `query ListQuestions(
       text
       options
       correctAnswer
+      quizID
       createdAt
       updatedAt
+      quizQuestionsId
       __typename
     }
     nextToken
@@ -558,6 +634,42 @@ export const lessonsByModuleIDAndId = /* GraphQL */ `query LessonsByModuleIDAndI
   APITypes.LessonsByModuleIDAndIdQueryVariables,
   APITypes.LessonsByModuleIDAndIdQuery
 >;
+export const exercisesByLessonIDAndId = /* GraphQL */ `query ExercisesByLessonIDAndId(
+  $lessonID: ID!
+  $id: ModelIDKeyConditionInput
+  $sortDirection: ModelSortDirection
+  $filter: ModelExerciseFilterInput
+  $limit: Int
+  $nextToken: String
+) {
+  exercisesByLessonIDAndId(
+    lessonID: $lessonID
+    id: $id
+    sortDirection: $sortDirection
+    filter: $filter
+    limit: $limit
+    nextToken: $nextToken
+  ) {
+    items {
+      id
+      question
+      solution
+      lessonID
+      exerciseType
+      data
+      createdAt
+      updatedAt
+      lessonExercisesId
+      __typename
+    }
+    nextToken
+    __typename
+  }
+}
+` as GeneratedQuery<
+  APITypes.ExercisesByLessonIDAndIdQueryVariables,
+  APITypes.ExercisesByLessonIDAndIdQuery
+>;
 export const quizzesByLessonIDAndId = /* GraphQL */ `query QuizzesByLessonIDAndId(
   $lessonID: ID!
   $id: ModelIDKeyConditionInput
@@ -590,4 +702,39 @@ export const quizzesByLessonIDAndId = /* GraphQL */ `query QuizzesByLessonIDAndI
 ` as GeneratedQuery<
   APITypes.QuizzesByLessonIDAndIdQueryVariables,
   APITypes.QuizzesByLessonIDAndIdQuery
+>;
+export const questionsByQuizIDAndId = /* GraphQL */ `query QuestionsByQuizIDAndId(
+  $quizID: ID!
+  $id: ModelIDKeyConditionInput
+  $sortDirection: ModelSortDirection
+  $filter: ModelQuestionFilterInput
+  $limit: Int
+  $nextToken: String
+) {
+  questionsByQuizIDAndId(
+    quizID: $quizID
+    id: $id
+    sortDirection: $sortDirection
+    filter: $filter
+    limit: $limit
+    nextToken: $nextToken
+  ) {
+    items {
+      id
+      text
+      options
+      correctAnswer
+      quizID
+      createdAt
+      updatedAt
+      quizQuestionsId
+      __typename
+    }
+    nextToken
+    __typename
+  }
+}
+` as GeneratedQuery<
+  APITypes.QuestionsByQuizIDAndIdQueryVariables,
+  APITypes.QuestionsByQuizIDAndIdQuery
 >;

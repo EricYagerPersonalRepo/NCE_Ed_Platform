@@ -14,8 +14,6 @@ export { default as NCEStudentProfileCreateForm } from "./NCEStudentProfileCreat
 export { default as NCEStudentProfileUpdateForm } from "./NCEStudentProfileUpdateForm";
 export { default as NCEUserSettingsCreateForm } from "./NCEUserSettingsCreateForm";
 export { default as NCEUserSettingsUpdateForm } from "./NCEUserSettingsUpdateForm";
-export { default as QuestionCreateForm } from "./QuestionCreateForm";
-export { default as QuestionUpdateForm } from "./QuestionUpdateForm";
 export { default as UserNotificationReadCreateForm } from "./UserNotificationReadCreateForm";
 export { default as UserNotificationReadUpdateForm } from "./UserNotificationReadUpdateForm";
 export { default as studioTheme } from "./studioTheme";

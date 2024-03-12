@@ -317,6 +317,7 @@ export type Lesson = {
   moduleID: string,
   module: Module,
   quizzes?: ModelQuizConnection | null,
+  exercises?: ModelExerciseConnection | null,
   createdAt: string,
   updatedAt: string,
   moduleLessonsId?: string | null,
@@ -334,10 +335,56 @@ export type Quiz = {
   title: string,
   lessonID: string,
   lesson: Lesson,
+  questions?: ModelQuestionConnection | null,
   createdAt: string,
   updatedAt: string,
   lessonQuizzesId?: string | null,
 };
+
+export type ModelQuestionConnection = {
+  __typename: "ModelQuestionConnection",
+  items:  Array<Question | null >,
+  nextToken?: string | null,
+};
+
+export type Question = {
+  __typename: "Question",
+  id: string,
+  text: string,
+  options?: string | null,
+  correctAnswer: string,
+  quizID: string,
+  quiz: Quiz,
+  createdAt: string,
+  updatedAt: string,
+  quizQuestionsId?: string | null,
+};
+
+export type ModelExerciseConnection = {
+  __typename: "ModelExerciseConnection",
+  items:  Array<Exercise | null >,
+  nextToken?: string | null,
+};
+
+export type Exercise = {
+  __typename: "Exercise",
+  id: string,
+  question: string,
+  solution?: string | null,
+  lessonID: string,
+  lesson: Lesson,
+  exerciseType: ExerciseType,
+  data?: string | null,
+  createdAt: string,
+  updatedAt: string,
+  lessonExercisesId?: string | null,
+};
+
+export enum ExerciseType {
+  CODING = "CODING",
+  PROBLEM_SOLVING = "PROBLEM_SOLVING",
+}
+
 
 export type UpdateCourseInput = {
   id: string,
@@ -415,6 +462,47 @@ export type DeleteLessonInput = {
   id: string,
 };
 
+export type CreateExerciseInput = {
+  id?: string | null,
+  question: string,
+  solution?: string | null,
+  lessonID: string,
+  exerciseType: ExerciseType,
+  data?: string | null,
+  lessonExercisesId?: string | null,
+};
+
+export type ModelExerciseConditionInput = {
+  question?: ModelStringInput | null,
+  solution?: ModelStringInput | null,
+  lessonID?: ModelIDInput | null,
+  exerciseType?: ModelExerciseTypeInput | null,
+  data?: ModelStringInput | null,
+  and?: Array< ModelExerciseConditionInput | null > | null,
+  or?: Array< ModelExerciseConditionInput | null > | null,
+  not?: ModelExerciseConditionInput | null,
+  lessonExercisesId?: ModelIDInput | null,
+};
+
+export type ModelExerciseTypeInput = {
+  eq?: ExerciseType | null,
+  ne?: ExerciseType | null,
+};
+
+export type UpdateExerciseInput = {
+  id: string,
+  question?: string | null,
+  solution?: string | null,
+  lessonID?: string | null,
+  exerciseType?: ExerciseType | null,
+  data?: string | null,
+  lessonExercisesId?: string | null,
+};
+
+export type DeleteExerciseInput = {
+  id: string,
+};
+
 export type CreateQuizInput = {
   id?: string | null,
   title: string,
@@ -447,25 +535,19 @@ export type CreateQuestionInput = {
   text: string,
   options?: string | null,
   correctAnswer: string,
+  quizID: string,
+  quizQuestionsId?: string | null,
 };
 
 export type ModelQuestionConditionInput = {
   text?: ModelStringInput | null,
   options?: ModelStringInput | null,
   correctAnswer?: ModelStringInput | null,
+  quizID?: ModelIDInput | null,
   and?: Array< ModelQuestionConditionInput | null > | null,
   or?: Array< ModelQuestionConditionInput | null > | null,
   not?: ModelQuestionConditionInput | null,
-};
-
-export type Question = {
-  __typename: "Question",
-  id: string,
-  text: string,
-  options?: string | null,
-  correctAnswer: string,
-  createdAt: string,
-  updatedAt: string,
+  quizQuestionsId?: ModelIDInput | null,
 };
 
 export type UpdateQuestionInput = {
@@ -473,6 +555,8 @@ export type UpdateQuestionInput = {
   text?: string | null,
   options?: string | null,
   correctAnswer?: string | null,
+  quizID?: string | null,
+  quizQuestionsId?: string | null,
 };
 
 export type DeleteQuestionInput = {
@@ -644,6 +728,19 @@ export type ModelLessonFilterInput = {
   moduleLessonsId?: ModelIDInput | null,
 };
 
+export type ModelExerciseFilterInput = {
+  id?: ModelIDInput | null,
+  question?: ModelStringInput | null,
+  solution?: ModelStringInput | null,
+  lessonID?: ModelIDInput | null,
+  exerciseType?: ModelExerciseTypeInput | null,
+  data?: ModelStringInput | null,
+  and?: Array< ModelExerciseFilterInput | null > | null,
+  or?: Array< ModelExerciseFilterInput | null > | null,
+  not?: ModelExerciseFilterInput | null,
+  lessonExercisesId?: ModelIDInput | null,
+};
+
 export type ModelQuizFilterInput = {
   id?: ModelIDInput | null,
   title?: ModelStringInput | null,
@@ -659,15 +756,11 @@ export type ModelQuestionFilterInput = {
   text?: ModelStringInput | null,
   options?: ModelStringInput | null,
   correctAnswer?: ModelStringInput | null,
+  quizID?: ModelIDInput | null,
   and?: Array< ModelQuestionFilterInput | null > | null,
   or?: Array< ModelQuestionFilterInput | null > | null,
   not?: ModelQuestionFilterInput | null,
-};
-
-export type ModelQuestionConnection = {
-  __typename: "ModelQuestionConnection",
-  items:  Array<Question | null >,
-  nextToken?: string | null,
+  quizQuestionsId?: ModelIDInput | null,
 };
 
 export type ModelEnrollmentFilterInput = {
@@ -808,6 +901,17 @@ export type ModelSubscriptionLessonFilterInput = {
   or?: Array< ModelSubscriptionLessonFilterInput | null > | null,
 };
 
+export type ModelSubscriptionExerciseFilterInput = {
+  id?: ModelSubscriptionIDInput | null,
+  question?: ModelSubscriptionStringInput | null,
+  solution?: ModelSubscriptionStringInput | null,
+  lessonID?: ModelSubscriptionIDInput | null,
+  exerciseType?: ModelSubscriptionStringInput | null,
+  data?: ModelSubscriptionStringInput | null,
+  and?: Array< ModelSubscriptionExerciseFilterInput | null > | null,
+  or?: Array< ModelSubscriptionExerciseFilterInput | null > | null,
+};
+
 export type ModelSubscriptionQuizFilterInput = {
   id?: ModelSubscriptionIDInput | null,
   title?: ModelSubscriptionStringInput | null,
@@ -821,6 +925,7 @@ export type ModelSubscriptionQuestionFilterInput = {
   text?: ModelSubscriptionStringInput | null,
   options?: ModelSubscriptionStringInput | null,
   correctAnswer?: ModelSubscriptionStringInput | null,
+  quizID?: ModelSubscriptionIDInput | null,
   and?: Array< ModelSubscriptionQuestionFilterInput | null > | null,
   or?: Array< ModelSubscriptionQuestionFilterInput | null > | null,
 };
@@ -1262,6 +1367,10 @@ export type CreateLessonMutation = {
       __typename: "ModelQuizConnection",
       nextToken?: string | null,
     } | null,
+    exercises?:  {
+      __typename: "ModelExerciseConnection",
+      nextToken?: string | null,
+    } | null,
     createdAt: string,
     updatedAt: string,
     moduleLessonsId?: string | null,
@@ -1293,6 +1402,10 @@ export type UpdateLessonMutation = {
     },
     quizzes?:  {
       __typename: "ModelQuizConnection",
+      nextToken?: string | null,
+    } | null,
+    exercises?:  {
+      __typename: "ModelExerciseConnection",
       nextToken?: string | null,
     } | null,
     createdAt: string,
@@ -1328,9 +1441,106 @@ export type DeleteLessonMutation = {
       __typename: "ModelQuizConnection",
       nextToken?: string | null,
     } | null,
+    exercises?:  {
+      __typename: "ModelExerciseConnection",
+      nextToken?: string | null,
+    } | null,
     createdAt: string,
     updatedAt: string,
     moduleLessonsId?: string | null,
+  } | null,
+};
+
+export type CreateExerciseMutationVariables = {
+  input: CreateExerciseInput,
+  condition?: ModelExerciseConditionInput | null,
+};
+
+export type CreateExerciseMutation = {
+  createExercise?:  {
+    __typename: "Exercise",
+    id: string,
+    question: string,
+    solution?: string | null,
+    lessonID: string,
+    lesson:  {
+      __typename: "Lesson",
+      id: string,
+      title: string,
+      content?: string | null,
+      videoURL?: string | null,
+      moduleID: string,
+      createdAt: string,
+      updatedAt: string,
+      moduleLessonsId?: string | null,
+    },
+    exerciseType: ExerciseType,
+    data?: string | null,
+    createdAt: string,
+    updatedAt: string,
+    lessonExercisesId?: string | null,
+  } | null,
+};
+
+export type UpdateExerciseMutationVariables = {
+  input: UpdateExerciseInput,
+  condition?: ModelExerciseConditionInput | null,
+};
+
+export type UpdateExerciseMutation = {
+  updateExercise?:  {
+    __typename: "Exercise",
+    id: string,
+    question: string,
+    solution?: string | null,
+    lessonID: string,
+    lesson:  {
+      __typename: "Lesson",
+      id: string,
+      title: string,
+      content?: string | null,
+      videoURL?: string | null,
+      moduleID: string,
+      createdAt: string,
+      updatedAt: string,
+      moduleLessonsId?: string | null,
+    },
+    exerciseType: ExerciseType,
+    data?: string | null,
+    createdAt: string,
+    updatedAt: string,
+    lessonExercisesId?: string | null,
+  } | null,
+};
+
+export type DeleteExerciseMutationVariables = {
+  input: DeleteExerciseInput,
+  condition?: ModelExerciseConditionInput | null,
+};
+
+export type DeleteExerciseMutation = {
+  deleteExercise?:  {
+    __typename: "Exercise",
+    id: string,
+    question: string,
+    solution?: string | null,
+    lessonID: string,
+    lesson:  {
+      __typename: "Lesson",
+      id: string,
+      title: string,
+      content?: string | null,
+      videoURL?: string | null,
+      moduleID: string,
+      createdAt: string,
+      updatedAt: string,
+      moduleLessonsId?: string | null,
+    },
+    exerciseType: ExerciseType,
+    data?: string | null,
+    createdAt: string,
+    updatedAt: string,
+    lessonExercisesId?: string | null,
   } | null,
 };
 
@@ -1356,6 +1566,10 @@ export type CreateQuizMutation = {
       updatedAt: string,
       moduleLessonsId?: string | null,
     },
+    questions?:  {
+      __typename: "ModelQuestionConnection",
+      nextToken?: string | null,
+    } | null,
     createdAt: string,
     updatedAt: string,
     lessonQuizzesId?: string | null,
@@ -1384,6 +1598,10 @@ export type UpdateQuizMutation = {
       updatedAt: string,
       moduleLessonsId?: string | null,
     },
+    questions?:  {
+      __typename: "ModelQuestionConnection",
+      nextToken?: string | null,
+    } | null,
     createdAt: string,
     updatedAt: string,
     lessonQuizzesId?: string | null,
@@ -1412,6 +1630,10 @@ export type DeleteQuizMutation = {
       updatedAt: string,
       moduleLessonsId?: string | null,
     },
+    questions?:  {
+      __typename: "ModelQuestionConnection",
+      nextToken?: string | null,
+    } | null,
     createdAt: string,
     updatedAt: string,
     lessonQuizzesId?: string | null,
@@ -1430,8 +1652,19 @@ export type CreateQuestionMutation = {
     text: string,
     options?: string | null,
     correctAnswer: string,
+    quizID: string,
+    quiz:  {
+      __typename: "Quiz",
+      id: string,
+      title: string,
+      lessonID: string,
+      createdAt: string,
+      updatedAt: string,
+      lessonQuizzesId?: string | null,
+    },
     createdAt: string,
     updatedAt: string,
+    quizQuestionsId?: string | null,
   } | null,
 };
 
@@ -1447,8 +1680,19 @@ export type UpdateQuestionMutation = {
     text: string,
     options?: string | null,
     correctAnswer: string,
+    quizID: string,
+    quiz:  {
+      __typename: "Quiz",
+      id: string,
+      title: string,
+      lessonID: string,
+      createdAt: string,
+      updatedAt: string,
+      lessonQuizzesId?: string | null,
+    },
     createdAt: string,
     updatedAt: string,
+    quizQuestionsId?: string | null,
   } | null,
 };
 
@@ -1464,8 +1708,19 @@ export type DeleteQuestionMutation = {
     text: string,
     options?: string | null,
     correctAnswer: string,
+    quizID: string,
+    quiz:  {
+      __typename: "Quiz",
+      id: string,
+      title: string,
+      lessonID: string,
+      createdAt: string,
+      updatedAt: string,
+      lessonQuizzesId?: string | null,
+    },
     createdAt: string,
     updatedAt: string,
+    quizQuestionsId?: string | null,
   } | null,
 };
 
@@ -1815,6 +2070,10 @@ export type GetLessonQuery = {
       __typename: "ModelQuizConnection",
       nextToken?: string | null,
     } | null,
+    exercises?:  {
+      __typename: "ModelExerciseConnection",
+      nextToken?: string | null,
+    } | null,
     createdAt: string,
     updatedAt: string,
     moduleLessonsId?: string | null,
@@ -1845,6 +2104,61 @@ export type ListLessonsQuery = {
   } | null,
 };
 
+export type GetExerciseQueryVariables = {
+  id: string,
+};
+
+export type GetExerciseQuery = {
+  getExercise?:  {
+    __typename: "Exercise",
+    id: string,
+    question: string,
+    solution?: string | null,
+    lessonID: string,
+    lesson:  {
+      __typename: "Lesson",
+      id: string,
+      title: string,
+      content?: string | null,
+      videoURL?: string | null,
+      moduleID: string,
+      createdAt: string,
+      updatedAt: string,
+      moduleLessonsId?: string | null,
+    },
+    exerciseType: ExerciseType,
+    data?: string | null,
+    createdAt: string,
+    updatedAt: string,
+    lessonExercisesId?: string | null,
+  } | null,
+};
+
+export type ListExercisesQueryVariables = {
+  filter?: ModelExerciseFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+};
+
+export type ListExercisesQuery = {
+  listExercises?:  {
+    __typename: "ModelExerciseConnection",
+    items:  Array< {
+      __typename: "Exercise",
+      id: string,
+      question: string,
+      solution?: string | null,
+      lessonID: string,
+      exerciseType: ExerciseType,
+      data?: string | null,
+      createdAt: string,
+      updatedAt: string,
+      lessonExercisesId?: string | null,
+    } | null >,
+    nextToken?: string | null,
+  } | null,
+};
+
 export type GetQuizQueryVariables = {
   id: string,
 };
@@ -1866,6 +2180,10 @@ export type GetQuizQuery = {
       updatedAt: string,
       moduleLessonsId?: string | null,
     },
+    questions?:  {
+      __typename: "ModelQuestionConnection",
+      nextToken?: string | null,
+    } | null,
     createdAt: string,
     updatedAt: string,
     lessonQuizzesId?: string | null,
@@ -1905,8 +2223,19 @@ export type GetQuestionQuery = {
     text: string,
     options?: string | null,
     correctAnswer: string,
+    quizID: string,
+    quiz:  {
+      __typename: "Quiz",
+      id: string,
+      title: string,
+      lessonID: string,
+      createdAt: string,
+      updatedAt: string,
+      lessonQuizzesId?: string | null,
+    },
     createdAt: string,
     updatedAt: string,
+    quizQuestionsId?: string | null,
   } | null,
 };
 
@@ -1925,8 +2254,10 @@ export type ListQuestionsQuery = {
       text: string,
       options?: string | null,
       correctAnswer: string,
+      quizID: string,
       createdAt: string,
       updatedAt: string,
+      quizQuestionsId?: string | null,
     } | null >,
     nextToken?: string | null,
   } | null,
@@ -2053,6 +2384,34 @@ export type LessonsByModuleIDAndIdQuery = {
   } | null,
 };
 
+export type ExercisesByLessonIDAndIdQueryVariables = {
+  lessonID: string,
+  id?: ModelIDKeyConditionInput | null,
+  sortDirection?: ModelSortDirection | null,
+  filter?: ModelExerciseFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+};
+
+export type ExercisesByLessonIDAndIdQuery = {
+  exercisesByLessonIDAndId?:  {
+    __typename: "ModelExerciseConnection",
+    items:  Array< {
+      __typename: "Exercise",
+      id: string,
+      question: string,
+      solution?: string | null,
+      lessonID: string,
+      exerciseType: ExerciseType,
+      data?: string | null,
+      createdAt: string,
+      updatedAt: string,
+      lessonExercisesId?: string | null,
+    } | null >,
+    nextToken?: string | null,
+  } | null,
+};
+
 export type QuizzesByLessonIDAndIdQueryVariables = {
   lessonID: string,
   id?: ModelIDKeyConditionInput | null,
@@ -2073,6 +2432,33 @@ export type QuizzesByLessonIDAndIdQuery = {
       createdAt: string,
       updatedAt: string,
       lessonQuizzesId?: string | null,
+    } | null >,
+    nextToken?: string | null,
+  } | null,
+};
+
+export type QuestionsByQuizIDAndIdQueryVariables = {
+  quizID: string,
+  id?: ModelIDKeyConditionInput | null,
+  sortDirection?: ModelSortDirection | null,
+  filter?: ModelQuestionFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+};
+
+export type QuestionsByQuizIDAndIdQuery = {
+  questionsByQuizIDAndId?:  {
+    __typename: "ModelQuestionConnection",
+    items:  Array< {
+      __typename: "Question",
+      id: string,
+      text: string,
+      options?: string | null,
+      correctAnswer: string,
+      quizID: string,
+      createdAt: string,
+      updatedAt: string,
+      quizQuestionsId?: string | null,
     } | null >,
     nextToken?: string | null,
   } | null,
@@ -2482,6 +2868,10 @@ export type OnCreateLessonSubscription = {
       __typename: "ModelQuizConnection",
       nextToken?: string | null,
     } | null,
+    exercises?:  {
+      __typename: "ModelExerciseConnection",
+      nextToken?: string | null,
+    } | null,
     createdAt: string,
     updatedAt: string,
     moduleLessonsId?: string | null,
@@ -2512,6 +2902,10 @@ export type OnUpdateLessonSubscription = {
     },
     quizzes?:  {
       __typename: "ModelQuizConnection",
+      nextToken?: string | null,
+    } | null,
+    exercises?:  {
+      __typename: "ModelExerciseConnection",
       nextToken?: string | null,
     } | null,
     createdAt: string,
@@ -2546,9 +2940,103 @@ export type OnDeleteLessonSubscription = {
       __typename: "ModelQuizConnection",
       nextToken?: string | null,
     } | null,
+    exercises?:  {
+      __typename: "ModelExerciseConnection",
+      nextToken?: string | null,
+    } | null,
     createdAt: string,
     updatedAt: string,
     moduleLessonsId?: string | null,
+  } | null,
+};
+
+export type OnCreateExerciseSubscriptionVariables = {
+  filter?: ModelSubscriptionExerciseFilterInput | null,
+};
+
+export type OnCreateExerciseSubscription = {
+  onCreateExercise?:  {
+    __typename: "Exercise",
+    id: string,
+    question: string,
+    solution?: string | null,
+    lessonID: string,
+    lesson:  {
+      __typename: "Lesson",
+      id: string,
+      title: string,
+      content?: string | null,
+      videoURL?: string | null,
+      moduleID: string,
+      createdAt: string,
+      updatedAt: string,
+      moduleLessonsId?: string | null,
+    },
+    exerciseType: ExerciseType,
+    data?: string | null,
+    createdAt: string,
+    updatedAt: string,
+    lessonExercisesId?: string | null,
+  } | null,
+};
+
+export type OnUpdateExerciseSubscriptionVariables = {
+  filter?: ModelSubscriptionExerciseFilterInput | null,
+};
+
+export type OnUpdateExerciseSubscription = {
+  onUpdateExercise?:  {
+    __typename: "Exercise",
+    id: string,
+    question: string,
+    solution?: string | null,
+    lessonID: string,
+    lesson:  {
+      __typename: "Lesson",
+      id: string,
+      title: string,
+      content?: string | null,
+      videoURL?: string | null,
+      moduleID: string,
+      createdAt: string,
+      updatedAt: string,
+      moduleLessonsId?: string | null,
+    },
+    exerciseType: ExerciseType,
+    data?: string | null,
+    createdAt: string,
+    updatedAt: string,
+    lessonExercisesId?: string | null,
+  } | null,
+};
+
+export type OnDeleteExerciseSubscriptionVariables = {
+  filter?: ModelSubscriptionExerciseFilterInput | null,
+};
+
+export type OnDeleteExerciseSubscription = {
+  onDeleteExercise?:  {
+    __typename: "Exercise",
+    id: string,
+    question: string,
+    solution?: string | null,
+    lessonID: string,
+    lesson:  {
+      __typename: "Lesson",
+      id: string,
+      title: string,
+      content?: string | null,
+      videoURL?: string | null,
+      moduleID: string,
+      createdAt: string,
+      updatedAt: string,
+      moduleLessonsId?: string | null,
+    },
+    exerciseType: ExerciseType,
+    data?: string | null,
+    createdAt: string,
+    updatedAt: string,
+    lessonExercisesId?: string | null,
   } | null,
 };
 
@@ -2573,6 +3061,10 @@ export type OnCreateQuizSubscription = {
       updatedAt: string,
       moduleLessonsId?: string | null,
     },
+    questions?:  {
+      __typename: "ModelQuestionConnection",
+      nextToken?: string | null,
+    } | null,
     createdAt: string,
     updatedAt: string,
     lessonQuizzesId?: string | null,
@@ -2600,6 +3092,10 @@ export type OnUpdateQuizSubscription = {
       updatedAt: string,
       moduleLessonsId?: string | null,
     },
+    questions?:  {
+      __typename: "ModelQuestionConnection",
+      nextToken?: string | null,
+    } | null,
     createdAt: string,
     updatedAt: string,
     lessonQuizzesId?: string | null,
@@ -2627,6 +3123,10 @@ export type OnDeleteQuizSubscription = {
       updatedAt: string,
       moduleLessonsId?: string | null,
     },
+    questions?:  {
+      __typename: "ModelQuestionConnection",
+      nextToken?: string | null,
+    } | null,
     createdAt: string,
     updatedAt: string,
     lessonQuizzesId?: string | null,
@@ -2644,8 +3144,19 @@ export type OnCreateQuestionSubscription = {
     text: string,
     options?: string | null,
     correctAnswer: string,
+    quizID: string,
+    quiz:  {
+      __typename: "Quiz",
+      id: string,
+      title: string,
+      lessonID: string,
+      createdAt: string,
+      updatedAt: string,
+      lessonQuizzesId?: string | null,
+    },
     createdAt: string,
     updatedAt: string,
+    quizQuestionsId?: string | null,
   } | null,
 };
 
@@ -2660,8 +3171,19 @@ export type OnUpdateQuestionSubscription = {
     text: string,
     options?: string | null,
     correctAnswer: string,
+    quizID: string,
+    quiz:  {
+      __typename: "Quiz",
+      id: string,
+      title: string,
+      lessonID: string,
+      createdAt: string,
+      updatedAt: string,
+      lessonQuizzesId?: string | null,
+    },
     createdAt: string,
     updatedAt: string,
+    quizQuestionsId?: string | null,
   } | null,
 };
 
@@ -2676,8 +3198,19 @@ export type OnDeleteQuestionSubscription = {
     text: string,
     options?: string | null,
     correctAnswer: string,
+    quizID: string,
+    quiz:  {
+      __typename: "Quiz",
+      id: string,
+      title: string,
+      lessonID: string,
+      createdAt: string,
+      updatedAt: string,
+      lessonQuizzesId?: string | null,
+    },
     createdAt: string,
     updatedAt: string,
+    quizQuestionsId?: string | null,
   } | null,
 };
 

@@ -147,7 +147,7 @@ type Question
 ]){
   id: ID!
   text: String!
-  options: AWSJSON
+  options: AWSJSON # Multiple-choice options
   correctAnswer: String!
   quizID: ID! @index(name: "byQuiz", sortKeyFields: ["id"])
   quiz: Quiz! @belongsTo(fields: ["quizID"])
