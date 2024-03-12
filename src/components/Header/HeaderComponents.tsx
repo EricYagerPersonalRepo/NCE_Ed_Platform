@@ -197,6 +197,7 @@ export const UserAccountButtons_Web = ({ avatarUrl }: any) => {
     const fetchNotifications = async () => {
         try {
             const { newNotificationsCount, notificationsPayload }:any = await getBroadcastNotificationsQuery()
+            console.log("NOTIFICATIONS PAYLOAD: ", notificationsPayload)
             setNotifications(notificationsPayload)
             setNotificationsLength(newNotificationsCount)
             return notificationsPayload
@@ -284,9 +285,9 @@ export const UserAccountButtons_Web = ({ avatarUrl }: any) => {
                                 }}>
                                     {notification.message}
                                 </Typography>
-                                <Typography component="p" variant="body2" style={{ color: 'gray' }}>
+                                {/*<Typography component="p" variant="body2" style={{ color: 'gray' }}>
                                     {formatDistanceToNow(new Date(notification.createdAt), { addSuffix: true })}
-                                </Typography>
+                            </Typography>*/}
                             </Box>
                         </MenuItem>
                         ))}

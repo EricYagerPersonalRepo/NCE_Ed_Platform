@@ -11,12 +11,14 @@ const client = generateClient()
 
 export const getBroadcastNotificationsQuery = async () => {
     try {
-
         const broadcastResponse = await amplifyApiClient.graphql({
             query: listBroadcastNotifications, 
             variables: {}
         })
-        const readResponse = await amplifyApiClient.graphql({
+        let newNotificationsCount = 0
+        let returnPayload = {}
+        console.log("BROADCAST RESPONSE: ", broadcastResponse)
+        /*const readResponse = await amplifyApiClient.graphql({
             query: listUserNotificationReads,
             variables: {}
         })
@@ -39,7 +41,7 @@ export const getBroadcastNotificationsQuery = async () => {
         }))
 
         returnPayload.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
-        
+        */
         return { newNotificationsCount, notificationsPayload: returnPayload }
     } catch(notificationCallError) {
         console.error(notificationCallError)
