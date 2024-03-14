@@ -28,7 +28,7 @@ const AuthenticatedHeader: React.FC<AuthenticatedHeaderProps>= ({avatarUrl}) => 
     const isMobile = useMediaQuery(theme.breakpoints.down('sm'))
 
     return (
-        <AppBar position="static" style={{ background: 'white' }} elevation={0}>
+        <AppBar position="static" sx={{ background: 'white', zIndex: (theme) => theme.zIndex.drawer + 1  }} elevation={0}>
             <Toolbar>
                 <CommonHeaderComponent />
                 {isMobile ? <UserAccountButtons_Mobile /> : <UserAccountButtons_Web avatarUrl={avatarUrl}/>}

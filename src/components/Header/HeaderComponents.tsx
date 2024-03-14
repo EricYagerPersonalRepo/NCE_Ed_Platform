@@ -8,7 +8,7 @@ import { ConsoleLogger } from 'aws-amplify/utils'
 import { getBroadcastNotificationsQuery, markNotificationAsRead } from '@/src/functions/Notifications'
 import { formatDistanceToNow } from 'date-fns'
 import { amplifyApiClient } from '@/src/functions/AuthX'
-import { onCreateBroadcastNotification } from '@/src/graphql/subscriptions'
+import { onCreateBroadcastNotification, onDeleteBroadcastNotification } from '@/src/graphql/subscriptions'
 import { Notification } from '@/src/types/HeaderTypes'
 
 /**
@@ -197,7 +197,6 @@ export const UserAccountButtons_Web = ({ avatarUrl }: any) => {
     const fetchNotifications = async () => {
         try {
             const { newNotificationsCount, notificationsPayload }:any = await getBroadcastNotificationsQuery()
-            console.log("NOTIFICATIONS PAYLOAD: ", notificationsPayload)
             setNotifications(notificationsPayload)
             setNotificationsLength(newNotificationsCount)
             return notificationsPayload
@@ -232,9 +231,23 @@ export const UserAccountButtons_Web = ({ avatarUrl }: any) => {
             },
             error: (error) => console.warn(error)
         })
+
+        // Subscription for deletion events
+        const deleteNotificationSub = amplifyApiClient.graphql({ query: onDeleteBroadcastNotification }).subscribe({
+            next: ({ data }) => {
+                const deletedNotificationId = data.onDeleteBroadcastNotification.id
+                console.log(data)
+
+                // Remove the deleted notification from the state
+                setNotifications(notifications => notifications.filter(notification => notification.id !== deletedNotificationId))
+                fetchNotifications()
+            },
+            error: (error) => console.warn(error),
+        })
     
         return () => {
             createNotificationSub.unsubscribe()
+            deleteNotificationSub.unsubscribe()
         }
     }, [])
     

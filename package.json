@@ -2,7 +2,7 @@
   "name": "nce-ed-platform",
   "version": "0.1.0",
   "scripts": {
-    "dev": "next dev",
+    "dev": "next dev -H 0.0.0.0",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
@@ -20,6 +20,7 @@
     "@mui/icons-material": "^5.15.1",
     "@mui/material": "^5.15.1",
     "@mui/utils": "^5.15.11",
+    "@mui/x-data-grid": "^6.19.6",
     "@tanstack/react-query": "^5.25.0",
     "aws-amplify": "^6.0.6",
     "cypress": "^13.6.2",

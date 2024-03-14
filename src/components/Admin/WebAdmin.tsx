@@ -1,79 +1,57 @@
-import { NotificationType } from "@/src/API";
-import { amplifyApiClient } from "@/src/functions/AuthX";
-import { createBroadcastNotification } from "@/src/graphql/mutations";
-import { Button, FormControl, InputLabel, MenuItem, Select, TextField } from "@mui/material";
+import { Notifications, People, School } from "@mui/icons-material";
+import { Box, Drawer, List, ListItem, ListItemButton, ListItemIcon, ListItemText } from "@mui/material";
 import { useState } from "react";
+import { AdminNotificationsView } from "./AdminComponents";
+
+const drawerWidth = 240
 
 const WebAdministrativeView = () => {
-    const [message, setMessage] = useState('')
-    const [title, setTitle] = useState('')
-    const [type, setType] = useState<NotificationType>(NotificationType.MESSAGE)
+    const [activeView, setActiveView] = useState('Notifications');
 
-  const handleCreateNotification = async (event:any) => {
-    event.preventDefault();
-
-    try {
-     await amplifyApiClient.graphql({
-        query: createBroadcastNotification, 
-        variables: { input: 
-            {
-                title:title, 
-                targetStudent: "",
-                message:message, 
-                type:type 
-            }
+    const renderActiveView = () => {
+        switch (activeView) {
+            case 'Notifications':
+                return <AdminNotificationsView />;
+            case 'Users':
+                return <div>Users View</div>;
+            case 'Courses':
+                return <div>Courses View</div>;
+            default:
+                return <div>Unknown View</div>;
         }
-    })
-      alert('Notification created successfully')
-      // Reset form
-      setMessage('');
-      setType(NotificationType.MESSAGE);
-    } catch (error) {
-      console.error('Error creating notification:', error);
-      alert('Failed to create notification');
     }
-  }
-    return(
-        <form onSubmit={handleCreateNotification}>
-            <TextField
-                fullWidth
-                label="Title"
-                variant="outlined"
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
-                required
-                margin="normal"
-            />
-            <TextField
-                fullWidth
-                label="Message"
-                variant="outlined"
-                value={message}
-                onChange={(e) => setMessage(e.target.value)}
-                required
-                margin="normal"
-            />
-            <FormControl fullWidth margin="normal">
-                <InputLabel>Type</InputLabel>
-                <Select
-                value={type}
-                onChange={(e) => setType(e.target.value as NotificationType)} // Cast to NotificationType
-                label="Type"
-                required
-                >
-                {/* Map enum values to menu items */}
-                {Object.values(NotificationType).map((typeValue) => (
-                    <MenuItem key={typeValue} value={typeValue}>
-                    {typeValue}
-                    </MenuItem>
-                ))}
-                </Select>
-            </FormControl>
-            <Button type="submit" variant="contained" color="primary">
-                Create Notification
-            </Button>
-        </form>
-    )
+
+    return (
+        <Box sx={{ display: 'flex' }}>
+            <Drawer
+                variant="permanent"
+                sx={{
+                    width: drawerWidth,
+                    flexShrink: 0,
+                    [`& .MuiDrawer-paper`]: { width: drawerWidth, boxSizing: 'border-box', top: '140px' }
+                }}
+            >
+                <List>
+                    {['Notifications', 'Users', 'Courses'].map((text, index) => (
+                        <ListItemButton key={text} onClick={()=>setActiveView(text)}>
+                            <ListItemIcon>
+                                {index === 0 && <Notifications />}
+                                {index === 1 && <People />}
+                                {index === 2 && <School />}
+                            </ListItemIcon>
+                            <ListItemText primary={text} />
+                        </ListItemButton>
+                    ))}
+                </List>
+            </Drawer>
+            <Box
+                component="main"
+                sx={{ flexGrow: 1, bgcolor: 'background.default', p: 3 }}
+            >
+                {renderActiveView()}
+            </Box>
+        </Box>
+    );
 }
 
 export default WebAdministrativeView
