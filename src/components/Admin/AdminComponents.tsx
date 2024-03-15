@@ -15,7 +15,7 @@ export const RestrictedView = () => {
     )
 }
 
-export const RenderAdministrativePage = ({isMobile}:any) => {
+export const AdminHome = ({isMobile}:any) => {
     return(isMobile ? <MobileAdmin /> : <WebAdmin />)
 }
 
@@ -33,15 +33,14 @@ export const AdminNotificationsView = () => {
     useEffect(() => {
         switch (window.location.hash) {
             case "#createnotifications":
-                setValue(0);
-                break;
+                setValue(0)
+                break
             case "#editnotifications":
-                setValue(1);
-                break;
-            // Add more cases as needed for additional hashes/tabs
+                setValue(1)
+                break
             default:
-                setValue(0); // Default tab if no hash matches
-                break;
+                setValue(0)
+                break
         }
     }, [])
 
@@ -303,6 +302,72 @@ export const AdminNotificationsTableView = () => {
                 </DialogActions>
             </Dialog>
 
+        </>
+    )
+}
+
+export const AdminUsersView = () => {
+    const [rows, setRows] = useState<GridRowsProp>([])
+    const [rowModesModel, setRowModesModel] = useState<GridRowModesModel>({})
+    const [openDialog, setOpenDialog] = useState(false)
+    const [editedRow, setEditedRow] = useState<any>({})
+
+    useEffect(() => {
+        const fetchProfiles = async () => {
+        }
+        fetchProfiles()
+    }, [])
+
+    const handleRowEditStop = (event:any, reason:any) => {
+        if (reason === 'rowFocusOut') {
+            event.defaultMuiPrevented = true
+        }
+    }
+
+    const processRowUpdate = async (newRow:any) => {
+       
+    }
+
+    const processRowUpdateError = (error:any) => {
+        console.error("processRowUpdateError: ", error)
+    }
+
+    const confirmRowUpdate = (newRow:any) => {
+        const originalRow = rows.find(row => row.id === newRow.id)
+        setEditedRow({ originalRow, newRow })
+        setOpenDialog(true)
+    }
+
+    const columns: GridColDef[] = [
+        { field: 'id', headerName: 'ID', flex: 1, editable: true },
+        { field: 'message', headerName: 'Message', flex: 5, editable: true },
+        {
+            field: 'actions',
+            type: 'actions',
+            headerName: 'Actions',
+            width: 100,
+            getActions: (params) => [
+                <GridActionsCellItem
+                    icon={<Edit />}
+                    label="Edit"
+                    onClick={() => setRowModesModel({...rowModesModel, [params.id]: { mode: GridRowModes.Edit }})}
+                />,
+                <GridActionsCellItem
+                    icon={<Delete />}
+                    label="Delete"
+                    onClick={() => handleDelete(params.id)}
+                />,
+            ],
+        },
+    ]
+
+    const handleDelete = async (id:any) => {
+        
+    }
+
+    return (
+        <>
+            
         </>
     )
 }

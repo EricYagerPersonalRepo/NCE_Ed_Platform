@@ -1,7 +1,7 @@
 import { Notifications, People, School } from "@mui/icons-material";
 import { Box, Drawer, List, ListItem, ListItemButton, ListItemIcon, ListItemText } from "@mui/material";
 import { useState } from "react";
-import { AdminNotificationsView } from "./AdminComponents";
+import { AdminNotificationsView, AdminUsersView } from "./AdminComponents";
 
 const drawerWidth = 240
 
@@ -13,7 +13,7 @@ const WebAdministrativeView = () => {
             case 'Notifications':
                 return <AdminNotificationsView />;
             case 'Users':
-                return <div>Users View</div>;
+                return <AdminUsersView />;
             case 'Courses':
                 return <div>Courses View</div>;
             default:

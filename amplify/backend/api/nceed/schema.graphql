@@ -9,6 +9,7 @@ type NCEStudentProfile
   name: String!
   email: AWSEmail!
   birthdate: AWSDate!
+  status: StudentStatus
 }
 
 type NCEUserSettings 
@@ -58,6 +59,10 @@ enum NotificationType {
   REMINDER
 }
 
+enum StudentStatus {
+  ACTIVE
+  INACTIVE
+}
 # BEGIN COURSE SCHEMA DEFINITIONS
 
 type Course 

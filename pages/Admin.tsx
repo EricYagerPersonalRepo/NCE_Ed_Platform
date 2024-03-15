@@ -1,5 +1,5 @@
 import { GetNCEUserSettingsQuery } from "@/src/API"
-import { RenderAdministrativePage } from "@/src/components/Admin"
+import { AdminHome } from "@/src/components/Admin"
 import { amplifyApiClient } from "@/src/functions/AuthX"
 import { getNCEUserSettings } from "@/src/graphql/queries"
 import { GraphQLResult } from "aws-amplify/api"
@@ -30,7 +30,7 @@ const Admin = ({userData, isMobile}:any) => {
     },[userData.cognitoID])
 
     return(
-        loading ? <div></div> : isAdmin && <RenderAdministrativePage isMobile={isMobile} />
+        loading ? <div></div> : isAdmin && <AdminHome isMobile={isMobile} />
     )
 }
 
