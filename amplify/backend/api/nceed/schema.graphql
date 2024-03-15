@@ -9,7 +9,7 @@ type NCEStudentProfile
   name: String!
   email: AWSEmail!
   birthdate: AWSDate!
-  status: StudentStatus
+  status: StudentStatus!
 }
 
 type NCEUserSettings 

@@ -2,9 +2,9 @@ import { useEffect, useState } from "react"
 import { MobileAdmin, WebAdmin } from "."
 import { NotificationType } from "@/src/API"
 import { amplifyApiClient } from "@/src/functions/AuthX"
-import { createBroadcastNotification, deleteBroadcastNotification, updateBroadcastNotification } from "@/src/graphql/mutations"
+import { createBroadcastNotification, deleteBroadcastNotification, updateBroadcastNotification, updateNCEStudentProfile } from "@/src/graphql/mutations"
 import { Box, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, FormControl, Grid, InputLabel, MenuItem, Select, Tab, Tabs, TextField, Typography } from "@mui/material"
-import { listBroadcastNotifications } from "@/src/graphql/queries"
+import { listBroadcastNotifications, listNCEStudentProfiles } from "@/src/graphql/queries"
 import { DataGrid, GridActionsCellItem, GridColDef, GridRowModes, GridRowModesModel, GridRowsProp } from "@mui/x-data-grid"
 import { Delete, Edit } from "@mui/icons-material"
 import { TabPanel } from "../Global/Tabs"
@@ -314,6 +314,17 @@ export const AdminUsersView = () => {
 
     useEffect(() => {
         const fetchProfiles = async () => {
+            try {
+                const { data } = await amplifyApiClient.graphql({
+                    query: listNCEStudentProfiles,
+                    variables: {},
+                })
+                if (data.listNCEStudentProfiles.items) {
+                    setRows(data.listNCEStudentProfiles.items.map(item => ({...item, id: item.id})))
+                }
+            } catch (error) {
+                console.error('Error fetching notifications:', error)
+            }
         }
         fetchProfiles()
     }, [])
@@ -325,7 +336,23 @@ export const AdminUsersView = () => {
     }
 
     const processRowUpdate = async (newRow:any) => {
-       
+
+        if(editedRow) {
+            try {
+                await amplifyApiClient.graphql({
+                    query: updateNCEStudentProfile,
+                    variables: { input: { id: newRow.id, name: newRow.name,  email:newRow.email, birthdate: newRow.birthdate, status:newRow.status } },
+                })
+                setRows((prevRows) => prevRows.map((row) => (row.id === editedRow.id ? editedRow : row)))
+
+            } catch (error) {
+                console.error("Error updating student profle:", error)
+                throw new Error('The row update failed, reverting changes')
+            }
+        }
+
+        setOpenDialog(false)
+        setEditedRow({})
     }
 
     const processRowUpdateError = (error:any) => {
@@ -339,8 +366,11 @@ export const AdminUsersView = () => {
     }
 
     const columns: GridColDef[] = [
-        { field: 'id', headerName: 'ID', flex: 1, editable: true },
-        { field: 'message', headerName: 'Message', flex: 5, editable: true },
+        { field: 'id', headerName: 'ID', flex: 1, editable: false },
+        { field: 'name', headerName: 'Name', flex: 1, editable: true },
+        { field: 'email', headerName: 'Email', flex: 1, editable: true},
+        { field: 'birthdate', headerName: 'Birthdate', flex: 1, editable: true},
+        { field: 'status', headerName: 'Status', flex: 1, editable: true },
         {
             field: 'actions',
             type: 'actions',
@@ -352,22 +382,59 @@ export const AdminUsersView = () => {
                     label="Edit"
                     onClick={() => setRowModesModel({...rowModesModel, [params.id]: { mode: GridRowModes.Edit }})}
                 />,
-                <GridActionsCellItem
-                    icon={<Delete />}
-                    label="Delete"
-                    onClick={() => handleDelete(params.id)}
-                />,
             ],
         },
     ]
 
-    const handleDelete = async (id:any) => {
-        
-    }
 
     return (
         <>
-            
-        </>
+        <Box sx={{ height: 500, width: '100%' }}>
+            <DataGrid
+                rows={rows}
+                columns={columns}
+                editMode="row"
+                rowModesModel={rowModesModel}
+                onRowModesModelChange={setRowModesModel}
+                onRowEditStop={handleRowEditStop}
+                processRowUpdate={confirmRowUpdate}
+                onProcessRowUpdateError={(error)=>processRowUpdateError(error)}
+                initialState={{
+                    pagination: { paginationModel: { pageSize: 5 } },
+                }}
+                pageSizeOptions = {[5, 10, 25]}
+            />
+        </Box>
+        <Dialog
+            open={openDialog}
+            onClose={() => setOpenDialog(false)}
+            aria-labelledby="alert-dialog-title"
+            aria-describedby="alert-dialog-description"
+        >
+            <DialogTitle id="alert-dialog-title">{"Confirm Changes"}</DialogTitle>
+            <DialogContent>
+                <DialogContentText id="alert-dialog-description">
+                    Are you sure you want to save these changes?
+                    <br/>
+                    <strong>Changes:</strong>
+                    {editedRow.newRow && editedRow.originalRow && Object.keys(editedRow.newRow).map((key) => {
+                        if (editedRow.newRow[key] !== editedRow.originalRow[key]) {
+                            return (
+                                <div key={key}>
+                                    {key}: {editedRow.originalRow[key]} <strong>-</strong> {editedRow.newRow[key]}
+                                    email: {editedRow.email}
+                                </div>
+                            )
+                        }
+                        return null
+                    })}
+                </DialogContentText>
+            </DialogContent>
+            <DialogActions>
+                <Button onClick={() => setOpenDialog(false)}>Cancel</Button>
+                <Button onClick={() => processRowUpdate(editedRow.newRow)} autoFocus>Confirm</Button>
+            </DialogActions>
+        </Dialog>
+    </>
     )
 }

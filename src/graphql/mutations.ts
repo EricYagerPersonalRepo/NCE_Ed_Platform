@@ -17,6 +17,7 @@ export const createNCEStudentProfile = /* GraphQL */ `mutation CreateNCEStudentP
     name
     email
     birthdate
+    status
     createdAt
     updatedAt
     owner
@@ -36,6 +37,7 @@ export const updateNCEStudentProfile = /* GraphQL */ `mutation UpdateNCEStudentP
     name
     email
     birthdate
+    status
     createdAt
     updatedAt
     owner
@@ -55,6 +57,7 @@ export const deleteNCEStudentProfile = /* GraphQL */ `mutation DeleteNCEStudentP
     name
     email
     birthdate
+    status
     createdAt
     updatedAt
     owner

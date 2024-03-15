@@ -17,6 +17,7 @@ export const onCreateNCEStudentProfile = /* GraphQL */ `subscription OnCreateNCE
     name
     email
     birthdate
+    status
     createdAt
     updatedAt
     owner
@@ -36,6 +37,7 @@ export const onUpdateNCEStudentProfile = /* GraphQL */ `subscription OnUpdateNCE
     name
     email
     birthdate
+    status
     createdAt
     updatedAt
     owner
@@ -55,6 +57,7 @@ export const onDeleteNCEStudentProfile = /* GraphQL */ `subscription OnDeleteNCE
     name
     email
     birthdate
+    status
     createdAt
     updatedAt
     owner

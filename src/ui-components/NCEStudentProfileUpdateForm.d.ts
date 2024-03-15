@@ -5,7 +5,7 @@
  **************************************************************************/
 
 import * as React from "react";
-import { GridProps, TextFieldProps } from "@aws-amplify/ui-react";
+import { GridProps, SelectFieldProps, TextFieldProps } from "@aws-amplify/ui-react";
 import { NCEStudentProfile } from "../API.ts";
 export declare type EscapeHatchProps = {
     [elementHierarchy: string]: Record<string, unknown>;
@@ -26,11 +26,13 @@ export declare type NCEStudentProfileUpdateFormInputValues = {
     name?: string;
     email?: string;
     birthdate?: string;
+    status?: string;
 };
 export declare type NCEStudentProfileUpdateFormValidationValues = {
     name?: ValidationFunction<string>;
     email?: ValidationFunction<string>;
     birthdate?: ValidationFunction<string>;
+    status?: ValidationFunction<string>;
 };
 export declare type PrimitiveOverrideProps<T> = Partial<T> & React.DOMAttributes<HTMLDivElement>;
 export declare type NCEStudentProfileUpdateFormOverridesProps = {
@@ -38,6 +40,7 @@ export declare type NCEStudentProfileUpdateFormOverridesProps = {
     name?: PrimitiveOverrideProps<TextFieldProps>;
     email?: PrimitiveOverrideProps<TextFieldProps>;
     birthdate?: PrimitiveOverrideProps<TextFieldProps>;
+    status?: PrimitiveOverrideProps<SelectFieldProps>;
 } & EscapeHatchProps;
 export declare type NCEStudentProfileUpdateFormProps = React.PropsWithChildren<{
     overrides?: NCEStudentProfileUpdateFormOverridesProps | undefined | null;

@@ -14,6 +14,20 @@
       "providerPlugin": "awscloudformation",
       "service": "API Gateway"
     },
+    "nceUserInformationAPI": {
+      "dependsOn": [
+        {
+          "attributes": [
+            "Name",
+            "Arn"
+          ],
+          "category": "function",
+          "resourceName": "nceUserInformationLambda"
+        }
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "API Gateway"
+    },
     "nceed": {
       "dependsOn": [
         {
@@ -96,6 +110,35 @@
       ],
       "providerPlugin": "awscloudformation",
       "service": "Lambda"
+    },
+    "nceUserInformationLambda": {
+      "build": true,
+      "dependsOn": [
+        {
+          "attributes": [
+            "GraphQLAPIIdOutput",
+            "GraphQLAPIEndpointOutput"
+          ],
+          "category": "api",
+          "resourceName": "nceed"
+        },
+        {
+          "attributes": [
+            "UserPoolId"
+          ],
+          "category": "auth",
+          "resourceName": "nceed07f38101"
+        },
+        {
+          "attributes": [
+            "Name"
+          ],
+          "category": "function",
+          "resourceName": "nceAvatarHandlerLambdaFunction"
+        }
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
     }
   },
   "hosting": {
@@ -119,6 +162,22 @@
         {
           "category": "function",
           "resourceName": "nceAvatarHandlerLambdaFunction"
+        }
+      ]
+    },
+    "AMPLIFY_function_nceUserInformationLambda_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "nceUserInformationLambda"
+        }
+      ]
+    },
+    "AMPLIFY_function_nceUserInformationLambda_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "nceUserInformationLambda"
         }
       ]
     },

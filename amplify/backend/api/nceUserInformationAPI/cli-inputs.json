@@ -1,0 +1,18 @@
+{
+  "version": 1,
+  "paths": {
+    "/user/{cognitoID}": {
+      "name": "/user/{cognitoID}",
+      "lambdaFunction": "nceUserInformationLambda",
+      "permissions": {
+        "setting": "private",
+        "auth": [
+          "create",
+          "read",
+          "update",
+          "delete"
+        ]
+      }
+    }
+  }
+}

@@ -7,12 +7,20 @@ export type CreateNCEStudentProfileInput = {
   name: string,
   email: string,
   birthdate: string,
+  status: StudentStatus,
 };
+
+export enum StudentStatus {
+  ACTIVE = "ACTIVE",
+  INACTIVE = "INACTIVE",
+}
+
 
 export type ModelNCEStudentProfileConditionInput = {
   name?: ModelStringInput | null,
   email?: ModelStringInput | null,
   birthdate?: ModelStringInput | null,
+  status?: ModelStudentStatusInput | null,
   and?: Array< ModelNCEStudentProfileConditionInput | null > | null,
   or?: Array< ModelNCEStudentProfileConditionInput | null > | null,
   not?: ModelNCEStudentProfileConditionInput | null,
@@ -58,12 +66,18 @@ export type ModelSizeInput = {
   between?: Array< number | null > | null,
 };
 
+export type ModelStudentStatusInput = {
+  eq?: StudentStatus | null,
+  ne?: StudentStatus | null,
+};
+
 export type NCEStudentProfile = {
   __typename: "NCEStudentProfile",
   id: string,
   name: string,
   email: string,
   birthdate: string,
+  status: StudentStatus,
   createdAt: string,
   updatedAt: string,
   owner?: string | null,
@@ -74,6 +88,7 @@ export type UpdateNCEStudentProfileInput = {
   name?: string | null,
   email?: string | null,
   birthdate?: string | null,
+  status?: StudentStatus | null,
 };
 
 export type DeleteNCEStudentProfileInput = {
@@ -131,7 +146,7 @@ export type DeleteNCEUserSettingsInput = {
 
 export type CreateBroadcastNotificationInput = {
   id?: string | null,
-  targetStudent: string,
+  targetStudent?: string | null,
   title: string,
   message: string,
   createdAt?: string | null,
@@ -166,7 +181,7 @@ export type ModelNotificationTypeInput = {
 export type BroadcastNotification = {
   __typename: "BroadcastNotification",
   id: string,
-  targetStudent: string,
+  targetStudent?: string | null,
   title: string,
   message: string,
   createdAt: string,
@@ -625,6 +640,7 @@ export type ModelNCEStudentProfileFilterInput = {
   name?: ModelStringInput | null,
   email?: ModelStringInput | null,
   birthdate?: ModelStringInput | null,
+  status?: ModelStudentStatusInput | null,
   and?: Array< ModelNCEStudentProfileFilterInput | null > | null,
   or?: Array< ModelNCEStudentProfileFilterInput | null > | null,
   not?: ModelNCEStudentProfileFilterInput | null,
@@ -802,6 +818,7 @@ export type ModelSubscriptionNCEStudentProfileFilterInput = {
   name?: ModelSubscriptionStringInput | null,
   email?: ModelSubscriptionStringInput | null,
   birthdate?: ModelSubscriptionStringInput | null,
+  status?: ModelSubscriptionStringInput | null,
   and?: Array< ModelSubscriptionNCEStudentProfileFilterInput | null > | null,
   or?: Array< ModelSubscriptionNCEStudentProfileFilterInput | null > | null,
 };
@@ -965,6 +982,7 @@ export type CreateNCEStudentProfileMutation = {
     name: string,
     email: string,
     birthdate: string,
+    status: StudentStatus,
     createdAt: string,
     updatedAt: string,
     owner?: string | null,
@@ -983,6 +1001,7 @@ export type UpdateNCEStudentProfileMutation = {
     name: string,
     email: string,
     birthdate: string,
+    status: StudentStatus,
     createdAt: string,
     updatedAt: string,
     owner?: string | null,
@@ -1001,6 +1020,7 @@ export type DeleteNCEStudentProfileMutation = {
     name: string,
     email: string,
     birthdate: string,
+    status: StudentStatus,
     createdAt: string,
     updatedAt: string,
     owner?: string | null,
@@ -1073,7 +1093,7 @@ export type CreateBroadcastNotificationMutation = {
   createBroadcastNotification?:  {
     __typename: "BroadcastNotification",
     id: string,
-    targetStudent: string,
+    targetStudent?: string | null,
     title: string,
     message: string,
     createdAt: string,
@@ -1092,7 +1112,7 @@ export type UpdateBroadcastNotificationMutation = {
   updateBroadcastNotification?:  {
     __typename: "BroadcastNotification",
     id: string,
-    targetStudent: string,
+    targetStudent?: string | null,
     title: string,
     message: string,
     createdAt: string,
@@ -1111,7 +1131,7 @@ export type DeleteBroadcastNotificationMutation = {
   deleteBroadcastNotification?:  {
     __typename: "BroadcastNotification",
     id: string,
-    targetStudent: string,
+    targetStudent?: string | null,
     title: string,
     message: string,
     createdAt: string,
@@ -1792,6 +1812,7 @@ export type GetNCEStudentProfileQuery = {
     name: string,
     email: string,
     birthdate: string,
+    status: StudentStatus,
     createdAt: string,
     updatedAt: string,
     owner?: string | null,
@@ -1813,6 +1834,7 @@ export type ListNCEStudentProfilesQuery = {
       name: string,
       email: string,
       birthdate: string,
+      status: StudentStatus,
       createdAt: string,
       updatedAt: string,
       owner?: string | null,
@@ -1871,7 +1893,7 @@ export type GetBroadcastNotificationQuery = {
   getBroadcastNotification?:  {
     __typename: "BroadcastNotification",
     id: string,
-    targetStudent: string,
+    targetStudent?: string | null,
     title: string,
     message: string,
     createdAt: string,
@@ -1893,7 +1915,7 @@ export type ListBroadcastNotificationsQuery = {
     items:  Array< {
       __typename: "BroadcastNotification",
       id: string,
-      targetStudent: string,
+      targetStudent?: string | null,
       title: string,
       message: string,
       createdAt: string,
@@ -2476,6 +2498,7 @@ export type OnCreateNCEStudentProfileSubscription = {
     name: string,
     email: string,
     birthdate: string,
+    status: StudentStatus,
     createdAt: string,
     updatedAt: string,
     owner?: string | null,
@@ -2494,6 +2517,7 @@ export type OnUpdateNCEStudentProfileSubscription = {
     name: string,
     email: string,
     birthdate: string,
+    status: StudentStatus,
     createdAt: string,
     updatedAt: string,
     owner?: string | null,
@@ -2512,6 +2536,7 @@ export type OnDeleteNCEStudentProfileSubscription = {
     name: string,
     email: string,
     birthdate: string,
+    status: StudentStatus,
     createdAt: string,
     updatedAt: string,
     owner?: string | null,
@@ -2583,7 +2608,7 @@ export type OnCreateBroadcastNotificationSubscription = {
   onCreateBroadcastNotification?:  {
     __typename: "BroadcastNotification",
     id: string,
-    targetStudent: string,
+    targetStudent?: string | null,
     title: string,
     message: string,
     createdAt: string,
@@ -2601,7 +2626,7 @@ export type OnUpdateBroadcastNotificationSubscription = {
   onUpdateBroadcastNotification?:  {
     __typename: "BroadcastNotification",
     id: string,
-    targetStudent: string,
+    targetStudent?: string | null,
     title: string,
     message: string,
     createdAt: string,
@@ -2619,7 +2644,7 @@ export type OnDeleteBroadcastNotificationSubscription = {
   onDeleteBroadcastNotification?:  {
     __typename: "BroadcastNotification",
     id: string,
-    targetStudent: string,
+    targetStudent?: string | null,
     title: string,
     message: string,
     createdAt: string,

@@ -14,6 +14,7 @@ export const getNCEStudentProfile = /* GraphQL */ `query GetNCEStudentProfile($i
     name
     email
     birthdate
+    status
     createdAt
     updatedAt
     owner
@@ -39,6 +40,7 @@ export const listNCEStudentProfiles = /* GraphQL */ `query ListNCEStudentProfile
       name
       email
       birthdate
+      status
       createdAt
       updatedAt
       owner

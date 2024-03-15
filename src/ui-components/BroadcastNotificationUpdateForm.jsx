@@ -77,7 +77,7 @@ export default function BroadcastNotificationUpdateForm(props) {
   }, [idProp, broadcastNotificationModelProp]);
   React.useEffect(resetStateValues, [broadcastNotificationRecord]);
   const validations = {
-    targetStudent: [{ type: "Required" }],
+    targetStudent: [],
     title: [{ type: "Required" }],
     message: [{ type: "Required" }],
     createdAt: [{ type: "Required" }],
@@ -127,7 +127,7 @@ export default function BroadcastNotificationUpdateForm(props) {
       onSubmit={async (event) => {
         event.preventDefault();
         let modelFields = {
-          targetStudent,
+          targetStudent: targetStudent ?? null,
           title,
           message,
           createdAt,
@@ -186,7 +186,7 @@ export default function BroadcastNotificationUpdateForm(props) {
     >
       <TextField
         label="Target student"
-        isRequired={true}
+        isRequired={false}
         isReadOnly={false}
         value={targetStudent}
         onChange={(e) => {

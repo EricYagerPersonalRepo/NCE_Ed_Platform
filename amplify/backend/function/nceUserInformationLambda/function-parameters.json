@@ -1,0 +1,27 @@
+{
+  "lambdaLayers": [],
+  "permissions": {
+    "api": {
+      "nceed": [
+        "Query",
+        "Mutation"
+      ]
+    },
+    "auth": {
+      "nceed07f38101": [
+        "create",
+        "read",
+        "update",
+        "delete"
+      ]
+    },
+    "function": {
+      "nceAvatarHandlerLambdaFunction": [
+        "create",
+        "read",
+        "update",
+        "delete"
+      ]
+    }
+  }
+}

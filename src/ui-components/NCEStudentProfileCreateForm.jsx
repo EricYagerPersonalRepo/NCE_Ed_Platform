@@ -6,7 +6,13 @@
 
 /* eslint-disable */
 import * as React from "react";
-import { Button, Flex, Grid, TextField } from "@aws-amplify/ui-react";
+import {
+  Button,
+  Flex,
+  Grid,
+  SelectField,
+  TextField,
+} from "@aws-amplify/ui-react";
 import { fetchByPath, getOverrideProps, validateField } from "./utils";
 import { generateClient } from "aws-amplify/api";
 import { createNCEStudentProfile } from "../graphql/mutations";
@@ -26,21 +32,25 @@ export default function NCEStudentProfileCreateForm(props) {
     name: "",
     email: "",
     birthdate: "",
+    status: "",
   };
   const [name, setName] = React.useState(initialValues.name);
   const [email, setEmail] = React.useState(initialValues.email);
   const [birthdate, setBirthdate] = React.useState(initialValues.birthdate);
+  const [status, setStatus] = React.useState(initialValues.status);
   const [errors, setErrors] = React.useState({});
   const resetStateValues = () => {
     setName(initialValues.name);
     setEmail(initialValues.email);
     setBirthdate(initialValues.birthdate);
+    setStatus(initialValues.status);
     setErrors({});
   };
   const validations = {
     name: [{ type: "Required" }],
     email: [{ type: "Required" }, { type: "Email" }],
     birthdate: [{ type: "Required" }],
+    status: [{ type: "Required" }],
   };
   const runValidationTasks = async (
     fieldName,
@@ -71,6 +81,7 @@ export default function NCEStudentProfileCreateForm(props) {
           name,
           email,
           birthdate,
+          status,
         };
         const validationResponses = await Promise.all(
           Object.keys(validations).reduce((promises, fieldName) => {
@@ -136,6 +147,7 @@ export default function NCEStudentProfileCreateForm(props) {
               name: value,
               email,
               birthdate,
+              status,
             };
             const result = onChange(modelFields);
             value = result?.name ?? value;
@@ -162,6 +174,7 @@ export default function NCEStudentProfileCreateForm(props) {
               name,
               email: value,
               birthdate,
+              status,
             };
             const result = onChange(modelFields);
             value = result?.email ?? value;
@@ -189,6 +202,7 @@ export default function NCEStudentProfileCreateForm(props) {
               name,
               email,
               birthdate: value,
+              status,
             };
             const result = onChange(modelFields);
             value = result?.birthdate ?? value;
@@ -203,6 +217,44 @@ export default function NCEStudentProfileCreateForm(props) {
         hasError={errors.birthdate?.hasError}
         {...getOverrideProps(overrides, "birthdate")}
       ></TextField>
+      <SelectField
+        label="Status"
+        placeholder="Please select an option"
+        isDisabled={false}
+        value={status}
+        onChange={(e) => {
+          let { value } = e.target;
+          if (onChange) {
+            const modelFields = {
+              name,
+              email,
+              birthdate,
+              status: value,
+            };
+            const result = onChange(modelFields);
+            value = result?.status ?? value;
+          }
+          if (errors.status?.hasError) {
+            runValidationTasks("status", value);
+          }
+          setStatus(value);
+        }}
+        onBlur={() => runValidationTasks("status", status)}
+        errorMessage={errors.status?.errorMessage}
+        hasError={errors.status?.hasError}
+        {...getOverrideProps(overrides, "status")}
+      >
+        <option
+          children="Active"
+          value="ACTIVE"
+          {...getOverrideProps(overrides, "statusoption0")}
+        ></option>
+        <option
+          children="Inactive"
+          value="INACTIVE"
+          {...getOverrideProps(overrides, "statusoption1")}
+        ></option>
+      </SelectField>
       <Flex
         justifyContent="space-between"
         {...getOverrideProps(overrides, "CTAFlex")}

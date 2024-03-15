@@ -55,7 +55,7 @@ export default function BroadcastNotificationCreateForm(props) {
     setErrors({});
   };
   const validations = {
-    targetStudent: [{ type: "Required" }],
+    targetStudent: [],
     title: [{ type: "Required" }],
     message: [{ type: "Required" }],
     createdAt: [{ type: "Required" }],
@@ -166,7 +166,7 @@ export default function BroadcastNotificationCreateForm(props) {
     >
       <TextField
         label="Target student"
-        isRequired={true}
+        isRequired={false}
         isReadOnly={false}
         value={targetStudent}
         onChange={(e) => {
