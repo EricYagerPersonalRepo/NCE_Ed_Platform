@@ -32,6 +32,7 @@ export const useSignUpHooks = () => {
     const [showConfirmPassword, setShowConfirmPassword] = useState(false)
     const [error, setError] = useState<SignUpFormErrors>({})
     const [age, setAge] = useState(0)
+    const [status,setStatus] = useState("INACTIVE")
     const [birthdayComplete, setBirthdayComplete] = useState(false)
     const [nameComplete, setNameComplete] = useState(false)
     const [locationComplete, setLocationComplete] = useState(false)
@@ -63,6 +64,7 @@ export const useSignUpHooks = () => {
         showConfirmPassword, setShowConfirmPassword,
         error, setError,
         age, setAge,
+        status,setStatus,
         birthdayComplete, setBirthdayComplete,
         nameComplete, setNameComplete,
         locationComplete, setLocationComplete,
