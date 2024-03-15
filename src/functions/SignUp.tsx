@@ -51,7 +51,7 @@ export const handlePostTfaWorkflow = async ({signUpHooks}:any) => {
         const signInResult = await handleSignIn({ username,password })
 
         if (signInResult.isSignedIn) {
-            const profileInput= { id:signUpHooks.id, name:signUpHooks.name, email:signUpHooks.username, birthdate:signUpHooks.birthday }
+            const profileInput= { id:signUpHooks.id, name:signUpHooks.name, email:signUpHooks.username, birthdate:signUpHooks.birthday, status: signUpHooks.status }
             const profileResult = await handleCreateStudentProfile(profileInput)
             if (profileResult.isSignedUp) {
                 console.log("Signed up!")//window.location.href = '/StudentProfile'
