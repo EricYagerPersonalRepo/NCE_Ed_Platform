@@ -9,7 +9,7 @@ import { DataGrid, GridActionsCellItem, GridColDef, GridRowModes, GridRowModesMo
 import { Delete, Edit } from "@mui/icons-material"
 import { TabPanel } from "../Global/Tabs"
 import { fetchAuthSession, getCurrentUser } from "aws-amplify/auth"
-import { post } from "aws-amplify/api"
+import { get } from "aws-amplify/api"
 
 export const RestrictedView = () => {
     return(
@@ -315,6 +315,18 @@ export const AdminUsersView = () => {
     const [editedRow, setEditedRow] = useState<any>({})
 
     useEffect(() => {
+        async function fetchUserGroups(username) {
+            const response = await fetch('/api/getUserGroups', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ username: username }),
+            })
+            const data = await response.json()
+            return(data)
+        }
+
         const fetchProfilesAndGroups = async () => {
             try {
                 const profilesData = await amplifyApiClient.graphql({
@@ -323,50 +335,39 @@ export const AdminUsersView = () => {
                 })
     
                 if (profilesData.data.listNCEStudentProfiles.items) {
-                    let session = await fetchAuthSession()
-                    console.log("SESSION: ", session)
                     const profilesWithGroups = await Promise.all(
                         profilesData.data.listNCEStudentProfiles.items.map(async (profile) => {
-                            console.log(profile)
-                            let apiName = 'AdminQueries'
-                            let path = '/listGroupsForUser'
-                            
-                            if(session.tokens){
-                                let token:any = session.tokens.accessToken.toString()
-                                let options = {
-                                    body: {
-                                        "username" : profile.id,
-                                    }, 
-                                    headers: {
-                                        'Content-Type' : 'application/json',
-                                        Authorization: `${token}`
-                                    } 
+                            let groupsForUser = await fetchUserGroups(profile.id)
+                            console.log("GROUPS FOR USER: ", groupsForUser.Data)
+                            try{
+                                if(!groupsForUser.Data.Error) {
+                                    return { ...profile, groups: groupsForUser.Data};
+                                }else{
+                                    return {...profile, groups: []}
                                 }
-                                console.log("OPTIONS: ", options)
-                               try{
-                                    const groupsResponse:any = await post({apiName,path,options})
-                                    console.log(groupsResponse)
-                                    if (groupsResponse && groupsResponse.groups) {
-                                        return { ...profile, groups: groupsResponse.groups};
-                                    }else{
-                                        return {...profile, groups: []}
-                                    }
-                                }catch(error) {
-                                    console.error(error)
-                                }
+                            }catch(error) {
+                                console.error(error)
                             }
                         })
                     )
-                    const filteredProfiles = profilesWithGroups.filter(item => item !== undefined)
-                    console.log(filteredProfiles)
-                    //setRows(filteredProfiles.map(item => ({ ...item, id: item.id })))
-                }
+                    const validProfilesWithGroups = profilesWithGroups.filter(Boolean);
+                    setRows(validProfilesWithGroups.map(profile => ({
+                        id: profile.id,
+                        name: profile.name,
+                        email: profile.email,
+                        birthdate: profile.birthdate,
+                        status: profile.status,
+                        groups: profile.groups.join(', ')
+                    })));
+                                    }
+                
             } catch (error) {
                 console.error('Error fetching profiles and groups:', error)
             }
         }
     
         fetchProfilesAndGroups()
+
     }, [])
     
 
