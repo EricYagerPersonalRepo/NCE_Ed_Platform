@@ -1,9 +1,8 @@
 {
   "version": 1,
   "paths": {
-    "/user/{cognitoID}": {
-      "name": "/user/{cognitoID}",
-      "lambdaFunction": "nceUserInformationLambda",
+    "/{proxy+}": {
+      "lambdaFunction": "AdminQueriesfd07c2fc",
       "permissions": {
         "setting": "private",
         "auth": [

@@ -51,7 +51,8 @@
     },
     "categories": {
       "auth": {
-        "nceed07f38101": {}
+        "nceed07f38101": {},
+        "userPoolGroups": {}
       },
       "hosting": {
         "amplifyhosting": {
@@ -62,7 +63,7 @@
       "api": {
         "nceed": {},
         "avatarHandlerApiGateway": {},
-        "nceUserInformationAPI": {}
+        "AdminQueries": {}
       },
       "storage": {
         "nceEdAvatars": {}
@@ -72,9 +73,9 @@
           "deploymentBucketName": "amplify-nceed-dev-60353-deployment",
           "s3Key": "amplify-builds/nceAvatarHandlerLambdaFunction-756d74386f524255664d-build.zip"
         },
-        "nceUserInformationLambda": {
+        "AdminQueriesfd07c2fc": {
           "deploymentBucketName": "amplify-nceed-dev-60353-deployment",
-          "s3Key": "amplify-builds/nceUserInformationLambda-316a6f676f5231503275-build.zip"
+          "s3Key": "amplify-builds/AdminQueriesfd07c2fc-6d5779682f7452316142-build.zip"
         }
       }
     }

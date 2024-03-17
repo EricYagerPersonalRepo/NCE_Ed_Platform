@@ -1,5 +1,27 @@
 {
   "api": {
+    "AdminQueries": {
+      "authorizationType": "AMAZON_COGNITO_USER_POOLS",
+      "dependsOn": [
+        {
+          "attributes": [
+            "UserPoolId"
+          ],
+          "category": "auth",
+          "resourceName": "nceed07f38101"
+        },
+        {
+          "attributes": [
+            "Arn",
+            "Name"
+          ],
+          "category": "function",
+          "resourceName": "AdminQueriesfd07c2fc"
+        }
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "API Gateway"
+    },
     "avatarHandlerApiGateway": {
       "dependsOn": [
         {
@@ -9,20 +31,6 @@
           ],
           "category": "function",
           "resourceName": "nceAvatarHandlerLambdaFunction"
-        }
-      ],
-      "providerPlugin": "awscloudformation",
-      "service": "API Gateway"
-    },
-    "nceUserInformationAPI": {
-      "dependsOn": [
-        {
-          "attributes": [
-            "Name",
-            "Arn"
-          ],
-          "category": "function",
-          "resourceName": "nceUserInformationLambda"
         }
       ],
       "providerPlugin": "awscloudformation",
@@ -79,9 +87,39 @@
       },
       "providerPlugin": "awscloudformation",
       "service": "Cognito"
+    },
+    "userPoolGroups": {
+      "dependsOn": [
+        {
+          "attributes": [
+            "UserPoolId",
+            "AppClientIDWeb",
+            "AppClientID",
+            "IdentityPoolId"
+          ],
+          "category": "auth",
+          "resourceName": "nceed07f38101"
+        }
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "Cognito-UserPool-Groups"
     }
   },
   "function": {
+    "AdminQueriesfd07c2fc": {
+      "build": true,
+      "dependsOn": [
+        {
+          "attributes": [
+            "UserPoolId"
+          ],
+          "category": "auth",
+          "resourceName": "nceed07f38101"
+        }
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
     "nceAvatarHandlerLambdaFunction": {
       "build": true,
       "dependsOn": [
@@ -110,35 +148,6 @@
       ],
       "providerPlugin": "awscloudformation",
       "service": "Lambda"
-    },
-    "nceUserInformationLambda": {
-      "build": true,
-      "dependsOn": [
-        {
-          "attributes": [
-            "GraphQLAPIIdOutput",
-            "GraphQLAPIEndpointOutput"
-          ],
-          "category": "api",
-          "resourceName": "nceed"
-        },
-        {
-          "attributes": [
-            "UserPoolId"
-          ],
-          "category": "auth",
-          "resourceName": "nceed07f38101"
-        },
-        {
-          "attributes": [
-            "Name"
-          ],
-          "category": "function",
-          "resourceName": "nceAvatarHandlerLambdaFunction"
-        }
-      ],
-      "providerPlugin": "awscloudformation",
-      "service": "Lambda"
     }
   },
   "hosting": {
@@ -149,6 +158,22 @@
     }
   },
   "parameters": {
+    "AMPLIFY_function_AdminQueriesfd07c2fc_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "AdminQueriesfd07c2fc"
+        }
+      ]
+    },
+    "AMPLIFY_function_AdminQueriesfd07c2fc_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "AdminQueriesfd07c2fc"
+        }
+      ]
+    },
     "AMPLIFY_function_nceAvatarHandlerLambdaFunction_deploymentBucketName": {
       "usedBy": [
         {
@@ -162,22 +187,6 @@
         {
           "category": "function",
           "resourceName": "nceAvatarHandlerLambdaFunction"
-        }
-      ]
-    },
-    "AMPLIFY_function_nceUserInformationLambda_deploymentBucketName": {
-      "usedBy": [
-        {
-          "category": "function",
-          "resourceName": "nceUserInformationLambda"
-        }
-      ]
-    },
-    "AMPLIFY_function_nceUserInformationLambda_s3Key": {
-      "usedBy": [
-        {
-          "category": "function",
-          "resourceName": "nceUserInformationLambda"
         }
       ]
     },

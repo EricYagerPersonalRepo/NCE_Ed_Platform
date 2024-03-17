@@ -1,11 +1,11 @@
 export type AmplifyDependentResourcesAttributes = {
   "api": {
-    "avatarHandlerApiGateway": {
+    "AdminQueries": {
       "ApiId": "string",
       "ApiName": "string",
       "RootUrl": "string"
     },
-    "nceUserInformationAPI": {
+    "avatarHandlerApiGateway": {
       "ApiId": "string",
       "ApiName": "string",
       "RootUrl": "string"
@@ -26,17 +26,20 @@ export type AmplifyDependentResourcesAttributes = {
       "UserPoolArn": "string",
       "UserPoolId": "string",
       "UserPoolName": "string"
+    },
+    "userPoolGroups": {
+      "AdminsGroupRole": "string"
     }
   },
   "function": {
-    "nceAvatarHandlerLambdaFunction": {
+    "AdminQueriesfd07c2fc": {
       "Arn": "string",
       "LambdaExecutionRole": "string",
       "LambdaExecutionRoleArn": "string",
       "Name": "string",
       "Region": "string"
     },
-    "nceUserInformationLambda": {
+    "nceAvatarHandlerLambdaFunction": {
       "Arn": "string",
       "LambdaExecutionRole": "string",
       "LambdaExecutionRoleArn": "string",

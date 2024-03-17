@@ -8,6 +8,8 @@ import { listBroadcastNotifications, listNCEStudentProfiles } from "@/src/graphq
 import { DataGrid, GridActionsCellItem, GridColDef, GridRowModes, GridRowModesModel, GridRowsProp } from "@mui/x-data-grid"
 import { Delete, Edit } from "@mui/icons-material"
 import { TabPanel } from "../Global/Tabs"
+import { fetchAuthSession, getCurrentUser } from "aws-amplify/auth"
+import { post } from "aws-amplify/api"
 
 export const RestrictedView = () => {
     return(
@@ -313,21 +315,60 @@ export const AdminUsersView = () => {
     const [editedRow, setEditedRow] = useState<any>({})
 
     useEffect(() => {
-        const fetchProfiles = async () => {
+        const fetchProfilesAndGroups = async () => {
             try {
-                const { data } = await amplifyApiClient.graphql({
+                const profilesData = await amplifyApiClient.graphql({
                     query: listNCEStudentProfiles,
                     variables: {},
                 })
-                if (data.listNCEStudentProfiles.items) {
-                    setRows(data.listNCEStudentProfiles.items.map(item => ({...item, id: item.id})))
+    
+                if (profilesData.data.listNCEStudentProfiles.items) {
+                    let session = await fetchAuthSession()
+                    console.log("SESSION: ", session)
+                    const profilesWithGroups = await Promise.all(
+                        profilesData.data.listNCEStudentProfiles.items.map(async (profile) => {
+                            console.log(profile)
+                            let apiName = 'AdminQueries'
+                            let path = '/listGroupsForUser'
+                            
+                            if(session.tokens){
+                                let token:any = session.tokens.accessToken.toString()
+                                let options = {
+                                    body: {
+                                        "username" : profile.id,
+                                    }, 
+                                    headers: {
+                                        'Content-Type' : 'application/json',
+                                        Authorization: `${token}`
+                                    } 
+                                }
+                                console.log("OPTIONS: ", options)
+                               try{
+                                    const groupsResponse:any = await post({apiName,path,options})
+                                    console.log(groupsResponse)
+                                    if (groupsResponse && groupsResponse.groups) {
+                                        return { ...profile, groups: groupsResponse.groups};
+                                    }else{
+                                        return {...profile, groups: []}
+                                    }
+                                }catch(error) {
+                                    console.error(error)
+                                }
+                            }
+                        })
+                    )
+                    const filteredProfiles = profilesWithGroups.filter(item => item !== undefined)
+                    console.log(filteredProfiles)
+                    //setRows(filteredProfiles.map(item => ({ ...item, id: item.id })))
                 }
             } catch (error) {
-                console.error('Error fetching notifications:', error)
+                console.error('Error fetching profiles and groups:', error)
             }
         }
-        fetchProfiles()
+    
+        fetchProfilesAndGroups()
     }, [])
+    
 
     const handleRowEditStop = (event:any, reason:any) => {
         if (reason === 'rowFocusOut') {
@@ -371,6 +412,7 @@ export const AdminUsersView = () => {
         { field: 'email', headerName: 'Email', flex: 1, editable: true},
         { field: 'birthdate', headerName: 'Birthdate', flex: 1, editable: true},
         { field: 'status', headerName: 'Status', flex: 1, editable: true },
+        { field: 'groups', headerName: 'Groups', flex: 1, editable: false },
         {
             field: 'actions',
             type: 'actions',
