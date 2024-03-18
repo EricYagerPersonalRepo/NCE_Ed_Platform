@@ -17,7 +17,6 @@ export const getNCEStudentProfile = /* GraphQL */ `query GetNCEStudentProfile($i
     status
     createdAt
     updatedAt
-    owner
     __typename
   }
 }
@@ -43,7 +42,6 @@ export const listNCEStudentProfiles = /* GraphQL */ `query ListNCEStudentProfile
       status
       createdAt
       updatedAt
-      owner
       __typename
     }
     nextToken
@@ -63,7 +61,6 @@ export const getNCEUserSettings = /* GraphQL */ `query GetNCEUserSettings($id: I
     isAdmin
     createdAt
     updatedAt
-    owner
     __typename
   }
 }
@@ -85,7 +82,6 @@ export const listNCEUserSettings = /* GraphQL */ `query ListNCEUserSettings(
       isAdmin
       createdAt
       updatedAt
-      owner
       __typename
     }
     nextToken
@@ -149,7 +145,6 @@ export const getUserNotificationRead = /* GraphQL */ `query GetUserNotificationR
     readAt
     createdAt
     updatedAt
-    owner
     __typename
   }
 }
@@ -173,7 +168,6 @@ export const listUserNotificationReads = /* GraphQL */ `query ListUserNotificati
       readAt
       createdAt
       updatedAt
-      owner
       __typename
     }
     nextToken

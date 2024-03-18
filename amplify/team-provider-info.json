@@ -47,7 +47,8 @@
       "StackName": "amplify-nceed-dev-60353",
       "StackId": "arn:aws:cloudformation:us-east-1:179682925980:stack/amplify-nceed-dev-60353/8f6f68f0-d884-11ee-a9e0-122700f02b2d",
       "AmplifyAppId": "d2pnmux7cfrkfc",
-      "APIGatewayAuthURL": "https://s3.amazonaws.com/amplify-nceed-dev-60353-deployment/amplify-cfn-templates/api/APIGatewayAuthStack.json"
+      "APIGatewayAuthURL": "https://s3.amazonaws.com/amplify-nceed-dev-60353-deployment/amplify-cfn-templates/api/APIGatewayAuthStack.json",
+      "AuthTriggerTemplateURL": "https://s3.amazonaws.com/amplify-nceed-dev-60353-deployment/amplify-cfn-templates/auth/auth-trigger-cloudformation-template.json"
     },
     "categories": {
       "auth": {
@@ -62,7 +63,8 @@
       },
       "api": {
         "nceed": {},
-        "avatarHandlerApiGateway": {}
+        "avatarHandlerApiGateway": {},
+        "AdminQueries": {}
       },
       "storage": {
         "nceEdAvatars": {}
@@ -71,6 +73,15 @@
         "nceAvatarHandlerLambdaFunction": {
           "deploymentBucketName": "amplify-nceed-dev-60353-deployment",
           "s3Key": "amplify-builds/nceAvatarHandlerLambdaFunction-756d74386f524255664d-build.zip"
+        },
+        "nceed07f38101PostConfirmation": {
+          "GROUP": "Students",
+          "deploymentBucketName": "amplify-nceed-dev-60353-deployment",
+          "s3Key": "amplify-builds/nceed07f38101PostConfirmation-33486c6552324c343550-build.zip"
+        },
+        "AdminQueries6e804d46": {
+          "deploymentBucketName": "amplify-nceed-dev-60353-deployment",
+          "s3Key": "amplify-builds/AdminQueries6e804d46-6d5779682f7452316142-build.zip"
         }
       }
     }

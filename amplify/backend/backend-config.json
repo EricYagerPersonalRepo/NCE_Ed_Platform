@@ -1,5 +1,27 @@
 {
   "api": {
+    "AdminQueries": {
+      "authorizationType": "AMAZON_COGNITO_USER_POOLS",
+      "dependsOn": [
+        {
+          "attributes": [
+            "UserPoolId"
+          ],
+          "category": "auth",
+          "resourceName": "nceed07f38101"
+        },
+        {
+          "attributes": [
+            "Arn",
+            "Name"
+          ],
+          "category": "function",
+          "resourceName": "AdminQueries6e804d46"
+        }
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "API Gateway"
+    },
     "avatarHandlerApiGateway": {
       "dependsOn": [
         {
@@ -15,23 +37,17 @@
       "service": "API Gateway"
     },
     "nceed": {
-      "dependsOn": [
-        {
-          "attributes": [
-            "UserPoolId"
-          ],
-          "category": "auth",
-          "resourceName": "nceed07f38101"
-        }
-      ],
+      "dependsOn": [],
       "output": {
         "authConfig": {
           "additionalAuthenticationProviders": [],
           "defaultAuthentication": {
-            "authenticationType": "AMAZON_COGNITO_USER_POOLS",
-            "userPoolConfig": {
-              "userPoolId": "authnceed07f38101"
-            }
+            "apiKeyConfig": {
+              "apiKeyExpirationDate": "2024-03-25T12:02:18.636Z",
+              "apiKeyExpirationDays": 7,
+              "description": "tempKey"
+            },
+            "authenticationType": "API_KEY"
           }
         }
       },
@@ -42,9 +58,19 @@
   "auth": {
     "nceed07f38101": {
       "customAuth": false,
-      "dependsOn": [],
+      "dependsOn": [
+        {
+          "attributes": [
+            "Arn",
+            "Name"
+          ],
+          "category": "function",
+          "resourceName": "nceed07f38101PostConfirmation",
+          "triggerProvider": "Cognito"
+        }
+      ],
       "frontendAuthConfig": {
-        "mfaConfiguration": "OFF",
+        "mfaConfiguration": "OPTIONAL",
         "mfaTypes": [
           "SMS"
         ],
@@ -84,6 +110,20 @@
     }
   },
   "function": {
+    "AdminQueries6e804d46": {
+      "build": true,
+      "dependsOn": [
+        {
+          "attributes": [
+            "UserPoolId"
+          ],
+          "category": "auth",
+          "resourceName": "nceed07f38101"
+        }
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
     "nceAvatarHandlerLambdaFunction": {
       "build": true,
       "dependsOn": [
@@ -112,6 +152,11 @@
       ],
       "providerPlugin": "awscloudformation",
       "service": "Lambda"
+    },
+    "nceed07f38101PostConfirmation": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
     }
   },
   "hosting": {
@@ -122,6 +167,22 @@
     }
   },
   "parameters": {
+    "AMPLIFY_function_AdminQueries6e804d46_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "AdminQueries6e804d46"
+        }
+      ]
+    },
+    "AMPLIFY_function_AdminQueries6e804d46_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "AdminQueries6e804d46"
+        }
+      ]
+    },
     "AMPLIFY_function_nceAvatarHandlerLambdaFunction_deploymentBucketName": {
       "usedBy": [
         {
@@ -135,6 +196,30 @@
         {
           "category": "function",
           "resourceName": "nceAvatarHandlerLambdaFunction"
+        }
+      ]
+    },
+    "AMPLIFY_function_nceed07f38101PostConfirmation_GROUP": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "nceed07f38101PostConfirmation"
+        }
+      ]
+    },
+    "AMPLIFY_function_nceed07f38101PostConfirmation_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "nceed07f38101PostConfirmation"
+        }
+      ]
+    },
+    "AMPLIFY_function_nceed07f38101PostConfirmation_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "nceed07f38101PostConfirmation"
         }
       ]
     },

@@ -10,9 +10,8 @@ type GeneratedSubscription<InputType, OutputType> = string & {
 
 export const onCreateNCEStudentProfile = /* GraphQL */ `subscription OnCreateNCEStudentProfile(
   $filter: ModelSubscriptionNCEStudentProfileFilterInput
-  $owner: String
 ) {
-  onCreateNCEStudentProfile(filter: $filter, owner: $owner) {
+  onCreateNCEStudentProfile(filter: $filter) {
     id
     name
     email
@@ -20,7 +19,6 @@ export const onCreateNCEStudentProfile = /* GraphQL */ `subscription OnCreateNCE
     status
     createdAt
     updatedAt
-    owner
     __typename
   }
 }
@@ -30,9 +28,8 @@ export const onCreateNCEStudentProfile = /* GraphQL */ `subscription OnCreateNCE
 >;
 export const onUpdateNCEStudentProfile = /* GraphQL */ `subscription OnUpdateNCEStudentProfile(
   $filter: ModelSubscriptionNCEStudentProfileFilterInput
-  $owner: String
 ) {
-  onUpdateNCEStudentProfile(filter: $filter, owner: $owner) {
+  onUpdateNCEStudentProfile(filter: $filter) {
     id
     name
     email
@@ -40,7 +37,6 @@ export const onUpdateNCEStudentProfile = /* GraphQL */ `subscription OnUpdateNCE
     status
     createdAt
     updatedAt
-    owner
     __typename
   }
 }
@@ -50,9 +46,8 @@ export const onUpdateNCEStudentProfile = /* GraphQL */ `subscription OnUpdateNCE
 >;
 export const onDeleteNCEStudentProfile = /* GraphQL */ `subscription OnDeleteNCEStudentProfile(
   $filter: ModelSubscriptionNCEStudentProfileFilterInput
-  $owner: String
 ) {
-  onDeleteNCEStudentProfile(filter: $filter, owner: $owner) {
+  onDeleteNCEStudentProfile(filter: $filter) {
     id
     name
     email
@@ -60,7 +55,6 @@ export const onDeleteNCEStudentProfile = /* GraphQL */ `subscription OnDeleteNCE
     status
     createdAt
     updatedAt
-    owner
     __typename
   }
 }
@@ -70,9 +64,8 @@ export const onDeleteNCEStudentProfile = /* GraphQL */ `subscription OnDeleteNCE
 >;
 export const onCreateNCEUserSettings = /* GraphQL */ `subscription OnCreateNCEUserSettings(
   $filter: ModelSubscriptionNCEUserSettingsFilterInput
-  $owner: String
 ) {
-  onCreateNCEUserSettings(filter: $filter, owner: $owner) {
+  onCreateNCEUserSettings(filter: $filter) {
     id
     notificationsEnabled
     darkModeEnabled
@@ -80,7 +73,6 @@ export const onCreateNCEUserSettings = /* GraphQL */ `subscription OnCreateNCEUs
     isAdmin
     createdAt
     updatedAt
-    owner
     __typename
   }
 }
@@ -90,9 +82,8 @@ export const onCreateNCEUserSettings = /* GraphQL */ `subscription OnCreateNCEUs
 >;
 export const onUpdateNCEUserSettings = /* GraphQL */ `subscription OnUpdateNCEUserSettings(
   $filter: ModelSubscriptionNCEUserSettingsFilterInput
-  $owner: String
 ) {
-  onUpdateNCEUserSettings(filter: $filter, owner: $owner) {
+  onUpdateNCEUserSettings(filter: $filter) {
     id
     notificationsEnabled
     darkModeEnabled
@@ -100,7 +91,6 @@ export const onUpdateNCEUserSettings = /* GraphQL */ `subscription OnUpdateNCEUs
     isAdmin
     createdAt
     updatedAt
-    owner
     __typename
   }
 }
@@ -110,9 +100,8 @@ export const onUpdateNCEUserSettings = /* GraphQL */ `subscription OnUpdateNCEUs
 >;
 export const onDeleteNCEUserSettings = /* GraphQL */ `subscription OnDeleteNCEUserSettings(
   $filter: ModelSubscriptionNCEUserSettingsFilterInput
-  $owner: String
 ) {
-  onDeleteNCEUserSettings(filter: $filter, owner: $owner) {
+  onDeleteNCEUserSettings(filter: $filter) {
     id
     notificationsEnabled
     darkModeEnabled
@@ -120,7 +109,6 @@ export const onDeleteNCEUserSettings = /* GraphQL */ `subscription OnDeleteNCEUs
     isAdmin
     createdAt
     updatedAt
-    owner
     __typename
   }
 }
@@ -187,15 +175,13 @@ export const onDeleteBroadcastNotification = /* GraphQL */ `subscription OnDelet
 >;
 export const onCreateUserNotificationRead = /* GraphQL */ `subscription OnCreateUserNotificationRead(
   $filter: ModelSubscriptionUserNotificationReadFilterInput
-  $owner: String
 ) {
-  onCreateUserNotificationRead(filter: $filter, owner: $owner) {
+  onCreateUserNotificationRead(filter: $filter) {
     id
     notificationID
     readAt
     createdAt
     updatedAt
-    owner
     __typename
   }
 }
@@ -205,15 +191,13 @@ export const onCreateUserNotificationRead = /* GraphQL */ `subscription OnCreate
 >;
 export const onUpdateUserNotificationRead = /* GraphQL */ `subscription OnUpdateUserNotificationRead(
   $filter: ModelSubscriptionUserNotificationReadFilterInput
-  $owner: String
 ) {
-  onUpdateUserNotificationRead(filter: $filter, owner: $owner) {
+  onUpdateUserNotificationRead(filter: $filter) {
     id
     notificationID
     readAt
     createdAt
     updatedAt
-    owner
     __typename
   }
 }
@@ -223,15 +207,13 @@ export const onUpdateUserNotificationRead = /* GraphQL */ `subscription OnUpdate
 >;
 export const onDeleteUserNotificationRead = /* GraphQL */ `subscription OnDeleteUserNotificationRead(
   $filter: ModelSubscriptionUserNotificationReadFilterInput
-  $owner: String
 ) {
-  onDeleteUserNotificationRead(filter: $filter, owner: $owner) {
+  onDeleteUserNotificationRead(filter: $filter) {
     id
     notificationID
     readAt
     createdAt
     updatedAt
-    owner
     __typename
   }
 }

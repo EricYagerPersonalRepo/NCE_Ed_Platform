@@ -80,7 +80,6 @@ export type NCEStudentProfile = {
   status: StudentStatus,
   createdAt: string,
   updatedAt: string,
-  owner?: string | null,
 };
 
 export type UpdateNCEStudentProfileInput = {
@@ -129,7 +128,6 @@ export type NCEUserSettings = {
   isAdmin: boolean,
   createdAt: string,
   updatedAt: string,
-  owner?: string | null,
 };
 
 export type UpdateNCEUserSettingsInput = {
@@ -241,7 +239,6 @@ export type UserNotificationRead = {
   readAt?: string | null,
   createdAt: string,
   updatedAt: string,
-  owner?: string | null,
 };
 
 export type UpdateUserNotificationReadInput = {
@@ -985,7 +982,6 @@ export type CreateNCEStudentProfileMutation = {
     status: StudentStatus,
     createdAt: string,
     updatedAt: string,
-    owner?: string | null,
   } | null,
 };
 
@@ -1004,7 +1000,6 @@ export type UpdateNCEStudentProfileMutation = {
     status: StudentStatus,
     createdAt: string,
     updatedAt: string,
-    owner?: string | null,
   } | null,
 };
 
@@ -1023,7 +1018,6 @@ export type DeleteNCEStudentProfileMutation = {
     status: StudentStatus,
     createdAt: string,
     updatedAt: string,
-    owner?: string | null,
   } | null,
 };
 
@@ -1042,7 +1036,6 @@ export type CreateNCEUserSettingsMutation = {
     isAdmin: boolean,
     createdAt: string,
     updatedAt: string,
-    owner?: string | null,
   } | null,
 };
 
@@ -1061,7 +1054,6 @@ export type UpdateNCEUserSettingsMutation = {
     isAdmin: boolean,
     createdAt: string,
     updatedAt: string,
-    owner?: string | null,
   } | null,
 };
 
@@ -1080,7 +1072,6 @@ export type DeleteNCEUserSettingsMutation = {
     isAdmin: boolean,
     createdAt: string,
     updatedAt: string,
-    owner?: string | null,
   } | null,
 };
 
@@ -1154,7 +1145,6 @@ export type CreateUserNotificationReadMutation = {
     readAt?: string | null,
     createdAt: string,
     updatedAt: string,
-    owner?: string | null,
   } | null,
 };
 
@@ -1171,7 +1161,6 @@ export type UpdateUserNotificationReadMutation = {
     readAt?: string | null,
     createdAt: string,
     updatedAt: string,
-    owner?: string | null,
   } | null,
 };
 
@@ -1188,7 +1177,6 @@ export type DeleteUserNotificationReadMutation = {
     readAt?: string | null,
     createdAt: string,
     updatedAt: string,
-    owner?: string | null,
   } | null,
 };
 
@@ -1815,7 +1803,6 @@ export type GetNCEStudentProfileQuery = {
     status: StudentStatus,
     createdAt: string,
     updatedAt: string,
-    owner?: string | null,
   } | null,
 };
 
@@ -1837,7 +1824,6 @@ export type ListNCEStudentProfilesQuery = {
       status: StudentStatus,
       createdAt: string,
       updatedAt: string,
-      owner?: string | null,
     } | null >,
     nextToken?: string | null,
   } | null,
@@ -1857,7 +1843,6 @@ export type GetNCEUserSettingsQuery = {
     isAdmin: boolean,
     createdAt: string,
     updatedAt: string,
-    owner?: string | null,
   } | null,
 };
 
@@ -1879,7 +1864,6 @@ export type ListNCEUserSettingsQuery = {
       isAdmin: boolean,
       createdAt: string,
       updatedAt: string,
-      owner?: string | null,
     } | null >,
     nextToken?: string | null,
   } | null,
@@ -1939,7 +1923,6 @@ export type GetUserNotificationReadQuery = {
     readAt?: string | null,
     createdAt: string,
     updatedAt: string,
-    owner?: string | null,
   } | null,
 };
 
@@ -1959,7 +1942,6 @@ export type ListUserNotificationReadsQuery = {
       readAt?: string | null,
       createdAt: string,
       updatedAt: string,
-      owner?: string | null,
     } | null >,
     nextToken?: string | null,
   } | null,
@@ -2488,7 +2470,6 @@ export type QuestionsByQuizIDAndIdQuery = {
 
 export type OnCreateNCEStudentProfileSubscriptionVariables = {
   filter?: ModelSubscriptionNCEStudentProfileFilterInput | null,
-  owner?: string | null,
 };
 
 export type OnCreateNCEStudentProfileSubscription = {
@@ -2501,13 +2482,11 @@ export type OnCreateNCEStudentProfileSubscription = {
     status: StudentStatus,
     createdAt: string,
     updatedAt: string,
-    owner?: string | null,
   } | null,
 };
 
 export type OnUpdateNCEStudentProfileSubscriptionVariables = {
   filter?: ModelSubscriptionNCEStudentProfileFilterInput | null,
-  owner?: string | null,
 };
 
 export type OnUpdateNCEStudentProfileSubscription = {
@@ -2520,13 +2499,11 @@ export type OnUpdateNCEStudentProfileSubscription = {
     status: StudentStatus,
     createdAt: string,
     updatedAt: string,
-    owner?: string | null,
   } | null,
 };
 
 export type OnDeleteNCEStudentProfileSubscriptionVariables = {
   filter?: ModelSubscriptionNCEStudentProfileFilterInput | null,
-  owner?: string | null,
 };
 
 export type OnDeleteNCEStudentProfileSubscription = {
@@ -2539,13 +2516,11 @@ export type OnDeleteNCEStudentProfileSubscription = {
     status: StudentStatus,
     createdAt: string,
     updatedAt: string,
-    owner?: string | null,
   } | null,
 };
 
 export type OnCreateNCEUserSettingsSubscriptionVariables = {
   filter?: ModelSubscriptionNCEUserSettingsFilterInput | null,
-  owner?: string | null,
 };
 
 export type OnCreateNCEUserSettingsSubscription = {
@@ -2558,13 +2533,11 @@ export type OnCreateNCEUserSettingsSubscription = {
     isAdmin: boolean,
     createdAt: string,
     updatedAt: string,
-    owner?: string | null,
   } | null,
 };
 
 export type OnUpdateNCEUserSettingsSubscriptionVariables = {
   filter?: ModelSubscriptionNCEUserSettingsFilterInput | null,
-  owner?: string | null,
 };
 
 export type OnUpdateNCEUserSettingsSubscription = {
@@ -2577,13 +2550,11 @@ export type OnUpdateNCEUserSettingsSubscription = {
     isAdmin: boolean,
     createdAt: string,
     updatedAt: string,
-    owner?: string | null,
   } | null,
 };
 
 export type OnDeleteNCEUserSettingsSubscriptionVariables = {
   filter?: ModelSubscriptionNCEUserSettingsFilterInput | null,
-  owner?: string | null,
 };
 
 export type OnDeleteNCEUserSettingsSubscription = {
@@ -2596,7 +2567,6 @@ export type OnDeleteNCEUserSettingsSubscription = {
     isAdmin: boolean,
     createdAt: string,
     updatedAt: string,
-    owner?: string | null,
   } | null,
 };
 
@@ -2656,7 +2626,6 @@ export type OnDeleteBroadcastNotificationSubscription = {
 
 export type OnCreateUserNotificationReadSubscriptionVariables = {
   filter?: ModelSubscriptionUserNotificationReadFilterInput | null,
-  owner?: string | null,
 };
 
 export type OnCreateUserNotificationReadSubscription = {
@@ -2667,13 +2636,11 @@ export type OnCreateUserNotificationReadSubscription = {
     readAt?: string | null,
     createdAt: string,
     updatedAt: string,
-    owner?: string | null,
   } | null,
 };
 
 export type OnUpdateUserNotificationReadSubscriptionVariables = {
   filter?: ModelSubscriptionUserNotificationReadFilterInput | null,
-  owner?: string | null,
 };
 
 export type OnUpdateUserNotificationReadSubscription = {
@@ -2684,13 +2651,11 @@ export type OnUpdateUserNotificationReadSubscription = {
     readAt?: string | null,
     createdAt: string,
     updatedAt: string,
-    owner?: string | null,
   } | null,
 };
 
 export type OnDeleteUserNotificationReadSubscriptionVariables = {
   filter?: ModelSubscriptionUserNotificationReadFilterInput | null,
-  owner?: string | null,
 };
 
 export type OnDeleteUserNotificationReadSubscription = {
@@ -2701,7 +2666,6 @@ export type OnDeleteUserNotificationReadSubscription = {
     readAt?: string | null,
     createdAt: string,
     updatedAt: string,
-    owner?: string | null,
   } | null,
 };
 
