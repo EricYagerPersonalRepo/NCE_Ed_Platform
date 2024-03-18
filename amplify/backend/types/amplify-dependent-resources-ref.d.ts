@@ -1,10 +1,5 @@
 export type AmplifyDependentResourcesAttributes = {
   "api": {
-    "AdminQueries": {
-      "ApiId": "string",
-      "ApiName": "string",
-      "RootUrl": "string"
-    },
     "avatarHandlerApiGateway": {
       "ApiId": "string",
       "ApiName": "string",
@@ -32,13 +27,6 @@ export type AmplifyDependentResourcesAttributes = {
     }
   },
   "function": {
-    "AdminQueriesfd07c2fc": {
-      "Arn": "string",
-      "LambdaExecutionRole": "string",
-      "LambdaExecutionRoleArn": "string",
-      "Name": "string",
-      "Region": "string"
-    },
     "nceAvatarHandlerLambdaFunction": {
       "Arn": "string",
       "LambdaExecutionRole": "string",

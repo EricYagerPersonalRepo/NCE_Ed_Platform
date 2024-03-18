@@ -1,27 +1,5 @@
 {
   "api": {
-    "AdminQueries": {
-      "authorizationType": "AMAZON_COGNITO_USER_POOLS",
-      "dependsOn": [
-        {
-          "attributes": [
-            "UserPoolId"
-          ],
-          "category": "auth",
-          "resourceName": "nceed07f38101"
-        },
-        {
-          "attributes": [
-            "Arn",
-            "Name"
-          ],
-          "category": "function",
-          "resourceName": "AdminQueriesfd07c2fc"
-        }
-      ],
-      "providerPlugin": "awscloudformation",
-      "service": "API Gateway"
-    },
     "avatarHandlerApiGateway": {
       "dependsOn": [
         {
@@ -106,20 +84,6 @@
     }
   },
   "function": {
-    "AdminQueriesfd07c2fc": {
-      "build": true,
-      "dependsOn": [
-        {
-          "attributes": [
-            "UserPoolId"
-          ],
-          "category": "auth",
-          "resourceName": "nceed07f38101"
-        }
-      ],
-      "providerPlugin": "awscloudformation",
-      "service": "Lambda"
-    },
     "nceAvatarHandlerLambdaFunction": {
       "build": true,
       "dependsOn": [
@@ -158,22 +122,6 @@
     }
   },
   "parameters": {
-    "AMPLIFY_function_AdminQueriesfd07c2fc_deploymentBucketName": {
-      "usedBy": [
-        {
-          "category": "function",
-          "resourceName": "AdminQueriesfd07c2fc"
-        }
-      ]
-    },
-    "AMPLIFY_function_AdminQueriesfd07c2fc_s3Key": {
-      "usedBy": [
-        {
-          "category": "function",
-          "resourceName": "AdminQueriesfd07c2fc"
-        }
-      ]
-    },
     "AMPLIFY_function_nceAvatarHandlerLambdaFunction_deploymentBucketName": {
       "usedBy": [
         {
