@@ -172,7 +172,6 @@ export const UserAccountView = ({userID, avatarUrl, router}:any) => {
 export const UserSettingsComponent = ({userID}:any) => {
     const [userSettings, setUserSettings] = useState({
         id:userID,
-        birthdate: '',
         email: '',
         name: '',
     })
@@ -193,7 +192,6 @@ export const UserSettingsComponent = ({userID}:any) => {
                     if(apiCall.data.getNCEStudentProfile) {
                         setUserSettings({
                             id: userID,
-                            birthdate: apiCall.data.getNCEStudentProfile.birthdate,
                             email: apiCall.data.getNCEStudentProfile.email,
                             name: apiCall.data.getNCEStudentProfile.name,
                         })
@@ -277,19 +275,6 @@ export const UserSettingsComponent = ({userID}:any) => {
                     margin="normal"
                     value={userSettings.email}
                     disabled
-                />
-                <TextField
-                    fullWidth
-                    label="Birthdate"
-                    name="birthdate"
-                    type="date"
-                    variant="outlined"
-                    margin="normal"
-                    InputLabelProps={{
-                        shrink: true,
-                    }}
-                    value={userSettings.birthdate}
-                    onChange={(event)=>setUserSettings({...userSettings, birthdate:event.target.value})}
                 />
                 <Button
                     variant="contained"

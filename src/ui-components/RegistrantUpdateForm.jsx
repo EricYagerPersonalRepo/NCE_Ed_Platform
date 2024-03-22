@@ -214,7 +214,6 @@ export default function RegistrantUpdateForm(props) {
     []
   );
   const [address, setAddress] = React.useState(initialValues.address);
-  const [birthdate, setBirthdate] = React.useState(initialValues.birthdate);
   const autocompleteLength = 10;
   const [errors, setErrors] = React.useState({});
   const resetStateValues = () => {
@@ -237,7 +236,6 @@ export default function RegistrantUpdateForm(props) {
         ? cleanValues.address
         : JSON.stringify(cleanValues.address)
     );
-    setBirthdate(cleanValues.birthdate);
     setErrors({});
   };
   const [registrantRecord, setRegistrantRecord] =
@@ -450,7 +448,6 @@ export default function RegistrantUpdateForm(props) {
             lastName: modelFields.lastName,
             email: modelFields.email,
             phone: modelFields.phone,
-            birthdate: modelFields.birthdate,
             address: modelFields.address
               ? JSON.parse(modelFields.address)
               : modelFields.address,
@@ -723,37 +720,6 @@ export default function RegistrantUpdateForm(props) {
         hasError={errors.address?.hasError}
         {...getOverrideProps(overrides, "address")}
       ></TextAreaField>
-      <TextField
-        label="Birthdate"
-        isRequired={true}
-        isReadOnly={false}
-        type="date"
-        value={birthdate}
-        onChange={(e) => {
-          let { value } = e.target;
-          if (onChange) {
-            const modelFields = {
-              firstName,
-              lastName,
-              email,
-              phone,
-              StudentProfiles,
-              address,
-              birthdate: value,
-            };
-            const result = onChange(modelFields);
-            value = result?.birthdate ?? value;
-          }
-          if (errors.birthdate?.hasError) {
-            runValidationTasks("birthdate", value);
-          }
-          setBirthdate(value);
-        }}
-        onBlur={() => runValidationTasks("birthdate", birthdate)}
-        errorMessage={errors.birthdate?.errorMessage}
-        hasError={errors.birthdate?.hasError}
-        {...getOverrideProps(overrides, "birthdate")}
-      ></TextField>
       <Flex
         justifyContent="space-between"
         {...getOverrideProps(overrides, "CTAFlex")}

@@ -206,7 +206,6 @@ export default function StudentProfileUpdateForm(props) {
   );
   const [name, setName] = React.useState(initialValues.name);
   const [email, setEmail] = React.useState(initialValues.email);
-  const [birthdate, setBirthdate] = React.useState(initialValues.birthdate);
   const [courseEnrollments, setCourseEnrollments] = React.useState(
     initialValues.courseEnrollments
   );
@@ -227,7 +226,6 @@ export default function StudentProfileUpdateForm(props) {
     setCognitoUserID(cleanValues.cognitoUserID);
     setName(cleanValues.name);
     setEmail(cleanValues.email);
-    setBirthdate(cleanValues.birthdate);
     setCourseEnrollments(cleanValues.courseEnrollments ?? []);
     setCurrentCourseEnrollmentsValue(undefined);
     setCurrentCourseEnrollmentsDisplayValue("");
@@ -443,7 +441,6 @@ export default function StudentProfileUpdateForm(props) {
             cognitoUserID: modelFields.cognitoUserID,
             name: modelFields.name,
             email: modelFields.email,
-            birthdate: modelFields.birthdate,
           };
           promises.push(
             client.graphql({
@@ -553,35 +550,6 @@ export default function StudentProfileUpdateForm(props) {
         errorMessage={errors.email?.errorMessage}
         hasError={errors.email?.hasError}
         {...getOverrideProps(overrides, "email")}
-      ></TextField>
-      <TextField
-        label="Birthdate"
-        isRequired={true}
-        isReadOnly={false}
-        type="date"
-        value={birthdate}
-        onChange={(e) => {
-          let { value } = e.target;
-          if (onChange) {
-            const modelFields = {
-              cognitoUserID,
-              name,
-              email,
-              birthdate: value,
-              courseEnrollments,
-            };
-            const result = onChange(modelFields);
-            value = result?.birthdate ?? value;
-          }
-          if (errors.birthdate?.hasError) {
-            runValidationTasks("birthdate", value);
-          }
-          setBirthdate(value);
-        }}
-        onBlur={() => runValidationTasks("birthdate", birthdate)}
-        errorMessage={errors.birthdate?.errorMessage}
-        hasError={errors.birthdate?.hasError}
-        {...getOverrideProps(overrides, "birthdate")}
       ></TextField>
       <ArrayField
         onChange={async (items) => {

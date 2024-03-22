@@ -355,7 +355,6 @@ export const AdminUsersView = () => {
                         id: profile.id,
                         name: profile.name,
                         email: profile.email,
-                        birthdate: profile.birthdate,
                         status: profile.status,
                         groups: profile.groups.join(', ')
                     })));
@@ -383,7 +382,7 @@ export const AdminUsersView = () => {
             try {
                 await amplifyApiClient.graphql({
                     query: updateNCEStudentProfile,
-                    variables: { input: { id: newRow.id, name: newRow.name,  email:newRow.email, birthdate: newRow.birthdate, status:newRow.status } },
+                    variables: { input: { id: newRow.id, name: newRow.name,  email:newRow.email, status:newRow.status } },
                 })
                 setRows((prevRows) => prevRows.map((row) => (row.id === editedRow.id ? editedRow : row)))
 
