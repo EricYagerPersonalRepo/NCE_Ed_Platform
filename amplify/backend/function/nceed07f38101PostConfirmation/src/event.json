@@ -1,7 +1,22 @@
 {
+  "version": "1",
+  "region": "us-east-1",
+  "userPoolId": "us-east-1_gQfOXqsnM",
+  "userName": "b474d142-11d7-4df2-a280-bce6df56dd0f",
+  "callerContext": {
+    "awsSdkVersion": "aws-sdk-unknown-unknown",
+    "clientId": "exampleClientId123456789"
+  },
+  "triggerSource": "PostConfirmation_ConfirmSignUp",
   "request": {
-    "userPoolId": "testID",
-    "userName": "testUser"
+    "userAttributes": {
+      "sub": "b474d142-11d7-4df2-a280-bce6df56dd0f",
+      "given_name": "Jane",
+      "family_name": "Doe",
+      "email": "janedoe@example.com",
+      "custom:birthdate": "1990-01-01"
+    },
+    "newDeviceUsed": false
   },
   "response": {}
 }

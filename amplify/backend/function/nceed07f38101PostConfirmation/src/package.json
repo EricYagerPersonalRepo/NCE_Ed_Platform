@@ -5,7 +5,15 @@
   "main": "index.js",
   "license": "Apache-2.0",
   "dependencies": {
-    "axios": "latest"
+    "@aws-sdk/client-sts": "^3.535.0",
+    "@aws-sdk/credential-provider-node": "^3.535.0",
+    "@aws-sdk/util-format-url": "^3.535.0",
+    "@smithy/node-http-handler": "^2.5.0",
+    "@smithy/protocol-http": "^3.3.0",
+    "@smithy/signature-v4": "^2.2.0",
+    "aws-sdk": "^2.1580.0",
+    "axios": "latest",
+    "dotenv": "^16.4.5"
   },
   "devDependencies": {
     "@types/aws-lambda": "^8.10.92"

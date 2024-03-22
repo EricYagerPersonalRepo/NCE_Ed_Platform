@@ -20,18 +20,19 @@ exports.handler = async (event) => {
     UserPoolId: event.userPoolId,
     Username: event.userName,
   };
-  /**
-   * Check if the group exists; if it doesn't, create it.
-   */
+
   try {
     await cognitoIdentityServiceProvider.send(new GetGroupCommand(groupParams));
-  } catch (e) {
-    await cognitoIdentityServiceProvider.send(new CreateGroupCommand(groupParams));
+    await cognitoIdentityServiceProvider.send(new AdminAddUserToGroupCommand(addUserParams));
+  } catch(error){
+    if (error.response) {
+        console.error("Error status:", error.response.status);
+        console.error("Error data:", error.response.data);
+    } else {
+        console.error("Error message:", error.message);
+    }
   }
-  /**
-   * Then, add the user to the group.
-   */
-  await cognitoIdentityServiceProvider.send(new AdminAddUserToGroupCommand(addUserParams));
 
   return event;
+
 };

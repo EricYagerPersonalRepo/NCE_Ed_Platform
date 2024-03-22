@@ -1,19 +1,32 @@
-/**
+/* Amplify Params - DO NOT EDIT
+	API_AVATARHANDLERAPIGATEWAY_APIID
+	API_AVATARHANDLERAPIGATEWAY_APINAME
+	API_NCEED_BROADCASTNOTIFICATIONTABLE_ARN
+	API_NCEED_BROADCASTNOTIFICATIONTABLE_NAME
+	API_NCEED_GRAPHQLAPIENDPOINTOUTPUT
+	API_NCEED_GRAPHQLAPIIDOUTPUT
+	API_NCEED_GRAPHQLAPIKEYOUTPUT
+	API_NCEED_NCESTUDENTPROFILETABLE_ARN
+	API_NCEED_NCESTUDENTPROFILETABLE_NAME
+	API_NCEED_NCEUSERSETTINGSTABLE_ARN
+	API_NCEED_NCEUSERSETTINGSTABLE_NAME
+	API_NCEED_USERNOTIFICATIONREADTABLE_ARN
+	API_NCEED_USERNOTIFICATIONREADTABLE_NAME
+	ENV
+	REGION
+	STORAGE_NCEEDAVATARS_BUCKETNAME
+Amplify Params - DO NOT EDIT *//**
  * @fileoverview
  *
  * This CloudFormation Trigger creates a handler which awaits the other handlers
  * specified in the `MODULES` env var, located at `./${MODULE}`.
  */
 
-/**
- * The names of modules to load are stored as a comma-delimited string in the
- * `MODULES` env var.
- */
+
 const moduleNames = process.env.MODULES.split(',');
-/**
- * The array of imported modules.
- */
 const modules = moduleNames.map((name) => require(`./${name}`));
+console.log(modules)
+
 
 /**
  * This async handler iterates over the given modules and awaits them.
@@ -23,11 +36,6 @@ const modules = moduleNames.map((name) => require(`./${name}`));
  *
  */
 exports.handler = async (event, context) => {
-  /**
-   * Instead of naively iterating over all handlers, run them concurrently with
-   * `await Promise.all(...)`. This would otherwise just be determined by the
-   * order of names in the `MODULES` var.
-   */
-  await Promise.all(modules.map((module) => module.handler(event, context)));
-  return event;
+	await Promise.all(modules.map((module) => module.handler(event, context)));
+	return null;
 };
