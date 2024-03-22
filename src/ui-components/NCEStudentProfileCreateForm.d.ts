@@ -24,13 +24,11 @@ export declare type ValidationFunction<T> = (value: T, validationResponse: Valid
 export declare type NCEStudentProfileCreateFormInputValues = {
     name?: string;
     email?: string;
-    birthdate?: string;
     status?: string;
 };
 export declare type NCEStudentProfileCreateFormValidationValues = {
     name?: ValidationFunction<string>;
     email?: ValidationFunction<string>;
-    birthdate?: ValidationFunction<string>;
     status?: ValidationFunction<string>;
 };
 export declare type PrimitiveOverrideProps<T> = Partial<T> & React.DOMAttributes<HTMLDivElement>;
@@ -38,7 +36,6 @@ export declare type NCEStudentProfileCreateFormOverridesProps = {
     NCEStudentProfileCreateFormGrid?: PrimitiveOverrideProps<GridProps>;
     name?: PrimitiveOverrideProps<TextFieldProps>;
     email?: PrimitiveOverrideProps<TextFieldProps>;
-    birthdate?: PrimitiveOverrideProps<TextFieldProps>;
     status?: PrimitiveOverrideProps<SelectFieldProps>;
 } & EscapeHatchProps;
 export declare type NCEStudentProfileCreateFormProps = React.PropsWithChildren<{

@@ -445,29 +445,16 @@ export function TwoFactorAuthForm({ signUpHooks, handleConfirmSignup }: { signUp
     const [confirmationCode, setConfirmationCode] = useState('')
     let {username,password} = {username:signUpHooks.username, password:signUpHooks.password}
 
-    const handlePostTfaWorkflow = async (signUpHooks:any) => {
-        
-        try {
-            const signInResult = await handleSignIn({ username,password })
-            console.log(signInResult)
-
-            if (signInResult.isSignedIn) {
-                const profileInput= { id: signUpHooks.id, name:signUpHooks.name, email:signUpHooks.username, birthdate:signUpHooks.birthday, status:signUpHooks.status }
-                const profileResult = await handleCreateStudentProfile(profileInput)
-                //const userSettingsResult:any = await handleCreateInitialUserSettings(signUpHooks.cognitoUserID)
-                if (profileResult.isSignedUp) {
-                    console.log("They are signed up.")
-                }
-            }
-        } catch (error) {
-            console.error('Error in post-TFA workflow:', error)
-        }
-    }
-
-    const handleSubmit = async () => {
+    const handleSubmit = async() => {
         const result = await handleConfirmSignup({ username, confirmationCode })
+        console.log("Result from handleSubmit in Components.tsx: ", result)
         if (result.signUpComplete) {
-          handlePostTfaWorkflow(signUpHooks)
+            try {
+                const signInResult = await handleSignIn({ username,password })
+                console.log("signInResult from TwoFactorAuthForm: ", signInResult)
+            } catch (error) {
+                console.error('Error in post-TFA workflow:', error)
+            }
         }
     }
 

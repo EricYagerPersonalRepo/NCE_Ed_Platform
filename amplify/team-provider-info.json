@@ -77,11 +77,17 @@
         "nceed07f38101PostConfirmation": {
           "GROUP": "Students",
           "deploymentBucketName": "amplify-nceed-dev-60353-deployment",
-          "s3Key": "amplify-builds/nceed07f38101PostConfirmation-33486c6552324c343550-build.zip"
+          "s3Key": "amplify-builds/nceed07f38101PostConfirmation-524a74497a78586a4b65-build.zip",
+          "apiNceedGraphqlapikeyoutputProd": "f",
+          "apiNceedGraphqlapikeyoutputDev": "f"
         },
         "AdminQueries6e804d46": {
           "deploymentBucketName": "amplify-nceed-dev-60353-deployment",
           "s3Key": "amplify-builds/AdminQueries6e804d46-6d5779682f7452316142-build.zip"
+        },
+        "graphQlLambdaAuthorizer09c68778": {
+          "deploymentBucketName": "amplify-nceed-dev-60353-deployment",
+          "s3Key": "amplify-builds/graphQlLambdaAuthorizer09c68778-776a5254737a334a3068-build.zip"
         }
       }
     }

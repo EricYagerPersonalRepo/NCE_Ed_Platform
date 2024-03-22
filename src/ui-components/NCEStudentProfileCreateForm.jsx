@@ -31,25 +31,21 @@ export default function NCEStudentProfileCreateForm(props) {
   const initialValues = {
     name: "",
     email: "",
-    birthdate: "",
     status: "",
   };
   const [name, setName] = React.useState(initialValues.name);
   const [email, setEmail] = React.useState(initialValues.email);
-  const [birthdate, setBirthdate] = React.useState(initialValues.birthdate);
   const [status, setStatus] = React.useState(initialValues.status);
   const [errors, setErrors] = React.useState({});
   const resetStateValues = () => {
     setName(initialValues.name);
     setEmail(initialValues.email);
-    setBirthdate(initialValues.birthdate);
     setStatus(initialValues.status);
     setErrors({});
   };
   const validations = {
     name: [{ type: "Required" }],
     email: [{ type: "Required" }, { type: "Email" }],
-    birthdate: [{ type: "Required" }],
     status: [{ type: "Required" }],
   };
   const runValidationTasks = async (
@@ -80,7 +76,6 @@ export default function NCEStudentProfileCreateForm(props) {
         let modelFields = {
           name,
           email,
-          birthdate,
           status,
         };
         const validationResponses = await Promise.all(
@@ -146,7 +141,6 @@ export default function NCEStudentProfileCreateForm(props) {
             const modelFields = {
               name: value,
               email,
-              birthdate,
               status,
             };
             const result = onChange(modelFields);
@@ -173,7 +167,6 @@ export default function NCEStudentProfileCreateForm(props) {
             const modelFields = {
               name,
               email: value,
-              birthdate,
               status,
             };
             const result = onChange(modelFields);
@@ -189,34 +182,6 @@ export default function NCEStudentProfileCreateForm(props) {
         hasError={errors.email?.hasError}
         {...getOverrideProps(overrides, "email")}
       ></TextField>
-      <TextField
-        label="Birthdate"
-        isRequired={true}
-        isReadOnly={false}
-        type="date"
-        value={birthdate}
-        onChange={(e) => {
-          let { value } = e.target;
-          if (onChange) {
-            const modelFields = {
-              name,
-              email,
-              birthdate: value,
-              status,
-            };
-            const result = onChange(modelFields);
-            value = result?.birthdate ?? value;
-          }
-          if (errors.birthdate?.hasError) {
-            runValidationTasks("birthdate", value);
-          }
-          setBirthdate(value);
-        }}
-        onBlur={() => runValidationTasks("birthdate", birthdate)}
-        errorMessage={errors.birthdate?.errorMessage}
-        hasError={errors.birthdate?.hasError}
-        {...getOverrideProps(overrides, "birthdate")}
-      ></TextField>
       <SelectField
         label="Status"
         placeholder="Please select an option"
@@ -228,7 +193,6 @@ export default function NCEStudentProfileCreateForm(props) {
             const modelFields = {
               name,
               email,
-              birthdate,
               status: value,
             };
             const result = onChange(modelFields);

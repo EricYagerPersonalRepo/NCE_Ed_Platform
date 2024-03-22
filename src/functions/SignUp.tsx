@@ -1,3 +1,7 @@
+
+import { SignUpHooks, handleConfirmSignUpReturnType } from "@/src/types/SignUpTypes"
+import { ConfirmSignUpInput, ConfirmSignUpOutput, SignUpOutput, confirmSignUp, signUp } from "aws-amplify/auth"
+
 /**
  * Array of allowed ZIP codes for the signup process.
  *
@@ -40,29 +44,7 @@ export const ageCaluclatedFromInputBirthday = (event:any) => {
     return(age)
 }
 
-import { handleCreateStudentProfile, handleSignIn } from "@/src/functions/AuthX"
-import { SignUpHooks, handleConfirmSignUpReturnType } from "@/src/types/SignUpTypes"
-import { ConfirmSignUpInput, ConfirmSignUpOutput, SignUpOutput, confirmSignUp, signUp } from "aws-amplify/auth"
-
-// Manages the post-two-factor-authentication workflow.
-export const handlePostTfaWorkflow = async ({signUpHooks}:any) => {
-    let {username,password} = {username:signUpHooks.username, password:signUpHooks.password}
-    try {
-        const signInResult = await handleSignIn({ username,password })
-
-        if (signInResult.isSignedIn) {
-            const profileInput= { id:signUpHooks.id, name:signUpHooks.name, email:signUpHooks.username, birthdate:signUpHooks.birthday, status: signUpHooks.status }
-            const profileResult = await handleCreateStudentProfile(profileInput)
-            if (profileResult.isSignedUp) {
-                console.log("Signed up!")//window.location.href = '/StudentProfile'
-            }
-        }
-    } catch (error) {
-        console.error('Error in post-TFA workflow:', error)
-    }
-}
-
-export async function handleSignUpCall(username:any,password:any){
+export async function handleSignUpCall(username:any, password:any, birthdate:any){
     try{
         const response:SignUpOutput = await signUp({
             username,
@@ -84,9 +66,10 @@ export async function handleSignUpCall(username:any,password:any){
 export async function handleSignUp(signUpHooks:SignUpHooks) {
     const username = signUpHooks.username
     const password = signUpHooks.password
+    const birthdate = signUpHooks.birthday
 
     try {
-        const response:SignUpOutput = await handleSignUpCall(username, password)
+        const response:SignUpOutput = await handleSignUpCall(username, password, birthdate)
 
         if (response.nextStep && response.nextStep.signUpStep === "CONFIRM_SIGN_UP") {
             signUpHooks.setTfaOpen(true)

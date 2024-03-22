@@ -43,6 +43,36 @@
     },
     "s3Key": {
       "Type": "String"
+    },
+    "apiavatarHandlerApiGatewayApiName": {
+      "Type": "String",
+      "Default": "apiavatarHandlerApiGatewayApiName"
+    },
+    "apiavatarHandlerApiGatewayApiId": {
+      "Type": "String",
+      "Default": "apiavatarHandlerApiGatewayApiId"
+    },
+    "apinceedGraphQLAPIIdOutput": {
+      "Type": "String",
+      "Default": "apinceedGraphQLAPIIdOutput"
+    },
+    "apinceedGraphQLAPIEndpointOutput": {
+      "Type": "String",
+      "Default": "apinceedGraphQLAPIEndpointOutput"
+    },
+    "apinceedGraphQLAPIKeyOutput": {
+      "Type": "String",
+      "Default": "apinceedGraphQLAPIKeyOutput"
+    },
+    "storagenceEdAvatarsBucketName": {
+      "Type": "String",
+      "Default": "storagenceEdAvatarsBucketName"
+    },
+    "apiNceedGraphqlapikeyoutputProd": {
+      "Type": "String"
+    },
+    "apiNceedGraphqlapikeyoutputDev": {
+      "Type": "String"
     }
   },
   "Conditions": {
@@ -95,6 +125,30 @@
             },
             "GROUP": {
               "Ref": "GROUP"
+            },
+            "API_AVATARHANDLERAPIGATEWAY_APINAME": {
+              "Ref": "apiavatarHandlerApiGatewayApiName"
+            },
+            "API_AVATARHANDLERAPIGATEWAY_APIID": {
+              "Ref": "apiavatarHandlerApiGatewayApiId"
+            },
+            "API_NCEED_GRAPHQLAPIIDOUTPUT": {
+              "Ref": "apinceedGraphQLAPIIdOutput"
+            },
+            "API_NCEED_GRAPHQLAPIENDPOINTOUTPUT": {
+              "Ref": "apinceedGraphQLAPIEndpointOutput"
+            },
+            "API_NCEED_GRAPHQLAPIKEYOUTPUT": {
+              "Ref": "apinceedGraphQLAPIKeyOutput"
+            },
+            "STORAGE_NCEEDAVATARS_BUCKETNAME": {
+              "Ref": "storagenceEdAvatarsBucketName"
+            },
+            "API_NCEED_GRAPHQLAPIKEYOUTPUT_PROD": {
+              "Ref": "apiNceedGraphqlapikeyoutputProd"
+            },
+            "API_NCEED_GRAPHQLAPIKEYOUTPUT_DEV": {
+              "Ref": "apiNceedGraphqlapikeyoutputDev"
             }
           }
         },
@@ -193,6 +247,142 @@
                   }
                 ]
               }
+            }
+          ]
+        }
+      }
+    },
+    "AmplifyResourcesPolicy": {
+      "DependsOn": [
+        "LambdaExecutionRole"
+      ],
+      "Type": "AWS::IAM::Policy",
+      "Properties": {
+        "PolicyName": "amplify-lambda-execution-policy",
+        "Roles": [
+          {
+            "Ref": "LambdaExecutionRole"
+          }
+        ],
+        "PolicyDocument": {
+          "Version": "2012-10-17",
+          "Statement": [
+            {
+              "Effect": "Allow",
+              "Action": [
+                "apigateway:POST",
+                "apigateway:PUT",
+                "apigateway:GET",
+                "apigateway:HEAD",
+                "apigateway:OPTIONS",
+                "apigateway:PATCH",
+                "apigateway:DELETE"
+              ],
+              "Resource": [
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:aws:apigateway:",
+                      {
+                        "Ref": "AWS::Region"
+                      },
+                      "::/restapis/",
+                      {
+                        "Ref": "apiavatarHandlerApiGatewayApiName"
+                      },
+                      "/*"
+                    ]
+                  ]
+                }
+              ]
+            },
+            {
+              "Effect": "Allow",
+              "Action": [
+                "appsync:GraphQL"
+              ],
+              "Resource": [
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:aws:appsync:",
+                      {
+                        "Ref": "AWS::Region"
+                      },
+                      ":",
+                      {
+                        "Ref": "AWS::AccountId"
+                      },
+                      ":apis/",
+                      {
+                        "Ref": "apinceedGraphQLAPIIdOutput"
+                      },
+                      "/types/Query/*"
+                    ]
+                  ]
+                },
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:aws:appsync:",
+                      {
+                        "Ref": "AWS::Region"
+                      },
+                      ":",
+                      {
+                        "Ref": "AWS::AccountId"
+                      },
+                      ":apis/",
+                      {
+                        "Ref": "apinceedGraphQLAPIIdOutput"
+                      },
+                      "/types/Mutation/*"
+                    ]
+                  ]
+                }
+              ]
+            },
+            {
+              "Effect": "Allow",
+              "Action": "s3:ListBucket",
+              "Resource": [
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:aws:s3:::",
+                      {
+                        "Ref": "storagenceEdAvatarsBucketName"
+                      }
+                    ]
+                  ]
+                }
+              ]
+            },
+            {
+              "Effect": "Allow",
+              "Action": [
+                "s3:PutObject",
+                "s3:GetObject",
+                "s3:DeleteObject"
+              ],
+              "Resource": [
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:aws:s3:::",
+                      {
+                        "Ref": "storagenceEdAvatarsBucketName"
+                      },
+                      "/*"
+                    ]
+                  ]
+                }
+              ]
             }
           ]
         }

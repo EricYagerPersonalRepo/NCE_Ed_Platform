@@ -12,13 +12,10 @@ AWS.config.update({ region: process.env.REGION });
  */
 async function makeAppSyncCall(query, variables = {}) {
   const env = process.env.ENV
-  const endpoint = env==="PROD" ? new URL(process.env.API_NCEED_GRAPHQLAPIENDPOINTOUTPUT_PROD) : new URL(process.env.API_NCEED_GRAPHQLAPIENDPOINTOUTPUT_DEV)
-  const apiKey = env==="PROD" ? process.env.API_NCEED_GRAPHQLAPIKEYOUTPUT_PROD : process.env.API_NCEED_GRAPHQLAPIKEYOUTPUT_DEV
+  const endpoint = "https://rnsvbwbxvvdgdmmh7h2vqxs3gu.appsync-api.us-east-1.amazonaws.com/graphql"//env==="PROD" ? new URL(process.env.API_NCEED_GRAPHQLAPIENDPOINTOUTPUT_PROD) : new URL(process.env.API_NCEED_GRAPHQLAPIENDPOINTOUTPUT_DEV)
+  const apiKey = "da2-kwiiwyvrsvfidaaxww2f3ecp4y"
   let responseBody = null;
-
-  console.log("HIT: ", query, variables)
-
-  console.log("ENDPOINT: ", endpoint, apiKey)
+  console.log("ENDPOINT: ", endpoint)
   try{
     const response = await axios.post(endpoint, {
       query: query,

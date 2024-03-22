@@ -16,10 +16,10 @@ export const createNCEStudentProfile = /* GraphQL */ `mutation CreateNCEStudentP
     id
     name
     email
-    birthdate
     status
     createdAt
     updatedAt
+    owner
     __typename
   }
 }
@@ -35,10 +35,10 @@ export const updateNCEStudentProfile = /* GraphQL */ `mutation UpdateNCEStudentP
     id
     name
     email
-    birthdate
     status
     createdAt
     updatedAt
+    owner
     __typename
   }
 }
@@ -54,10 +54,10 @@ export const deleteNCEStudentProfile = /* GraphQL */ `mutation DeleteNCEStudentP
     id
     name
     email
-    birthdate
     status
     createdAt
     updatedAt
+    owner
     __typename
   }
 }
@@ -77,6 +77,7 @@ export const createNCEUserSettings = /* GraphQL */ `mutation CreateNCEUserSettin
     isAdmin
     createdAt
     updatedAt
+    owner
     __typename
   }
 }
@@ -96,6 +97,7 @@ export const updateNCEUserSettings = /* GraphQL */ `mutation UpdateNCEUserSettin
     isAdmin
     createdAt
     updatedAt
+    owner
     __typename
   }
 }
@@ -115,6 +117,7 @@ export const deleteNCEUserSettings = /* GraphQL */ `mutation DeleteNCEUserSettin
     isAdmin
     createdAt
     updatedAt
+    owner
     __typename
   }
 }

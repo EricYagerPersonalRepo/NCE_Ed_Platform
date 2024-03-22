@@ -2,17 +2,24 @@
 
 type NCEStudentProfile 
   @model 
- {
+  @auth(rules: [
+    { allow: owner}
+    { allow: groups, groups: ["Admins"], operations: [create, update, read, delete] }
+    { allow: custom }
+  ]){
   id: ID!
   name: String!
   email: AWSEmail!
-  birthdate: AWSDate!
   status: StudentStatus!
 }
 
 type NCEUserSettings 
   @model 
- {
+  @auth(rules: [
+    { allow: owner }
+    { allow: groups, groups: ["Admins"], operations: [create, update, read, delete] }
+    { allow: custom }
+  ]){
   id: ID!
   notificationsEnabled: Boolean!
   darkModeEnabled: Boolean!
@@ -24,7 +31,11 @@ type NCEUserSettings
 
 type BroadcastNotification 
 @model 
-{
+@auth(rules: [
+  { allow: groups, groups: ["Admins"], operations: [create, update, read, delete] }
+  { allow: groups, groups: ["Students"], operations: [update, read] }
+  { allow: custom }
+]){
   id: ID!
   targetStudent: String
   title: String!
@@ -36,7 +47,10 @@ type BroadcastNotification
 
 type UserNotificationRead 
 @model 
-{
+@auth(rules: [
+  { allow: groups, groups: ["Admins"], operations: [create, update, read, delete] }
+  { allow: groups, groups: ["Students"], operations: [create, read, update] }
+]){
   id: ID!
   notificationID: ID!
   readAt: AWSDateTime
@@ -52,11 +66,16 @@ enum StudentStatus {
   ACTIVE
   INACTIVE
 }
+
 # BEGIN COURSE SCHEMA DEFINITIONS
 
 type Course 
 @model
-{
+@auth(rules: [
+  { allow: groups, groups: ["Admins"], operations: [create, update, delete, read] }
+  { allow: groups, groups: ["Instructors"], operations: [create, update, read] }
+  { allow: groups, groups: ["Students"], operations: [read] }
+]){
   id: ID!
   title: String!
   description: String
@@ -68,7 +87,11 @@ type Course
 
 type Module 
 @model 
-{
+@auth(rules:[
+  { allow: groups, groups: ["Admins"], operations: [create, update, delete, read] }
+  { allow: groups, groups: ["Instructors"], operations: [create, update, read] }
+  { allow: groups, groups: ["Students"], operations: [read] }
+]){
   id: ID!
   title: String!
   description: String
@@ -79,7 +102,11 @@ type Module
 
 type Lesson 
 @model 
-{
+@auth(rules:[
+  { allow: groups, groups: ["Admins"], operations: [create, update, delete, read] }
+  { allow: groups, groups: ["Instructors"], operations: [create, update, read] }
+  { allow: groups, groups: ["Students"], operations: [read] }
+]){
   id: ID!
   title: String!
   content: AWSJSON # Use AWSJSON for complex content structures
@@ -92,7 +119,11 @@ type Lesson
 
 type Exercise 
 @model 
-{
+@auth(rules: [
+  { allow: groups, groups: ["Admins"], operations: [create, update, delete, read] }
+  { allow: groups, groups: ["Instructors"], operations: [create, update, read] }
+  { allow: groups, groups: ["Students"], operations: [read] }
+]){
   id: ID!
   question: String!
   solution: String
@@ -104,7 +135,11 @@ type Exercise
 
 type Quiz 
 @model 
-{
+@auth(rules: [
+  { allow: groups, groups: ["Admins"], operations: [create, update, delete, read] }
+  { allow: groups, groups: ["Instructors"], operations: [create, update, read] }
+  { allow: groups, groups: ["Students"], operations: [read] }
+]){
   id: ID!
   title: String!
   lessonID: ID! @index(name: "byLesson", sortKeyFields: ["id"])
@@ -114,7 +149,11 @@ type Quiz
 
 type Question 
 @model 
-{
+@auth(rules: [
+  { allow: groups, groups: ["Admins"], operations: [create, update, delete, read] }
+  { allow: groups, groups: ["Instructors"], operations: [create, update, read] }
+  { allow: groups, groups: ["Students"], operations: [read] }
+]){
   id: ID!
   text: String!
   options: AWSJSON # Multiple-choice options
@@ -125,7 +164,11 @@ type Question
 
 type Enrollment 
 @model 
-{
+@auth(rules: [
+  { allow: groups, groups: ["Admins"], operations: [create, update, delete, read] }
+  { allow: groups, groups: ["Instructors"], operations: [create, update, read] }
+  { allow: groups, groups: ["Students"], operations: [read] }
+]){
   id: ID!
   userID: ID!
   courseID: ID!

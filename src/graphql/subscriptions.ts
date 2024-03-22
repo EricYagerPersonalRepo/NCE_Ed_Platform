@@ -10,15 +10,16 @@ type GeneratedSubscription<InputType, OutputType> = string & {
 
 export const onCreateNCEStudentProfile = /* GraphQL */ `subscription OnCreateNCEStudentProfile(
   $filter: ModelSubscriptionNCEStudentProfileFilterInput
+  $owner: String
 ) {
-  onCreateNCEStudentProfile(filter: $filter) {
+  onCreateNCEStudentProfile(filter: $filter, owner: $owner) {
     id
     name
     email
-    birthdate
     status
     createdAt
     updatedAt
+    owner
     __typename
   }
 }
@@ -28,15 +29,16 @@ export const onCreateNCEStudentProfile = /* GraphQL */ `subscription OnCreateNCE
 >;
 export const onUpdateNCEStudentProfile = /* GraphQL */ `subscription OnUpdateNCEStudentProfile(
   $filter: ModelSubscriptionNCEStudentProfileFilterInput
+  $owner: String
 ) {
-  onUpdateNCEStudentProfile(filter: $filter) {
+  onUpdateNCEStudentProfile(filter: $filter, owner: $owner) {
     id
     name
     email
-    birthdate
     status
     createdAt
     updatedAt
+    owner
     __typename
   }
 }
@@ -46,15 +48,16 @@ export const onUpdateNCEStudentProfile = /* GraphQL */ `subscription OnUpdateNCE
 >;
 export const onDeleteNCEStudentProfile = /* GraphQL */ `subscription OnDeleteNCEStudentProfile(
   $filter: ModelSubscriptionNCEStudentProfileFilterInput
+  $owner: String
 ) {
-  onDeleteNCEStudentProfile(filter: $filter) {
+  onDeleteNCEStudentProfile(filter: $filter, owner: $owner) {
     id
     name
     email
-    birthdate
     status
     createdAt
     updatedAt
+    owner
     __typename
   }
 }
@@ -64,8 +67,9 @@ export const onDeleteNCEStudentProfile = /* GraphQL */ `subscription OnDeleteNCE
 >;
 export const onCreateNCEUserSettings = /* GraphQL */ `subscription OnCreateNCEUserSettings(
   $filter: ModelSubscriptionNCEUserSettingsFilterInput
+  $owner: String
 ) {
-  onCreateNCEUserSettings(filter: $filter) {
+  onCreateNCEUserSettings(filter: $filter, owner: $owner) {
     id
     notificationsEnabled
     darkModeEnabled
@@ -73,6 +77,7 @@ export const onCreateNCEUserSettings = /* GraphQL */ `subscription OnCreateNCEUs
     isAdmin
     createdAt
     updatedAt
+    owner
     __typename
   }
 }
@@ -82,8 +87,9 @@ export const onCreateNCEUserSettings = /* GraphQL */ `subscription OnCreateNCEUs
 >;
 export const onUpdateNCEUserSettings = /* GraphQL */ `subscription OnUpdateNCEUserSettings(
   $filter: ModelSubscriptionNCEUserSettingsFilterInput
+  $owner: String
 ) {
-  onUpdateNCEUserSettings(filter: $filter) {
+  onUpdateNCEUserSettings(filter: $filter, owner: $owner) {
     id
     notificationsEnabled
     darkModeEnabled
@@ -91,6 +97,7 @@ export const onUpdateNCEUserSettings = /* GraphQL */ `subscription OnUpdateNCEUs
     isAdmin
     createdAt
     updatedAt
+    owner
     __typename
   }
 }
@@ -100,8 +107,9 @@ export const onUpdateNCEUserSettings = /* GraphQL */ `subscription OnUpdateNCEUs
 >;
 export const onDeleteNCEUserSettings = /* GraphQL */ `subscription OnDeleteNCEUserSettings(
   $filter: ModelSubscriptionNCEUserSettingsFilterInput
+  $owner: String
 ) {
-  onDeleteNCEUserSettings(filter: $filter) {
+  onDeleteNCEUserSettings(filter: $filter, owner: $owner) {
     id
     notificationsEnabled
     darkModeEnabled
@@ -109,6 +117,7 @@ export const onDeleteNCEUserSettings = /* GraphQL */ `subscription OnDeleteNCEUs
     isAdmin
     createdAt
     updatedAt
+    owner
     __typename
   }
 }

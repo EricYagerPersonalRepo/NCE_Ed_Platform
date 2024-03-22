@@ -6,7 +6,6 @@ export type CreateNCEStudentProfileInput = {
   id?: string | null,
   name: string,
   email: string,
-  birthdate: string,
   status: StudentStatus,
 };
 
@@ -19,7 +18,6 @@ export enum StudentStatus {
 export type ModelNCEStudentProfileConditionInput = {
   name?: ModelStringInput | null,
   email?: ModelStringInput | null,
-  birthdate?: ModelStringInput | null,
   status?: ModelStudentStatusInput | null,
   and?: Array< ModelNCEStudentProfileConditionInput | null > | null,
   or?: Array< ModelNCEStudentProfileConditionInput | null > | null,
@@ -76,17 +74,16 @@ export type NCEStudentProfile = {
   id: string,
   name: string,
   email: string,
-  birthdate: string,
   status: StudentStatus,
   createdAt: string,
   updatedAt: string,
+  owner?: string | null,
 };
 
 export type UpdateNCEStudentProfileInput = {
   id: string,
   name?: string | null,
   email?: string | null,
-  birthdate?: string | null,
   status?: StudentStatus | null,
 };
 
@@ -128,6 +125,7 @@ export type NCEUserSettings = {
   isAdmin: boolean,
   createdAt: string,
   updatedAt: string,
+  owner?: string | null,
 };
 
 export type UpdateNCEUserSettingsInput = {
@@ -636,7 +634,6 @@ export type ModelNCEStudentProfileFilterInput = {
   id?: ModelIDInput | null,
   name?: ModelStringInput | null,
   email?: ModelStringInput | null,
-  birthdate?: ModelStringInput | null,
   status?: ModelStudentStatusInput | null,
   and?: Array< ModelNCEStudentProfileFilterInput | null > | null,
   or?: Array< ModelNCEStudentProfileFilterInput | null > | null,
@@ -718,6 +715,12 @@ export type ModelCourseConnection = {
   nextToken?: string | null,
 };
 
+export enum ModelSortDirection {
+  ASC = "ASC",
+  DESC = "DESC",
+}
+
+
 export type ModelModuleFilterInput = {
   id?: ModelIDInput | null,
   title?: ModelStringInput | null,
@@ -727,6 +730,16 @@ export type ModelModuleFilterInput = {
   or?: Array< ModelModuleFilterInput | null > | null,
   not?: ModelModuleFilterInput | null,
   courseModulesId?: ModelIDInput | null,
+};
+
+export type ModelIDKeyConditionInput = {
+  eq?: string | null,
+  le?: string | null,
+  lt?: string | null,
+  ge?: string | null,
+  gt?: string | null,
+  between?: Array< string | null > | null,
+  beginsWith?: string | null,
 };
 
 export type ModelLessonFilterInput = {
@@ -794,27 +807,10 @@ export type ModelEnrollmentConnection = {
   nextToken?: string | null,
 };
 
-export enum ModelSortDirection {
-  ASC = "ASC",
-  DESC = "DESC",
-}
-
-
-export type ModelIDKeyConditionInput = {
-  eq?: string | null,
-  le?: string | null,
-  lt?: string | null,
-  ge?: string | null,
-  gt?: string | null,
-  between?: Array< string | null > | null,
-  beginsWith?: string | null,
-};
-
 export type ModelSubscriptionNCEStudentProfileFilterInput = {
   id?: ModelSubscriptionIDInput | null,
   name?: ModelSubscriptionStringInput | null,
   email?: ModelSubscriptionStringInput | null,
-  birthdate?: ModelSubscriptionStringInput | null,
   status?: ModelSubscriptionStringInput | null,
   and?: Array< ModelSubscriptionNCEStudentProfileFilterInput | null > | null,
   or?: Array< ModelSubscriptionNCEStudentProfileFilterInput | null > | null,
@@ -978,10 +974,10 @@ export type CreateNCEStudentProfileMutation = {
     id: string,
     name: string,
     email: string,
-    birthdate: string,
     status: StudentStatus,
     createdAt: string,
     updatedAt: string,
+    owner?: string | null,
   } | null,
 };
 
@@ -996,10 +992,10 @@ export type UpdateNCEStudentProfileMutation = {
     id: string,
     name: string,
     email: string,
-    birthdate: string,
     status: StudentStatus,
     createdAt: string,
     updatedAt: string,
+    owner?: string | null,
   } | null,
 };
 
@@ -1014,10 +1010,10 @@ export type DeleteNCEStudentProfileMutation = {
     id: string,
     name: string,
     email: string,
-    birthdate: string,
     status: StudentStatus,
     createdAt: string,
     updatedAt: string,
+    owner?: string | null,
   } | null,
 };
 
@@ -1036,6 +1032,7 @@ export type CreateNCEUserSettingsMutation = {
     isAdmin: boolean,
     createdAt: string,
     updatedAt: string,
+    owner?: string | null,
   } | null,
 };
 
@@ -1054,6 +1051,7 @@ export type UpdateNCEUserSettingsMutation = {
     isAdmin: boolean,
     createdAt: string,
     updatedAt: string,
+    owner?: string | null,
   } | null,
 };
 
@@ -1072,6 +1070,7 @@ export type DeleteNCEUserSettingsMutation = {
     isAdmin: boolean,
     createdAt: string,
     updatedAt: string,
+    owner?: string | null,
   } | null,
 };
 
@@ -1799,10 +1798,10 @@ export type GetNCEStudentProfileQuery = {
     id: string,
     name: string,
     email: string,
-    birthdate: string,
     status: StudentStatus,
     createdAt: string,
     updatedAt: string,
+    owner?: string | null,
   } | null,
 };
 
@@ -1820,10 +1819,10 @@ export type ListNCEStudentProfilesQuery = {
       id: string,
       name: string,
       email: string,
-      birthdate: string,
       status: StudentStatus,
       createdAt: string,
       updatedAt: string,
+      owner?: string | null,
     } | null >,
     nextToken?: string | null,
   } | null,
@@ -1843,6 +1842,7 @@ export type GetNCEUserSettingsQuery = {
     isAdmin: boolean,
     createdAt: string,
     updatedAt: string,
+    owner?: string | null,
   } | null,
 };
 
@@ -1864,6 +1864,7 @@ export type ListNCEUserSettingsQuery = {
       isAdmin: boolean,
       createdAt: string,
       updatedAt: string,
+      owner?: string | null,
     } | null >,
     nextToken?: string | null,
   } | null,
@@ -1993,6 +1994,32 @@ export type ListCoursesQuery = {
   } | null,
 };
 
+export type CoursesByCreatorQueryVariables = {
+  creator: string,
+  sortDirection?: ModelSortDirection | null,
+  filter?: ModelCourseFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+};
+
+export type CoursesByCreatorQuery = {
+  coursesByCreator?:  {
+    __typename: "ModelCourseConnection",
+    items:  Array< {
+      __typename: "Course",
+      id: string,
+      title: string,
+      description?: string | null,
+      subject: CourseSubject,
+      difficulty?: string | null,
+      creator: string,
+      createdAt: string,
+      updatedAt: string,
+    } | null >,
+    nextToken?: string | null,
+  } | null,
+};
+
 export type GetModuleQueryVariables = {
   id: string,
 };
@@ -2033,6 +2060,32 @@ export type ListModulesQueryVariables = {
 
 export type ListModulesQuery = {
   listModules?:  {
+    __typename: "ModelModuleConnection",
+    items:  Array< {
+      __typename: "Module",
+      id: string,
+      title: string,
+      description?: string | null,
+      courseID: string,
+      createdAt: string,
+      updatedAt: string,
+      courseModulesId?: string | null,
+    } | null >,
+    nextToken?: string | null,
+  } | null,
+};
+
+export type ModulesByCourseIDAndIdQueryVariables = {
+  courseID: string,
+  id?: ModelIDKeyConditionInput | null,
+  sortDirection?: ModelSortDirection | null,
+  filter?: ModelModuleFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+};
+
+export type ModulesByCourseIDAndIdQuery = {
+  modulesByCourseIDAndId?:  {
     __typename: "ModelModuleConnection",
     items:  Array< {
       __typename: "Module",
@@ -2108,6 +2161,33 @@ export type ListLessonsQuery = {
   } | null,
 };
 
+export type LessonsByModuleIDAndIdQueryVariables = {
+  moduleID: string,
+  id?: ModelIDKeyConditionInput | null,
+  sortDirection?: ModelSortDirection | null,
+  filter?: ModelLessonFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+};
+
+export type LessonsByModuleIDAndIdQuery = {
+  lessonsByModuleIDAndId?:  {
+    __typename: "ModelLessonConnection",
+    items:  Array< {
+      __typename: "Lesson",
+      id: string,
+      title: string,
+      content?: string | null,
+      videoURL?: string | null,
+      moduleID: string,
+      createdAt: string,
+      updatedAt: string,
+      moduleLessonsId?: string | null,
+    } | null >,
+    nextToken?: string | null,
+  } | null,
+};
+
 export type GetExerciseQueryVariables = {
   id: string,
 };
@@ -2146,6 +2226,34 @@ export type ListExercisesQueryVariables = {
 
 export type ListExercisesQuery = {
   listExercises?:  {
+    __typename: "ModelExerciseConnection",
+    items:  Array< {
+      __typename: "Exercise",
+      id: string,
+      question: string,
+      solution?: string | null,
+      lessonID: string,
+      exerciseType: ExerciseType,
+      data?: string | null,
+      createdAt: string,
+      updatedAt: string,
+      lessonExercisesId?: string | null,
+    } | null >,
+    nextToken?: string | null,
+  } | null,
+};
+
+export type ExercisesByLessonIDAndIdQueryVariables = {
+  lessonID: string,
+  id?: ModelIDKeyConditionInput | null,
+  sortDirection?: ModelSortDirection | null,
+  filter?: ModelExerciseFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+};
+
+export type ExercisesByLessonIDAndIdQuery = {
+  exercisesByLessonIDAndId?:  {
     __typename: "ModelExerciseConnection",
     items:  Array< {
       __typename: "Exercise",
@@ -2216,6 +2324,31 @@ export type ListQuizzesQuery = {
   } | null,
 };
 
+export type QuizzesByLessonIDAndIdQueryVariables = {
+  lessonID: string,
+  id?: ModelIDKeyConditionInput | null,
+  sortDirection?: ModelSortDirection | null,
+  filter?: ModelQuizFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+};
+
+export type QuizzesByLessonIDAndIdQuery = {
+  quizzesByLessonIDAndId?:  {
+    __typename: "ModelQuizConnection",
+    items:  Array< {
+      __typename: "Quiz",
+      id: string,
+      title: string,
+      lessonID: string,
+      createdAt: string,
+      updatedAt: string,
+      lessonQuizzesId?: string | null,
+    } | null >,
+    nextToken?: string | null,
+  } | null,
+};
+
 export type GetQuestionQueryVariables = {
   id: string,
 };
@@ -2251,6 +2384,33 @@ export type ListQuestionsQueryVariables = {
 
 export type ListQuestionsQuery = {
   listQuestions?:  {
+    __typename: "ModelQuestionConnection",
+    items:  Array< {
+      __typename: "Question",
+      id: string,
+      text: string,
+      options?: string | null,
+      correctAnswer: string,
+      quizID: string,
+      createdAt: string,
+      updatedAt: string,
+      quizQuestionsId?: string | null,
+    } | null >,
+    nextToken?: string | null,
+  } | null,
+};
+
+export type QuestionsByQuizIDAndIdQueryVariables = {
+  quizID: string,
+  id?: ModelIDKeyConditionInput | null,
+  sortDirection?: ModelSortDirection | null,
+  filter?: ModelQuestionFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+};
+
+export type QuestionsByQuizIDAndIdQuery = {
+  questionsByQuizIDAndId?:  {
     __typename: "ModelQuestionConnection",
     items:  Array< {
       __typename: "Question",
@@ -2309,167 +2469,9 @@ export type ListEnrollmentsQuery = {
   } | null,
 };
 
-export type CoursesByCreatorQueryVariables = {
-  creator: string,
-  sortDirection?: ModelSortDirection | null,
-  filter?: ModelCourseFilterInput | null,
-  limit?: number | null,
-  nextToken?: string | null,
-};
-
-export type CoursesByCreatorQuery = {
-  coursesByCreator?:  {
-    __typename: "ModelCourseConnection",
-    items:  Array< {
-      __typename: "Course",
-      id: string,
-      title: string,
-      description?: string | null,
-      subject: CourseSubject,
-      difficulty?: string | null,
-      creator: string,
-      createdAt: string,
-      updatedAt: string,
-    } | null >,
-    nextToken?: string | null,
-  } | null,
-};
-
-export type ModulesByCourseIDAndIdQueryVariables = {
-  courseID: string,
-  id?: ModelIDKeyConditionInput | null,
-  sortDirection?: ModelSortDirection | null,
-  filter?: ModelModuleFilterInput | null,
-  limit?: number | null,
-  nextToken?: string | null,
-};
-
-export type ModulesByCourseIDAndIdQuery = {
-  modulesByCourseIDAndId?:  {
-    __typename: "ModelModuleConnection",
-    items:  Array< {
-      __typename: "Module",
-      id: string,
-      title: string,
-      description?: string | null,
-      courseID: string,
-      createdAt: string,
-      updatedAt: string,
-      courseModulesId?: string | null,
-    } | null >,
-    nextToken?: string | null,
-  } | null,
-};
-
-export type LessonsByModuleIDAndIdQueryVariables = {
-  moduleID: string,
-  id?: ModelIDKeyConditionInput | null,
-  sortDirection?: ModelSortDirection | null,
-  filter?: ModelLessonFilterInput | null,
-  limit?: number | null,
-  nextToken?: string | null,
-};
-
-export type LessonsByModuleIDAndIdQuery = {
-  lessonsByModuleIDAndId?:  {
-    __typename: "ModelLessonConnection",
-    items:  Array< {
-      __typename: "Lesson",
-      id: string,
-      title: string,
-      content?: string | null,
-      videoURL?: string | null,
-      moduleID: string,
-      createdAt: string,
-      updatedAt: string,
-      moduleLessonsId?: string | null,
-    } | null >,
-    nextToken?: string | null,
-  } | null,
-};
-
-export type ExercisesByLessonIDAndIdQueryVariables = {
-  lessonID: string,
-  id?: ModelIDKeyConditionInput | null,
-  sortDirection?: ModelSortDirection | null,
-  filter?: ModelExerciseFilterInput | null,
-  limit?: number | null,
-  nextToken?: string | null,
-};
-
-export type ExercisesByLessonIDAndIdQuery = {
-  exercisesByLessonIDAndId?:  {
-    __typename: "ModelExerciseConnection",
-    items:  Array< {
-      __typename: "Exercise",
-      id: string,
-      question: string,
-      solution?: string | null,
-      lessonID: string,
-      exerciseType: ExerciseType,
-      data?: string | null,
-      createdAt: string,
-      updatedAt: string,
-      lessonExercisesId?: string | null,
-    } | null >,
-    nextToken?: string | null,
-  } | null,
-};
-
-export type QuizzesByLessonIDAndIdQueryVariables = {
-  lessonID: string,
-  id?: ModelIDKeyConditionInput | null,
-  sortDirection?: ModelSortDirection | null,
-  filter?: ModelQuizFilterInput | null,
-  limit?: number | null,
-  nextToken?: string | null,
-};
-
-export type QuizzesByLessonIDAndIdQuery = {
-  quizzesByLessonIDAndId?:  {
-    __typename: "ModelQuizConnection",
-    items:  Array< {
-      __typename: "Quiz",
-      id: string,
-      title: string,
-      lessonID: string,
-      createdAt: string,
-      updatedAt: string,
-      lessonQuizzesId?: string | null,
-    } | null >,
-    nextToken?: string | null,
-  } | null,
-};
-
-export type QuestionsByQuizIDAndIdQueryVariables = {
-  quizID: string,
-  id?: ModelIDKeyConditionInput | null,
-  sortDirection?: ModelSortDirection | null,
-  filter?: ModelQuestionFilterInput | null,
-  limit?: number | null,
-  nextToken?: string | null,
-};
-
-export type QuestionsByQuizIDAndIdQuery = {
-  questionsByQuizIDAndId?:  {
-    __typename: "ModelQuestionConnection",
-    items:  Array< {
-      __typename: "Question",
-      id: string,
-      text: string,
-      options?: string | null,
-      correctAnswer: string,
-      quizID: string,
-      createdAt: string,
-      updatedAt: string,
-      quizQuestionsId?: string | null,
-    } | null >,
-    nextToken?: string | null,
-  } | null,
-};
-
 export type OnCreateNCEStudentProfileSubscriptionVariables = {
   filter?: ModelSubscriptionNCEStudentProfileFilterInput | null,
+  owner?: string | null,
 };
 
 export type OnCreateNCEStudentProfileSubscription = {
@@ -2478,15 +2480,16 @@ export type OnCreateNCEStudentProfileSubscription = {
     id: string,
     name: string,
     email: string,
-    birthdate: string,
     status: StudentStatus,
     createdAt: string,
     updatedAt: string,
+    owner?: string | null,
   } | null,
 };
 
 export type OnUpdateNCEStudentProfileSubscriptionVariables = {
   filter?: ModelSubscriptionNCEStudentProfileFilterInput | null,
+  owner?: string | null,
 };
 
 export type OnUpdateNCEStudentProfileSubscription = {
@@ -2495,15 +2498,16 @@ export type OnUpdateNCEStudentProfileSubscription = {
     id: string,
     name: string,
     email: string,
-    birthdate: string,
     status: StudentStatus,
     createdAt: string,
     updatedAt: string,
+    owner?: string | null,
   } | null,
 };
 
 export type OnDeleteNCEStudentProfileSubscriptionVariables = {
   filter?: ModelSubscriptionNCEStudentProfileFilterInput | null,
+  owner?: string | null,
 };
 
 export type OnDeleteNCEStudentProfileSubscription = {
@@ -2512,15 +2516,16 @@ export type OnDeleteNCEStudentProfileSubscription = {
     id: string,
     name: string,
     email: string,
-    birthdate: string,
     status: StudentStatus,
     createdAt: string,
     updatedAt: string,
+    owner?: string | null,
   } | null,
 };
 
 export type OnCreateNCEUserSettingsSubscriptionVariables = {
   filter?: ModelSubscriptionNCEUserSettingsFilterInput | null,
+  owner?: string | null,
 };
 
 export type OnCreateNCEUserSettingsSubscription = {
@@ -2533,11 +2538,13 @@ export type OnCreateNCEUserSettingsSubscription = {
     isAdmin: boolean,
     createdAt: string,
     updatedAt: string,
+    owner?: string | null,
   } | null,
 };
 
 export type OnUpdateNCEUserSettingsSubscriptionVariables = {
   filter?: ModelSubscriptionNCEUserSettingsFilterInput | null,
+  owner?: string | null,
 };
 
 export type OnUpdateNCEUserSettingsSubscription = {
@@ -2550,11 +2557,13 @@ export type OnUpdateNCEUserSettingsSubscription = {
     isAdmin: boolean,
     createdAt: string,
     updatedAt: string,
+    owner?: string | null,
   } | null,
 };
 
 export type OnDeleteNCEUserSettingsSubscriptionVariables = {
   filter?: ModelSubscriptionNCEUserSettingsFilterInput | null,
+  owner?: string | null,
 };
 
 export type OnDeleteNCEUserSettingsSubscription = {
@@ -2567,6 +2576,7 @@ export type OnDeleteNCEUserSettingsSubscription = {
     isAdmin: boolean,
     createdAt: string,
     updatedAt: string,
+    owner?: string | null,
   } | null,
 };
 

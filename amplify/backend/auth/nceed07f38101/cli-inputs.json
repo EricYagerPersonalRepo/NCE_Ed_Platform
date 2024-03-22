@@ -44,7 +44,8 @@
       "email"
     ],
     "userPoolGroupList": [
-      "Admins"
+      "Admins",
+      "Students"
     ],
     "serviceName": "Cognito",
     "usernameCaseSensitive": false,

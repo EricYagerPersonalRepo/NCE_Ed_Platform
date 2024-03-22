@@ -5,7 +5,6 @@
 	API_NCEED_BROADCASTNOTIFICATIONTABLE_NAME
 	API_NCEED_GRAPHQLAPIENDPOINTOUTPUT
 	API_NCEED_GRAPHQLAPIIDOUTPUT
-	API_NCEED_GRAPHQLAPIKEYOUTPUT
 	API_NCEED_NCESTUDENTPROFILETABLE_ARN
 	API_NCEED_NCESTUDENTPROFILETABLE_NAME
 	API_NCEED_NCEUSERSETTINGSTABLE_ARN
@@ -25,8 +24,6 @@ Amplify Params - DO NOT EDIT *//**
 
 const moduleNames = process.env.MODULES.split(',');
 const modules = moduleNames.map((name) => require(`./${name}`));
-console.log(modules)
-
 
 /**
  * This async handler iterates over the given modules and awaits them.
@@ -37,5 +34,5 @@ console.log(modules)
  */
 exports.handler = async (event, context) => {
 	await Promise.all(modules.map((module) => module.handler(event, context)));
-	return null;
+	return event;
 };

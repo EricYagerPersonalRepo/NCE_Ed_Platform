@@ -13,5 +13,61 @@
   "triggerTemplate": "PostConfirmation.json.ejs",
   "triggerEventPath": "PostConfirmation.event.json",
   "roleName": "nceed07f38101PostConfirmation",
-  "skipEdit": true
+  "skipEdit": true,
+  "permissions": {
+    "api": {
+      "avatarHandlerApiGateway": [
+        "create",
+        "read",
+        "update",
+        "delete"
+      ],
+      "nceed": [
+        "Query",
+        "Mutation"
+      ]
+    },
+    "storage": {
+      "nceEdAvatars": [
+        "create",
+        "read",
+        "update",
+        "delete"
+      ],
+      "NCEStudentProfile:@model(appsync)": [
+        "create",
+        "read",
+        "update",
+        "delete"
+      ],
+      "NCEUserSettings:@model(appsync)": [
+        "create",
+        "read",
+        "update",
+        "delete"
+      ],
+      "BroadcastNotification:@model(appsync)": [
+        "create",
+        "read",
+        "update",
+        "delete"
+      ],
+      "UserNotificationRead:@model(appsync)": [
+        "create",
+        "read",
+        "update",
+        "delete"
+      ]
+    }
+  },
+  "environmentVariableList": [
+    {
+      "cloudFormationParameterName": "apiNceedGraphqlapikeyoutputProd",
+      "environmentVariableName": "API_NCEED_GRAPHQLAPIKEYOUTPUT_PROD"
+    },
+    {
+      "cloudFormationParameterName": "apiNceedGraphqlapikeyoutputDev",
+      "environmentVariableName": "API_NCEED_GRAPHQLAPIKEYOUTPUT_DEV"
+    }
+  ]
 }

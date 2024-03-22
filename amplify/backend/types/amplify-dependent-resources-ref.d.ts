@@ -28,11 +28,19 @@ export type AmplifyDependentResourcesAttributes = {
       "UserPoolName": "string"
     },
     "userPoolGroups": {
-      "AdminsGroupRole": "string"
+      "AdminsGroupRole": "string",
+      "StudentsGroupRole": "string"
     }
   },
   "function": {
     "AdminQueries6e804d46": {
+      "Arn": "string",
+      "LambdaExecutionRole": "string",
+      "LambdaExecutionRoleArn": "string",
+      "Name": "string",
+      "Region": "string"
+    },
+    "graphQlLambdaAuthorizer09c68778": {
       "Arn": "string",
       "LambdaExecutionRole": "string",
       "LambdaExecutionRoleArn": "string",
