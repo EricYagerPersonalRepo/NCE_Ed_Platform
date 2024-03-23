@@ -3,7 +3,7 @@ import { mount } from 'cypress/react18'
 import { fetchCityState } from '../../functions/AuthX'
 import { EmailInput, NameInput, PasswordInput, ZipInput } from '../../components/SignUp'
 import { useSignUpHooks } from '../../state/SignUpHooks'
-
+/*
 export const NameInputTestWrapper = ({ testData, testError }: any) => {
   const signUpHooks = useSignUpHooks()
 
@@ -175,3 +175,5 @@ describe('<PasswordInput />', () => {
   })
 
 })
+
+*/

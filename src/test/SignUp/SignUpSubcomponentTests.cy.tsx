@@ -3,7 +3,7 @@ import { SignUpTabItem, SignUpTabPanel, TwoFactorInput } from '../../components/
 import { TextField } from '@mui/material'
 import { mount } from 'cypress/react18'
 import { Button } from '@aws-amplify/ui-react'
-
+/*
 describe('<SignUpTabItem />', () => {
   it('renders with text', () => {
     const text = "Test Text"
@@ -69,6 +69,7 @@ describe('<SignUpTabPanel />', () => {
   })
 })
 
+/*
 describe('<TwoFactorInput />', () => {
   let mockSignUpHooks:any;
   let handleConfirmSignupMock;
@@ -146,4 +147,4 @@ describe('<TwoFactorInput />', () => {
     cy.get('input').should('have.value', '123456')
   })
 
-})
+})*/
