@@ -275,7 +275,7 @@ export const UserAccountButtons_Web = ({ avatarUrl }: any) => {
                     onClose={handleNotificationsClose}
                     sx={{width: 300}}
                 >
-                    {notifications.map((notification:any, index) => (
+                    {/*notifications.map((notification:any, index) => (
                         <MenuItem 
                             key={index} 
                             sx={{ 
@@ -298,13 +298,12 @@ export const UserAccountButtons_Web = ({ avatarUrl }: any) => {
                                 }}>
                                     {notification.message}
                                 </Typography>
-                                {/*<Typography component="p" variant="body2" style={{ color: 'gray' }}>
+                                {<Typography component="p" variant="body2" style={{ color: 'gray' }}>
                                     {formatDistanceToNow(new Date(notification.createdAt), { addSuffix: true })}
-                            </Typography>*/}
+                            </Typography>
                             </Box>
                         </MenuItem>
-                        ))}
-
+                        ))}*/}
                 </Menu>
 
                 <IconButton

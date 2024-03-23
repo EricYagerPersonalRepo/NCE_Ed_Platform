@@ -27,10 +27,6 @@ const LogInForm = ({loggedIn}:any) => {
         }
     }
 
-    if (loggedIn) {
-        router.push("/StudentProfile")
-    }
-
     return(
         <Grid container spacing={2} direction="column">
             <Grid item>

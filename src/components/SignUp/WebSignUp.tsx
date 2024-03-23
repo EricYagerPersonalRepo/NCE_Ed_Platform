@@ -1,8 +1,7 @@
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect } from 'react'
 import {  Grid, Container, Tabs, Tab, Modal } from '@mui/material'
-import { handleConfirmSignup } from '@/src/functions/SignUp'
 import { useSignUpHooks } from '@/src/state/SignUpHooks'
-import { BirthdayInput, EmailInput, NameInput, PasswordInput, ZipInput,  SignUpTabItem, TwoFactorAuthForm } from './Components'
+import { EmailInput, NameInput, PasswordInput, ZipInput,  SignUpTabItem, TwoFactorInput } from './Components'
 
 /**
  * WebSignUp Component - Manages the entire sign-up process for web users through a multi-step form.
@@ -24,27 +23,25 @@ import { BirthdayInput, EmailInput, NameInput, PasswordInput, ZipInput,  SignUpT
  */
 const WebSignUp = () => {
     const signUpHooks = useSignUpHooks()
-    const dateInputRef:any = useRef(null)
 
-    const handleTabChange:any = (event:any,newValue:number) => {
-        signUpHooks.setTabValue(newValue)
+    const handleTabChange:any = (event:any) => {
+        console.log(event.target.innerHTML)
+        event.target.innerHTML==="Email" && signUpHooks.setTabValue(0)
+        event.target.innerHTML==="Set Password" && signUpHooks.setTabValue(1)
+        event.target.innerHTML==="Confirm Signup" && signUpHooks.setTabValue(2)
+        event.target.innerHTML==="Name" && signUpHooks.setTabValue(3)
+        event.target.innerHTML==="Location" && signUpHooks.setTabValue(4)
+
     }
-
-    useEffect(() => {
-        if (signUpHooks.tabValue === 0 && dateInputRef.current) {
-            dateInputRef.current.focus()
-        }
-    }, [signUpHooks.tabValue])
-
 
     // Updates the form's completion status based on the completion of individual steps.
     useEffect(()=> {
-        if(signUpHooks.birthdayComplete && signUpHooks.nameComplete && signUpHooks.locationComplete && signUpHooks.emailComplete){
+        if(signUpHooks.nameComplete && signUpHooks.locationComplete){
             signUpHooks.setFormComplete(true)
         }else{
             signUpHooks.setFormComplete(false)
         }
-    }, [signUpHooks.birthdayComplete, signUpHooks.nameComplete, signUpHooks.locationComplete, signUpHooks.emailComplete])
+    }, [signUpHooks.nameComplete, signUpHooks.locationComplete])
 
 
     return (
@@ -55,80 +52,78 @@ const WebSignUp = () => {
                         orientation="horizontal"
                         variant="scrollable"
                         value={signUpHooks.tabValue}
-                        onChange={handleTabChange}
+                        onChange={(event)=>handleTabChange(event)}
                         aria-label="Vertical tabs for sign up"
                         sx={{ borderRight: 1, borderColor: 'divider', '.MuiTabs-flexContainer': { alignItems: 'flex-start' } }}
                     >
-
                         <Tab
-                            label={<SignUpTabItem text="Age" 
-                                waiting={signUpHooks.birthdayWaiting} 
-                                complete={signUpHooks.birthdayComplete} 
-                            />}
-                            disabled
+                            label={<SignUpTabItem text="Email" 
+                                waiting={signUpHooks.emailWaiting} 
+                                complete={signUpHooks.emailComplete} 
+                            /> }
+                        />    
+                        <Tab
+                            label={ <SignUpTabItem text="Set Password" 
+                                waiting={signUpHooks.signupWaiting} 
+                                complete={signUpHooks.signupComplete} 
+                            /> }
+                        />
+                        <Tab
+                            label={ <SignUpTabItem text="Confirm Signup" 
+                                waiting={signUpHooks.confirmSignupWaiting } 
+                                complete={signUpHooks.confirmSignupComplete} 
+                            /> }
                         />
                         <Tab
                             label={<SignUpTabItem text="Name" 
                                 waiting={signUpHooks.nameWaiting} 
                                 complete={signUpHooks.nameComplete} 
                             />}
-                            disabled
                         />
                         <Tab
                             label={ <SignUpTabItem text="Location" 
                                 waiting={signUpHooks.locationWaiting} 
                                 complete={signUpHooks.locationComplete} 
                             /> }
-                            disabled
-                        />
-                        <Tab
-                            label={<SignUpTabItem text="Email" 
-                                waiting={signUpHooks.emailWaiting} 
-                                complete={signUpHooks.emailComplete} 
-                            /> }
-                            disabled
-                        />    
-                        <Tab
-                            label={ <SignUpTabItem text="Create Account" 
-                                waiting={signUpHooks.signupWaiting} 
-                                complete={signUpHooks.signupComplete} 
-                            /> }
-                            disabled
                         />
                     </Tabs>
                 </Grid>
                 <Grid item xs={12} container justifyContent="center">
                     <form>
-                        <BirthdayInput
+                        <EmailInput
+                            signUpHooks={signUpHooks} 
+                        />
+                        <PasswordInput
+                            signUpHooks={signUpHooks}
+                        /> 
+                        <TwoFactorInput 
                             signUpHooks={signUpHooks} 
                         />
                         <NameInput 
                             signUpHooks={signUpHooks} 
                         />
-                        <EmailInput
-                            signUpHooks={signUpHooks} 
-                        />
                         <ZipInput
                             signUpHooks={signUpHooks}
                         />
-                        <PasswordInput
-                            signUpHooks={signUpHooks}
-                        /> 
                     </form>
                 </Grid>
             </Grid>
-            <Container maxWidth="lg">
+            
+        </Container>
+    )
+}
+
+/**
+ * <Container maxWidth="lg">
                 <Modal
                     open={signUpHooks.tfaOpen}
                     onClose={() => signUpHooks.setTfaOpen(false)}
                     aria-labelledby="modal-title"
                     aria-describedby="modal-description"
                 >
-                    <TwoFactorAuthForm signUpHooks={signUpHooks} handleConfirmSignup={handleConfirmSignup} />
+                    <TwoFactorInput signUpHooks={signUpHooks} />
                 </Modal>
             </Container>
-        </Container>
-    )
-}
+ */
 
 export default WebSignUp

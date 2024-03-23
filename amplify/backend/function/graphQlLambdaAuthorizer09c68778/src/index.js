@@ -1,5 +1,3 @@
-// This is sample code. Please update this to suite your schema
-
 /**
  * @type {import('@types/aws-lambda').APIGatewayProxyHandler}
  */

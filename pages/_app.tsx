@@ -108,10 +108,12 @@ const NCE_Education_App = ({ Component, pageProps }:any) => {
     useEffect(()=>{
         const avatarUrlResponse = async() => {
             try{
-                const currentUser = await getCurrentUser();
-                const avatarFileName = `avatars/${currentUser.userId}/avatar.png`;
-                let presignedUrlResponse = await getPresignedUrl(avatarFileName)
-                setAvatarUrl(presignedUrlResponse)
+                const currentUser = null//await getCurrentUser();
+                if(currentUser){
+                    const avatarFileName = `avatars/${currentUser.userId}/avatar.png`;
+                    let presignedUrlResponse = await getPresignedUrl(avatarFileName)
+                    setAvatarUrl(presignedUrlResponse)
+                }
             }catch(error){
                 console.error("Error with presignedUrlResponse call in app.tsx: ", error)
                 return

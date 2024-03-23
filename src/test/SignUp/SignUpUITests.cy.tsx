@@ -1,23 +1,8 @@
 import React, { useEffect} from 'react'
 import { mount } from 'cypress/react18'
 import { fetchCityState } from '../../functions/AuthX'
-import { BirthdayInput, EmailInput, NameInput, PasswordInput, ZipInput } from '../../components/SignUp'
+import { EmailInput, NameInput, PasswordInput, ZipInput } from '../../components/SignUp'
 import { useSignUpHooks } from '../../state/SignUpHooks'
-
-export const BirthdayInputTestWrapper = ({ testData, testError }: any) => {
-  const signUpHooks = useSignUpHooks()
-
-  useEffect(() => {
-    signUpHooks.setBirthday(testData)
-    signUpHooks.setTabValue(0)
-
-    if (testError) {
-      signUpHooks.setError({ ...signUpHooks.error, ...testError })
-    }
-  }, [testData, testError, signUpHooks])
-
-  return <BirthdayInput signUpHooks={signUpHooks} />
-}
 
 export const NameInputTestWrapper = ({ testData, testError }: any) => {
   const signUpHooks = useSignUpHooks()
@@ -78,27 +63,6 @@ export const PasswordInputTestWrapper = ({testData, testError}:any) => {
 
   return(<PasswordInput signUpHooks={signUpHooks} />)
 }
-
-/**
- * Tests
- */
-
-describe('<BirthdayInput />', () => {
-
-  it('renders and interacts with the birthday input', () => {
-    const testData = '2000-01-01'
-    mount(<BirthdayInputTestWrapper testData={testData} />)
-    cy.get('input[type="date"]').should('have.value', testData)
-  })
-
-  it('displays error message for birthday < 16 YOE', () => {
-    const testData = {birthday: '2014-01-01'}
-    mount(<BirthdayInputTestWrapper testData={testData.birthday}/>)
-    cy.get('.MuiFormHelperText-root.Mui-error')
-      .should('contain', 'You must be at least 16 years old to sign up.')
-      .and('be.visible')
-  })
-})
 
 describe('<NameInput />', () => {
 

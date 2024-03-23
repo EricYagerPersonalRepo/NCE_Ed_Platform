@@ -10,7 +10,7 @@ import { MobileSignUp, WebSignUp } from '@/src/components/SignUp'
  * ensuring that already logged-in users do not access the sign-up form.
  *
  * The component renders different UIs based on the screen size, providing tailored experiences for mobile 
- * and web users. The sign-up process involves multiple steps, including birthday, name, location, and email
+ * and web users. The sign-up process involves multiple steps, including name, location, and email
  * entry, each managed through individual tabs. It incorporates two-factor authentication and integrates 
  * with AWS Amplify's signUp service.
  *
@@ -25,14 +25,14 @@ import { MobileSignUp, WebSignUp } from '@/src/components/SignUp'
  * @returns {JSX.Element} - The SignUp component renders either a mobile or web version of the sign-up form, 
  * or redirects the user if already logged in.
  */
-const SignUp = ({ loggedIn, isMobile, router }: any)  =>{
+const SignUp = ({ isMobile }: any)  =>{
 
-    //punt user if they're already logged in
+    /**punt user if they're already logged in
     useEffect(() => {
         if (loggedIn) {
             router.push('/')
         }
-    }, [loggedIn, router])
+    }, [loggedIn, router])**/
 
     return isMobile ? <MobileSignUp /> : <WebSignUp />
 }

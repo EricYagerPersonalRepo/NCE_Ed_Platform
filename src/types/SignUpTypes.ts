@@ -1,7 +1,3 @@
-// Regular expression for validating birthday. Format: YYYY-MM-DD.
-// Example of valid input: 1990-12-31
-export const birthdayPattern = /^(19[0-9][1-9]|20[0-9]{2})-\d{2}-\d{2}$/
-
 // Regular expression for validating a full name. Requires at least two words.
 // Example of valid input: John Doe
 export const namePattern = /^[A-Za-z]+(?: [A-Za-z]+)+$/
@@ -22,7 +18,6 @@ export interface handleConfirmSignUpReturnType {
 }
 
 export interface SignUpFormErrors {
-    birthday?: string
     name?: string
     streetAddress?: string
     city?: string
@@ -59,8 +54,6 @@ export interface AuthenticatedHomeProps {
 export interface SignUpHooks {
     id: string;
     setId: (value: string) => void;
-    birthday: string;
-    setBirthday: (value: string) => void;
     name: string;
     setName: (value: string) => void;
     city: string;
@@ -83,34 +76,37 @@ export interface SignUpHooks {
     setError: (value: SignUpFormErrors) => void;
     age: number;
     setAge: (value: number) => void;
-    birthdayComplete: boolean;
-    setBirthdayComplete: (value: boolean) => void;
+    status: string;
+    setStatus: (value: string) => void;
+    confirmSignupComplete: boolean;
+    setConfirmSignupComplete: (value: boolean) => void;
     nameComplete: boolean;
     setNameComplete: (value: boolean) => void;
     locationComplete: boolean;
     setLocationComplete: (value: boolean) => void;
     emailComplete: boolean;
     setEmailComplete: (value: boolean) => void;
-    birthdayWaiting: boolean;
-    setBirthdayWaiting: (value: boolean) => void;
+    passwordComplete: boolean;
+    setPasswordComplete: (value: boolean) => void;
     nameWaiting: boolean;
     setNameWaiting: (value: boolean) => void;
     locationWaiting: boolean;
     setLocationWaiting: (value: boolean) => void;
     emailWaiting: boolean;
     setEmailWaiting: (value: boolean) => void;
+    passwordWaiting: boolean;
+    setPasswordWaiting: (value: boolean) => void;
+    confirmSignupWaiting: boolean;
+    setConfirmSignupWaiting: (value: boolean) => void;
     signupWaiting: boolean;
     setSignupWaiting: (value: boolean) => void;
     signupComplete: boolean;
     setSignupComplete: (value: boolean) => void;
-    tfaOpen: boolean;
-    setTfaOpen: (value: boolean) => void;
     tabValue: number;
     setTabValue: (value: number) => void;
     formComplete: boolean;
     setFormComplete: (value: boolean) => void;
-    cognitoUserID: string;
-    setCognitoUserID: (value: string) => void;
     userSignedIn: boolean;
     setUserSignedIn: (value: boolean) => void;
 }
+

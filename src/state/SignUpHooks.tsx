@@ -20,7 +20,6 @@ interface SignUpFormErrors {
  */
 export const useSignUpHooks = () => {
     const [id, setId] = useState('')
-    const [birthday, setBirthday] = useState('')
     const [name, setName] = useState('')
     const [city, setCity] = useState('')
     const [zipCode, setZipCode] = useState('')
@@ -30,29 +29,29 @@ export const useSignUpHooks = () => {
     const [confirmPassword, setConfirmPassword] = useState('')
     const [showPassword, setShowPassword] = useState(false)
     const [showConfirmPassword, setShowConfirmPassword] = useState(false)
-    const [error, setError] = useState<SignUpFormErrors>({})
     const [age, setAge] = useState(0)
     const [status,setStatus] = useState("INACTIVE")
-    const [birthdayComplete, setBirthdayComplete] = useState(false)
+    const [confirmSignupComplete, setConfirmSingupConplete] = useState(false)
     const [nameComplete, setNameComplete] = useState(false)
     const [locationComplete, setLocationComplete] = useState(false)
     const [emailComplete, setEmailComplete] = useState(false)
-    const [birthdayWaiting, setBirthdayWaiting] = useState(false)
+    const [passwordComplete, setPasswordComplete] = useState(false)
     const [nameWaiting, setNameWaiting] = useState(false)
     const [locationWaiting, setLocationWaiting] = useState(false)
+    const [confirmSignupWaiting, setConfirmSignupWaiting] = useState(false)
     const [emailWaiting, setEmailWaiting] = useState(false)
+    const [passwordWaiting,setPasswordWaiting] = useState(false)
     const [signupWaiting, setSignupWaiting] = useState(false)
     const [signupComplete, setSignupComplete] = useState(false)
-    const [tfaOpen, setTfaOpen] = useState(false)
     const [tabValue, setTabValue] = useState(0)
     const [formComplete, setFormComplete] = useState(false)
     const [userSignedIn, setUserSignedIn] = useState(false)
+    const [error, setError] = useState<SignUpFormErrors>({})
 
     // You can also include any functions that update these states here.
 
     return {
         id, setId,
-        birthday, setBirthday,
         name, setName,
         city, setCity,
         zipCode, setZipCode,
@@ -62,22 +61,23 @@ export const useSignUpHooks = () => {
         confirmPassword, setConfirmPassword,
         showPassword, setShowPassword,
         showConfirmPassword, setShowConfirmPassword,
-        error, setError,
         age, setAge,
         status,setStatus,
-        birthdayComplete, setBirthdayComplete,
+        confirmSignupComplete, setConfirmSingupConplete,
         nameComplete, setNameComplete,
         locationComplete, setLocationComplete,
         emailComplete, setEmailComplete,
-        birthdayWaiting, setBirthdayWaiting,
+        passwordComplete, setPasswordComplete,
         nameWaiting, setNameWaiting,
         locationWaiting, setLocationWaiting,
         emailWaiting, setEmailWaiting,
+        passwordWaiting,setPasswordWaiting,
+        confirmSignupWaiting, setConfirmSignupWaiting,
         signupWaiting, setSignupWaiting,
         signupComplete, setSignupComplete,
-        tfaOpen, setTfaOpen,
         tabValue, setTabValue,
         formComplete, setFormComplete,
         userSignedIn, setUserSignedIn,
+        error, setError,
     }
 }

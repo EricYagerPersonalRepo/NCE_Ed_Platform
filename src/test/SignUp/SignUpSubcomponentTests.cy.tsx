@@ -1,5 +1,5 @@
 import React from 'react'
-import { SignUpTabItem, SignUpTabPanel, TwoFactorAuthForm } from '../../components/SignUp/Components'
+import { SignUpTabItem, SignUpTabPanel, TwoFactorInput } from '../../components/SignUp/Components'
 import { TextField } from '@mui/material'
 import { mount } from 'cypress/react18'
 import { Button } from '@aws-amplify/ui-react'
@@ -69,7 +69,7 @@ describe('<SignUpTabPanel />', () => {
   })
 })
 
-describe('<TwoFactorAuthForm />', () => {
+describe('<TwoFactorInput />', () => {
   let mockSignUpHooks:any;
   let handleConfirmSignupMock;
 
@@ -77,8 +77,6 @@ describe('<TwoFactorAuthForm />', () => {
     handleConfirmSignupMock = cy.stub().resolves({ signUpComplete: true });
 
     mockSignUpHooks = {
-      birthday: '',
-      setBirthday: cy.stub(),
       name: '',
       setName: cy.stub(),
       city: '',
@@ -101,16 +99,12 @@ describe('<TwoFactorAuthForm />', () => {
       setError: cy.stub(),
       age: 0,
       setAge: cy.stub(),
-      birthdayComplete: false,
-      setBirthdayComplete: cy.stub(),
       nameComplete: false,
       setNameComplete: cy.stub(),
       locationComplete: false,
       setLocationComplete: cy.stub(),
       emailComplete: false,
       setEmailComplete: cy.stub(),
-      birthdayWaiting: false,
-      setBirthdayWaiting: cy.stub(),
       nameWaiting: false,
       setNameWaiting: cy.stub(),
       locationWaiting: false,
@@ -135,21 +129,18 @@ describe('<TwoFactorAuthForm />', () => {
   });
 
   it('renders', () => {
-    const handleConfirmSignupMock = cy.stub().resolves({ signUpComplete: true })
+    
     cy.mount(
-      <TwoFactorAuthForm 
+      <TwoFactorInput 
         signUpHooks={mockSignUpHooks}
-        handleConfirmSignup={handleConfirmSignupMock}
       />)
     cy.contains('Two-Factor Authentication').should('be.visible')
   })
 
   it('accepts input in the TFA code field', () => {
-    const handleConfirmSignupMock = cy.stub().resolves({ signUpComplete: true })
     mount(
-      <TwoFactorAuthForm 
+      <TwoFactorInput 
         signUpHooks={mockSignUpHooks}
-        handleConfirmSignup={handleConfirmSignupMock}
       />)
     cy.get('input').type('123456')
     cy.get('input').should('have.value', '123456')
