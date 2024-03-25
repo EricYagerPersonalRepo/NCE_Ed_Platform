@@ -387,7 +387,7 @@ export const AdminUsersView = () => {
                 setRows((prevRows) => prevRows.map((row) => (row.id === editedRow.id ? editedRow : row)))
 
             } catch (error) {
-                console.error("Error updating the student profle:", error)
+                console.error("Error updating student profle:", error)
                 throw new Error('The row update failed, reverting changes')
             }
         }
