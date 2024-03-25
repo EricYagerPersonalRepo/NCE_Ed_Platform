@@ -25,7 +25,7 @@ import { MobileSignUp, WebSignUp } from '@/src/components/SignUp'
  * @returns {JSX.Element} - The SignUp component renders either a mobile or web version of the sign-up form, 
  * or redirects the user if already logged in.
  */
-const SignUp = ({ isMobile }: any)  =>{
+const SignUp = ({ isMobile, router }: any)  =>{
 
     /**punt user if they're already logged in
     useEffect(() => {
@@ -34,7 +34,7 @@ const SignUp = ({ isMobile }: any)  =>{
         }
     }, [loggedIn, router])**/
 
-    return isMobile ? <MobileSignUp /> : <WebSignUp />
+    return isMobile ? <MobileSignUp /> : <WebSignUp router={router}/>
 }
 
 export default SignUp

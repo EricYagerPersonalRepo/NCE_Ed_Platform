@@ -223,14 +223,20 @@ export function TwoFactorInput({ signUpHooks }: { signUpHooks:ReturnType<typeof 
     let {username,password} = {username:signUpHooks.username, password:signUpHooks.password}
 
     const handleSubmit = async() => {
+        signUpHooks.setConfirmSignupWaiting(true)
         const result = await handleConfirmSignup({ username, confirmationCode })
         console.log("Result from handleSubmit in Components.tsx: ", result)
+
         if (result.signUpComplete) {
             try {
                 const signInResult = await handleSignIn({ username,password })
                 console.log("signInResult from TwoFactorInput: ", signInResult)
                 if(signInResult){
-                    signUpHooks.setTabValue(3)
+                    setTimeout(() => {
+                        signUpHooks.setTabValue(3)
+                        signUpHooks.setConfirmSignupWaiting(false)
+                        signUpHooks.setConfirmSingupConplete(true)
+                    },1000)
                 }
             } catch (error) {
                 console.error('Error in post-TFA workflow:', error)
@@ -238,24 +244,22 @@ export function TwoFactorInput({ signUpHooks }: { signUpHooks:ReturnType<typeof 
         }
     }
 
+    
+
     return (
         <SignUpTabPanel value={signUpHooks.tabValue} index={2}>
-
-            <Typography id="modal-description" sx={{ mt: 2 }}>
-                <Grid container spacing={2}>
-                    <Grid item xs={12} sm={4}>
-                        <TextField 
-                            fullWidth 
-                            label="TFA Code" 
-                            variant="standard" 
-                            autoFocus={signUpHooks.tabValue === 2}
-                            onChange={(event) => setConfirmationCode(event.target.value)}
-                        />
-                    </Grid>
+            <Grid container spacing={2}>
+                <Grid item xs={12} sm={4}>
+                    <TextField 
+                        fullWidth 
+                        label="TFA Code" 
+                        variant="standard" 
+                        autoFocus={signUpHooks.tabValue === 2}
+                        onChange={(event) => setConfirmationCode(event.target.value)}
+                    />
                 </Grid>
-            </Typography>
+            </Grid>
             <Button onClick={handleSubmit}>Submit</Button>
-
         </SignUpTabPanel>
     )
 }
@@ -376,25 +380,7 @@ export const ZipInput = ({signUpHooks}:any) => {
                     signUpHooks.setLocationComplete(true)
                     signUpHooks.setLocationWaiting(false)
                     if(signUpHooks.emailComplete && signUpHooks.passwordComplete && signUpHooks.NameComplete){
-                        signUpHooks.setFormComplete(true)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-                        
+                        signUpHooks.setFormComplete(true)  
                     }else{
                         signUpHooks.setFormComplete(false)
                     }

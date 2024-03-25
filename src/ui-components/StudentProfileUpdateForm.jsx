@@ -7,181 +7,18 @@
 /* eslint-disable */
 import * as React from "react";
 import {
-  Autocomplete,
-  Badge,
   Button,
-  Divider,
   Flex,
   Grid,
-  Icon,
-  ScrollView,
-  Text,
+  SelectField,
+  SwitchField,
   TextField,
-  useTheme,
 } from "@aws-amplify/ui-react";
 import { fetchByPath, getOverrideProps, validateField } from "./utils";
 import { generateClient } from "aws-amplify/api";
-import { getStudentProfile, listCourseEnrollments } from "../graphql/queries";
-import {
-  updateCourseEnrollment,
-  updateStudentProfile,
-} from "../graphql/mutations";
+import { getStudentProfile } from "../graphql/queries";
+import { updateStudentProfile } from "../graphql/mutations";
 const client = generateClient();
-function ArrayField({
-  items = [],
-  onChange,
-  label,
-  inputFieldRef,
-  children,
-  hasError,
-  setFieldValue,
-  currentFieldValue,
-  defaultFieldValue,
-  lengthLimit,
-  getBadgeText,
-  runValidationTasks,
-  errorMessage,
-}) {
-  const labelElement = <Text>{label}</Text>;
-  const {
-    tokens: {
-      components: {
-        fieldmessages: { error: errorStyles },
-      },
-    },
-  } = useTheme();
-  const [selectedBadgeIndex, setSelectedBadgeIndex] = React.useState();
-  const [isEditing, setIsEditing] = React.useState();
-  React.useEffect(() => {
-    if (isEditing) {
-      inputFieldRef?.current?.focus();
-    }
-  }, [isEditing]);
-  const removeItem = async (removeIndex) => {
-    const newItems = items.filter((value, index) => index !== removeIndex);
-    await onChange(newItems);
-    setSelectedBadgeIndex(undefined);
-  };
-  const addItem = async () => {
-    const { hasError } = runValidationTasks();
-    if (
-      currentFieldValue !== undefined &&
-      currentFieldValue !== null &&
-      currentFieldValue !== "" &&
-      !hasError
-    ) {
-      const newItems = [...items];
-      if (selectedBadgeIndex !== undefined) {
-        newItems[selectedBadgeIndex] = currentFieldValue;
-        setSelectedBadgeIndex(undefined);
-      } else {
-        newItems.push(currentFieldValue);
-      }
-      await onChange(newItems);
-      setIsEditing(false);
-    }
-  };
-  const arraySection = (
-    <React.Fragment>
-      {!!items?.length && (
-        <ScrollView height="inherit" width="inherit" maxHeight={"7rem"}>
-          {items.map((value, index) => {
-            return (
-              <Badge
-                key={index}
-                style={{
-                  cursor: "pointer",
-                  alignItems: "center",
-                  marginRight: 3,
-                  marginTop: 3,
-                  backgroundColor:
-                    index === selectedBadgeIndex ? "#B8CEF9" : "",
-                }}
-                onClick={() => {
-                  setSelectedBadgeIndex(index);
-                  setFieldValue(items[index]);
-                  setIsEditing(true);
-                }}
-              >
-                {getBadgeText ? getBadgeText(value) : value.toString()}
-                <Icon
-                  style={{
-                    cursor: "pointer",
-                    paddingLeft: 3,
-                    width: 20,
-                    height: 20,
-                  }}
-                  viewBox={{ width: 20, height: 20 }}
-                  paths={[
-                    {
-                      d: "M10 10l5.09-5.09L10 10l5.09 5.09L10 10zm0 0L4.91 4.91 10 10l-5.09 5.09L10 10z",
-                      stroke: "black",
-                    },
-                  ]}
-                  ariaLabel="button"
-                  onClick={(event) => {
-                    event.stopPropagation();
-                    removeItem(index);
-                  }}
-                />
-              </Badge>
-            );
-          })}
-        </ScrollView>
-      )}
-      <Divider orientation="horizontal" marginTop={5} />
-    </React.Fragment>
-  );
-  if (lengthLimit !== undefined && items.length >= lengthLimit && !isEditing) {
-    return (
-      <React.Fragment>
-        {labelElement}
-        {arraySection}
-      </React.Fragment>
-    );
-  }
-  return (
-    <React.Fragment>
-      {labelElement}
-      {isEditing && children}
-      {!isEditing ? (
-        <>
-          <Button
-            onClick={() => {
-              setIsEditing(true);
-            }}
-          >
-            Add item
-          </Button>
-          {errorMessage && hasError && (
-            <Text color={errorStyles.color} fontSize={errorStyles.fontSize}>
-              {errorMessage}
-            </Text>
-          )}
-        </>
-      ) : (
-        <Flex justifyContent="flex-end">
-          {(currentFieldValue || isEditing) && (
-            <Button
-              children="Cancel"
-              type="button"
-              size="small"
-              onClick={() => {
-                setFieldValue(defaultFieldValue);
-                setIsEditing(false);
-                setSelectedBadgeIndex(undefined);
-              }}
-            ></Button>
-          )}
-          <Button size="small" variation="link" onClick={addItem}>
-            {selectedBadgeIndex !== undefined ? "Save" : "Add"}
-          </Button>
-        </Flex>
-      )}
-      {arraySection}
-    </React.Fragment>
-  );
-}
 export default function StudentProfileUpdateForm(props) {
   const {
     id: idProp,
@@ -195,49 +32,42 @@ export default function StudentProfileUpdateForm(props) {
     ...rest
   } = props;
   const initialValues = {
-    cognitoUserID: "",
     name: "",
     email: "",
-    birthdate: "",
-    courseEnrollments: [],
+    status: "",
+    notificationsEnabled: false,
+    darkModeEnabled: false,
+    language: "",
+    isAdmin: false,
   };
-  const [cognitoUserID, setCognitoUserID] = React.useState(
-    initialValues.cognitoUserID
-  );
   const [name, setName] = React.useState(initialValues.name);
   const [email, setEmail] = React.useState(initialValues.email);
-  const [courseEnrollments, setCourseEnrollments] = React.useState(
-    initialValues.courseEnrollments
+  const [status, setStatus] = React.useState(initialValues.status);
+  const [notificationsEnabled, setNotificationsEnabled] = React.useState(
+    initialValues.notificationsEnabled
   );
-  const [courseEnrollmentsLoading, setCourseEnrollmentsLoading] =
-    React.useState(false);
-  const [courseEnrollmentsRecords, setCourseEnrollmentsRecords] =
-    React.useState([]);
-  const autocompleteLength = 10;
+  const [darkModeEnabled, setDarkModeEnabled] = React.useState(
+    initialValues.darkModeEnabled
+  );
+  const [language, setLanguage] = React.useState(initialValues.language);
+  const [isAdmin, setIsAdmin] = React.useState(initialValues.isAdmin);
   const [errors, setErrors] = React.useState({});
   const resetStateValues = () => {
     const cleanValues = studentProfileRecord
-      ? {
-          ...initialValues,
-          ...studentProfileRecord,
-          courseEnrollments: linkedCourseEnrollments,
-        }
+      ? { ...initialValues, ...studentProfileRecord }
       : initialValues;
-    setCognitoUserID(cleanValues.cognitoUserID);
     setName(cleanValues.name);
     setEmail(cleanValues.email);
-    setCourseEnrollments(cleanValues.courseEnrollments ?? []);
-    setCurrentCourseEnrollmentsValue(undefined);
-    setCurrentCourseEnrollmentsDisplayValue("");
+    setStatus(cleanValues.status);
+    setNotificationsEnabled(cleanValues.notificationsEnabled);
+    setDarkModeEnabled(cleanValues.darkModeEnabled);
+    setLanguage(cleanValues.language);
+    setIsAdmin(cleanValues.isAdmin);
     setErrors({});
   };
   const [studentProfileRecord, setStudentProfileRecord] = React.useState(
     studentProfileModelProp
   );
-  const [linkedCourseEnrollments, setLinkedCourseEnrollments] = React.useState(
-    []
-  );
-  const canUnlinkCourseEnrollments = false;
   React.useEffect(() => {
     const queryData = async () => {
       const record = idProp
@@ -248,41 +78,19 @@ export default function StudentProfileUpdateForm(props) {
             })
           )?.data?.getStudentProfile
         : studentProfileModelProp;
-      const linkedCourseEnrollments = record?.courseEnrollments?.items ?? [];
-      setLinkedCourseEnrollments(linkedCourseEnrollments);
       setStudentProfileRecord(record);
     };
     queryData();
   }, [idProp, studentProfileModelProp]);
-  React.useEffect(resetStateValues, [
-    studentProfileRecord,
-    linkedCourseEnrollments,
-  ]);
-  const [
-    currentCourseEnrollmentsDisplayValue,
-    setCurrentCourseEnrollmentsDisplayValue,
-  ] = React.useState("");
-  const [currentCourseEnrollmentsValue, setCurrentCourseEnrollmentsValue] =
-    React.useState(undefined);
-  const courseEnrollmentsRef = React.createRef();
-  const getIDValue = {
-    courseEnrollments: (r) => JSON.stringify({ id: r?.id }),
-  };
-  const courseEnrollmentsIdSet = new Set(
-    Array.isArray(courseEnrollments)
-      ? courseEnrollments.map((r) => getIDValue.courseEnrollments?.(r))
-      : getIDValue.courseEnrollments?.(courseEnrollments)
-  );
-  const getDisplayValue = {
-    courseEnrollments: (r) =>
-      `${r?.progress ? r?.progress + " - " : ""}${r?.id}`,
-  };
+  React.useEffect(resetStateValues, [studentProfileRecord]);
   const validations = {
-    cognitoUserID: [{ type: "Required" }],
     name: [{ type: "Required" }],
     email: [{ type: "Required" }, { type: "Email" }],
-    birthdate: [{ type: "Required" }],
-    courseEnrollments: [],
+    status: [{ type: "Required" }],
+    notificationsEnabled: [{ type: "Required" }],
+    darkModeEnabled: [{ type: "Required" }],
+    language: [{ type: "Required" }],
+    isAdmin: [{ type: "Required" }],
   };
   const runValidationTasks = async (
     fieldName,
@@ -301,39 +109,6 @@ export default function StudentProfileUpdateForm(props) {
     setErrors((errors) => ({ ...errors, [fieldName]: validationResponse }));
     return validationResponse;
   };
-  const fetchCourseEnrollmentsRecords = async (value) => {
-    setCourseEnrollmentsLoading(true);
-    const newOptions = [];
-    let newNext = "";
-    while (newOptions.length < autocompleteLength && newNext != null) {
-      const variables = {
-        limit: autocompleteLength * 5,
-        filter: {
-          or: [{ progress: { contains: value } }, { id: { contains: value } }],
-        },
-      };
-      if (newNext) {
-        variables["nextToken"] = newNext;
-      }
-      const result = (
-        await client.graphql({
-          query: listCourseEnrollments.replaceAll("__typename", ""),
-          variables,
-        })
-      )?.data?.listCourseEnrollments?.items;
-      var loaded = result.filter(
-        (item) =>
-          !courseEnrollmentsIdSet.has(getIDValue.courseEnrollments?.(item))
-      );
-      newOptions.push(...loaded);
-      newNext = result.nextToken;
-    }
-    setCourseEnrollmentsRecords(newOptions.slice(0, autocompleteLength));
-    setCourseEnrollmentsLoading(false);
-  };
-  React.useEffect(() => {
-    fetchCourseEnrollmentsRecords("");
-  }, []);
   return (
     <Grid
       as="form"
@@ -343,32 +118,26 @@ export default function StudentProfileUpdateForm(props) {
       onSubmit={async (event) => {
         event.preventDefault();
         let modelFields = {
-          cognitoUserID,
           name,
           email,
-          birthdate,
-          courseEnrollments: courseEnrollments ?? null,
+          status,
+          notificationsEnabled,
+          darkModeEnabled,
+          language,
+          isAdmin,
         };
         const validationResponses = await Promise.all(
           Object.keys(validations).reduce((promises, fieldName) => {
             if (Array.isArray(modelFields[fieldName])) {
               promises.push(
                 ...modelFields[fieldName].map((item) =>
-                  runValidationTasks(
-                    fieldName,
-                    item,
-                    getDisplayValue[fieldName]
-                  )
+                  runValidationTasks(fieldName, item)
                 )
               );
               return promises;
             }
             promises.push(
-              runValidationTasks(
-                fieldName,
-                modelFields[fieldName],
-                getDisplayValue[fieldName]
-              )
+              runValidationTasks(fieldName, modelFields[fieldName])
             );
             return promises;
           }, [])
@@ -385,75 +154,15 @@ export default function StudentProfileUpdateForm(props) {
               modelFields[key] = null;
             }
           });
-          const promises = [];
-          const courseEnrollmentsToLink = [];
-          const courseEnrollmentsToUnLink = [];
-          const courseEnrollmentsSet = new Set();
-          const linkedCourseEnrollmentsSet = new Set();
-          courseEnrollments.forEach((r) =>
-            courseEnrollmentsSet.add(getIDValue.courseEnrollments?.(r))
-          );
-          linkedCourseEnrollments.forEach((r) =>
-            linkedCourseEnrollmentsSet.add(getIDValue.courseEnrollments?.(r))
-          );
-          linkedCourseEnrollments.forEach((r) => {
-            if (!courseEnrollmentsSet.has(getIDValue.courseEnrollments?.(r))) {
-              courseEnrollmentsToUnLink.push(r);
-            }
-          });
-          courseEnrollments.forEach((r) => {
-            if (
-              !linkedCourseEnrollmentsSet.has(getIDValue.courseEnrollments?.(r))
-            ) {
-              courseEnrollmentsToLink.push(r);
-            }
-          });
-          courseEnrollmentsToUnLink.forEach((original) => {
-            if (!canUnlinkCourseEnrollments) {
-              throw Error(
-                `CourseEnrollment ${original.id} cannot be unlinked from StudentProfile because undefined is a required field.`
-              );
-            }
-            promises.push(
-              client.graphql({
-                query: updateCourseEnrollment.replaceAll("__typename", ""),
-                variables: {
-                  input: {
-                    id: original.id,
-                  },
-                },
-              })
-            );
-          });
-          courseEnrollmentsToLink.forEach((original) => {
-            promises.push(
-              client.graphql({
-                query: updateCourseEnrollment.replaceAll("__typename", ""),
-                variables: {
-                  input: {
-                    id: original.id,
-                  },
-                },
-              })
-            );
-          });
-          const modelFieldsToSave = {
-            cognitoUserID: modelFields.cognitoUserID,
-            name: modelFields.name,
-            email: modelFields.email,
-          };
-          promises.push(
-            client.graphql({
-              query: updateStudentProfile.replaceAll("__typename", ""),
-              variables: {
-                input: {
-                  id: studentProfileRecord.id,
-                  ...modelFieldsToSave,
-                },
+          await client.graphql({
+            query: updateStudentProfile.replaceAll("__typename", ""),
+            variables: {
+              input: {
+                id: studentProfileRecord.id,
+                ...modelFields,
               },
-            })
-          );
-          await Promise.all(promises);
+            },
+          });
           if (onSuccess) {
             onSuccess(modelFields);
           }
@@ -468,34 +177,6 @@ export default function StudentProfileUpdateForm(props) {
       {...rest}
     >
       <TextField
-        label="Cognito user id"
-        isRequired={true}
-        isReadOnly={false}
-        value={cognitoUserID}
-        onChange={(e) => {
-          let { value } = e.target;
-          if (onChange) {
-            const modelFields = {
-              cognitoUserID: value,
-              name,
-              email,
-              birthdate,
-              courseEnrollments,
-            };
-            const result = onChange(modelFields);
-            value = result?.cognitoUserID ?? value;
-          }
-          if (errors.cognitoUserID?.hasError) {
-            runValidationTasks("cognitoUserID", value);
-          }
-          setCognitoUserID(value);
-        }}
-        onBlur={() => runValidationTasks("cognitoUserID", cognitoUserID)}
-        errorMessage={errors.cognitoUserID?.errorMessage}
-        hasError={errors.cognitoUserID?.hasError}
-        {...getOverrideProps(overrides, "cognitoUserID")}
-      ></TextField>
-      <TextField
         label="Name"
         isRequired={true}
         isReadOnly={false}
@@ -504,11 +185,13 @@ export default function StudentProfileUpdateForm(props) {
           let { value } = e.target;
           if (onChange) {
             const modelFields = {
-              cognitoUserID,
               name: value,
               email,
-              birthdate,
-              courseEnrollments,
+              status,
+              notificationsEnabled,
+              darkModeEnabled,
+              language,
+              isAdmin,
             };
             const result = onChange(modelFields);
             value = result?.name ?? value;
@@ -532,11 +215,13 @@ export default function StudentProfileUpdateForm(props) {
           let { value } = e.target;
           if (onChange) {
             const modelFields = {
-              cognitoUserID,
               name,
               email: value,
-              birthdate,
-              courseEnrollments,
+              status,
+              notificationsEnabled,
+              darkModeEnabled,
+              language,
+              isAdmin,
             };
             const result = onChange(modelFields);
             value = result?.email ?? value;
@@ -551,92 +236,169 @@ export default function StudentProfileUpdateForm(props) {
         hasError={errors.email?.hasError}
         {...getOverrideProps(overrides, "email")}
       ></TextField>
-      <ArrayField
-        onChange={async (items) => {
-          let values = items;
+      <SelectField
+        label="Status"
+        placeholder="Please select an option"
+        isDisabled={false}
+        value={status}
+        onChange={(e) => {
+          let { value } = e.target;
           if (onChange) {
             const modelFields = {
-              cognitoUserID,
               name,
               email,
-              birthdate,
-              courseEnrollments: values,
+              status: value,
+              notificationsEnabled,
+              darkModeEnabled,
+              language,
+              isAdmin,
             };
             const result = onChange(modelFields);
-            values = result?.courseEnrollments ?? values;
+            value = result?.status ?? value;
           }
-          setCourseEnrollments(values);
-          setCurrentCourseEnrollmentsValue(undefined);
-          setCurrentCourseEnrollmentsDisplayValue("");
+          if (errors.status?.hasError) {
+            runValidationTasks("status", value);
+          }
+          setStatus(value);
         }}
-        currentFieldValue={currentCourseEnrollmentsValue}
-        label={"Course enrollments"}
-        items={courseEnrollments}
-        hasError={errors?.courseEnrollments?.hasError}
-        runValidationTasks={async () =>
-          await runValidationTasks(
-            "courseEnrollments",
-            currentCourseEnrollmentsValue
-          )
-        }
-        errorMessage={errors?.courseEnrollments?.errorMessage}
-        getBadgeText={getDisplayValue.courseEnrollments}
-        setFieldValue={(model) => {
-          setCurrentCourseEnrollmentsDisplayValue(
-            model ? getDisplayValue.courseEnrollments(model) : ""
-          );
-          setCurrentCourseEnrollmentsValue(model);
-        }}
-        inputFieldRef={courseEnrollmentsRef}
-        defaultFieldValue={""}
+        onBlur={() => runValidationTasks("status", status)}
+        errorMessage={errors.status?.errorMessage}
+        hasError={errors.status?.hasError}
+        {...getOverrideProps(overrides, "status")}
       >
-        <Autocomplete
-          label="Course enrollments"
-          isRequired={false}
-          isReadOnly={false}
-          placeholder="Search CourseEnrollment"
-          value={currentCourseEnrollmentsDisplayValue}
-          options={courseEnrollmentsRecords.map((r) => ({
-            id: getIDValue.courseEnrollments?.(r),
-            label: getDisplayValue.courseEnrollments?.(r),
-          }))}
-          isLoading={courseEnrollmentsLoading}
-          onSelect={({ id, label }) => {
-            setCurrentCourseEnrollmentsValue(
-              courseEnrollmentsRecords.find((r) =>
-                Object.entries(JSON.parse(id)).every(
-                  ([key, value]) => r[key] === value
-                )
-              )
-            );
-            setCurrentCourseEnrollmentsDisplayValue(label);
-            runValidationTasks("courseEnrollments", label);
-          }}
-          onClear={() => {
-            setCurrentCourseEnrollmentsDisplayValue("");
-          }}
-          onChange={(e) => {
-            let { value } = e.target;
-            fetchCourseEnrollmentsRecords(value);
-            if (errors.courseEnrollments?.hasError) {
-              runValidationTasks("courseEnrollments", value);
-            }
-            setCurrentCourseEnrollmentsDisplayValue(value);
-            setCurrentCourseEnrollmentsValue(undefined);
-          }}
-          onBlur={() =>
-            runValidationTasks(
-              "courseEnrollments",
-              currentCourseEnrollmentsDisplayValue
-            )
+        <option
+          children="Active"
+          value="ACTIVE"
+          {...getOverrideProps(overrides, "statusoption0")}
+        ></option>
+        <option
+          children="Inactive"
+          value="INACTIVE"
+          {...getOverrideProps(overrides, "statusoption1")}
+        ></option>
+      </SelectField>
+      <SwitchField
+        label="Notifications enabled"
+        defaultChecked={false}
+        isDisabled={false}
+        isChecked={notificationsEnabled}
+        onChange={(e) => {
+          let value = e.target.checked;
+          if (onChange) {
+            const modelFields = {
+              name,
+              email,
+              status,
+              notificationsEnabled: value,
+              darkModeEnabled,
+              language,
+              isAdmin,
+            };
+            const result = onChange(modelFields);
+            value = result?.notificationsEnabled ?? value;
           }
-          errorMessage={errors.courseEnrollments?.errorMessage}
-          hasError={errors.courseEnrollments?.hasError}
-          ref={courseEnrollmentsRef}
-          labelHidden={true}
-          {...getOverrideProps(overrides, "courseEnrollments")}
-        ></Autocomplete>
-      </ArrayField>
+          if (errors.notificationsEnabled?.hasError) {
+            runValidationTasks("notificationsEnabled", value);
+          }
+          setNotificationsEnabled(value);
+        }}
+        onBlur={() =>
+          runValidationTasks("notificationsEnabled", notificationsEnabled)
+        }
+        errorMessage={errors.notificationsEnabled?.errorMessage}
+        hasError={errors.notificationsEnabled?.hasError}
+        {...getOverrideProps(overrides, "notificationsEnabled")}
+      ></SwitchField>
+      <SwitchField
+        label="Dark mode enabled"
+        defaultChecked={false}
+        isDisabled={false}
+        isChecked={darkModeEnabled}
+        onChange={(e) => {
+          let value = e.target.checked;
+          if (onChange) {
+            const modelFields = {
+              name,
+              email,
+              status,
+              notificationsEnabled,
+              darkModeEnabled: value,
+              language,
+              isAdmin,
+            };
+            const result = onChange(modelFields);
+            value = result?.darkModeEnabled ?? value;
+          }
+          if (errors.darkModeEnabled?.hasError) {
+            runValidationTasks("darkModeEnabled", value);
+          }
+          setDarkModeEnabled(value);
+        }}
+        onBlur={() => runValidationTasks("darkModeEnabled", darkModeEnabled)}
+        errorMessage={errors.darkModeEnabled?.errorMessage}
+        hasError={errors.darkModeEnabled?.hasError}
+        {...getOverrideProps(overrides, "darkModeEnabled")}
+      ></SwitchField>
+      <TextField
+        label="Language"
+        isRequired={true}
+        isReadOnly={false}
+        value={language}
+        onChange={(e) => {
+          let { value } = e.target;
+          if (onChange) {
+            const modelFields = {
+              name,
+              email,
+              status,
+              notificationsEnabled,
+              darkModeEnabled,
+              language: value,
+              isAdmin,
+            };
+            const result = onChange(modelFields);
+            value = result?.language ?? value;
+          }
+          if (errors.language?.hasError) {
+            runValidationTasks("language", value);
+          }
+          setLanguage(value);
+        }}
+        onBlur={() => runValidationTasks("language", language)}
+        errorMessage={errors.language?.errorMessage}
+        hasError={errors.language?.hasError}
+        {...getOverrideProps(overrides, "language")}
+      ></TextField>
+      <SwitchField
+        label="Is admin"
+        defaultChecked={false}
+        isDisabled={false}
+        isChecked={isAdmin}
+        onChange={(e) => {
+          let value = e.target.checked;
+          if (onChange) {
+            const modelFields = {
+              name,
+              email,
+              status,
+              notificationsEnabled,
+              darkModeEnabled,
+              language,
+              isAdmin: value,
+            };
+            const result = onChange(modelFields);
+            value = result?.isAdmin ?? value;
+          }
+          if (errors.isAdmin?.hasError) {
+            runValidationTasks("isAdmin", value);
+          }
+          setIsAdmin(value);
+        }}
+        onBlur={() => runValidationTasks("isAdmin", isAdmin)}
+        errorMessage={errors.isAdmin?.errorMessage}
+        hasError={errors.isAdmin?.hasError}
+        {...getOverrideProps(overrides, "isAdmin")}
+      ></SwitchField>
       <Flex
         justifyContent="space-between"
         {...getOverrideProps(overrides, "CTAFlex")}

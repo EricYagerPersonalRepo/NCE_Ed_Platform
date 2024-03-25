@@ -17,6 +17,10 @@ export const onCreateNCEStudentProfile = /* GraphQL */ `subscription OnCreateNCE
     name
     email
     status
+    notificationsEnabled
+    darkModeEnabled
+    language
+    isAdmin
     createdAt
     updatedAt
     owner
@@ -36,6 +40,10 @@ export const onUpdateNCEStudentProfile = /* GraphQL */ `subscription OnUpdateNCE
     name
     email
     status
+    notificationsEnabled
+    darkModeEnabled
+    language
+    isAdmin
     createdAt
     updatedAt
     owner
@@ -55,6 +63,10 @@ export const onDeleteNCEStudentProfile = /* GraphQL */ `subscription OnDeleteNCE
     name
     email
     status
+    notificationsEnabled
+    darkModeEnabled
+    language
+    isAdmin
     createdAt
     updatedAt
     owner
@@ -64,6 +76,75 @@ export const onDeleteNCEStudentProfile = /* GraphQL */ `subscription OnDeleteNCE
 ` as GeneratedSubscription<
   APITypes.OnDeleteNCEStudentProfileSubscriptionVariables,
   APITypes.OnDeleteNCEStudentProfileSubscription
+>;
+export const onCreateStudentProfile = /* GraphQL */ `subscription OnCreateStudentProfile(
+  $filter: ModelSubscriptionStudentProfileFilterInput
+  $owner: String
+) {
+  onCreateStudentProfile(filter: $filter, owner: $owner) {
+    id
+    name
+    email
+    status
+    notificationsEnabled
+    darkModeEnabled
+    language
+    isAdmin
+    createdAt
+    updatedAt
+    owner
+    __typename
+  }
+}
+` as GeneratedSubscription<
+  APITypes.OnCreateStudentProfileSubscriptionVariables,
+  APITypes.OnCreateStudentProfileSubscription
+>;
+export const onUpdateStudentProfile = /* GraphQL */ `subscription OnUpdateStudentProfile(
+  $filter: ModelSubscriptionStudentProfileFilterInput
+  $owner: String
+) {
+  onUpdateStudentProfile(filter: $filter, owner: $owner) {
+    id
+    name
+    email
+    status
+    notificationsEnabled
+    darkModeEnabled
+    language
+    isAdmin
+    createdAt
+    updatedAt
+    owner
+    __typename
+  }
+}
+` as GeneratedSubscription<
+  APITypes.OnUpdateStudentProfileSubscriptionVariables,
+  APITypes.OnUpdateStudentProfileSubscription
+>;
+export const onDeleteStudentProfile = /* GraphQL */ `subscription OnDeleteStudentProfile(
+  $filter: ModelSubscriptionStudentProfileFilterInput
+  $owner: String
+) {
+  onDeleteStudentProfile(filter: $filter, owner: $owner) {
+    id
+    name
+    email
+    status
+    notificationsEnabled
+    darkModeEnabled
+    language
+    isAdmin
+    createdAt
+    updatedAt
+    owner
+    __typename
+  }
+}
+` as GeneratedSubscription<
+  APITypes.OnDeleteStudentProfileSubscriptionVariables,
+  APITypes.OnDeleteStudentProfileSubscription
 >;
 export const onCreateNCEUserSettings = /* GraphQL */ `subscription OnCreateNCEUserSettings(
   $filter: ModelSubscriptionNCEUserSettingsFilterInput

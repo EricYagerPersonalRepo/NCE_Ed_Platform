@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react'
 import {  Grid, Container, Tabs, Tab, Modal, Button } from '@mui/material'
 import { useSignUpHooks } from '@/src/state/SignUpHooks'
 import { EmailInput, NameInput, PasswordInput, ZipInput,  SignUpTabItem, TwoFactorInput } from './Components'
+import { handleCreateStudentProfile } from '@/src/functions/AuthX'
+import { CreateNCEStudentProfileInput, StudentStatus } from '@/src/API'
 
 /**
  * WebSignUp Component - Manages the entire sign-up process for web users through a multi-step form.
@@ -21,17 +23,17 @@ import { EmailInput, NameInput, PasswordInput, ZipInput,  SignUpTabItem, TwoFact
  * @returns {JSX.Element} - A containerized sign-up form with tab navigation for different sign-up steps,
  *                          integrating various input components and a TFA modal.
  */
-const WebSignUp = () => {
+const WebSignUp = ({router}) => {
     const signUpHooks = useSignUpHooks()
     const [signUpButtonVisible, setSignUpButtonVisible] = useState(false)
 
     const handleTabChange:any = (event:any) => {
-        console.log(event.target.innerHTML)
-        event.target.innerHTML==="Email" && signUpHooks.setTabValue(0)
-        event.target.innerHTML==="Set Password" && signUpHooks.setTabValue(1)
-        event.target.innerHTML==="Confirm Signup" && signUpHooks.setTabValue(2)
-        event.target.innerHTML==="Name" && signUpHooks.setTabValue(3)
-        event.target.innerHTML==="Location" && signUpHooks.setTabValue(4)
+        console.log(event)
+        String(event.target.innerHTML).includes("Email") && signUpHooks.setTabValue(0)
+        String(event.target.innerHTML).includes("Set Password") && signUpHooks.setTabValue(1)
+        String(event.target.innerHTML).includes("Confirm Signup") && signUpHooks.setTabValue(2)
+        String(event.target.innerHTML).includes("Name") && signUpHooks.setTabValue(3)
+        String(event.target.innerHTML).includes("Location") && signUpHooks.setTabValue(4)
     }
 
     // Updates the form's completion status based on the completion of individual steps.
@@ -48,6 +50,32 @@ const WebSignUp = () => {
             setSignUpButtonVisible(true)
         }
     }, [signUpHooks.formComplete])
+
+    const onSignUpButtonClick = async() => {
+        const studentProfileInput: CreateNCEStudentProfileInput = {
+            name: signUpHooks.name,
+            email: signUpHooks.username,
+            status: StudentStatus.ACTIVE,
+            notificationsEnabled: true,
+            darkModeEnabled: false,
+            language: "EN",
+            isAdmin: false,
+        }
+        
+        console.log(studentProfileInput)
+
+        try{
+
+            let studentProfileCreateCall = await handleCreateStudentProfile(studentProfileInput)
+
+            if(studentProfileCreateCall.isSignedUp === true){
+                router.push('/')
+            }
+        }
+        catch(error){
+            console.error(error)
+        }
+    }
 
 
     return (
@@ -73,11 +101,12 @@ const WebSignUp = () => {
                                 waiting={signUpHooks.signupWaiting} 
                                 complete={signUpHooks.signupComplete} 
                             /> }
+                            id="SignUp_Password_Input_Web"
                         />
                         <Tab
                             label={ <SignUpTabItem text="Confirm Signup" 
                                 waiting={signUpHooks.confirmSignupWaiting } 
-                                complete={signUpHooks.confirmSignupComplete} 
+                                complete={signUpHooks.confirmSignupComplete}
                             /> }
                         />
                         <Tab
@@ -114,7 +143,7 @@ const WebSignUp = () => {
                     </form>
                 </Grid>
                 <Grid item xs={12} container justifyContent="center">
-                    {signUpButtonVisible && <Button onClick={(event)=>{console.log(event)}}>Sign Up</Button>}
+                    {signUpButtonVisible && <Button onClick={onSignUpButtonClick}>Sign Up</Button>}
                 </Grid>
             </Grid>
             

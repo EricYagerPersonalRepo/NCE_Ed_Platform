@@ -1,7 +1,7 @@
 import { ConfirmSignUpInput, ConfirmSignUpOutput, SignInInput, SignInOutput, confirmSignUp, getCurrentUser, signIn, signOut } from "aws-amplify/auth"
-import { CreateNCEStudentProfileInput, CreateNCEUserSettingsInput } from "../API"
-import { createNCEStudentProfile, createNCEUserSettings } from "../graphql/mutations"
-import { handleConfirmSignUpReturnType } from "../types/SignUpTypes"
+import { CreateNCEStudentProfileInput, CreateNCEUserSettingsInput, StudentStatus } from "../API"
+import { createNCEStudentProfile, createNCEUserSettings, createStudentProfile } from "../graphql/mutations"
+import { handleConfirmSignUpReturnType, SignUpHooksProps } from "../types/SignUpTypes"
 import { generateClient } from "aws-amplify/api"
 
 export const amplifyApiClient = generateClient()
@@ -29,30 +29,17 @@ export const checkAuthStatus = async () => {
  * @returns {Promise<{isSignedUp: boolean, userProfile: any}>} A promise that resolves to an object indicating if the profile was successfully created and the user profile data.
  */
 export const handleCreateStudentProfile = async (studentProfileInput:CreateNCEStudentProfileInput) => {
+    console.log("handleCreateStudentProfile: ", studentProfileInput)
     try {
-        const userSettingsInput: CreateNCEUserSettingsInput = {
-            id: studentProfileInput.id,
-            notificationsEnabled: true, 
-            darkModeEnabled: false, 
-            language: 'en',
-            isAdmin: false,
-        }
-
         const profileResult = await amplifyApiClient.graphql({
-            query: createNCEStudentProfile,
+            query: createStudentProfile,
             variables: { input: studentProfileInput }
         })
 
-        const userSettingsCall = await amplifyApiClient.graphql({
-            query: createNCEUserSettings,
-            variables: { input: userSettingsInput }
-        })
-
         console.log("Tried to create student profile: ", profileResult)
-        console.log("Tried to create user settings: ", userSettingsCall)
         return({isSignedUp:true, userProfile:profileResult})
     } catch (signInError) {
-        console.log('Error creating student profile and settings:', signInError)
+        console.log('Error creating student profile:', signInError)
         return({isSignedUp:false, userProfile:null})
     }
 }

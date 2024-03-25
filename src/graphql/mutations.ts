@@ -17,6 +17,10 @@ export const createNCEStudentProfile = /* GraphQL */ `mutation CreateNCEStudentP
     name
     email
     status
+    notificationsEnabled
+    darkModeEnabled
+    language
+    isAdmin
     createdAt
     updatedAt
     owner
@@ -36,6 +40,10 @@ export const updateNCEStudentProfile = /* GraphQL */ `mutation UpdateNCEStudentP
     name
     email
     status
+    notificationsEnabled
+    darkModeEnabled
+    language
+    isAdmin
     createdAt
     updatedAt
     owner
@@ -55,6 +63,10 @@ export const deleteNCEStudentProfile = /* GraphQL */ `mutation DeleteNCEStudentP
     name
     email
     status
+    notificationsEnabled
+    darkModeEnabled
+    language
+    isAdmin
     createdAt
     updatedAt
     owner
@@ -64,6 +76,75 @@ export const deleteNCEStudentProfile = /* GraphQL */ `mutation DeleteNCEStudentP
 ` as GeneratedMutation<
   APITypes.DeleteNCEStudentProfileMutationVariables,
   APITypes.DeleteNCEStudentProfileMutation
+>;
+export const createStudentProfile = /* GraphQL */ `mutation CreateStudentProfile(
+  $input: CreateStudentProfileInput!
+  $condition: ModelStudentProfileConditionInput
+) {
+  createStudentProfile(input: $input, condition: $condition) {
+    id
+    name
+    email
+    status
+    notificationsEnabled
+    darkModeEnabled
+    language
+    isAdmin
+    createdAt
+    updatedAt
+    owner
+    __typename
+  }
+}
+` as GeneratedMutation<
+  APITypes.CreateStudentProfileMutationVariables,
+  APITypes.CreateStudentProfileMutation
+>;
+export const updateStudentProfile = /* GraphQL */ `mutation UpdateStudentProfile(
+  $input: UpdateStudentProfileInput!
+  $condition: ModelStudentProfileConditionInput
+) {
+  updateStudentProfile(input: $input, condition: $condition) {
+    id
+    name
+    email
+    status
+    notificationsEnabled
+    darkModeEnabled
+    language
+    isAdmin
+    createdAt
+    updatedAt
+    owner
+    __typename
+  }
+}
+` as GeneratedMutation<
+  APITypes.UpdateStudentProfileMutationVariables,
+  APITypes.UpdateStudentProfileMutation
+>;
+export const deleteStudentProfile = /* GraphQL */ `mutation DeleteStudentProfile(
+  $input: DeleteStudentProfileInput!
+  $condition: ModelStudentProfileConditionInput
+) {
+  deleteStudentProfile(input: $input, condition: $condition) {
+    id
+    name
+    email
+    status
+    notificationsEnabled
+    darkModeEnabled
+    language
+    isAdmin
+    createdAt
+    updatedAt
+    owner
+    __typename
+  }
+}
+` as GeneratedMutation<
+  APITypes.DeleteStudentProfileMutationVariables,
+  APITypes.DeleteStudentProfileMutation
 >;
 export const createNCEUserSettings = /* GraphQL */ `mutation CreateNCEUserSettings(
   $input: CreateNCEUserSettingsInput!

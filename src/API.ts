@@ -7,6 +7,10 @@ export type CreateNCEStudentProfileInput = {
   name: string,
   email: string,
   status: StudentStatus,
+  notificationsEnabled: boolean,
+  darkModeEnabled: boolean,
+  language: string,
+  isAdmin: boolean,
 };
 
 export enum StudentStatus {
@@ -19,6 +23,10 @@ export type ModelNCEStudentProfileConditionInput = {
   name?: ModelStringInput | null,
   email?: ModelStringInput | null,
   status?: ModelStudentStatusInput | null,
+  notificationsEnabled?: ModelBooleanInput | null,
+  darkModeEnabled?: ModelBooleanInput | null,
+  language?: ModelStringInput | null,
+  isAdmin?: ModelBooleanInput | null,
   and?: Array< ModelNCEStudentProfileConditionInput | null > | null,
   or?: Array< ModelNCEStudentProfileConditionInput | null > | null,
   not?: ModelNCEStudentProfileConditionInput | null,
@@ -69,12 +77,23 @@ export type ModelStudentStatusInput = {
   ne?: StudentStatus | null,
 };
 
+export type ModelBooleanInput = {
+  ne?: boolean | null,
+  eq?: boolean | null,
+  attributeExists?: boolean | null,
+  attributeType?: ModelAttributeTypes | null,
+};
+
 export type NCEStudentProfile = {
   __typename: "NCEStudentProfile",
   id: string,
   name: string,
   email: string,
   status: StudentStatus,
+  notificationsEnabled: boolean,
+  darkModeEnabled: boolean,
+  language: string,
+  isAdmin: boolean,
   createdAt: string,
   updatedAt: string,
   owner?: string | null,
@@ -85,9 +104,67 @@ export type UpdateNCEStudentProfileInput = {
   name?: string | null,
   email?: string | null,
   status?: StudentStatus | null,
+  notificationsEnabled?: boolean | null,
+  darkModeEnabled?: boolean | null,
+  language?: string | null,
+  isAdmin?: boolean | null,
 };
 
 export type DeleteNCEStudentProfileInput = {
+  id: string,
+};
+
+export type CreateStudentProfileInput = {
+  id?: string | null,
+  name: string,
+  email: string,
+  status: StudentStatus,
+  notificationsEnabled: boolean,
+  darkModeEnabled: boolean,
+  language: string,
+  isAdmin: boolean,
+};
+
+export type ModelStudentProfileConditionInput = {
+  name?: ModelStringInput | null,
+  email?: ModelStringInput | null,
+  status?: ModelStudentStatusInput | null,
+  notificationsEnabled?: ModelBooleanInput | null,
+  darkModeEnabled?: ModelBooleanInput | null,
+  language?: ModelStringInput | null,
+  isAdmin?: ModelBooleanInput | null,
+  and?: Array< ModelStudentProfileConditionInput | null > | null,
+  or?: Array< ModelStudentProfileConditionInput | null > | null,
+  not?: ModelStudentProfileConditionInput | null,
+};
+
+export type StudentProfile = {
+  __typename: "StudentProfile",
+  id: string,
+  name: string,
+  email: string,
+  status: StudentStatus,
+  notificationsEnabled: boolean,
+  darkModeEnabled: boolean,
+  language: string,
+  isAdmin: boolean,
+  createdAt: string,
+  updatedAt: string,
+  owner?: string | null,
+};
+
+export type UpdateStudentProfileInput = {
+  id: string,
+  name?: string | null,
+  email?: string | null,
+  status?: StudentStatus | null,
+  notificationsEnabled?: boolean | null,
+  darkModeEnabled?: boolean | null,
+  language?: string | null,
+  isAdmin?: boolean | null,
+};
+
+export type DeleteStudentProfileInput = {
   id: string,
 };
 
@@ -107,13 +184,6 @@ export type ModelNCEUserSettingsConditionInput = {
   and?: Array< ModelNCEUserSettingsConditionInput | null > | null,
   or?: Array< ModelNCEUserSettingsConditionInput | null > | null,
   not?: ModelNCEUserSettingsConditionInput | null,
-};
-
-export type ModelBooleanInput = {
-  ne?: boolean | null,
-  eq?: boolean | null,
-  attributeExists?: boolean | null,
-  attributeType?: ModelAttributeTypes | null,
 };
 
 export type NCEUserSettings = {
@@ -635,6 +705,10 @@ export type ModelNCEStudentProfileFilterInput = {
   name?: ModelStringInput | null,
   email?: ModelStringInput | null,
   status?: ModelStudentStatusInput | null,
+  notificationsEnabled?: ModelBooleanInput | null,
+  darkModeEnabled?: ModelBooleanInput | null,
+  language?: ModelStringInput | null,
+  isAdmin?: ModelBooleanInput | null,
   and?: Array< ModelNCEStudentProfileFilterInput | null > | null,
   or?: Array< ModelNCEStudentProfileFilterInput | null > | null,
   not?: ModelNCEStudentProfileFilterInput | null,
@@ -643,6 +717,26 @@ export type ModelNCEStudentProfileFilterInput = {
 export type ModelNCEStudentProfileConnection = {
   __typename: "ModelNCEStudentProfileConnection",
   items:  Array<NCEStudentProfile | null >,
+  nextToken?: string | null,
+};
+
+export type ModelStudentProfileFilterInput = {
+  id?: ModelIDInput | null,
+  name?: ModelStringInput | null,
+  email?: ModelStringInput | null,
+  status?: ModelStudentStatusInput | null,
+  notificationsEnabled?: ModelBooleanInput | null,
+  darkModeEnabled?: ModelBooleanInput | null,
+  language?: ModelStringInput | null,
+  isAdmin?: ModelBooleanInput | null,
+  and?: Array< ModelStudentProfileFilterInput | null > | null,
+  or?: Array< ModelStudentProfileFilterInput | null > | null,
+  not?: ModelStudentProfileFilterInput | null,
+};
+
+export type ModelStudentProfileConnection = {
+  __typename: "ModelStudentProfileConnection",
+  items:  Array<StudentProfile | null >,
   nextToken?: string | null,
 };
 
@@ -715,12 +809,6 @@ export type ModelCourseConnection = {
   nextToken?: string | null,
 };
 
-export enum ModelSortDirection {
-  ASC = "ASC",
-  DESC = "DESC",
-}
-
-
 export type ModelModuleFilterInput = {
   id?: ModelIDInput | null,
   title?: ModelStringInput | null,
@@ -730,16 +818,6 @@ export type ModelModuleFilterInput = {
   or?: Array< ModelModuleFilterInput | null > | null,
   not?: ModelModuleFilterInput | null,
   courseModulesId?: ModelIDInput | null,
-};
-
-export type ModelIDKeyConditionInput = {
-  eq?: string | null,
-  le?: string | null,
-  lt?: string | null,
-  ge?: string | null,
-  gt?: string | null,
-  between?: Array< string | null > | null,
-  beginsWith?: string | null,
 };
 
 export type ModelLessonFilterInput = {
@@ -807,11 +885,31 @@ export type ModelEnrollmentConnection = {
   nextToken?: string | null,
 };
 
+export enum ModelSortDirection {
+  ASC = "ASC",
+  DESC = "DESC",
+}
+
+
+export type ModelIDKeyConditionInput = {
+  eq?: string | null,
+  le?: string | null,
+  lt?: string | null,
+  ge?: string | null,
+  gt?: string | null,
+  between?: Array< string | null > | null,
+  beginsWith?: string | null,
+};
+
 export type ModelSubscriptionNCEStudentProfileFilterInput = {
   id?: ModelSubscriptionIDInput | null,
   name?: ModelSubscriptionStringInput | null,
   email?: ModelSubscriptionStringInput | null,
   status?: ModelSubscriptionStringInput | null,
+  notificationsEnabled?: ModelSubscriptionBooleanInput | null,
+  darkModeEnabled?: ModelSubscriptionBooleanInput | null,
+  language?: ModelSubscriptionStringInput | null,
+  isAdmin?: ModelSubscriptionBooleanInput | null,
   and?: Array< ModelSubscriptionNCEStudentProfileFilterInput | null > | null,
   or?: Array< ModelSubscriptionNCEStudentProfileFilterInput | null > | null,
 };
@@ -846,6 +944,24 @@ export type ModelSubscriptionStringInput = {
   notIn?: Array< string | null > | null,
 };
 
+export type ModelSubscriptionBooleanInput = {
+  ne?: boolean | null,
+  eq?: boolean | null,
+};
+
+export type ModelSubscriptionStudentProfileFilterInput = {
+  id?: ModelSubscriptionIDInput | null,
+  name?: ModelSubscriptionStringInput | null,
+  email?: ModelSubscriptionStringInput | null,
+  status?: ModelSubscriptionStringInput | null,
+  notificationsEnabled?: ModelSubscriptionBooleanInput | null,
+  darkModeEnabled?: ModelSubscriptionBooleanInput | null,
+  language?: ModelSubscriptionStringInput | null,
+  isAdmin?: ModelSubscriptionBooleanInput | null,
+  and?: Array< ModelSubscriptionStudentProfileFilterInput | null > | null,
+  or?: Array< ModelSubscriptionStudentProfileFilterInput | null > | null,
+};
+
 export type ModelSubscriptionNCEUserSettingsFilterInput = {
   id?: ModelSubscriptionIDInput | null,
   notificationsEnabled?: ModelSubscriptionBooleanInput | null,
@@ -854,11 +970,6 @@ export type ModelSubscriptionNCEUserSettingsFilterInput = {
   isAdmin?: ModelSubscriptionBooleanInput | null,
   and?: Array< ModelSubscriptionNCEUserSettingsFilterInput | null > | null,
   or?: Array< ModelSubscriptionNCEUserSettingsFilterInput | null > | null,
-};
-
-export type ModelSubscriptionBooleanInput = {
-  ne?: boolean | null,
-  eq?: boolean | null,
 };
 
 export type ModelSubscriptionBroadcastNotificationFilterInput = {
@@ -975,6 +1086,10 @@ export type CreateNCEStudentProfileMutation = {
     name: string,
     email: string,
     status: StudentStatus,
+    notificationsEnabled: boolean,
+    darkModeEnabled: boolean,
+    language: string,
+    isAdmin: boolean,
     createdAt: string,
     updatedAt: string,
     owner?: string | null,
@@ -993,6 +1108,10 @@ export type UpdateNCEStudentProfileMutation = {
     name: string,
     email: string,
     status: StudentStatus,
+    notificationsEnabled: boolean,
+    darkModeEnabled: boolean,
+    language: string,
+    isAdmin: boolean,
     createdAt: string,
     updatedAt: string,
     owner?: string | null,
@@ -1011,6 +1130,76 @@ export type DeleteNCEStudentProfileMutation = {
     name: string,
     email: string,
     status: StudentStatus,
+    notificationsEnabled: boolean,
+    darkModeEnabled: boolean,
+    language: string,
+    isAdmin: boolean,
+    createdAt: string,
+    updatedAt: string,
+    owner?: string | null,
+  } | null,
+};
+
+export type CreateStudentProfileMutationVariables = {
+  input: CreateStudentProfileInput,
+  condition?: ModelStudentProfileConditionInput | null,
+};
+
+export type CreateStudentProfileMutation = {
+  createStudentProfile?:  {
+    __typename: "StudentProfile",
+    id: string,
+    name: string,
+    email: string,
+    status: StudentStatus,
+    notificationsEnabled: boolean,
+    darkModeEnabled: boolean,
+    language: string,
+    isAdmin: boolean,
+    createdAt: string,
+    updatedAt: string,
+    owner?: string | null,
+  } | null,
+};
+
+export type UpdateStudentProfileMutationVariables = {
+  input: UpdateStudentProfileInput,
+  condition?: ModelStudentProfileConditionInput | null,
+};
+
+export type UpdateStudentProfileMutation = {
+  updateStudentProfile?:  {
+    __typename: "StudentProfile",
+    id: string,
+    name: string,
+    email: string,
+    status: StudentStatus,
+    notificationsEnabled: boolean,
+    darkModeEnabled: boolean,
+    language: string,
+    isAdmin: boolean,
+    createdAt: string,
+    updatedAt: string,
+    owner?: string | null,
+  } | null,
+};
+
+export type DeleteStudentProfileMutationVariables = {
+  input: DeleteStudentProfileInput,
+  condition?: ModelStudentProfileConditionInput | null,
+};
+
+export type DeleteStudentProfileMutation = {
+  deleteStudentProfile?:  {
+    __typename: "StudentProfile",
+    id: string,
+    name: string,
+    email: string,
+    status: StudentStatus,
+    notificationsEnabled: boolean,
+    darkModeEnabled: boolean,
+    language: string,
+    isAdmin: boolean,
     createdAt: string,
     updatedAt: string,
     owner?: string | null,
@@ -1799,6 +1988,10 @@ export type GetNCEStudentProfileQuery = {
     name: string,
     email: string,
     status: StudentStatus,
+    notificationsEnabled: boolean,
+    darkModeEnabled: boolean,
+    language: string,
+    isAdmin: boolean,
     createdAt: string,
     updatedAt: string,
     owner?: string | null,
@@ -1820,6 +2013,58 @@ export type ListNCEStudentProfilesQuery = {
       name: string,
       email: string,
       status: StudentStatus,
+      notificationsEnabled: boolean,
+      darkModeEnabled: boolean,
+      language: string,
+      isAdmin: boolean,
+      createdAt: string,
+      updatedAt: string,
+      owner?: string | null,
+    } | null >,
+    nextToken?: string | null,
+  } | null,
+};
+
+export type GetStudentProfileQueryVariables = {
+  id: string,
+};
+
+export type GetStudentProfileQuery = {
+  getStudentProfile?:  {
+    __typename: "StudentProfile",
+    id: string,
+    name: string,
+    email: string,
+    status: StudentStatus,
+    notificationsEnabled: boolean,
+    darkModeEnabled: boolean,
+    language: string,
+    isAdmin: boolean,
+    createdAt: string,
+    updatedAt: string,
+    owner?: string | null,
+  } | null,
+};
+
+export type ListStudentProfilesQueryVariables = {
+  filter?: ModelStudentProfileFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+};
+
+export type ListStudentProfilesQuery = {
+  listStudentProfiles?:  {
+    __typename: "ModelStudentProfileConnection",
+    items:  Array< {
+      __typename: "StudentProfile",
+      id: string,
+      name: string,
+      email: string,
+      status: StudentStatus,
+      notificationsEnabled: boolean,
+      darkModeEnabled: boolean,
+      language: string,
+      isAdmin: boolean,
       createdAt: string,
       updatedAt: string,
       owner?: string | null,
@@ -1994,32 +2239,6 @@ export type ListCoursesQuery = {
   } | null,
 };
 
-export type CoursesByCreatorQueryVariables = {
-  creator: string,
-  sortDirection?: ModelSortDirection | null,
-  filter?: ModelCourseFilterInput | null,
-  limit?: number | null,
-  nextToken?: string | null,
-};
-
-export type CoursesByCreatorQuery = {
-  coursesByCreator?:  {
-    __typename: "ModelCourseConnection",
-    items:  Array< {
-      __typename: "Course",
-      id: string,
-      title: string,
-      description?: string | null,
-      subject: CourseSubject,
-      difficulty?: string | null,
-      creator: string,
-      createdAt: string,
-      updatedAt: string,
-    } | null >,
-    nextToken?: string | null,
-  } | null,
-};
-
 export type GetModuleQueryVariables = {
   id: string,
 };
@@ -2060,32 +2279,6 @@ export type ListModulesQueryVariables = {
 
 export type ListModulesQuery = {
   listModules?:  {
-    __typename: "ModelModuleConnection",
-    items:  Array< {
-      __typename: "Module",
-      id: string,
-      title: string,
-      description?: string | null,
-      courseID: string,
-      createdAt: string,
-      updatedAt: string,
-      courseModulesId?: string | null,
-    } | null >,
-    nextToken?: string | null,
-  } | null,
-};
-
-export type ModulesByCourseIDAndIdQueryVariables = {
-  courseID: string,
-  id?: ModelIDKeyConditionInput | null,
-  sortDirection?: ModelSortDirection | null,
-  filter?: ModelModuleFilterInput | null,
-  limit?: number | null,
-  nextToken?: string | null,
-};
-
-export type ModulesByCourseIDAndIdQuery = {
-  modulesByCourseIDAndId?:  {
     __typename: "ModelModuleConnection",
     items:  Array< {
       __typename: "Module",
@@ -2161,33 +2354,6 @@ export type ListLessonsQuery = {
   } | null,
 };
 
-export type LessonsByModuleIDAndIdQueryVariables = {
-  moduleID: string,
-  id?: ModelIDKeyConditionInput | null,
-  sortDirection?: ModelSortDirection | null,
-  filter?: ModelLessonFilterInput | null,
-  limit?: number | null,
-  nextToken?: string | null,
-};
-
-export type LessonsByModuleIDAndIdQuery = {
-  lessonsByModuleIDAndId?:  {
-    __typename: "ModelLessonConnection",
-    items:  Array< {
-      __typename: "Lesson",
-      id: string,
-      title: string,
-      content?: string | null,
-      videoURL?: string | null,
-      moduleID: string,
-      createdAt: string,
-      updatedAt: string,
-      moduleLessonsId?: string | null,
-    } | null >,
-    nextToken?: string | null,
-  } | null,
-};
-
 export type GetExerciseQueryVariables = {
   id: string,
 };
@@ -2226,34 +2392,6 @@ export type ListExercisesQueryVariables = {
 
 export type ListExercisesQuery = {
   listExercises?:  {
-    __typename: "ModelExerciseConnection",
-    items:  Array< {
-      __typename: "Exercise",
-      id: string,
-      question: string,
-      solution?: string | null,
-      lessonID: string,
-      exerciseType: ExerciseType,
-      data?: string | null,
-      createdAt: string,
-      updatedAt: string,
-      lessonExercisesId?: string | null,
-    } | null >,
-    nextToken?: string | null,
-  } | null,
-};
-
-export type ExercisesByLessonIDAndIdQueryVariables = {
-  lessonID: string,
-  id?: ModelIDKeyConditionInput | null,
-  sortDirection?: ModelSortDirection | null,
-  filter?: ModelExerciseFilterInput | null,
-  limit?: number | null,
-  nextToken?: string | null,
-};
-
-export type ExercisesByLessonIDAndIdQuery = {
-  exercisesByLessonIDAndId?:  {
     __typename: "ModelExerciseConnection",
     items:  Array< {
       __typename: "Exercise",
@@ -2324,31 +2462,6 @@ export type ListQuizzesQuery = {
   } | null,
 };
 
-export type QuizzesByLessonIDAndIdQueryVariables = {
-  lessonID: string,
-  id?: ModelIDKeyConditionInput | null,
-  sortDirection?: ModelSortDirection | null,
-  filter?: ModelQuizFilterInput | null,
-  limit?: number | null,
-  nextToken?: string | null,
-};
-
-export type QuizzesByLessonIDAndIdQuery = {
-  quizzesByLessonIDAndId?:  {
-    __typename: "ModelQuizConnection",
-    items:  Array< {
-      __typename: "Quiz",
-      id: string,
-      title: string,
-      lessonID: string,
-      createdAt: string,
-      updatedAt: string,
-      lessonQuizzesId?: string | null,
-    } | null >,
-    nextToken?: string | null,
-  } | null,
-};
-
 export type GetQuestionQueryVariables = {
   id: string,
 };
@@ -2384,33 +2497,6 @@ export type ListQuestionsQueryVariables = {
 
 export type ListQuestionsQuery = {
   listQuestions?:  {
-    __typename: "ModelQuestionConnection",
-    items:  Array< {
-      __typename: "Question",
-      id: string,
-      text: string,
-      options?: string | null,
-      correctAnswer: string,
-      quizID: string,
-      createdAt: string,
-      updatedAt: string,
-      quizQuestionsId?: string | null,
-    } | null >,
-    nextToken?: string | null,
-  } | null,
-};
-
-export type QuestionsByQuizIDAndIdQueryVariables = {
-  quizID: string,
-  id?: ModelIDKeyConditionInput | null,
-  sortDirection?: ModelSortDirection | null,
-  filter?: ModelQuestionFilterInput | null,
-  limit?: number | null,
-  nextToken?: string | null,
-};
-
-export type QuestionsByQuizIDAndIdQuery = {
-  questionsByQuizIDAndId?:  {
     __typename: "ModelQuestionConnection",
     items:  Array< {
       __typename: "Question",
@@ -2469,6 +2555,165 @@ export type ListEnrollmentsQuery = {
   } | null,
 };
 
+export type CoursesByCreatorQueryVariables = {
+  creator: string,
+  sortDirection?: ModelSortDirection | null,
+  filter?: ModelCourseFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+};
+
+export type CoursesByCreatorQuery = {
+  coursesByCreator?:  {
+    __typename: "ModelCourseConnection",
+    items:  Array< {
+      __typename: "Course",
+      id: string,
+      title: string,
+      description?: string | null,
+      subject: CourseSubject,
+      difficulty?: string | null,
+      creator: string,
+      createdAt: string,
+      updatedAt: string,
+    } | null >,
+    nextToken?: string | null,
+  } | null,
+};
+
+export type ModulesByCourseIDAndIdQueryVariables = {
+  courseID: string,
+  id?: ModelIDKeyConditionInput | null,
+  sortDirection?: ModelSortDirection | null,
+  filter?: ModelModuleFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+};
+
+export type ModulesByCourseIDAndIdQuery = {
+  modulesByCourseIDAndId?:  {
+    __typename: "ModelModuleConnection",
+    items:  Array< {
+      __typename: "Module",
+      id: string,
+      title: string,
+      description?: string | null,
+      courseID: string,
+      createdAt: string,
+      updatedAt: string,
+      courseModulesId?: string | null,
+    } | null >,
+    nextToken?: string | null,
+  } | null,
+};
+
+export type LessonsByModuleIDAndIdQueryVariables = {
+  moduleID: string,
+  id?: ModelIDKeyConditionInput | null,
+  sortDirection?: ModelSortDirection | null,
+  filter?: ModelLessonFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+};
+
+export type LessonsByModuleIDAndIdQuery = {
+  lessonsByModuleIDAndId?:  {
+    __typename: "ModelLessonConnection",
+    items:  Array< {
+      __typename: "Lesson",
+      id: string,
+      title: string,
+      content?: string | null,
+      videoURL?: string | null,
+      moduleID: string,
+      createdAt: string,
+      updatedAt: string,
+      moduleLessonsId?: string | null,
+    } | null >,
+    nextToken?: string | null,
+  } | null,
+};
+
+export type ExercisesByLessonIDAndIdQueryVariables = {
+  lessonID: string,
+  id?: ModelIDKeyConditionInput | null,
+  sortDirection?: ModelSortDirection | null,
+  filter?: ModelExerciseFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+};
+
+export type ExercisesByLessonIDAndIdQuery = {
+  exercisesByLessonIDAndId?:  {
+    __typename: "ModelExerciseConnection",
+    items:  Array< {
+      __typename: "Exercise",
+      id: string,
+      question: string,
+      solution?: string | null,
+      lessonID: string,
+      exerciseType: ExerciseType,
+      data?: string | null,
+      createdAt: string,
+      updatedAt: string,
+      lessonExercisesId?: string | null,
+    } | null >,
+    nextToken?: string | null,
+  } | null,
+};
+
+export type QuizzesByLessonIDAndIdQueryVariables = {
+  lessonID: string,
+  id?: ModelIDKeyConditionInput | null,
+  sortDirection?: ModelSortDirection | null,
+  filter?: ModelQuizFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+};
+
+export type QuizzesByLessonIDAndIdQuery = {
+  quizzesByLessonIDAndId?:  {
+    __typename: "ModelQuizConnection",
+    items:  Array< {
+      __typename: "Quiz",
+      id: string,
+      title: string,
+      lessonID: string,
+      createdAt: string,
+      updatedAt: string,
+      lessonQuizzesId?: string | null,
+    } | null >,
+    nextToken?: string | null,
+  } | null,
+};
+
+export type QuestionsByQuizIDAndIdQueryVariables = {
+  quizID: string,
+  id?: ModelIDKeyConditionInput | null,
+  sortDirection?: ModelSortDirection | null,
+  filter?: ModelQuestionFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+};
+
+export type QuestionsByQuizIDAndIdQuery = {
+  questionsByQuizIDAndId?:  {
+    __typename: "ModelQuestionConnection",
+    items:  Array< {
+      __typename: "Question",
+      id: string,
+      text: string,
+      options?: string | null,
+      correctAnswer: string,
+      quizID: string,
+      createdAt: string,
+      updatedAt: string,
+      quizQuestionsId?: string | null,
+    } | null >,
+    nextToken?: string | null,
+  } | null,
+};
+
 export type OnCreateNCEStudentProfileSubscriptionVariables = {
   filter?: ModelSubscriptionNCEStudentProfileFilterInput | null,
   owner?: string | null,
@@ -2481,6 +2726,10 @@ export type OnCreateNCEStudentProfileSubscription = {
     name: string,
     email: string,
     status: StudentStatus,
+    notificationsEnabled: boolean,
+    darkModeEnabled: boolean,
+    language: string,
+    isAdmin: boolean,
     createdAt: string,
     updatedAt: string,
     owner?: string | null,
@@ -2499,6 +2748,10 @@ export type OnUpdateNCEStudentProfileSubscription = {
     name: string,
     email: string,
     status: StudentStatus,
+    notificationsEnabled: boolean,
+    darkModeEnabled: boolean,
+    language: string,
+    isAdmin: boolean,
     createdAt: string,
     updatedAt: string,
     owner?: string | null,
@@ -2517,6 +2770,76 @@ export type OnDeleteNCEStudentProfileSubscription = {
     name: string,
     email: string,
     status: StudentStatus,
+    notificationsEnabled: boolean,
+    darkModeEnabled: boolean,
+    language: string,
+    isAdmin: boolean,
+    createdAt: string,
+    updatedAt: string,
+    owner?: string | null,
+  } | null,
+};
+
+export type OnCreateStudentProfileSubscriptionVariables = {
+  filter?: ModelSubscriptionStudentProfileFilterInput | null,
+  owner?: string | null,
+};
+
+export type OnCreateStudentProfileSubscription = {
+  onCreateStudentProfile?:  {
+    __typename: "StudentProfile",
+    id: string,
+    name: string,
+    email: string,
+    status: StudentStatus,
+    notificationsEnabled: boolean,
+    darkModeEnabled: boolean,
+    language: string,
+    isAdmin: boolean,
+    createdAt: string,
+    updatedAt: string,
+    owner?: string | null,
+  } | null,
+};
+
+export type OnUpdateStudentProfileSubscriptionVariables = {
+  filter?: ModelSubscriptionStudentProfileFilterInput | null,
+  owner?: string | null,
+};
+
+export type OnUpdateStudentProfileSubscription = {
+  onUpdateStudentProfile?:  {
+    __typename: "StudentProfile",
+    id: string,
+    name: string,
+    email: string,
+    status: StudentStatus,
+    notificationsEnabled: boolean,
+    darkModeEnabled: boolean,
+    language: string,
+    isAdmin: boolean,
+    createdAt: string,
+    updatedAt: string,
+    owner?: string | null,
+  } | null,
+};
+
+export type OnDeleteStudentProfileSubscriptionVariables = {
+  filter?: ModelSubscriptionStudentProfileFilterInput | null,
+  owner?: string | null,
+};
+
+export type OnDeleteStudentProfileSubscription = {
+  onDeleteStudentProfile?:  {
+    __typename: "StudentProfile",
+    id: string,
+    name: string,
+    email: string,
+    status: StudentStatus,
+    notificationsEnabled: boolean,
+    darkModeEnabled: boolean,
+    language: string,
+    isAdmin: boolean,
     createdAt: string,
     updatedAt: string,
     owner?: string | null,

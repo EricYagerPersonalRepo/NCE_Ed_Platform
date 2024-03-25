@@ -1,6 +1,7 @@
 
-import { SignUpHooks, handleConfirmSignUpReturnType } from "@/src/types/SignUpTypes"
+import { SignUpHooksProps, handleConfirmSignUpReturnType } from "@/src/types/SignUpTypes"
 import { ConfirmSignUpInput, ConfirmSignUpOutput, SignUpOutput, confirmSignUp, signUp } from "aws-amplify/auth"
+import { CreateNCEStudentProfileInput, ModelNCEStudentProfileConditionInput } from "../API"
 
 /**
  * Array of allowed ZIP codes for the signup process.
@@ -42,7 +43,7 @@ export async function handleSignUpCall(username:any, password:any){
 }
 
 
-export async function handleSignUp(signUpHooks:SignUpHooks) {
+export async function handleSignUp(signUpHooks:SignUpHooksProps) {
     const username = signUpHooks.username
     const password = signUpHooks.password
 

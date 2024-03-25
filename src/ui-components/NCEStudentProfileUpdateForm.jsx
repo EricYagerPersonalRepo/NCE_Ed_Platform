@@ -11,6 +11,7 @@ import {
   Flex,
   Grid,
   SelectField,
+  SwitchField,
   TextField,
 } from "@aws-amplify/ui-react";
 import { fetchByPath, getOverrideProps, validateField } from "./utils";
@@ -34,10 +35,22 @@ export default function NCEStudentProfileUpdateForm(props) {
     name: "",
     email: "",
     status: "",
+    notificationsEnabled: false,
+    darkModeEnabled: false,
+    language: "",
+    isAdmin: false,
   };
   const [name, setName] = React.useState(initialValues.name);
   const [email, setEmail] = React.useState(initialValues.email);
   const [status, setStatus] = React.useState(initialValues.status);
+  const [notificationsEnabled, setNotificationsEnabled] = React.useState(
+    initialValues.notificationsEnabled
+  );
+  const [darkModeEnabled, setDarkModeEnabled] = React.useState(
+    initialValues.darkModeEnabled
+  );
+  const [language, setLanguage] = React.useState(initialValues.language);
+  const [isAdmin, setIsAdmin] = React.useState(initialValues.isAdmin);
   const [errors, setErrors] = React.useState({});
   const resetStateValues = () => {
     const cleanValues = nCEStudentProfileRecord
@@ -46,6 +59,10 @@ export default function NCEStudentProfileUpdateForm(props) {
     setName(cleanValues.name);
     setEmail(cleanValues.email);
     setStatus(cleanValues.status);
+    setNotificationsEnabled(cleanValues.notificationsEnabled);
+    setDarkModeEnabled(cleanValues.darkModeEnabled);
+    setLanguage(cleanValues.language);
+    setIsAdmin(cleanValues.isAdmin);
     setErrors({});
   };
   const [nCEStudentProfileRecord, setNCEStudentProfileRecord] = React.useState(
@@ -70,6 +87,10 @@ export default function NCEStudentProfileUpdateForm(props) {
     name: [{ type: "Required" }],
     email: [{ type: "Required" }, { type: "Email" }],
     status: [{ type: "Required" }],
+    notificationsEnabled: [{ type: "Required" }],
+    darkModeEnabled: [{ type: "Required" }],
+    language: [{ type: "Required" }],
+    isAdmin: [{ type: "Required" }],
   };
   const runValidationTasks = async (
     fieldName,
@@ -100,6 +121,10 @@ export default function NCEStudentProfileUpdateForm(props) {
           name,
           email,
           status,
+          notificationsEnabled,
+          darkModeEnabled,
+          language,
+          isAdmin,
         };
         const validationResponses = await Promise.all(
           Object.keys(validations).reduce((promises, fieldName) => {
@@ -163,6 +188,10 @@ export default function NCEStudentProfileUpdateForm(props) {
               name: value,
               email,
               status,
+              notificationsEnabled,
+              darkModeEnabled,
+              language,
+              isAdmin,
             };
             const result = onChange(modelFields);
             value = result?.name ?? value;
@@ -189,6 +218,10 @@ export default function NCEStudentProfileUpdateForm(props) {
               name,
               email: value,
               status,
+              notificationsEnabled,
+              darkModeEnabled,
+              language,
+              isAdmin,
             };
             const result = onChange(modelFields);
             value = result?.email ?? value;
@@ -215,6 +248,10 @@ export default function NCEStudentProfileUpdateForm(props) {
               name,
               email,
               status: value,
+              notificationsEnabled,
+              darkModeEnabled,
+              language,
+              isAdmin,
             };
             const result = onChange(modelFields);
             value = result?.status ?? value;
@@ -240,6 +277,128 @@ export default function NCEStudentProfileUpdateForm(props) {
           {...getOverrideProps(overrides, "statusoption1")}
         ></option>
       </SelectField>
+      <SwitchField
+        label="Notifications enabled"
+        defaultChecked={false}
+        isDisabled={false}
+        isChecked={notificationsEnabled}
+        onChange={(e) => {
+          let value = e.target.checked;
+          if (onChange) {
+            const modelFields = {
+              name,
+              email,
+              status,
+              notificationsEnabled: value,
+              darkModeEnabled,
+              language,
+              isAdmin,
+            };
+            const result = onChange(modelFields);
+            value = result?.notificationsEnabled ?? value;
+          }
+          if (errors.notificationsEnabled?.hasError) {
+            runValidationTasks("notificationsEnabled", value);
+          }
+          setNotificationsEnabled(value);
+        }}
+        onBlur={() =>
+          runValidationTasks("notificationsEnabled", notificationsEnabled)
+        }
+        errorMessage={errors.notificationsEnabled?.errorMessage}
+        hasError={errors.notificationsEnabled?.hasError}
+        {...getOverrideProps(overrides, "notificationsEnabled")}
+      ></SwitchField>
+      <SwitchField
+        label="Dark mode enabled"
+        defaultChecked={false}
+        isDisabled={false}
+        isChecked={darkModeEnabled}
+        onChange={(e) => {
+          let value = e.target.checked;
+          if (onChange) {
+            const modelFields = {
+              name,
+              email,
+              status,
+              notificationsEnabled,
+              darkModeEnabled: value,
+              language,
+              isAdmin,
+            };
+            const result = onChange(modelFields);
+            value = result?.darkModeEnabled ?? value;
+          }
+          if (errors.darkModeEnabled?.hasError) {
+            runValidationTasks("darkModeEnabled", value);
+          }
+          setDarkModeEnabled(value);
+        }}
+        onBlur={() => runValidationTasks("darkModeEnabled", darkModeEnabled)}
+        errorMessage={errors.darkModeEnabled?.errorMessage}
+        hasError={errors.darkModeEnabled?.hasError}
+        {...getOverrideProps(overrides, "darkModeEnabled")}
+      ></SwitchField>
+      <TextField
+        label="Language"
+        isRequired={true}
+        isReadOnly={false}
+        value={language}
+        onChange={(e) => {
+          let { value } = e.target;
+          if (onChange) {
+            const modelFields = {
+              name,
+              email,
+              status,
+              notificationsEnabled,
+              darkModeEnabled,
+              language: value,
+              isAdmin,
+            };
+            const result = onChange(modelFields);
+            value = result?.language ?? value;
+          }
+          if (errors.language?.hasError) {
+            runValidationTasks("language", value);
+          }
+          setLanguage(value);
+        }}
+        onBlur={() => runValidationTasks("language", language)}
+        errorMessage={errors.language?.errorMessage}
+        hasError={errors.language?.hasError}
+        {...getOverrideProps(overrides, "language")}
+      ></TextField>
+      <SwitchField
+        label="Is admin"
+        defaultChecked={false}
+        isDisabled={false}
+        isChecked={isAdmin}
+        onChange={(e) => {
+          let value = e.target.checked;
+          if (onChange) {
+            const modelFields = {
+              name,
+              email,
+              status,
+              notificationsEnabled,
+              darkModeEnabled,
+              language,
+              isAdmin: value,
+            };
+            const result = onChange(modelFields);
+            value = result?.isAdmin ?? value;
+          }
+          if (errors.isAdmin?.hasError) {
+            runValidationTasks("isAdmin", value);
+          }
+          setIsAdmin(value);
+        }}
+        onBlur={() => runValidationTasks("isAdmin", isAdmin)}
+        errorMessage={errors.isAdmin?.errorMessage}
+        hasError={errors.isAdmin?.hasError}
+        {...getOverrideProps(overrides, "isAdmin")}
+      ></SwitchField>
       <Flex
         justifyContent="space-between"
         {...getOverrideProps(overrides, "CTAFlex")}

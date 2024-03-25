@@ -56,19 +56,12 @@
                 "description": "devKey"
               },
               "authenticationType": "API_KEY"
-            },
-            {
-              "authenticationType": "AMAZON_COGNITO_USER_POOLS",
-              "userPoolConfig": {
-                "userPoolId": "authnceed07f38101"
-              }
             }
           ],
           "defaultAuthentication": {
-            "authenticationType": "AWS_LAMBDA",
-            "lambdaAuthorizerConfig": {
-              "lambdaFunction": "graphQlLambdaAuthorizer09c68778",
-              "ttlSeconds": "300"
+            "authenticationType": "AMAZON_COGNITO_USER_POOLS",
+            "userPoolConfig": {
+              "userPoolId": "authnceed07f38101"
             }
           }
         }

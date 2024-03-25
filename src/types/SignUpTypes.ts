@@ -51,7 +51,7 @@ export interface AuthenticatedHomeProps {
     isMobile: boolean;
 }
 
-export interface SignUpHooks {
+export interface SignUpHooksProps {
     id: string;
     setId: (value: string) => void;
     name: string;

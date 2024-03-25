@@ -5,8 +5,7 @@
  **************************************************************************/
 
 import * as React from "react";
-import { AutocompleteProps, GridProps, TextFieldProps } from "@aws-amplify/ui-react";
-import { CourseEnrollment } from "../API.ts";
+import { GridProps, SelectFieldProps, SwitchFieldProps, TextFieldProps } from "@aws-amplify/ui-react";
 export declare type EscapeHatchProps = {
     [elementHierarchy: string]: Record<string, unknown>;
 } | null;
@@ -23,27 +22,33 @@ export declare type ValidationResponse = {
 };
 export declare type ValidationFunction<T> = (value: T, validationResponse: ValidationResponse) => ValidationResponse | Promise<ValidationResponse>;
 export declare type StudentProfileCreateFormInputValues = {
-    cognitoUserID?: string;
     name?: string;
     email?: string;
-    birthdate?: string;
-    courseEnrollments?: CourseEnrollment[];
+    status?: string;
+    notificationsEnabled?: boolean;
+    darkModeEnabled?: boolean;
+    language?: string;
+    isAdmin?: boolean;
 };
 export declare type StudentProfileCreateFormValidationValues = {
-    cognitoUserID?: ValidationFunction<string>;
     name?: ValidationFunction<string>;
     email?: ValidationFunction<string>;
-    birthdate?: ValidationFunction<string>;
-    courseEnrollments?: ValidationFunction<CourseEnrollment>;
+    status?: ValidationFunction<string>;
+    notificationsEnabled?: ValidationFunction<boolean>;
+    darkModeEnabled?: ValidationFunction<boolean>;
+    language?: ValidationFunction<string>;
+    isAdmin?: ValidationFunction<boolean>;
 };
 export declare type PrimitiveOverrideProps<T> = Partial<T> & React.DOMAttributes<HTMLDivElement>;
 export declare type StudentProfileCreateFormOverridesProps = {
     StudentProfileCreateFormGrid?: PrimitiveOverrideProps<GridProps>;
-    cognitoUserID?: PrimitiveOverrideProps<TextFieldProps>;
     name?: PrimitiveOverrideProps<TextFieldProps>;
     email?: PrimitiveOverrideProps<TextFieldProps>;
-    birthdate?: PrimitiveOverrideProps<TextFieldProps>;
-    courseEnrollments?: PrimitiveOverrideProps<AutocompleteProps>;
+    status?: PrimitiveOverrideProps<SelectFieldProps>;
+    notificationsEnabled?: PrimitiveOverrideProps<SwitchFieldProps>;
+    darkModeEnabled?: PrimitiveOverrideProps<SwitchFieldProps>;
+    language?: PrimitiveOverrideProps<TextFieldProps>;
+    isAdmin?: PrimitiveOverrideProps<SwitchFieldProps>;
 } & EscapeHatchProps;
 export declare type StudentProfileCreateFormProps = React.PropsWithChildren<{
     overrides?: StudentProfileCreateFormOverridesProps | undefined | null;

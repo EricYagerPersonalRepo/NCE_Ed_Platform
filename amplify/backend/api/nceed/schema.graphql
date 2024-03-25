@@ -5,8 +5,23 @@ type NCEStudentProfile
   @auth(rules: [
     { allow: owner}
     { allow: groups, groups: ["Admins"], operations: [create, update, read, delete] }
-    { allow: custom }
+    { allow: groups, groups: ["Students"], operations: [create, update, read, delete] }
   ]){
+  id: ID!
+  name: String!
+  email: AWSEmail!
+  status: StudentStatus!
+  notificationsEnabled: Boolean!
+  darkModeEnabled: Boolean!
+  language: String!
+  isAdmin: Boolean!
+}
+
+type StudentProfile @model
+@auth(rules: [
+  { allow: owner}
+  { allow: groups, groups: ["Admins"], operations: [create, update, read, delete] }
+]){
   id: ID!
   name: String!
   email: AWSEmail!
@@ -22,7 +37,6 @@ type NCEUserSettings
   @auth(rules: [
     { allow: owner }
     { allow: groups, groups: ["Admins"], operations: [create, update, read, delete] }
-    { allow: custom }
   ]){
   id: ID!
   notificationsEnabled: Boolean!
@@ -38,7 +52,6 @@ type BroadcastNotification
 @auth(rules: [
   { allow: groups, groups: ["Admins"], operations: [create, update, read, delete] }
   { allow: groups, groups: ["Students"], operations: [update, read] }
-  { allow: custom }
 ]){
   id: ID!
   targetStudent: String

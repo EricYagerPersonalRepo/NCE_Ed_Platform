@@ -5,7 +5,7 @@
  **************************************************************************/
 
 import * as React from "react";
-import { GridProps, SelectFieldProps, TextFieldProps } from "@aws-amplify/ui-react";
+import { GridProps, SelectFieldProps, SwitchFieldProps, TextFieldProps } from "@aws-amplify/ui-react";
 export declare type EscapeHatchProps = {
     [elementHierarchy: string]: Record<string, unknown>;
 } | null;
@@ -25,11 +25,19 @@ export declare type NCEStudentProfileCreateFormInputValues = {
     name?: string;
     email?: string;
     status?: string;
+    notificationsEnabled?: boolean;
+    darkModeEnabled?: boolean;
+    language?: string;
+    isAdmin?: boolean;
 };
 export declare type NCEStudentProfileCreateFormValidationValues = {
     name?: ValidationFunction<string>;
     email?: ValidationFunction<string>;
     status?: ValidationFunction<string>;
+    notificationsEnabled?: ValidationFunction<boolean>;
+    darkModeEnabled?: ValidationFunction<boolean>;
+    language?: ValidationFunction<string>;
+    isAdmin?: ValidationFunction<boolean>;
 };
 export declare type PrimitiveOverrideProps<T> = Partial<T> & React.DOMAttributes<HTMLDivElement>;
 export declare type NCEStudentProfileCreateFormOverridesProps = {
@@ -37,6 +45,10 @@ export declare type NCEStudentProfileCreateFormOverridesProps = {
     name?: PrimitiveOverrideProps<TextFieldProps>;
     email?: PrimitiveOverrideProps<TextFieldProps>;
     status?: PrimitiveOverrideProps<SelectFieldProps>;
+    notificationsEnabled?: PrimitiveOverrideProps<SwitchFieldProps>;
+    darkModeEnabled?: PrimitiveOverrideProps<SwitchFieldProps>;
+    language?: PrimitiveOverrideProps<TextFieldProps>;
+    isAdmin?: PrimitiveOverrideProps<SwitchFieldProps>;
 } & EscapeHatchProps;
 export declare type NCEStudentProfileCreateFormProps = React.PropsWithChildren<{
     overrides?: NCEStudentProfileCreateFormOverridesProps | undefined | null;
