@@ -11,6 +11,10 @@ type NCEStudentProfile
   name: String!
   email: AWSEmail!
   status: StudentStatus!
+  notificationsEnabled: Boolean!
+  darkModeEnabled: Boolean!
+  language: String!
+  isAdmin: Boolean!
 }
 
 type NCEUserSettings 

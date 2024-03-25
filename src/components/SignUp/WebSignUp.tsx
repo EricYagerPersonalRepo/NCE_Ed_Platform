@@ -1,5 +1,5 @@
-import React, { useEffect } from 'react'
-import {  Grid, Container, Tabs, Tab, Modal } from '@mui/material'
+import React, { useEffect, useState } from 'react'
+import {  Grid, Container, Tabs, Tab, Modal, Button } from '@mui/material'
 import { useSignUpHooks } from '@/src/state/SignUpHooks'
 import { EmailInput, NameInput, PasswordInput, ZipInput,  SignUpTabItem, TwoFactorInput } from './Components'
 
@@ -23,6 +23,7 @@ import { EmailInput, NameInput, PasswordInput, ZipInput,  SignUpTabItem, TwoFact
  */
 const WebSignUp = () => {
     const signUpHooks = useSignUpHooks()
+    const [signUpButtonVisible, setSignUpButtonVisible] = useState(false)
 
     const handleTabChange:any = (event:any) => {
         console.log(event.target.innerHTML)
@@ -31,7 +32,6 @@ const WebSignUp = () => {
         event.target.innerHTML==="Confirm Signup" && signUpHooks.setTabValue(2)
         event.target.innerHTML==="Name" && signUpHooks.setTabValue(3)
         event.target.innerHTML==="Location" && signUpHooks.setTabValue(4)
-
     }
 
     // Updates the form's completion status based on the completion of individual steps.
@@ -42,6 +42,12 @@ const WebSignUp = () => {
             signUpHooks.setFormComplete(false)
         }
     }, [signUpHooks.nameComplete, signUpHooks.locationComplete])
+
+    useEffect(()=>{
+        if(signUpHooks.formComplete){
+            setSignUpButtonVisible(true)
+        }
+    }, [signUpHooks.formComplete])
 
 
     return (
@@ -106,6 +112,9 @@ const WebSignUp = () => {
                             signUpHooks={signUpHooks}
                         />
                     </form>
+                </Grid>
+                <Grid item xs={12} container justifyContent="center">
+                    {signUpButtonVisible && <Button onClick={(event)=>{console.log(event)}}>Sign Up</Button>}
                 </Grid>
             </Grid>
             
