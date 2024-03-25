@@ -60,14 +60,5 @@
       ]
     }
   },
-  "environmentVariableList": [
-    {
-      "cloudFormationParameterName": "apiNceedGraphqlapikeyoutputProd",
-      "environmentVariableName": "API_NCEED_GRAPHQLAPIKEYOUTPUT_PROD"
-    },
-    {
-      "cloudFormationParameterName": "apiNceedGraphqlapikeyoutputDev",
-      "environmentVariableName": "API_NCEED_GRAPHQLAPIKEYOUTPUT_DEV"
-    }
-  ]
+  "environmentVariableList": []
 }

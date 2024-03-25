@@ -67,12 +67,6 @@
     "storagenceEdAvatarsBucketName": {
       "Type": "String",
       "Default": "storagenceEdAvatarsBucketName"
-    },
-    "apiNceedGraphqlapikeyoutputProd": {
-      "Type": "String"
-    },
-    "apiNceedGraphqlapikeyoutputDev": {
-      "Type": "String"
     }
   },
   "Conditions": {
@@ -143,12 +137,6 @@
             },
             "STORAGE_NCEEDAVATARS_BUCKETNAME": {
               "Ref": "storagenceEdAvatarsBucketName"
-            },
-            "API_NCEED_GRAPHQLAPIKEYOUTPUT_PROD": {
-              "Ref": "apiNceedGraphqlapikeyoutputProd"
-            },
-            "API_NCEED_GRAPHQLAPIKEYOUTPUT_DEV": {
-              "Ref": "apiNceedGraphqlapikeyoutputDev"
             }
           }
         },

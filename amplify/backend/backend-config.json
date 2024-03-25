@@ -275,22 +275,6 @@
         }
       ]
     },
-    "AMPLIFY_function_nceed07f38101PostConfirmation_apiNceedGraphqlapikeyoutputDev": {
-      "usedBy": [
-        {
-          "category": "function",
-          "resourceName": "nceed07f38101PostConfirmation"
-        }
-      ]
-    },
-    "AMPLIFY_function_nceed07f38101PostConfirmation_apiNceedGraphqlapikeyoutputProd": {
-      "usedBy": [
-        {
-          "category": "function",
-          "resourceName": "nceed07f38101PostConfirmation"
-        }
-      ]
-    },
     "AMPLIFY_function_nceed07f38101PostConfirmation_deploymentBucketName": {
       "usedBy": [
         {
