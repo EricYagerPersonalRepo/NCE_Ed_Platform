@@ -53,12 +53,13 @@ const WebSignUp = ({router}) => {
 
     const onSignUpButtonClick = async() => {
         const studentProfileInput: CreateNCEStudentProfileInput = {
+            id: signUpHooks.id,
             name: signUpHooks.name,
             email: signUpHooks.username,
             status: StudentStatus.ACTIVE,
             notificationsEnabled: true,
             darkModeEnabled: false,
-            language: "EN",
+            language: "en",
             isAdmin: false,
         }
         

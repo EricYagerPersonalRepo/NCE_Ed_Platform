@@ -14,6 +14,7 @@ import { Hub } from 'aws-amplify/utils'
 import { getCurrentUser } from 'aws-amplify/auth'
 import { getPresignedUrl } from '@/src/functions/Amplify'
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { downloadAvatarFromS3 } from '@/src/functions/Storage'
 //import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
 const queryClient = new QueryClient()
@@ -79,6 +80,7 @@ const NCE_Education_App = ({ Component, pageProps }:any) => {
                 }
                 
                 setUserData(userDataResponse)
+                console.log(userData)
             }
         }
         getUserData()
@@ -108,10 +110,15 @@ const NCE_Education_App = ({ Component, pageProps }:any) => {
     useEffect(()=>{
         const avatarUrlResponse = async() => {
             try{
-                const currentUser = null//await getCurrentUser();
+                const currentUser = await getCurrentUser();
+                
+                console.log("USER: ", currentUser)
                 if(currentUser){
-                    const avatarFileName = `avatars/${currentUser.userId}/avatar.png`;
+                    const avatarFileName = `user_files/${currentUser.userId}/avatar.png`;
+                    const imageTest = await downloadAvatarFromS3(avatarFileName)
+                    console.log("IMAGE TEST: ", imageTest)
                     let presignedUrlResponse = await getPresignedUrl(avatarFileName)
+                    console.log("Presigned URL: ", presignedUrlResponse)
                     setAvatarUrl(presignedUrlResponse)
                 }
             }catch(error){

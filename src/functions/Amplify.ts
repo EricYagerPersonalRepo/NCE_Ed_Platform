@@ -15,13 +15,17 @@ import { getUrl } from "aws-amplify/storage";
  */
 
 export const getPresignedUrl = async (filename: string): Promise<string> => {
+    console.log("FILE: ", filename)
     try{
         const urlExists = await getUrl({
             key: filename,
             options: {
-                validateObjectExistence: true
+                validateObjectExistence: false,
+                accessLevel: "guest"
             }
         })
+
+        console.log("URL EXISTS: ", urlExists)
 
         const returnUrl = urlExists.url.href.toString()
 
@@ -34,7 +38,7 @@ export const getPresignedUrl = async (filename: string): Promise<string> => {
         
         else return("")
     }catch(presignedUrlCallError){
-        console.error(presignedUrlCallError)
+        console.error("Presigned URL call error: ", presignedUrlCallError)
         return ""
     }
 }

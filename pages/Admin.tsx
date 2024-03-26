@@ -1,7 +1,7 @@
-import { GetNCEUserSettingsQuery } from "@/src/API"
+import { GetNCEUserSettingsQuery, GetStudentProfileQuery } from "@/src/API"
 import { AdminHome } from "@/src/components/Admin"
 import { amplifyApiClient } from "@/src/functions/AuthX"
-import { getNCEUserSettings } from "@/src/graphql/queries"
+import { getNCEUserSettings, getStudentProfile } from "@/src/graphql/queries"
 import { GraphQLResult } from "aws-amplify/api"
 import React, { useEffect, useState } from "react"
 
@@ -9,15 +9,17 @@ const Admin = ({userData, isMobile}:any) => {
     const [isAdmin, setIsAdmin] = useState(false)
     const [loading, setLoading] = useState(true)
 
+    
+
     useEffect(()=>{
         if(userData.cognitoID!==""){
             const isAdmin = async() => {
                 try{
-                    let userSettingsPayload:GraphQLResult<GetNCEUserSettingsQuery> = await amplifyApiClient.graphql({
-                        query: getNCEUserSettings, 
+                    let userSettingsPayload:GraphQLResult<GetStudentProfileQuery> = await amplifyApiClient.graphql({
+                        query: getStudentProfile, 
                         variables: { id: userData.cognitoID }
                     })
-                    userSettingsPayload.data.getNCEUserSettings && setIsAdmin(userSettingsPayload.data.getNCEUserSettings?.isAdmin)
+                    userSettingsPayload.data.getStudentProfile && setIsAdmin(userSettingsPayload.data.getStudentProfile?.isAdmin)
                     setLoading(false)
                 }catch(error){
                     console.error(error)

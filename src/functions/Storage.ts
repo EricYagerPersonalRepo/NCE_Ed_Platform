@@ -1,4 +1,4 @@
-import { get } from "aws-amplify/api"
+import { get, put } from "aws-amplify/api"
 import { uploadData } from "aws-amplify/storage"
 
 /**
@@ -17,7 +17,7 @@ import { uploadData } from "aws-amplify/storage"
  */
 export async function uploadFileToS3(file:any, path = '') {
     try {
-        const result = await uploadData({
+        let result = await uploadData({
             key: path,
             data: file,
             options: {
@@ -26,14 +26,18 @@ export async function uploadFileToS3(file:any, path = '') {
                     if (totalBytes) {
                         console.log(
                             `Upload progress ${
-                            Math.round(transferredBytes / totalBytes) * 100
+                                Math.round(transferredBytes / totalBytes) * 100
                             } %`
                         )
                     }
                 }
             }
         }).result
-        return(result)
+
+        console.log(result)
+
+        if(result) return(result)
+
     } catch (error) {
         console.log('Error with file upload to S3: ', error)
         return(null)
@@ -54,13 +58,16 @@ export async function uploadFileToS3(file:any, path = '') {
  * @returns {void} - This function does not return a value. It logs the outcome of the GET operation.
  */
 export async function downloadAvatarFromS3(path:string) {
+    
     try {
         const restOperation = get({ 
-            apiName: 'avatarHandlerGateway',
+            apiName: 'avatarHandlerApiGateway',
             path: path
         });
     
         const response = await restOperation.response;
+        console.log("RESPONSE: ", response)
+        return(response)
     } catch (error) {
         console.log('downloadAvatarFromS3 error: GET call failed to retrieve avatar from S3: ', error);
     }

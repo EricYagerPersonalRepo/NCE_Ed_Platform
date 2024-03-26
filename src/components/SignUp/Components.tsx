@@ -248,17 +248,13 @@ export function TwoFactorInput({ signUpHooks }: { signUpHooks:ReturnType<typeof 
 
     return (
         <SignUpTabPanel value={signUpHooks.tabValue} index={2}>
-            <Grid container spacing={2}>
-                <Grid item xs={12} sm={4}>
-                    <TextField 
-                        fullWidth 
-                        label="TFA Code" 
-                        variant="standard" 
-                        autoFocus={signUpHooks.tabValue === 2}
-                        onChange={(event) => setConfirmationCode(event.target.value)}
-                    />
-                </Grid>
-            </Grid>
+            <TextField 
+                fullWidth 
+                label="TFA Code" 
+                variant="standard" 
+                autoFocus={signUpHooks.tabValue === 2}
+                onChange={(event) => setConfirmationCode(event.target.value)}
+            />
             <Button onClick={handleSubmit}>Submit</Button>
         </SignUpTabPanel>
     )

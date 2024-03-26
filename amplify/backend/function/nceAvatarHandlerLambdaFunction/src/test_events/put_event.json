@@ -1,6 +1,5 @@
 {
     "httpMethod": "PUT",
-    "path": "public/avatars/{userID}",
     "pathParameters": {
       "userID": "user123"
     },

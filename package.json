@@ -6,9 +6,9 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "test:putAvatar": "amplify mock function nceAvatarHandler --event src/test_events/put_event.json",
-    "test:getAvatar": "amplify mock function nceAvatarHandler --event src/test_events/get_event.json",
-    "test:deleteAvatar": "amplify mock function nceAvatarHandler --event src/test_events/delete_event.json",
+    "test:putAvatar": "amplify mock function nceAvatarHandlerLambdaFunction --event src/test_events/put_event.json",
+    "test:getAvatar": "amplify mock function nceAvatarHandlerLambdaFunction --event src/test_events/get_event.json",
+    "test:deleteAvatar": "amplify mock function nceAvatarHandlerLambdaFunction --event src/test_events/delete_event.json",
     "test:all_avatar_functions": "npm run test:putAvatar && npm run test:getAvatar && npm run test:deleteAvatar",
     "test:e2e": "npx cypress run --component && npx cypress run"
   },

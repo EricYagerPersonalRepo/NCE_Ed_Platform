@@ -1,14 +1,15 @@
 import React, { useEffect, useState } from 'react'
 import { generateClient } from "aws-amplify/api"
-import { getNCEStudentProfile, getNCEUserSettings } from '@/src/graphql/queries'
+import { getNCEStudentProfile, getNCEUserSettings, getStudentProfile } from '@/src/graphql/queries'
 import { Box, Tabs, Tab, FormControl, InputLabel, Select, MenuItem, Typography, Grid, Paper, Avatar, Button, TextField, FormControlLabel, Switch, CircularProgress } from '@mui/material'
 import { Course } from '@/src/types/StudentProfileTypes'
 import { uploadFileToS3 } from '@/src/functions/Storage'
 import { getCurrentUser } from 'aws-amplify/auth'
-import { updateNCEStudentProfile, updateNCEUserSettings } from '@/src/graphql/mutations'
+import { updateNCEStudentProfile, updateNCEUserSettings, updateStudentProfile } from '@/src/graphql/mutations'
 import { Cancel, CheckCircle } from '@mui/icons-material'
 import { green, red } from '@mui/material/colors'
 import { Router, useRouter } from 'next/router'
+import { StudentStatus } from '@/src/API'
 
 const amplifyApiClient = generateClient()
 
@@ -93,8 +94,20 @@ export const StudentCourseView = ({userID}:any) => {
  * 
  * @returns {JSX.Element} - A grid layout containing tabs for different sections of the user's account and the content of the selected tab.
  */
-export const UserAccountView = ({userID, avatarUrl, router}:any) => {
+export const UserAccountView = ({ avatarUrl, studentProfile, userSettings}:any) => {
     const [selectedTab, setSelectedTab] = useState(0)
+    const [studentProfileData, setStudentProfileData] = useState({
+        id: '',
+        email: '',
+        name: '',
+    })
+    const [userSettingsData, setUserSettingsData] = useState({
+        id: '',
+        darkModeEnabled: false,
+        language: 'en',
+        notificationsEnabled: false,
+        isAdmin: false,
+    })
 
     const handleTabChange = (event:any, newTabValue:any) => {
         setSelectedTab(newTabValue)
@@ -105,7 +118,7 @@ export const UserAccountView = ({userID, avatarUrl, router}:any) => {
         userSettings: 1,
         avatar: 2,
         notifications: 3,
-      }
+    }
 
     useEffect(() => {
         const handleHashChange = () => {
@@ -113,36 +126,44 @@ export const UserAccountView = ({userID, avatarUrl, router}:any) => {
             const tabIndex = tabNameToIndex[hash]
             if (tabIndex !== undefined) setSelectedTab(tabIndex)
         }
-
-        // Listen for hash changes
         window.addEventListener('hashchange', handleHashChange, false)
-        
-        // Call once on component mount in case there's already a hash
         handleHashChange()
-
-        // Cleanup
         return () => window.removeEventListener('hashchange', handleHashChange, false)
     }, [])
+
+    useEffect(() => {
+        if(studentProfile && userSettings){
+            console.log("student profile: ", studentProfile, "user settings: ", userSettings)
+            setStudentProfileData(studentProfile)
+            setUserSettingsData(userSettings)
+        }else{
+            return
+        }
+    }, [studentProfile, userSettings])
+
+    const updateHash = (hash) => {
+        window.location.hash = ""
+        window.location.hash += hash
+    }
 
     return (
         <Grid container spacing={2}>
             <Grid item xs={12}>
                 <Box sx={{ width: '100%', typography: 'body1' }}>
                     <Tabs value={selectedTab} onChange={handleTabChange} aria-label="settings tabs">
-                        <Tab label="Account Settings" />
-                        <Tab label="User Settings" />
-                        <Tab label="Avatar" />
-                        <Tab label="Notifications" />
+                        <Tab onClick={()=>{updateHash("#accountSettings")}} label="Account Settings" />
+                        <Tab onClick={()=>{updateHash("#userSettings")}} label="User Settings" />
+                        <Tab onClick={()=>{updateHash("#avatar")}} label="Avatar" />
+                        <Tab onClick={()=>{updateHash("#notifications")}} label="Notifications" />
                     </Tabs>
                 </Box>
                 <Grid item xs={12}>
                     <Paper elevation={3} style={{ padding: 20, width: '100%' }}>
                         {selectedTab === 0 && (
-                            <AccountSettingsComponent userID={userID} />
-
+                            <StudentProfileComponent userSettings={userSettingsData} studentProfile={studentProfileData} />
                         )}
                         {selectedTab === 1 && (
-                            <UserSettingsComponent userID={userID}/>
+                            <UserSettingsComponent userSettings={userSettingsData} studentProfile={studentProfileData}/>
                         )}
                         {selectedTab === 2 && (
                             <AvatarManager avatarUrl={avatarUrl}/>
@@ -157,23 +178,18 @@ export const UserAccountView = ({userID, avatarUrl, router}:any) => {
     )
 }
 
-/**
- * UserSettingsComponent - Manages the display and update of user settings.
- * 
- * This component is responsible for fetching and displaying the current user's settings, such as name, email, and birthdate, 
- * based on the provided userID. Users can update their settings, which are then persisted to the backend via a GraphQL API call. 
- * The component initially fetches the user's settings and displays them in form fields, allowing for modifications. Changes are 
- * applied by invoking a separate API call to update the backend, ensuring the user's settings are always current and accurately reflected.
- * 
- * @param {any} userID - The unique identifier for the user whose settings are to be managed.
- * 
- * @returns {JSX.Element} - A form that displays and allows for the modification of the user's settings.
- */
-export const UserSettingsComponent = ({userID}:any) => {
-    const [userSettings, setUserSettings] = useState({
-        id:userID,
+export const StudentProfileComponent = ({userSettings, studentProfile}:any) => {
+    const [studentProfileData, setStudentProfileData] = useState({
+        id:'',
         email: '',
         name: '',
+    })
+    const [userSettingsData, setUserSettingsData] = useState({
+        id: '',
+        darkModeEnabled: false,
+        language: 'en',
+        notificationsEnabled: false,
+        isAdmin: false,
     })
     const [loading, setLoading] = useState(true)
     const [saveChangesLoading, setSaveChangesLoading] = useState(false)
@@ -181,68 +197,40 @@ export const UserSettingsComponent = ({userID}:any) => {
     const [saveErrorText, setSaveErrorText] = useState("")
 
     useEffect(() => {
-        const checkAndSetUserSettings = async () => {
-            try{
-                if(userID){
-                    const apiCall = await amplifyApiClient.graphql({
-                        query: getNCEStudentProfile, 
-                        variables: { id: userID }
-                    })
-
-                    if(apiCall.data.getNCEStudentProfile) {
-                        setUserSettings({
-                            id: userID,
-                            email: apiCall.data.getNCEStudentProfile.email,
-                            name: apiCall.data.getNCEStudentProfile.name,
-                        })
-                        setLoading(false)
-                    }
-                    else {
-                        console.error("User settings don't exist")
-                    }
-                }
-            }catch(error){
-                console.error(error)
-                return false
-            }
+        if(studentProfile && userSettings){
+            setStudentProfileData(studentProfile)
+            setUserSettingsData(userSettings)
+            setLoading(false)
+        }else{
+            return
         }
+    }, [studentProfile, userSettings])
 
-        (async () => {
-            try{
-                checkAndSetUserSettings()
-            }catch(error){
-                console.error(error)
+    const handleChange = async () => {
+        setSaveChangesLoading(true);
+        try {
+            const updatedStudentProfile = {
+                ...studentProfileData,
+                // Include other fields as necessary
+            };
+            const updateCall = await amplifyApiClient.graphql({
+                query: updateStudentProfile,
+                variables: { input: updatedStudentProfile }
+            });
+            if (updateCall !== null) {
+                setStudentProfileData({
+                    id: updateCall.data.updateStudentProfile.id,
+                    email: updateCall.data.updateStudentProfile.email,
+                    name: updateCall.data.updateStudentProfile.name,
+                });
+                // Optionally, update userSettings state if necessary
             }
-        })()
-    }, [userID])
-
-    const handleChange = () => {
-        setSaveChangesLoading(true)
-        const accountSettingsUpdateCall = async() => {
-            try {
-                const updateCall = await amplifyApiClient.graphql({
-                    query: updateNCEStudentProfile,
-                    variables: { input: userSettings }
-                })
-                return(updateCall)
-            } catch (userSettingsUpdateError) {
-                console.log('Error Creating User Settings:', userSettingsUpdateError)
-                return(null)
-            }
-        }
-        try{
-            const updateCall = accountSettingsUpdateCall()
-            if(updateCall !== null) {
-                setTimeout(() => {
-                    setSaveChangesLoading(false)
-                }, 1250)
-            } else {
-                setSaveChangesLoading(false)
-            }
-        }catch(error:any){
-            setSaveErrorText(error)
-            setSaveChangesLoading(false)
-            setSaveError(true)
+            setSaveChangesLoading(false);
+        } catch (error) {
+            console.error('Error Updating User Settings:', error);
+            setSaveChangesLoading(false);
+            setSaveErrorText(error.message || 'An error occurred');
+            setSaveError(true);
         }
     }
 
@@ -263,8 +251,8 @@ export const UserSettingsComponent = ({userID}:any) => {
                     name="name"
                     variant="outlined"
                     margin="normal"
-                    value={userSettings.name}
-                    onChange={(event)=>setUserSettings({...userSettings, name:event.target.value})}
+                    value={studentProfileData.name}
+                    onChange={(event)=>setStudentProfileData({...studentProfileData, name: event.target.value})}
                 />
                 <TextField
                     fullWidth
@@ -273,22 +261,22 @@ export const UserSettingsComponent = ({userID}:any) => {
                     type="email"
                     variant="outlined"
                     margin="normal"
-                    value={userSettings.email}
+                    value={studentProfileData.email}
                     disabled
                 />
                 <Button
                     variant="contained"
                     color="primary"
-                    onClick={()=>handleChange()}
+                    onClick={handleChange}
                     sx={{ mt: 3, mb: 2 }}
                 >
                     Save Changes 
-                    {saveChangesLoading ? (
+                </Button>
+                {saveChangesLoading ? (
                     <CircularProgress size={24} />
                     ) : (
                     <SaveStatusIndicator />
                 )}
-                </Button>
                 {saveErrorText!=="" && <Typography variant="caption" color="red">{saveErrorText}</Typography>}
                 
 
@@ -297,109 +285,69 @@ export const UserSettingsComponent = ({userID}:any) => {
     )
 }
 
-/**
- * AccountSettingsComponent - Manages the display and update of account-related settings.
- * 
- * This component is designed to allow users to manage their account settings, including toggling dark mode,
- * selecting a language preference, enabling or disabling notifications, and viewing admin status. 
- * It fetches the current settings from a GraphQL API upon component mount, using the provided userID, and 
- * updates the UI accordingly. Users can modify their settings via interactive form elements, and changes are 
- * persisted to the backend through another GraphQL API call. This ensures that account settings are consistent 
- * across sessions and devices. The component provides immediate visual feedback for changes and handles loading 
- * states and potential errors gracefully.
- * 
- * @param {any} userID - The unique identifier for the user whose account settings are being managed.
- * 
- * @returns {JSX.Element} - A set of form controls for updating user account settings, including dark mode preference, 
- * language selection, notifications toggle, and admin status indication.
- */
-export const AccountSettingsComponent = ({userID}:any) => {
-    const [accountSettings, setAccountSettings] = useState({
-        id:userID,
+export const UserSettingsComponent = ({ userSettings, studentProfile }) => {
+    const [studentProfileData, setStudentProfileData] = useState({
+        id:'',
+        email: '',
+        name: '',
+    })
+    const [userSettingsData, setUserSettingsData] = useState({
+        id: '',
         darkModeEnabled: false,
         language: 'en',
         notificationsEnabled: false,
-        isAdmin: false
+        isAdmin: false,
     })
+
     const [loading, setLoading] = useState(true)
 
     useEffect(() => {
-        const checkAndSetAccountSettings = async () => {
-            try{
-                if(userID){
-                    const apiCall = await amplifyApiClient.graphql({
-                        query: getNCEUserSettings, 
-                        variables: { id: userID }
-                    })
-
-                    if(apiCall.data.getNCEUserSettings) {
-                        setAccountSettings({
-                            id: apiCall.data.getNCEUserSettings.id,
-                            darkModeEnabled: apiCall.data.getNCEUserSettings.darkModeEnabled,
-                            language: apiCall.data.getNCEUserSettings.language,
-                            notificationsEnabled: apiCall.data.getNCEUserSettings.notificationsEnabled,
-                            isAdmin: apiCall.data.getNCEUserSettings.isAdmin,
-                        })
-                        setLoading(false)
-                    }
-                    else {
-                        console.error("User settings don't exist")
-                    }
-                }
-            }catch(error){
-                console.error(error)
-                return false
-            }
+        if (studentProfile && userSettings) {
+            console.log("User Settings: ", userSettings)
+            setUserSettingsData(userSettings)
+            setStudentProfileData(studentProfile)
+            setLoading(false)
+        } else {
+            return
         }
+    }, [studentProfile, userSettings])
 
-        (async () => {
-            try{
-                checkAndSetAccountSettings()
-            }catch(error){
-                console.error(error)
-            }
-        })()
-    }, [userID])
-
-    const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const handleChange = async (event) => {
         const { name, value, checked, type } = event.target
         const updatedValue = type === 'checkbox' ? checked : value
 
-        const accountSettingsUpdateCall = async() => {
-            try {
-                const updatedSettings = {
-                    ...accountSettings,
-                    [name]: updatedValue,
-                }
-                let apiCall = await amplifyApiClient.graphql({
-                    query: updateNCEUserSettings,
-                    variables: { input: updatedSettings }
-                })
-
-                if(apiCall) {
-                    setAccountSettings({
-                        id:apiCall.data.updateNCEUserSettings.id,
-                        darkModeEnabled: apiCall.data.updateNCEUserSettings.darkModeEnabled,
-                        language: apiCall.data.updateNCEUserSettings.language,
-                        notificationsEnabled: apiCall.data.updateNCEUserSettings.notificationsEnabled,
-                        isAdmin: apiCall.data.updateNCEUserSettings.isAdmin
-                    })
-                    setLoading(false)
-                }
-            } catch (userSettingsUpdateError) {
-                console.log('Error Creating User Settings:', userSettingsUpdateError)
+        try {
+            const updatedSettings = {
+                ...studentProfileData,
+                ...userSettingsData,
+                [name]: updatedValue,
             }
+            const response = await amplifyApiClient.graphql({
+                query: updateStudentProfile,
+                variables: { input: updatedSettings },
+            })
+
+            if (response) {
+                setUserSettingsData({
+                    id: response.data.updateStudentProfile.id,
+                    darkModeEnabled: response.data.updateStudentProfile.darkModeEnabled,
+                    language: response.data.updateStudentProfile.language,
+                    notificationsEnabled: response.data.updateStudentProfile.notificationsEnabled,
+                    isAdmin: response.data.updateStudentProfile.isAdmin,
+                })
+            }
+        } catch (userSettingsUpdateError) {
+            console.log('Error Updating User Settings:', userSettingsUpdateError)
         }
-        accountSettingsUpdateCall()
     }
 
-    return (
-        !loading && (
-            <><div style={{ marginBottom: 16 }}>
+    return !loading && (
+        <>
+            <div style={{ marginBottom: 16 }}>
                 <FormControlLabel
                     control={
                         <Switch
-                            checked={accountSettings.darkModeEnabled ? accountSettings.darkModeEnabled : false}
+                            checked={userSettingsData.darkModeEnabled}
                             onChange={handleChange}
                             name="darkModeEnabled"
                             color="primary"
@@ -412,24 +360,23 @@ export const AccountSettingsComponent = ({userID}:any) => {
                 <TextField
                     select
                     label="Language"
-                    value={accountSettings.language}
+                    value={userSettingsData.language}
                     onChange={handleChange}
                     name="language"
                     variant="outlined"
                     size="small"
                     fullWidth
                 >
-                    <MenuItem value="en">English</MenuItem>
-                    <MenuItem value="es">Spanish</MenuItem>
-                    <MenuItem value="fr">French</MenuItem>
-                    {/* Add more language options as needed */}
+                    {['en', 'es', 'fr'].map((lang) => (
+                        <MenuItem key={lang} value={lang}>{lang}</MenuItem>
+                    ))}
                 </TextField>
             </div>
             <div style={{ marginBottom: 16 }}>
                 <FormControlLabel
                     control={
                         <Switch
-                            checked={accountSettings.notificationsEnabled ? accountSettings.notificationsEnabled : false}
+                            checked={userSettingsData.notificationsEnabled}
                             onChange={handleChange}
                             name="notificationsEnabled"
                             color="primary"
@@ -437,8 +384,8 @@ export const AccountSettingsComponent = ({userID}:any) => {
                     }
                     label="Allow Notifications"
                 />
-            </div></>
-        )
+            </div>
+        </>
     )
 }
 
@@ -466,7 +413,7 @@ export const AvatarManager = ({ avatarUrl }:any) => {
             email: currentUser.signInDetails?.loginId || '',
             cognitoID: currentUser.userId
         }
-        const avatarTarget = `avatars/${userDataResponse.cognitoID}/avatar.png`
+        const avatarTarget = `user_files/${userDataResponse.cognitoID}/avatar.png`
 
         if (!file) return
         

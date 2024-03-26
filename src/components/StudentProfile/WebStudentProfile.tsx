@@ -1,6 +1,9 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Button, Grid, List, ListItem, Typography } from '@mui/material'
 import { UserAccountView } from './StudentProfileComponents'
+import { amplifyApiClient } from '@/src/functions/AuthX'
+import { updateNCEStudentProfile } from '@/src/graphql/mutations'
+import { getStudentProfile } from '@/src/graphql/queries'
 
 /**
  * WebStudentProfile Component - Manages and displays the student profile interface within a web application.
@@ -20,19 +23,42 @@ import { UserAccountView } from './StudentProfileComponents'
  *                          selected view's content.
  */
 
-const WebStudentProfile = ({ userID, avatarUrl, router }: any) => {
+const WebStudentProfile = ({ userID, avatarUrl, studentProfile, userSettings }) => {
     const [activeView, setActiveView] = useState('Account')
+    const [studentProfileData, setStudentProfileData] = useState({
+        id: '',
+        email: '',
+        name: '',
+    })
+    const [userSettingsData, setUserSettingsData] = useState({
+        id: '',
+        darkModeEnabled: false,
+        language: 'en',
+        notificationsEnabled: false,
+        isAdmin: false,
+    })
 
-    const handleMenuClick = (view: string) => {
+    
+    const handleMenuClick = (view) => {
         setActiveView(view)
     }
+
+    useEffect(() => {
+        if(studentProfile && userSettings){
+            setStudentProfileData(studentProfile)
+            setUserSettingsData(userSettings)
+        }else{
+            return
+        }
+    }, [studentProfile, userSettings])
 
     const renderActiveView = () => {
         switch (activeView) {
             case 'Account':
-                return <UserAccountView userID={userID} avatarUrl={avatarUrl}/>
-            /*case 'My Courses':
-                return <StudentCourseView />*/
+                return <UserAccountView userID={userID} avatarUrl={avatarUrl} studentProfile={studentProfileData} userSettings={userSettingsData} />
+            case 'My Courses':
+                // return <StudentCourseView />
+                break
             default:
                 return <div>Welcome to Your Dashboard</div>
         }
@@ -48,7 +74,7 @@ const WebStudentProfile = ({ userID, avatarUrl, router }: any) => {
                     {['Account', 'My Courses'].map((text) => (
                         <ListItem key={text} disablePadding>
                             <Button
-                                fullWidth 
+                                fullWidth
                                 onClick={() => handleMenuClick(text)}
                                 style={{ 
                                     justifyContent: "flex-start",
@@ -63,13 +89,11 @@ const WebStudentProfile = ({ userID, avatarUrl, router }: any) => {
                     ))}
                 </List>
             </Grid>
-
             <Grid item xs={10} style={{ padding: '20px' }}>
                 {renderActiveView()}
             </Grid>
         </Grid>
     )
-
 }
 
 export default WebStudentProfile

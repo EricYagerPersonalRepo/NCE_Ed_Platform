@@ -1,4 +1,12 @@
-const AWS = require('aws-sdk');
+/* Amplify Params - DO NOT EDIT
+	API_NCEED_GRAPHQLAPIENDPOINTOUTPUT
+	API_NCEED_GRAPHQLAPIIDOUTPUT
+	API_NCEED_GRAPHQLAPIKEYOUTPUT
+	AUTH_NCEED07F38101_USERPOOLID
+	ENV
+	REGION
+	STORAGE_NCEEDAVATARS_BUCKETNAME
+Amplify Params - DO NOT EDIT */const AWS = require('aws-sdk');
 const S3 = new AWS.S3();
 const { getCache, setCache } = require('./cache');
 
@@ -24,16 +32,14 @@ exports.handler = async (event) => {
 async function handleGetRequest(userID) {
     let avatar;
     try {
-        avatar = await getCache(userID);
-        if (!avatar) {
-            const s3Response = await S3.getObject({
-                Bucket: 'nce-ed-avatars60353-dev',
-                Key: `public/user_files/${userID}/avatar.png`,
-            }).promise();
+        const objectKey = `public/user_files/${userID}/avatar.png`;
+        const s3Response = await S3.getObject({
+            Bucket: 'nce-ed-avatar-bucket212417-staging',
+            Key: objectKey,
+        }).promise();
+        console.log(s3Response)
 
-            avatar = s3Response.Body;
-            await setCache(userID, avatar);
-        }
+        avatar = s3Response.Body;
 
         return {
             statusCode: 200,
@@ -56,8 +62,8 @@ async function handlePutRequest(event, userID) {
         await S3.putObject({
             Bucket: 'nce-ed-avatar-bucket212417-staging',
             Key: objectKey,
-            Body: Buffer.from(imageData, 'base64'), // Convert base64 to binary
-            ContentType: 'image/png',
+            Body: Buffer.from(imageData, 'base64'),
+            ContentType: '*',
         }).promise();
 
         return {

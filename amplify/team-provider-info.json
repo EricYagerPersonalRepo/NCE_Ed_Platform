@@ -72,7 +72,7 @@
       "function": {
         "nceAvatarHandlerLambdaFunction": {
           "deploymentBucketName": "amplify-nceed-dev-60353-deployment",
-          "s3Key": "amplify-builds/nceAvatarHandlerLambdaFunction-756d74386f524255664d-build.zip"
+          "s3Key": "amplify-builds/nceAvatarHandlerLambdaFunction-39386657384e3855646c-build.zip"
         },
         "nceed07f38101PostConfirmation": {
           "GROUP": "Students",

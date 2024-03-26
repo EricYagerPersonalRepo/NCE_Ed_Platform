@@ -31,6 +31,10 @@
     "storagenceEdAvatarsBucketName": {
       "Type": "String",
       "Default": "storagenceEdAvatarsBucketName"
+    },
+    "apinceedGraphQLAPIKeyOutput": {
+      "Type": "String",
+      "Default": "apinceedGraphQLAPIKeyOutput"
     }
   },
   "Conditions": {
@@ -97,6 +101,9 @@
             },
             "STORAGE_NCEEDAVATARS_BUCKETNAME": {
               "Ref": "storagenceEdAvatarsBucketName"
+            },
+            "API_NCEED_GRAPHQLAPIKEYOUTPUT": {
+              "Ref": "apinceedGraphQLAPIKeyOutput"
             }
           }
         },
