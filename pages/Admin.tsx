@@ -9,8 +9,6 @@ const Admin = ({userData, isMobile}:any) => {
     const [isAdmin, setIsAdmin] = useState(false)
     const [loading, setLoading] = useState(true)
 
-    
-
     useEffect(()=>{
         if(userData.cognitoID!==""){
             const isAdmin = async() => {

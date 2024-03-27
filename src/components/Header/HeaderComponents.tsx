@@ -185,8 +185,11 @@ export const UserAccountButtons_Web = ({ avatarUrl }: any) => {
      * read and notification count
      */
     const handleNotificationClickEvent = async(notificationID:string) => {
+        console.log("Click event: ", notificationID)
         const notifications:any = await fetchNotifications()
-        notifications && markNotificationAsRead(notificationID)
+        console.log("click event call: ", notifications)
+        markNotificationAsRead(notificationID)
+        //notifications && markNotificationAsRead(notificationID)
         setRefreshSwitch(!refreshSwitch)
     }
 
@@ -276,7 +279,7 @@ export const UserAccountButtons_Web = ({ avatarUrl }: any) => {
                     onClose={handleNotificationsClose}
                     sx={{width: 300}}
                 >
-                    {notificationsLength > 0 && notifications.map((notification:any, index) => (
+                    {notifications.map((notification:any, index) => (
                         <MenuItem 
                             key={index} 
                             sx={{ 

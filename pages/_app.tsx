@@ -131,19 +131,17 @@ const NCE_Education_App = ({ Component, pageProps }:any) => {
 
     return (
         <QueryClientProvider client={queryClient}>
-            {/*<AuthProvider>*/}
-                <Head>
-                    <title>NCE Education App</title>
-                </Head>
-                <ThemeProvider theme={studioTheme}>
-                    {
-                        loggedIn ? <Header loggedIn={loggedIn} avatarUrl={avatarUrl} userData={userData} isMobile={isMobile} />
-                        :
-                        <Header />
-                    }
-                    <Component {...pageProps} loggedIn={loggedIn} avatarUrl={avatarUrl} userData={userData} isMobile={isMobile} router={router}/>
-                </ThemeProvider>
-            {/*</AuthProvider>*/}
+            <Head>
+                <title>NCE Education App</title>
+            </Head>
+            <ThemeProvider theme={studioTheme}>
+                {
+                    loggedIn ? <Header loggedIn={loggedIn} avatarUrl={avatarUrl} userData={userData} isMobile={isMobile} />
+                    :
+                    <Header />
+                }
+                <Component {...pageProps} loggedIn={loggedIn} avatarUrl={avatarUrl} userData={userData} isMobile={isMobile} router={router}/>
+            </ThemeProvider>
         </QueryClientProvider>
     )
 }
