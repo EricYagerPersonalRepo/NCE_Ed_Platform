@@ -7,6 +7,15 @@ describe('SignUp Page Basic Test', () => {
       // Check if the SignUp form is present
       cy.get('#sign-up').should('exist').log('Sign-up container is present')
       cy.get('form').should('exist').log('SignUp form is present')
+      /* ==== Generated with Cypress Studio ==== */
+      cy.get('#standard-adornment-name-noerror').type('eric.p.yager@gmail.com');
+      cy.get('.MuiInputAdornment-root > .MuiButtonBase-root').click();
+      cy.get('#standard-adornment-password').clear();
+      cy.get('#standard-adornment-password').type('$ocAdmin12');
+      cy.get('#standard-adornment-confirm-password').clear();
+      cy.get('#standard-adornment-confirm-password').type('$ocAdmin12');
+      cy.get(':nth-child(3) > .MuiButtonBase-root').click();
+      /* ==== End Cypress Studio ==== */
   })
 })
 

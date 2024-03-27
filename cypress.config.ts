@@ -21,6 +21,7 @@ export default defineConfig({
   },
 
   e2e: {
+    experimentalStudio: true,
     setupNodeEvents(on, config) {},
     reporter: 'mochawesome',
     reporterOptions: {
