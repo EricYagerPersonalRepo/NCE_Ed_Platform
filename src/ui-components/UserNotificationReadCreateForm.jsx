@@ -25,20 +25,24 @@ export default function UserNotificationReadCreateForm(props) {
   const initialValues = {
     notificationID: "",
     readAt: "",
+    readBy: "",
   };
   const [notificationID, setNotificationID] = React.useState(
     initialValues.notificationID
   );
   const [readAt, setReadAt] = React.useState(initialValues.readAt);
+  const [readBy, setReadBy] = React.useState(initialValues.readBy);
   const [errors, setErrors] = React.useState({});
   const resetStateValues = () => {
     setNotificationID(initialValues.notificationID);
     setReadAt(initialValues.readAt);
+    setReadBy(initialValues.readBy);
     setErrors({});
   };
   const validations = {
     notificationID: [{ type: "Required" }],
     readAt: [],
+    readBy: [{ type: "Required" }],
   };
   const runValidationTasks = async (
     fieldName,
@@ -85,6 +89,7 @@ export default function UserNotificationReadCreateForm(props) {
         let modelFields = {
           notificationID,
           readAt,
+          readBy,
         };
         const validationResponses = await Promise.all(
           Object.keys(validations).reduce((promises, fieldName) => {
@@ -149,6 +154,7 @@ export default function UserNotificationReadCreateForm(props) {
             const modelFields = {
               notificationID: value,
               readAt,
+              readBy,
             };
             const result = onChange(modelFields);
             value = result?.notificationID ?? value;
@@ -176,6 +182,7 @@ export default function UserNotificationReadCreateForm(props) {
             const modelFields = {
               notificationID,
               readAt: value,
+              readBy,
             };
             const result = onChange(modelFields);
             value = result?.readAt ?? value;
@@ -189,6 +196,32 @@ export default function UserNotificationReadCreateForm(props) {
         errorMessage={errors.readAt?.errorMessage}
         hasError={errors.readAt?.hasError}
         {...getOverrideProps(overrides, "readAt")}
+      ></TextField>
+      <TextField
+        label="Read by"
+        isRequired={true}
+        isReadOnly={false}
+        value={readBy}
+        onChange={(e) => {
+          let { value } = e.target;
+          if (onChange) {
+            const modelFields = {
+              notificationID,
+              readAt,
+              readBy: value,
+            };
+            const result = onChange(modelFields);
+            value = result?.readBy ?? value;
+          }
+          if (errors.readBy?.hasError) {
+            runValidationTasks("readBy", value);
+          }
+          setReadBy(value);
+        }}
+        onBlur={() => runValidationTasks("readBy", readBy)}
+        errorMessage={errors.readBy?.errorMessage}
+        hasError={errors.readBy?.hasError}
+        {...getOverrideProps(overrides, "readBy")}
       ></TextField>
       <Flex
         justifyContent="space-between"

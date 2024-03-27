@@ -274,6 +274,7 @@ export const createUserNotificationRead = /* GraphQL */ `mutation CreateUserNoti
     id
     notificationID
     readAt
+    readBy
     createdAt
     updatedAt
     __typename
@@ -291,6 +292,7 @@ export const updateUserNotificationRead = /* GraphQL */ `mutation UpdateUserNoti
     id
     notificationID
     readAt
+    readBy
     createdAt
     updatedAt
     __typename
@@ -308,6 +310,7 @@ export const deleteUserNotificationRead = /* GraphQL */ `mutation DeleteUserNoti
     id
     notificationID
     readAt
+    readBy
     createdAt
     updatedAt
     __typename

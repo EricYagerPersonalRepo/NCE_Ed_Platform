@@ -71,6 +71,7 @@ type UserNotificationRead
   id: ID!
   notificationID: ID!
   readAt: AWSDateTime
+  readBy: ID!
 }
 
 enum NotificationType {

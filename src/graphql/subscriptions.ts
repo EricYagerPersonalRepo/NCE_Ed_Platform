@@ -270,6 +270,7 @@ export const onCreateUserNotificationRead = /* GraphQL */ `subscription OnCreate
     id
     notificationID
     readAt
+    readBy
     createdAt
     updatedAt
     __typename
@@ -286,6 +287,7 @@ export const onUpdateUserNotificationRead = /* GraphQL */ `subscription OnUpdate
     id
     notificationID
     readAt
+    readBy
     createdAt
     updatedAt
     __typename
@@ -302,6 +304,7 @@ export const onDeleteUserNotificationRead = /* GraphQL */ `subscription OnDelete
     id
     notificationID
     readAt
+    readBy
     createdAt
     updatedAt
     __typename

@@ -154,7 +154,7 @@ export const UnauthenticatedHeaderButtons_Mobile: React.FC = () => {
  * @returns {JSX.Element} - A container with an avatar icon button that toggles a dropdown menu for user account actions.
  */
 
-export const UserAccountButtons_Web = ({ avatarUrl }: any) => {
+export const UserAccountButtons_Web = ({ userID, avatarUrl }: any) => {
     const [anchorElUser, setanchorElUser] = useState<null | HTMLElement>(null)
     const [anchorElNotifications, setanchorElNotifications] = useState<null | HTMLElement>(null)
     const [notifications, setNotifications] = useState<Notification[]>([])
@@ -184,12 +184,11 @@ export const UserAccountButtons_Web = ({ avatarUrl }: any) => {
      * @param notificationID I'm using the refreshSwitch just to trigger the useEffect below to try to live refresh the notifications
      * read and notification count
      */
-    const handleNotificationClickEvent = async(notificationID:string) => {
+    const handleNotificationClickEvent = async(userID:string, notificationID:string) => {
         console.log("Click event: ", notificationID)
-        const notifications:any = await fetchNotifications()
+        const notifications:any = await fetchNotifications() 
         console.log("click event call: ", notifications)
-        markNotificationAsRead(notificationID)
-        //notifications && markNotificationAsRead(notificationID)
+        markNotificationAsRead(userID, notificationID)
         setRefreshSwitch(!refreshSwitch)
     }
 
@@ -199,7 +198,7 @@ export const UserAccountButtons_Web = ({ avatarUrl }: any) => {
 
     const fetchNotifications = async () => {
         try {
-            const { newNotificationsCount, notificationsPayload }:any = await getBroadcastNotificationsQuery()
+            const { newNotificationsCount, notificationsPayload }:any = await getBroadcastNotificationsQuery(userID)
             console.log("notifications count: ", newNotificationsCount)
             setNotifications(notificationsPayload)
             console.log("Notifications Payload: ", notificationsPayload)
@@ -287,7 +286,7 @@ export const UserAccountButtons_Web = ({ avatarUrl }: any) => {
                             whiteSpace: 'normal',
                             backgroundColor: notification.read ? 'inherit' : '#f0f0f0', // Light grey for unread notifications
                             }}
-                            onClick={() => handleNotificationClickEvent(notification.id)}
+                            onClick={() => handleNotificationClickEvent(userID, notification.id)}
                         >
                             <Box display="flex" flexDirection="column" sx={{ maxWidth: '100%' }}>
                                 <Typography variant="body1" component="p" sx={{

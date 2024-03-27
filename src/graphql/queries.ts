@@ -201,6 +201,7 @@ export const getUserNotificationRead = /* GraphQL */ `query GetUserNotificationR
     id
     notificationID
     readAt
+    readBy
     createdAt
     updatedAt
     __typename
@@ -224,6 +225,7 @@ export const listUserNotificationReads = /* GraphQL */ `query ListUserNotificati
       id
       notificationID
       readAt
+      readBy
       createdAt
       updatedAt
       __typename

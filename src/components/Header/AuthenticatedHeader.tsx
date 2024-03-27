@@ -23,7 +23,7 @@ import { AuthenticatedHeaderProps } from '@/src/types/HeaderTypes'
  * @returns {JSX.Element} - The AppBar component containing the toolbar with common header elements and user account buttons,
  *                          adapted for mobile or web display based on the current screen size.
  */
-const AuthenticatedHeader: React.FC<AuthenticatedHeaderProps>= ({avatarUrl}) => {
+const AuthenticatedHeader: React.FC<AuthenticatedHeaderProps>= ({userData, avatarUrl}) => {
     const theme = useTheme()
     const isMobile = useMediaQuery(theme.breakpoints.down('sm'))
 
@@ -31,7 +31,7 @@ const AuthenticatedHeader: React.FC<AuthenticatedHeaderProps>= ({avatarUrl}) => 
         <AppBar position="static" sx={{ background: 'white', zIndex: (theme) => theme.zIndex.drawer + 1  }} elevation={0}>
             <Toolbar>
                 <CommonHeaderComponent />
-                {isMobile ? <UserAccountButtons_Mobile /> : <UserAccountButtons_Web avatarUrl={avatarUrl}/>}
+                {isMobile ? <UserAccountButtons_Mobile /> : <UserAccountButtons_Web userID={userData.cognitoID} avatarUrl={avatarUrl}/>}
             </Toolbar>
         </AppBar>
     )

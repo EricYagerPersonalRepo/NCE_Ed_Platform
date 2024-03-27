@@ -9,16 +9,24 @@ import { useQuery } from "@tanstack/react-query"
 
 const client = generateClient()
 
-export const getBroadcastNotificationsQuery = async () => {
+export const getBroadcastNotificationsQuery = async (userID) => {
     try {
         const broadcastResponse = await amplifyApiClient.graphql({
             query: listBroadcastNotifications, 
             variables: {}
         })
 
+        const variables = {
+            filter: {
+                id: {
+                    eq: userID
+                } 
+            }
+        }
+
         const readResponse = await amplifyApiClient.graphql({
             query: listUserNotificationReads,
-            variables: {}
+            variables: {},
         })
 
         const broadcastItems = broadcastResponse.data.listBroadcastNotifications?.items ?? []
@@ -49,12 +57,15 @@ export const getBroadcastNotificationsQuery = async () => {
 
 
 
-export const markNotificationAsRead = async(notificationID:string) => {
+export const markNotificationAsRead = async(userID:string, notificationID:string) => { 
     console.log(notificationID)
     try{
         const readNotification = await amplifyApiClient.graphql({
             query: createUserNotificationRead,
-            variables: {input: {notificationID:notificationID}}
+            variables: {input: {
+                notificationID:notificationID,
+                readBy: userID
+            }}
         })
         console.log("Read notification: ", readNotification)
         return readNotification

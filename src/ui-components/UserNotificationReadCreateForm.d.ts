@@ -24,16 +24,19 @@ export declare type ValidationFunction<T> = (value: T, validationResponse: Valid
 export declare type UserNotificationReadCreateFormInputValues = {
     notificationID?: string;
     readAt?: string;
+    readBy?: string;
 };
 export declare type UserNotificationReadCreateFormValidationValues = {
     notificationID?: ValidationFunction<string>;
     readAt?: ValidationFunction<string>;
+    readBy?: ValidationFunction<string>;
 };
 export declare type PrimitiveOverrideProps<T> = Partial<T> & React.DOMAttributes<HTMLDivElement>;
 export declare type UserNotificationReadCreateFormOverridesProps = {
     UserNotificationReadCreateFormGrid?: PrimitiveOverrideProps<GridProps>;
     notificationID?: PrimitiveOverrideProps<TextFieldProps>;
     readAt?: PrimitiveOverrideProps<TextFieldProps>;
+    readBy?: PrimitiveOverrideProps<TextFieldProps>;
 } & EscapeHatchProps;
 export declare type UserNotificationReadCreateFormProps = React.PropsWithChildren<{
     overrides?: UserNotificationReadCreateFormOverridesProps | undefined | null;
