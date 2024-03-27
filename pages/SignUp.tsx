@@ -27,13 +27,6 @@ import { MobileSignUp, WebSignUp } from '@/src/components/SignUp'
  */
 const SignUp = ({ isMobile, router }: any)  =>{
 
-    /**punt user if they're already logged in
-    useEffect(() => {
-        if (loggedIn) {
-            router.push('/')
-        }
-    }, [loggedIn, router])**/
-
     return isMobile ? <MobileSignUp /> : <WebSignUp router={router}/>
 }
 

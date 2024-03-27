@@ -152,17 +152,4 @@ const WebSignUp = ({router}) => {
     )
 }
 
-/**
- * <Container maxWidth="lg">
-                <Modal
-                    open={signUpHooks.tfaOpen}
-                    onClose={() => signUpHooks.setTfaOpen(false)}
-                    aria-labelledby="modal-title"
-                    aria-describedby="modal-description"
-                >
-                    <TwoFactorInput signUpHooks={signUpHooks} />
-                </Modal>
-            </Container>
- */
-
 export default WebSignUp

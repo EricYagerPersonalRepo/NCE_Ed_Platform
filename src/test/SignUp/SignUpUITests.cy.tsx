@@ -3,13 +3,13 @@ import { mount } from 'cypress/react18'
 import { fetchCityState } from '../../functions/AuthX'
 import { EmailInput, NameInput, PasswordInput, ZipInput } from '../../components/SignUp'
 import { useSignUpHooks } from '../../state/SignUpHooks'
-/*
+
 export const NameInputTestWrapper = ({ testData, testError }: any) => {
   const signUpHooks = useSignUpHooks()
 
   useEffect(() => {
     signUpHooks.setName(testData)
-    signUpHooks.setTabValue(1)
+    signUpHooks.setTabValue(3)
 
     if (testError) {
       signUpHooks.setError({ ...signUpHooks.error, ...testError })
@@ -24,7 +24,7 @@ export const ZipInputTestWrapper = ({testData, testError}:any) => {
 
   useEffect(() => {
     signUpHooks.setZipCode(testData)
-    signUpHooks.setTabValue(2)
+    signUpHooks.setTabValue(4)
 
     if(testError){
       signUpHooks.setError({...signUpHooks.error, ...testError})
@@ -39,8 +39,11 @@ export const EmailInputTestWrapper =  ({testData, testError}:any) => {
 
   useEffect(() => {
     signUpHooks.setUsername(testData)
-    signUpHooks.setTabValue(3)
+    signUpHooks.setTabValue(0)
 
+    if (testError) {
+      signUpHooks.setError({ ...signUpHooks.error, ...testError })
+    }
   }, [testData, testError, signUpHooks])
 
   return(<EmailInput signUpHooks={signUpHooks} />)
@@ -51,7 +54,7 @@ export const PasswordInputTestWrapper = ({testData, testError}:any) => {
 
   useEffect(() => {
     signUpHooks.setPassword(testData)
-    signUpHooks.setTabValue(4)
+    signUpHooks.setTabValue(1)
 
 
     if(testError){
@@ -65,14 +68,13 @@ export const PasswordInputTestWrapper = ({testData, testError}:any) => {
 }
 
 describe('<NameInput />', () => {
-
   it('render input and accept name', () => {
     const testName = 'John Doe'
     mount(<NameInputTestWrapper testData={testName} />)
     cy.get('input[type="text"]').should('have.value', testName)
   })
 
-  it('validates correct name input', () => {
+  it('validates correct name input and updates tab value', () => {
     const testName = 'John Doe'
     mount(<NameInputTestWrapper testData={testName} />)
     cy.get('button').contains('Done').click()
@@ -86,35 +88,51 @@ describe('<NameInput />', () => {
   })
 })
 
+describe('<ZipInput />', () => {
+  const validZip = "13630";
+  const invalidZip = "99999";
+  const baseUrl = 'https://api.zippopotam.us/us/';
 
-describe('<ZipCodeInput />', () => {
-  const baseUrl = 'https://api.zippopotam.us/us/'
-  const validZip = "13630"
-  const invalidZip = "99999"
+  beforeEach(() => {
+    cy.intercept('GET', `${baseUrl}${validZip}`, {
+      statusCode: 200,
+      body: {
+        'post code': validZip,
+        'country': 'United States',
+        'country abbreviation': 'US',
+        'places': [
+          {
+            'place name': 'De Kalb Junction',
+            'state': 'New York',
+            'state abbreviation': 'NY',
+          },
+        ],
+      },
+    }).as('validZip');
+
+    cy.intercept('GET', `${baseUrl}${invalidZip}`, {
+      statusCode: 200,
+      body: {}
+    }).as('invalidZip');
+  });
 
   it('renders the zip code input and accepts zip', () => {
-    mount( <ZipInputTestWrapper testData={validZip} />)
-    cy.get('input[placeholder="Zip Code"]').type(validZip)
-    cy.get('#zip-code-input').should('have.value', validZip)
-  })
+    mount(<ZipInputTestWrapper testData={validZip} />);
+    cy.get('#zip-code-input').type(validZip).should('have.value', validZip);
+  });
 
   it('fetches city and state for a valid ZIP code', () => {
-    const mockResponse = {
-      places: [{ 'place name': 'De Kalb Junction', 'state': 'New York' }]
-    }
+    mount(<ZipInputTestWrapper testData={validZip} />);
+    cy.get('#zip-code-input').type(validZip);
+    cy.wait('@validZip');
+  });
 
-    cy.intercept('GET', `${baseUrl}${validZip}`, mockResponse).as('getCityState')
-
-    // Call your function here. Ensure that fetchCityState is imported and can be called within the test context.
-    fetchCityState(validZip).then((result) => {
-      expect(result.City).to.equal('De Kalb Junction')
-      expect(result.State).to.equal('New York')
-    })
-
-    cy.wait('@getCityState').its('response.statusCode').should('eq', 200)
-  })
-})
-
+  it('handles an invalid ZIP code appropriately', () => {
+    mount(<ZipInputTestWrapper testData={invalidZip} />);
+    cy.get('#zip-code-input').type(invalidZip);
+    cy.get('#component-error-text').should('contain', 'Zip code outside supported area. Contact info@northcountryengineer.com for more information.')
+  });
+});
 
 describe('<EmailInput />', () => {
 
@@ -135,45 +153,45 @@ describe('<EmailInput />', () => {
     const testError = { email: "Invalid Email" }
     mount(<EmailInputTestWrapper testData={testEmail} testError={testError} />)
     cy.get('button').contains('Done').click()
-    cy.get('#component-email-error-text').should('contain', 'Please enter a valid email address. Example: joe@example.com')
+    cy.get('#component-email-error-text').should('contain', 'Invalid Email')
   })
 })
 
 describe('<PasswordInput />', () => {
+  beforeEach(() => {
+    cy.mount(<PasswordInputTestWrapper testData="" testError={{}} />);
+  });
+
   it('renders the password input fields', () => {
-    mount(<PasswordInputTestWrapper testData="" />)
-    cy.get('#standard-adornment-password').should('exist')
-    cy.get('#standard-adornment-confirm-password').should('exist')
-  })
+    cy.get('#standard-adornment-password').should('exist');
+    cy.get('#standard-adornment-confirm-password').should('exist');
+  });
 
   it('toggles password visibility', () => {
-    mount(<PasswordInputTestWrapper testData="" />)
+    cy.get('#standard-adornment-password').should('have.attr', 'type', 'password');
+    cy.get('#standard-adornment-confirm-password').should('have.attr', 'type', 'password');
 
-    cy.get('#standard-adornment-password').should('have.attr', 'type', 'password')
-    cy.get('#standard-adornment-confirm-password').should('have.attr', 'type', 'password')
-    cy.get('#standard-adornment-password + div button').click()
-    cy.get('#standard-adornment-password').should('have.attr', 'type', 'text')
-    cy.get('#standard-adornment-confirm-password + div button').click()
-    cy.get('#standard-adornment-confirm-password').should('have.attr', 'type', 'text')
-  })
+    cy.get('[aria-label="toggle password visibility"]').first().click();
+    cy.get('#standard-adornment-password').should('have.attr', 'type', 'text');
+
+    cy.get('[aria-label="toggle password visibility"]').last().click();
+    cy.get('#standard-adornment-confirm-password').should('have.attr', 'type', 'text');
+  });
 
   it('enables sign-up button when form is complete', () => {
-    const testData = 'ValidPassword123!'
-    mount(<PasswordInputTestWrapper testData={testData} />)
-    cy.get('#standard-adornment-password').type(testData)
-    cy.get('#standard-adornment-confirm-password').type(testData)
-    cy.get('button').contains('Sign Up').should('not.be.disabled')
-  })
+    const testData = 'ValidPassword123!';
+    cy.mount(<PasswordInputTestWrapper testData={testData} />);
+    cy.get('#standard-adornment-password').clear().type(testData);
+    cy.get('#standard-adornment-confirm-password').clear().type(testData);
+    cy.get('button').contains('Sign Up').should('not.be.disabled');
+  });
 
   it('attempts sign-up with valid password', () => {
-    const testData = 'ValidPassword123!'
-    mount(<PasswordInputTestWrapper testData={testData} />)
-    cy.get('#standard-adornment-password').type(testData)
-    cy.get('#standard-adornment-confirm-password').type(testData)
+    const testData = 'ValidPassword123!';
+    cy.mount(<PasswordInputTestWrapper testData={testData} />);
+    cy.get('#standard-adornment-password').type(testData);
+    cy.get('#standard-adornment-confirm-password').type(testData);
+    cy.get('button').contains('Sign Up').click();
+  });
+});
 
-    cy.get('button').contains('Sign Up').click()
-  })
-
-})
-
-*/

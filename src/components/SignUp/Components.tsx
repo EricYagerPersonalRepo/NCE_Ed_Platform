@@ -359,8 +359,8 @@ export const ZipInput = ({signUpHooks}:any) => {
                 signUpHooks.setState(cityStateCall.State)
             } catch (error) {
                 console.error('Failed to fetch city and state:', error)
-                signUpHooks.setCity('') //Reassigs error inputs to null string
-                signUpHooks.setState('') //Reassigs error inputs to null string
+                signUpHooks.setCity('')
+                signUpHooks.setState('') 
             }
         }
     }

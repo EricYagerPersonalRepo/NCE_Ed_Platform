@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Avatar, Badge, Box, Button, Grid, IconButton, Menu, MenuItem, Typography, setRef } from '@mui/material'
+import { Avatar, Badge, Box, Button, Grid, IconButton, Menu, MenuItem, Typography } from '@mui/material'
 import { AccountCircle, MoreVert, Notifications } from '@mui/icons-material'
 import { useRouter } from 'next/router'
 import { signOut } from 'aws-amplify/auth'
@@ -437,22 +437,5 @@ export const Authenticated_UserHeaderMenu = ({anchorElUser, open, handleUserClos
                 </MenuItem>
             </Menu>
         </div>
-    )
-}
-
-export const notificationsDropDown = async({anchorElNotifications, open, handleNotificationsClose}:any) => {
-    return(
-        <Menu
-          id="notification-menu"
-          anchorEl={anchorElNotifications}
-          keepMounted
-          open={anchorElNotifications}
-          onClose={handleNotificationsClose}
-        >
-          {/* Placeholder MenuItems, replace with your logic for notifications */}
-          <MenuItem onClick={handleNotificationsClose}>Notification 1</MenuItem>
-          <MenuItem onClick={handleNotificationsClose}>Notification 2</MenuItem>
-          <MenuItem onClick={handleNotificationsClose}>Notification 3</MenuItem>
-        </Menu>
     )
 }
