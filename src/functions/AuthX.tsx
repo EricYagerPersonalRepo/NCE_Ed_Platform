@@ -1,7 +1,6 @@
-import { ConfirmSignUpInput, ConfirmSignUpOutput, SignInInput, SignInOutput, confirmSignUp, getCurrentUser, signIn, signOut } from "aws-amplify/auth"
-import { CreateNCEStudentProfileInput, CreateNCEUserSettingsInput, StudentStatus } from "../API"
-import { createNCEStudentProfile, createNCEUserSettings, createStudentProfile } from "../graphql/mutations"
-import { handleConfirmSignUpReturnType, SignUpHooksProps } from "../types/SignUpTypes"
+import { SignInInput, SignInOutput, getCurrentUser, signIn, signOut } from "aws-amplify/auth"
+import { CreateStudentProfileInput } from "../API"
+import { createStudentProfile } from "../graphql/mutations"
 import { generateClient } from "aws-amplify/api"
 
 export const amplifyApiClient = generateClient()
@@ -28,7 +27,7 @@ export const checkAuthStatus = async () => {
  * @param {CreateNCEStudentProfileInput} studentProfileInput - The input object containing user profile details.
  * @returns {Promise<{isSignedUp: boolean, userProfile: any}>} A promise that resolves to an object indicating if the profile was successfully created and the user profile data.
  */
-export const handleCreateStudentProfile = async (studentProfileInput:CreateNCEStudentProfileInput) => {
+export const handleCreateStudentProfile = async (studentProfileInput:CreateStudentProfileInput) => {
     console.log("handleCreateStudentProfile: ", studentProfileInput)
     try {
         const profileResult = await amplifyApiClient.graphql({

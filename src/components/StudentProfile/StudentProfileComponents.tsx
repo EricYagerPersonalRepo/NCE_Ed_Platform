@@ -1,15 +1,12 @@
 import React, { useEffect, useState } from 'react'
 import { generateClient } from "aws-amplify/api"
-import { getNCEStudentProfile, getNCEUserSettings, getStudentProfile } from '@/src/graphql/queries'
-import { Box, Tabs, Tab, FormControl, InputLabel, Select, MenuItem, Typography, Grid, Paper, Avatar, Button, TextField, FormControlLabel, Switch, CircularProgress } from '@mui/material'
-import { Course } from '@/src/types/StudentProfileTypes'
+import { Box, Tabs, Tab, MenuItem, Typography, Grid, Paper, Avatar, Button, TextField, FormControlLabel, Switch, CircularProgress } from '@mui/material'
 import { uploadFileToS3 } from '@/src/functions/Storage'
 import { getCurrentUser } from 'aws-amplify/auth'
-import { updateNCEStudentProfile, updateNCEUserSettings, updateStudentProfile } from '@/src/graphql/mutations'
+import { updateStudentProfile } from '@/src/graphql/mutations'
 import { Cancel, CheckCircle } from '@mui/icons-material'
 import { green, red } from '@mui/material/colors'
-import { Router, useRouter } from 'next/router'
-import { StudentStatus } from '@/src/API'
+import { useRouter } from 'next/router'
 
 const amplifyApiClient = generateClient()
 
