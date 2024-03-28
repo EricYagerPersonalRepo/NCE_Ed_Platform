@@ -1,9 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Button, Grid, List, ListItem, Typography } from '@mui/material'
 import { UserAccountView } from './StudentProfileComponents'
-import { amplifyApiClient } from '@/src/functions/AuthX'
-import { updateNCEStudentProfile } from '@/src/graphql/mutations'
-import { getStudentProfile } from '@/src/graphql/queries'
 
 /**
  * WebStudentProfile Component - Manages and displays the student profile interface within a web application.

@@ -3,7 +3,7 @@ import {  Grid, Container, Tabs, Tab, Modal, Button } from '@mui/material'
 import { useSignUpHooks } from '@/src/state/SignUpHooks'
 import { EmailInput, NameInput, PasswordInput, ZipInput,  SignUpTabItem, TwoFactorInput } from './Components'
 import { handleCreateStudentProfile } from '@/src/functions/AuthX'
-import { CreateNCEStudentProfileInput, StudentStatus } from '@/src/API'
+import { CreateStudentProfileInput, StudentStatus } from '@/src/API'
 
 /**
  * WebSignUp Component - Manages the entire sign-up process for web users through a multi-step form.
@@ -52,7 +52,7 @@ const WebSignUp = ({router}) => {
     }, [signUpHooks.formComplete])
 
     const onSignUpButtonClick = async() => {
-        const studentProfileInput: CreateNCEStudentProfileInput = {
+        const studentProfileInput: CreateStudentProfileInput = {
             id: signUpHooks.id,
             name: signUpHooks.name,
             email: signUpHooks.username,
