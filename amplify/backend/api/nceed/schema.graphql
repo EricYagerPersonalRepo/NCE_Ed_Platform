@@ -1,23 +1,7 @@
 # BEGIN STUDENT PROFILE AND SETTINGS SCHEMA DEFINITIONS
 
-type NCEStudentProfile 
-  @model 
-  @auth(rules: [
-    { allow: owner}
-    { allow: groups, groups: ["Admins"], operations: [create, update, read, delete] }
-    { allow: groups, groups: ["Students"], operations: [create, update, read, delete] }
-  ]){
-  id: ID!
-  name: String!
-  email: AWSEmail!
-  status: StudentStatus!
-  notificationsEnabled: Boolean!
-  darkModeEnabled: Boolean!
-  language: String!
-  isAdmin: Boolean!
-}
-
-type StudentProfile @model
+type StudentProfile 
+@model
 @auth(rules: [
   { allow: owner}
   { allow: groups, groups: ["Admins"], operations: [create, update, read, delete] }
@@ -26,19 +10,6 @@ type StudentProfile @model
   name: String!
   email: AWSEmail!
   status: StudentStatus!
-  notificationsEnabled: Boolean!
-  darkModeEnabled: Boolean!
-  language: String!
-  isAdmin: Boolean!
-}
-
-type NCEUserSettings 
-  @model 
-  @auth(rules: [
-    { allow: owner }
-    { allow: groups, groups: ["Admins"], operations: [create, update, read, delete] }
-  ]){
-  id: ID!
   notificationsEnabled: Boolean!
   darkModeEnabled: Boolean!
   language: String!

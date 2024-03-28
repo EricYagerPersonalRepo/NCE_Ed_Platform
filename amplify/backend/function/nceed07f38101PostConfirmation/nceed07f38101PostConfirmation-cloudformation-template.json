@@ -137,6 +137,32 @@
             },
             "STORAGE_NCEEDAVATARS_BUCKETNAME": {
               "Ref": "storagenceEdAvatarsBucketName"
+            },
+            "API_NCEED_STUDENTPROFILETABLE_NAME": {
+              "Fn::ImportValue": {
+                "Fn::Sub": "${apinceedGraphQLAPIIdOutput}:GetAtt:StudentProfileTable:Name"
+              }
+            },
+            "API_NCEED_STUDENTPROFILETABLE_ARN": {
+              "Fn::Join": [
+                "",
+                [
+                  "arn:aws:dynamodb:",
+                  {
+                    "Ref": "AWS::Region"
+                  },
+                  ":",
+                  {
+                    "Ref": "AWS::AccountId"
+                  },
+                  ":table/",
+                  {
+                    "Fn::ImportValue": {
+                      "Fn::Sub": "${apinceedGraphQLAPIIdOutput}:GetAtt:StudentProfileTable:Name"
+                    }
+                  }
+                ]
+              ]
             }
           }
         },
@@ -367,6 +393,72 @@
                         "Ref": "storagenceEdAvatarsBucketName"
                       },
                       "/*"
+                    ]
+                  ]
+                }
+              ]
+            },
+            {
+              "Effect": "Allow",
+              "Action": [
+                "dynamodb:Put*",
+                "dynamodb:Create*",
+                "dynamodb:BatchWriteItem",
+                "dynamodb:PartiQLInsert",
+                "dynamodb:Get*",
+                "dynamodb:BatchGetItem",
+                "dynamodb:List*",
+                "dynamodb:Describe*",
+                "dynamodb:Scan",
+                "dynamodb:Query",
+                "dynamodb:PartiQLSelect",
+                "dynamodb:Update*",
+                "dynamodb:RestoreTable*",
+                "dynamodb:PartiQLUpdate",
+                "dynamodb:Delete*",
+                "dynamodb:PartiQLDelete"
+              ],
+              "Resource": [
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:aws:dynamodb:",
+                      {
+                        "Ref": "AWS::Region"
+                      },
+                      ":",
+                      {
+                        "Ref": "AWS::AccountId"
+                      },
+                      ":table/",
+                      {
+                        "Fn::ImportValue": {
+                          "Fn::Sub": "${apinceedGraphQLAPIIdOutput}:GetAtt:StudentProfileTable:Name"
+                        }
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:aws:dynamodb:",
+                      {
+                        "Ref": "AWS::Region"
+                      },
+                      ":",
+                      {
+                        "Ref": "AWS::AccountId"
+                      },
+                      ":table/",
+                      {
+                        "Fn::ImportValue": {
+                          "Fn::Sub": "${apinceedGraphQLAPIIdOutput}:GetAtt:StudentProfileTable:Name"
+                        }
+                      },
+                      "/index/*"
                     ]
                   ]
                 }

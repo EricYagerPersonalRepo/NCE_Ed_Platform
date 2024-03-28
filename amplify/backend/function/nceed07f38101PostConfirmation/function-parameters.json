@@ -34,25 +34,7 @@
         "update",
         "delete"
       ],
-      "NCEStudentProfile:@model(appsync)": [
-        "create",
-        "read",
-        "update",
-        "delete"
-      ],
-      "NCEUserSettings:@model(appsync)": [
-        "create",
-        "read",
-        "update",
-        "delete"
-      ],
-      "BroadcastNotification:@model(appsync)": [
-        "create",
-        "read",
-        "update",
-        "delete"
-      ],
-      "UserNotificationRead:@model(appsync)": [
+      "StudentProfile:@model(appsync)": [
         "create",
         "read",
         "update",

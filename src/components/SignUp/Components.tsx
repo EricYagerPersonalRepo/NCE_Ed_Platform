@@ -63,6 +63,7 @@ export const EmailInput = ({signUpHooks}:any) => {
                         endAdornment={
                             <InputAdornment position="end">
                                 <Button
+                                    id="email-input-done"
                                     onClick={handleEmailInput}
                                 >
                                     Done

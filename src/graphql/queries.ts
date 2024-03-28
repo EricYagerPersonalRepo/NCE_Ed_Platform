@@ -8,58 +8,6 @@ type GeneratedQuery<InputType, OutputType> = string & {
   __generatedQueryOutput: OutputType;
 };
 
-export const getNCEStudentProfile = /* GraphQL */ `query GetNCEStudentProfile($id: ID!) {
-  getNCEStudentProfile(id: $id) {
-    id
-    name
-    email
-    status
-    notificationsEnabled
-    darkModeEnabled
-    language
-    isAdmin
-    createdAt
-    updatedAt
-    owner
-    __typename
-  }
-}
-` as GeneratedQuery<
-  APITypes.GetNCEStudentProfileQueryVariables,
-  APITypes.GetNCEStudentProfileQuery
->;
-export const listNCEStudentProfiles = /* GraphQL */ `query ListNCEStudentProfiles(
-  $filter: ModelNCEStudentProfileFilterInput
-  $limit: Int
-  $nextToken: String
-) {
-  listNCEStudentProfiles(
-    filter: $filter
-    limit: $limit
-    nextToken: $nextToken
-  ) {
-    items {
-      id
-      name
-      email
-      status
-      notificationsEnabled
-      darkModeEnabled
-      language
-      isAdmin
-      createdAt
-      updatedAt
-      owner
-      __typename
-    }
-    nextToken
-    __typename
-  }
-}
-` as GeneratedQuery<
-  APITypes.ListNCEStudentProfilesQueryVariables,
-  APITypes.ListNCEStudentProfilesQuery
->;
 export const getStudentProfile = /* GraphQL */ `query GetStudentProfile($id: ID!) {
   getStudentProfile(id: $id) {
     id
@@ -107,48 +55,6 @@ export const listStudentProfiles = /* GraphQL */ `query ListStudentProfiles(
 ` as GeneratedQuery<
   APITypes.ListStudentProfilesQueryVariables,
   APITypes.ListStudentProfilesQuery
->;
-export const getNCEUserSettings = /* GraphQL */ `query GetNCEUserSettings($id: ID!) {
-  getNCEUserSettings(id: $id) {
-    id
-    notificationsEnabled
-    darkModeEnabled
-    language
-    isAdmin
-    createdAt
-    updatedAt
-    owner
-    __typename
-  }
-}
-` as GeneratedQuery<
-  APITypes.GetNCEUserSettingsQueryVariables,
-  APITypes.GetNCEUserSettingsQuery
->;
-export const listNCEUserSettings = /* GraphQL */ `query ListNCEUserSettings(
-  $filter: ModelNCEUserSettingsFilterInput
-  $limit: Int
-  $nextToken: String
-) {
-  listNCEUserSettings(filter: $filter, limit: $limit, nextToken: $nextToken) {
-    items {
-      id
-      notificationsEnabled
-      darkModeEnabled
-      language
-      isAdmin
-      createdAt
-      updatedAt
-      owner
-      __typename
-    }
-    nextToken
-    __typename
-  }
-}
-` as GeneratedQuery<
-  APITypes.ListNCEUserSettingsQueryVariables,
-  APITypes.ListNCEUserSettingsQuery
 >;
 export const getBroadcastNotification = /* GraphQL */ `query GetBroadcastNotification($id: ID!) {
   getBroadcastNotification(id: $id) {
