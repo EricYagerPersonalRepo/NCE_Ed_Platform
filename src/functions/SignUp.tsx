@@ -1,7 +1,6 @@
 
 import { SignUpHooksProps, handleConfirmSignUpReturnType } from "@/src/types/SignUpTypes"
 import { ConfirmSignUpInput, ConfirmSignUpOutput, SignUpOutput, confirmSignUp, signUp } from "aws-amplify/auth"
-import { CreateNCEStudentProfileInput, ModelNCEStudentProfileConditionInput } from "../API"
 
 /**
  * Array of allowed ZIP codes for the signup process.

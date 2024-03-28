@@ -24,7 +24,7 @@ export const checkAuthStatus = async () => {
 /**
  * Asynchronously creates a student profile in the system.
  * 
- * @param {CreateNCEStudentProfileInput} studentProfileInput - The input object containing user profile details.
+ * @param {CreateStudentProfileInput} studentProfileInput - The input object containing user profile details.
  * @returns {Promise<{isSignedUp: boolean, userProfile: any}>} A promise that resolves to an object indicating if the profile was successfully created and the user profile data.
  */
 export const handleCreateStudentProfile = async (studentProfileInput:CreateStudentProfileInput) => {

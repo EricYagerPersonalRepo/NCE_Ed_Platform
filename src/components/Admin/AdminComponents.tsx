@@ -2,9 +2,9 @@ import { useEffect, useState } from "react"
 import { MobileAdmin, WebAdmin } from "."
 import { NotificationType } from "@/src/API"
 import { amplifyApiClient } from "@/src/functions/AuthX"
-import { createBroadcastNotification, deleteBroadcastNotification, updateBroadcastNotification, updateNCEStudentProfile } from "@/src/graphql/mutations"
+import { createBroadcastNotification, deleteBroadcastNotification, updateBroadcastNotification, updateStudentProfile } from "@/src/graphql/mutations"
 import { Box, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, FormControl, Grid, InputLabel, MenuItem, Select, Tab, Tabs, TextField, Typography } from "@mui/material"
-import { listBroadcastNotifications, listNCEStudentProfiles } from "@/src/graphql/queries"
+import { listBroadcastNotifications, listStudentProfiles } from "@/src/graphql/queries"
 import { DataGrid, GridActionsCellItem, GridColDef, GridRowModes, GridRowModesModel, GridRowsProp } from "@mui/x-data-grid"
 import { Delete, Edit } from "@mui/icons-material"
 import { TabPanel } from "../Global/Tabs"
@@ -330,13 +330,13 @@ export const AdminUsersView = () => {
         const fetchProfilesAndGroups = async () => {
             try {
                 const profilesData = await amplifyApiClient.graphql({
-                    query: listNCEStudentProfiles,
+                    query: listStudentProfiles,
                     variables: {},
                 })
     
-                if (profilesData.data.listNCEStudentProfiles.items) {
+                if (profilesData.data.listStudentProfiles.items) {
                     const profilesWithGroups = await Promise.all(
-                        profilesData.data.listNCEStudentProfiles.items.map(async (profile) => {
+                        profilesData.data.listStudentProfiles.items.map(async (profile) => {
                             let groupsForUser = await fetchUserGroups(profile.id)
                             console.log("GROUPS FOR USER: ", groupsForUser.Data)
                             try{
@@ -381,7 +381,7 @@ export const AdminUsersView = () => {
         if(editedRow) {
             try {
                 await amplifyApiClient.graphql({
-                    query: updateNCEStudentProfile,
+                    query: updateStudentProfile,
                     variables: { input: { id: newRow.id, name: newRow.name,  email:newRow.email, status:newRow.status } },
                 })
                 setRows((prevRows) => prevRows.map((row) => (row.id === editedRow.id ? editedRow : row)))
