@@ -26,7 +26,6 @@ const CreateNewCourseDialog = ({userData}:any) => {
     const handleSubmit = async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         e.preventDefault()
 
-        // Ensure subject is not an empty string before proceeding
         if (subject === '') {
             alert('Please select a subject')
             return
