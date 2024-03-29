@@ -1,13 +1,7 @@
-/***************************************************************************
- * The contents of this file were generated with Amplify Studio.           *
- * Please refrain from making any modifications to this file.              *
- * Any changes to this file will be overwritten when running amplify pull. *
- **************************************************************************/
-
 /* eslint-disable */
 import { createTheme } from "@aws-amplify/ui-react";
 export default createTheme({
-  name: "studioTheme",
+  name: "nce_ed_theme",
   tokens: {
     components: {
       alert: {
@@ -1272,6 +1266,7 @@ export default createTheme({
         warning: { value: "{colors.orange.20.value}" },
         error: { value: "{colors.red.20.value}" },
         success: { value: "{colors.green.20.value}" },
+        paper: {value: "{colors.white.value}" },
       },
       border: {
         primary: { value: "{colors.neutral.60.value}" },

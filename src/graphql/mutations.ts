@@ -821,3 +821,366 @@ export const deleteEnrollment = /* GraphQL */ `mutation DeleteEnrollment(
   APITypes.DeleteEnrollmentMutationVariables,
   APITypes.DeleteEnrollmentMutation
 >;
+export const createInstructorProfile = /* GraphQL */ `mutation CreateInstructorProfile(
+  $input: CreateInstructorProfileInput!
+  $condition: ModelInstructorProfileConditionInput
+) {
+  createInstructorProfile(input: $input, condition: $condition) {
+    id
+    name
+    email
+    biography {
+      id
+      overview
+      createdAt
+      updatedAt
+      owner
+      __typename
+    }
+    contact {
+      id
+      phone
+      email
+      createdAt
+      updatedAt
+      owner
+      __typename
+    }
+    createdAt
+    updatedAt
+    owner
+    __typename
+  }
+}
+` as GeneratedMutation<
+  APITypes.CreateInstructorProfileMutationVariables,
+  APITypes.CreateInstructorProfileMutation
+>;
+export const updateInstructorProfile = /* GraphQL */ `mutation UpdateInstructorProfile(
+  $input: UpdateInstructorProfileInput!
+  $condition: ModelInstructorProfileConditionInput
+) {
+  updateInstructorProfile(input: $input, condition: $condition) {
+    id
+    name
+    email
+    biography {
+      id
+      overview
+      createdAt
+      updatedAt
+      owner
+      __typename
+    }
+    contact {
+      id
+      phone
+      email
+      createdAt
+      updatedAt
+      owner
+      __typename
+    }
+    createdAt
+    updatedAt
+    owner
+    __typename
+  }
+}
+` as GeneratedMutation<
+  APITypes.UpdateInstructorProfileMutationVariables,
+  APITypes.UpdateInstructorProfileMutation
+>;
+export const deleteInstructorProfile = /* GraphQL */ `mutation DeleteInstructorProfile(
+  $input: DeleteInstructorProfileInput!
+  $condition: ModelInstructorProfileConditionInput
+) {
+  deleteInstructorProfile(input: $input, condition: $condition) {
+    id
+    name
+    email
+    biography {
+      id
+      overview
+      createdAt
+      updatedAt
+      owner
+      __typename
+    }
+    contact {
+      id
+      phone
+      email
+      createdAt
+      updatedAt
+      owner
+      __typename
+    }
+    createdAt
+    updatedAt
+    owner
+    __typename
+  }
+}
+` as GeneratedMutation<
+  APITypes.DeleteInstructorProfileMutationVariables,
+  APITypes.DeleteInstructorProfileMutation
+>;
+export const createInstructorContact = /* GraphQL */ `mutation CreateInstructorContact(
+  $input: CreateInstructorContactInput!
+  $condition: ModelInstructorContactConditionInput
+) {
+  createInstructorContact(input: $input, condition: $condition) {
+    id
+    phone
+    email
+    createdAt
+    updatedAt
+    owner
+    __typename
+  }
+}
+` as GeneratedMutation<
+  APITypes.CreateInstructorContactMutationVariables,
+  APITypes.CreateInstructorContactMutation
+>;
+export const updateInstructorContact = /* GraphQL */ `mutation UpdateInstructorContact(
+  $input: UpdateInstructorContactInput!
+  $condition: ModelInstructorContactConditionInput
+) {
+  updateInstructorContact(input: $input, condition: $condition) {
+    id
+    phone
+    email
+    createdAt
+    updatedAt
+    owner
+    __typename
+  }
+}
+` as GeneratedMutation<
+  APITypes.UpdateInstructorContactMutationVariables,
+  APITypes.UpdateInstructorContactMutation
+>;
+export const deleteInstructorContact = /* GraphQL */ `mutation DeleteInstructorContact(
+  $input: DeleteInstructorContactInput!
+  $condition: ModelInstructorContactConditionInput
+) {
+  deleteInstructorContact(input: $input, condition: $condition) {
+    id
+    phone
+    email
+    createdAt
+    updatedAt
+    owner
+    __typename
+  }
+}
+` as GeneratedMutation<
+  APITypes.DeleteInstructorContactMutationVariables,
+  APITypes.DeleteInstructorContactMutation
+>;
+export const createInstructorBiography = /* GraphQL */ `mutation CreateInstructorBiography(
+  $input: CreateInstructorBiographyInput!
+  $condition: ModelInstructorBiographyConditionInput
+) {
+  createInstructorBiography(input: $input, condition: $condition) {
+    id
+    overview
+    professionalExperience {
+      nextToken
+      __typename
+    }
+    awards {
+      nextToken
+      __typename
+    }
+    createdAt
+    updatedAt
+    owner
+    __typename
+  }
+}
+` as GeneratedMutation<
+  APITypes.CreateInstructorBiographyMutationVariables,
+  APITypes.CreateInstructorBiographyMutation
+>;
+export const updateInstructorBiography = /* GraphQL */ `mutation UpdateInstructorBiography(
+  $input: UpdateInstructorBiographyInput!
+  $condition: ModelInstructorBiographyConditionInput
+) {
+  updateInstructorBiography(input: $input, condition: $condition) {
+    id
+    overview
+    professionalExperience {
+      nextToken
+      __typename
+    }
+    awards {
+      nextToken
+      __typename
+    }
+    createdAt
+    updatedAt
+    owner
+    __typename
+  }
+}
+` as GeneratedMutation<
+  APITypes.UpdateInstructorBiographyMutationVariables,
+  APITypes.UpdateInstructorBiographyMutation
+>;
+export const deleteInstructorBiography = /* GraphQL */ `mutation DeleteInstructorBiography(
+  $input: DeleteInstructorBiographyInput!
+  $condition: ModelInstructorBiographyConditionInput
+) {
+  deleteInstructorBiography(input: $input, condition: $condition) {
+    id
+    overview
+    professionalExperience {
+      nextToken
+      __typename
+    }
+    awards {
+      nextToken
+      __typename
+    }
+    createdAt
+    updatedAt
+    owner
+    __typename
+  }
+}
+` as GeneratedMutation<
+  APITypes.DeleteInstructorBiographyMutationVariables,
+  APITypes.DeleteInstructorBiographyMutation
+>;
+export const createExperience = /* GraphQL */ `mutation CreateExperience(
+  $input: CreateExperienceInput!
+  $condition: ModelExperienceConditionInput
+) {
+  createExperience(input: $input, condition: $condition) {
+    id
+    startDate
+    endDate
+    isCurrent
+    companyName
+    jobTitle
+    description
+    createdAt
+    updatedAt
+    instructorBiographyProfessionalExperienceId
+    owner
+    __typename
+  }
+}
+` as GeneratedMutation<
+  APITypes.CreateExperienceMutationVariables,
+  APITypes.CreateExperienceMutation
+>;
+export const updateExperience = /* GraphQL */ `mutation UpdateExperience(
+  $input: UpdateExperienceInput!
+  $condition: ModelExperienceConditionInput
+) {
+  updateExperience(input: $input, condition: $condition) {
+    id
+    startDate
+    endDate
+    isCurrent
+    companyName
+    jobTitle
+    description
+    createdAt
+    updatedAt
+    instructorBiographyProfessionalExperienceId
+    owner
+    __typename
+  }
+}
+` as GeneratedMutation<
+  APITypes.UpdateExperienceMutationVariables,
+  APITypes.UpdateExperienceMutation
+>;
+export const deleteExperience = /* GraphQL */ `mutation DeleteExperience(
+  $input: DeleteExperienceInput!
+  $condition: ModelExperienceConditionInput
+) {
+  deleteExperience(input: $input, condition: $condition) {
+    id
+    startDate
+    endDate
+    isCurrent
+    companyName
+    jobTitle
+    description
+    createdAt
+    updatedAt
+    instructorBiographyProfessionalExperienceId
+    owner
+    __typename
+  }
+}
+` as GeneratedMutation<
+  APITypes.DeleteExperienceMutationVariables,
+  APITypes.DeleteExperienceMutation
+>;
+export const createAward = /* GraphQL */ `mutation CreateAward(
+  $input: CreateAwardInput!
+  $condition: ModelAwardConditionInput
+) {
+  createAward(input: $input, condition: $condition) {
+    id
+    awardDate
+    awardSource
+    description
+    createdAt
+    updatedAt
+    instructorBiographyAwardsId
+    owner
+    __typename
+  }
+}
+` as GeneratedMutation<
+  APITypes.CreateAwardMutationVariables,
+  APITypes.CreateAwardMutation
+>;
+export const updateAward = /* GraphQL */ `mutation UpdateAward(
+  $input: UpdateAwardInput!
+  $condition: ModelAwardConditionInput
+) {
+  updateAward(input: $input, condition: $condition) {
+    id
+    awardDate
+    awardSource
+    description
+    createdAt
+    updatedAt
+    instructorBiographyAwardsId
+    owner
+    __typename
+  }
+}
+` as GeneratedMutation<
+  APITypes.UpdateAwardMutationVariables,
+  APITypes.UpdateAwardMutation
+>;
+export const deleteAward = /* GraphQL */ `mutation DeleteAward(
+  $input: DeleteAwardInput!
+  $condition: ModelAwardConditionInput
+) {
+  deleteAward(input: $input, condition: $condition) {
+    id
+    awardDate
+    awardSource
+    description
+    createdAt
+    updatedAt
+    instructorBiographyAwardsId
+    owner
+    __typename
+  }
+}
+` as GeneratedMutation<
+  APITypes.DeleteAwardMutationVariables,
+  APITypes.DeleteAwardMutation
+>;

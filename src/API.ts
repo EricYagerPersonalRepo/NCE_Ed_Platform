@@ -608,6 +608,216 @@ export type DeleteEnrollmentInput = {
   id: string,
 };
 
+export type CreateInstructorProfileInput = {
+  id?: string | null,
+  name: string,
+  email: string,
+};
+
+export type ModelInstructorProfileConditionInput = {
+  name?: ModelStringInput | null,
+  email?: ModelStringInput | null,
+  and?: Array< ModelInstructorProfileConditionInput | null > | null,
+  or?: Array< ModelInstructorProfileConditionInput | null > | null,
+  not?: ModelInstructorProfileConditionInput | null,
+};
+
+export type InstructorProfile = {
+  __typename: "InstructorProfile",
+  id: string,
+  name: string,
+  email: string,
+  biography: InstructorBiography,
+  contact: InstructorContact,
+  createdAt: string,
+  updatedAt: string,
+  owner?: string | null,
+};
+
+export type InstructorBiography = {
+  __typename: "InstructorBiography",
+  id: string,
+  overview: string,
+  professionalExperience?: ModelExperienceConnection | null,
+  awards?: ModelAwardConnection | null,
+  createdAt: string,
+  updatedAt: string,
+  owner?: string | null,
+};
+
+export type ModelExperienceConnection = {
+  __typename: "ModelExperienceConnection",
+  items:  Array<Experience | null >,
+  nextToken?: string | null,
+};
+
+export type Experience = {
+  __typename: "Experience",
+  id: string,
+  startDate: string,
+  endDate?: string | null,
+  isCurrent: boolean,
+  companyName: string,
+  jobTitle: string,
+  description: string,
+  createdAt: string,
+  updatedAt: string,
+  instructorBiographyProfessionalExperienceId?: string | null,
+  owner?: string | null,
+};
+
+export type ModelAwardConnection = {
+  __typename: "ModelAwardConnection",
+  items:  Array<Award | null >,
+  nextToken?: string | null,
+};
+
+export type Award = {
+  __typename: "Award",
+  id: string,
+  awardDate: string,
+  awardSource: string,
+  description: string,
+  createdAt: string,
+  updatedAt: string,
+  instructorBiographyAwardsId?: string | null,
+  owner?: string | null,
+};
+
+export type InstructorContact = {
+  __typename: "InstructorContact",
+  id: string,
+  phone?: string | null,
+  email?: string | null,
+  createdAt: string,
+  updatedAt: string,
+  owner?: string | null,
+};
+
+export type UpdateInstructorProfileInput = {
+  id: string,
+  name?: string | null,
+  email?: string | null,
+};
+
+export type DeleteInstructorProfileInput = {
+  id: string,
+};
+
+export type CreateInstructorContactInput = {
+  id?: string | null,
+  phone?: string | null,
+  email?: string | null,
+};
+
+export type ModelInstructorContactConditionInput = {
+  phone?: ModelStringInput | null,
+  email?: ModelStringInput | null,
+  and?: Array< ModelInstructorContactConditionInput | null > | null,
+  or?: Array< ModelInstructorContactConditionInput | null > | null,
+  not?: ModelInstructorContactConditionInput | null,
+};
+
+export type UpdateInstructorContactInput = {
+  id: string,
+  phone?: string | null,
+  email?: string | null,
+};
+
+export type DeleteInstructorContactInput = {
+  id: string,
+};
+
+export type CreateInstructorBiographyInput = {
+  id?: string | null,
+  overview: string,
+};
+
+export type ModelInstructorBiographyConditionInput = {
+  overview?: ModelStringInput | null,
+  and?: Array< ModelInstructorBiographyConditionInput | null > | null,
+  or?: Array< ModelInstructorBiographyConditionInput | null > | null,
+  not?: ModelInstructorBiographyConditionInput | null,
+};
+
+export type UpdateInstructorBiographyInput = {
+  id: string,
+  overview?: string | null,
+};
+
+export type DeleteInstructorBiographyInput = {
+  id: string,
+};
+
+export type CreateExperienceInput = {
+  id?: string | null,
+  startDate: string,
+  endDate?: string | null,
+  isCurrent: boolean,
+  companyName: string,
+  jobTitle: string,
+  description: string,
+  instructorBiographyProfessionalExperienceId?: string | null,
+};
+
+export type ModelExperienceConditionInput = {
+  startDate?: ModelStringInput | null,
+  endDate?: ModelStringInput | null,
+  isCurrent?: ModelBooleanInput | null,
+  companyName?: ModelStringInput | null,
+  jobTitle?: ModelStringInput | null,
+  description?: ModelStringInput | null,
+  and?: Array< ModelExperienceConditionInput | null > | null,
+  or?: Array< ModelExperienceConditionInput | null > | null,
+  not?: ModelExperienceConditionInput | null,
+  instructorBiographyProfessionalExperienceId?: ModelIDInput | null,
+};
+
+export type UpdateExperienceInput = {
+  id: string,
+  startDate?: string | null,
+  endDate?: string | null,
+  isCurrent?: boolean | null,
+  companyName?: string | null,
+  jobTitle?: string | null,
+  description?: string | null,
+  instructorBiographyProfessionalExperienceId?: string | null,
+};
+
+export type DeleteExperienceInput = {
+  id: string,
+};
+
+export type CreateAwardInput = {
+  id?: string | null,
+  awardDate: string,
+  awardSource: string,
+  description: string,
+  instructorBiographyAwardsId?: string | null,
+};
+
+export type ModelAwardConditionInput = {
+  awardDate?: ModelStringInput | null,
+  awardSource?: ModelStringInput | null,
+  description?: ModelStringInput | null,
+  and?: Array< ModelAwardConditionInput | null > | null,
+  or?: Array< ModelAwardConditionInput | null > | null,
+  not?: ModelAwardConditionInput | null,
+  instructorBiographyAwardsId?: ModelIDInput | null,
+};
+
+export type UpdateAwardInput = {
+  id: string,
+  awardDate?: string | null,
+  awardSource?: string | null,
+  description?: string | null,
+  instructorBiographyAwardsId?: string | null,
+};
+
+export type DeleteAwardInput = {
+  id: string,
+};
+
 export type ModelStudentProfileFilterInput = {
   id?: ModelIDInput | null,
   name?: ModelStringInput | null,
@@ -755,6 +965,75 @@ export type ModelEnrollmentConnection = {
   __typename: "ModelEnrollmentConnection",
   items:  Array<Enrollment | null >,
   nextToken?: string | null,
+};
+
+export type ModelInstructorProfileFilterInput = {
+  id?: ModelIDInput | null,
+  name?: ModelStringInput | null,
+  email?: ModelStringInput | null,
+  and?: Array< ModelInstructorProfileFilterInput | null > | null,
+  or?: Array< ModelInstructorProfileFilterInput | null > | null,
+  not?: ModelInstructorProfileFilterInput | null,
+};
+
+export type ModelInstructorProfileConnection = {
+  __typename: "ModelInstructorProfileConnection",
+  items:  Array<InstructorProfile | null >,
+  nextToken?: string | null,
+};
+
+export type ModelInstructorContactFilterInput = {
+  id?: ModelIDInput | null,
+  phone?: ModelStringInput | null,
+  email?: ModelStringInput | null,
+  and?: Array< ModelInstructorContactFilterInput | null > | null,
+  or?: Array< ModelInstructorContactFilterInput | null > | null,
+  not?: ModelInstructorContactFilterInput | null,
+};
+
+export type ModelInstructorContactConnection = {
+  __typename: "ModelInstructorContactConnection",
+  items:  Array<InstructorContact | null >,
+  nextToken?: string | null,
+};
+
+export type ModelInstructorBiographyFilterInput = {
+  id?: ModelIDInput | null,
+  overview?: ModelStringInput | null,
+  and?: Array< ModelInstructorBiographyFilterInput | null > | null,
+  or?: Array< ModelInstructorBiographyFilterInput | null > | null,
+  not?: ModelInstructorBiographyFilterInput | null,
+};
+
+export type ModelInstructorBiographyConnection = {
+  __typename: "ModelInstructorBiographyConnection",
+  items:  Array<InstructorBiography | null >,
+  nextToken?: string | null,
+};
+
+export type ModelExperienceFilterInput = {
+  id?: ModelIDInput | null,
+  startDate?: ModelStringInput | null,
+  endDate?: ModelStringInput | null,
+  isCurrent?: ModelBooleanInput | null,
+  companyName?: ModelStringInput | null,
+  jobTitle?: ModelStringInput | null,
+  description?: ModelStringInput | null,
+  and?: Array< ModelExperienceFilterInput | null > | null,
+  or?: Array< ModelExperienceFilterInput | null > | null,
+  not?: ModelExperienceFilterInput | null,
+  instructorBiographyProfessionalExperienceId?: ModelIDInput | null,
+};
+
+export type ModelAwardFilterInput = {
+  id?: ModelIDInput | null,
+  awardDate?: ModelStringInput | null,
+  awardSource?: ModelStringInput | null,
+  description?: ModelStringInput | null,
+  and?: Array< ModelAwardFilterInput | null > | null,
+  or?: Array< ModelAwardFilterInput | null > | null,
+  not?: ModelAwardFilterInput | null,
+  instructorBiographyAwardsId?: ModelIDInput | null,
 };
 
 export enum ModelSortDirection {
@@ -922,6 +1201,50 @@ export type ModelSubscriptionFloatInput = {
   between?: Array< number | null > | null,
   in?: Array< number | null > | null,
   notIn?: Array< number | null > | null,
+};
+
+export type ModelSubscriptionInstructorProfileFilterInput = {
+  id?: ModelSubscriptionIDInput | null,
+  name?: ModelSubscriptionStringInput | null,
+  email?: ModelSubscriptionStringInput | null,
+  and?: Array< ModelSubscriptionInstructorProfileFilterInput | null > | null,
+  or?: Array< ModelSubscriptionInstructorProfileFilterInput | null > | null,
+};
+
+export type ModelSubscriptionInstructorContactFilterInput = {
+  id?: ModelSubscriptionIDInput | null,
+  phone?: ModelSubscriptionStringInput | null,
+  email?: ModelSubscriptionStringInput | null,
+  and?: Array< ModelSubscriptionInstructorContactFilterInput | null > | null,
+  or?: Array< ModelSubscriptionInstructorContactFilterInput | null > | null,
+};
+
+export type ModelSubscriptionInstructorBiographyFilterInput = {
+  id?: ModelSubscriptionIDInput | null,
+  overview?: ModelSubscriptionStringInput | null,
+  and?: Array< ModelSubscriptionInstructorBiographyFilterInput | null > | null,
+  or?: Array< ModelSubscriptionInstructorBiographyFilterInput | null > | null,
+};
+
+export type ModelSubscriptionExperienceFilterInput = {
+  id?: ModelSubscriptionIDInput | null,
+  startDate?: ModelSubscriptionStringInput | null,
+  endDate?: ModelSubscriptionStringInput | null,
+  isCurrent?: ModelSubscriptionBooleanInput | null,
+  companyName?: ModelSubscriptionStringInput | null,
+  jobTitle?: ModelSubscriptionStringInput | null,
+  description?: ModelSubscriptionStringInput | null,
+  and?: Array< ModelSubscriptionExperienceFilterInput | null > | null,
+  or?: Array< ModelSubscriptionExperienceFilterInput | null > | null,
+};
+
+export type ModelSubscriptionAwardFilterInput = {
+  id?: ModelSubscriptionIDInput | null,
+  awardDate?: ModelSubscriptionStringInput | null,
+  awardSource?: ModelSubscriptionStringInput | null,
+  description?: ModelSubscriptionStringInput | null,
+  and?: Array< ModelSubscriptionAwardFilterInput | null > | null,
+  or?: Array< ModelSubscriptionAwardFilterInput | null > | null,
 };
 
 export type CreateStudentProfileMutationVariables = {
@@ -1707,6 +2030,354 @@ export type DeleteEnrollmentMutation = {
   } | null,
 };
 
+export type CreateInstructorProfileMutationVariables = {
+  input: CreateInstructorProfileInput,
+  condition?: ModelInstructorProfileConditionInput | null,
+};
+
+export type CreateInstructorProfileMutation = {
+  createInstructorProfile?:  {
+    __typename: "InstructorProfile",
+    id: string,
+    name: string,
+    email: string,
+    biography:  {
+      __typename: "InstructorBiography",
+      id: string,
+      overview: string,
+      createdAt: string,
+      updatedAt: string,
+      owner?: string | null,
+    },
+    contact:  {
+      __typename: "InstructorContact",
+      id: string,
+      phone?: string | null,
+      email?: string | null,
+      createdAt: string,
+      updatedAt: string,
+      owner?: string | null,
+    },
+    createdAt: string,
+    updatedAt: string,
+    owner?: string | null,
+  } | null,
+};
+
+export type UpdateInstructorProfileMutationVariables = {
+  input: UpdateInstructorProfileInput,
+  condition?: ModelInstructorProfileConditionInput | null,
+};
+
+export type UpdateInstructorProfileMutation = {
+  updateInstructorProfile?:  {
+    __typename: "InstructorProfile",
+    id: string,
+    name: string,
+    email: string,
+    biography:  {
+      __typename: "InstructorBiography",
+      id: string,
+      overview: string,
+      createdAt: string,
+      updatedAt: string,
+      owner?: string | null,
+    },
+    contact:  {
+      __typename: "InstructorContact",
+      id: string,
+      phone?: string | null,
+      email?: string | null,
+      createdAt: string,
+      updatedAt: string,
+      owner?: string | null,
+    },
+    createdAt: string,
+    updatedAt: string,
+    owner?: string | null,
+  } | null,
+};
+
+export type DeleteInstructorProfileMutationVariables = {
+  input: DeleteInstructorProfileInput,
+  condition?: ModelInstructorProfileConditionInput | null,
+};
+
+export type DeleteInstructorProfileMutation = {
+  deleteInstructorProfile?:  {
+    __typename: "InstructorProfile",
+    id: string,
+    name: string,
+    email: string,
+    biography:  {
+      __typename: "InstructorBiography",
+      id: string,
+      overview: string,
+      createdAt: string,
+      updatedAt: string,
+      owner?: string | null,
+    },
+    contact:  {
+      __typename: "InstructorContact",
+      id: string,
+      phone?: string | null,
+      email?: string | null,
+      createdAt: string,
+      updatedAt: string,
+      owner?: string | null,
+    },
+    createdAt: string,
+    updatedAt: string,
+    owner?: string | null,
+  } | null,
+};
+
+export type CreateInstructorContactMutationVariables = {
+  input: CreateInstructorContactInput,
+  condition?: ModelInstructorContactConditionInput | null,
+};
+
+export type CreateInstructorContactMutation = {
+  createInstructorContact?:  {
+    __typename: "InstructorContact",
+    id: string,
+    phone?: string | null,
+    email?: string | null,
+    createdAt: string,
+    updatedAt: string,
+    owner?: string | null,
+  } | null,
+};
+
+export type UpdateInstructorContactMutationVariables = {
+  input: UpdateInstructorContactInput,
+  condition?: ModelInstructorContactConditionInput | null,
+};
+
+export type UpdateInstructorContactMutation = {
+  updateInstructorContact?:  {
+    __typename: "InstructorContact",
+    id: string,
+    phone?: string | null,
+    email?: string | null,
+    createdAt: string,
+    updatedAt: string,
+    owner?: string | null,
+  } | null,
+};
+
+export type DeleteInstructorContactMutationVariables = {
+  input: DeleteInstructorContactInput,
+  condition?: ModelInstructorContactConditionInput | null,
+};
+
+export type DeleteInstructorContactMutation = {
+  deleteInstructorContact?:  {
+    __typename: "InstructorContact",
+    id: string,
+    phone?: string | null,
+    email?: string | null,
+    createdAt: string,
+    updatedAt: string,
+    owner?: string | null,
+  } | null,
+};
+
+export type CreateInstructorBiographyMutationVariables = {
+  input: CreateInstructorBiographyInput,
+  condition?: ModelInstructorBiographyConditionInput | null,
+};
+
+export type CreateInstructorBiographyMutation = {
+  createInstructorBiography?:  {
+    __typename: "InstructorBiography",
+    id: string,
+    overview: string,
+    professionalExperience?:  {
+      __typename: "ModelExperienceConnection",
+      nextToken?: string | null,
+    } | null,
+    awards?:  {
+      __typename: "ModelAwardConnection",
+      nextToken?: string | null,
+    } | null,
+    createdAt: string,
+    updatedAt: string,
+    owner?: string | null,
+  } | null,
+};
+
+export type UpdateInstructorBiographyMutationVariables = {
+  input: UpdateInstructorBiographyInput,
+  condition?: ModelInstructorBiographyConditionInput | null,
+};
+
+export type UpdateInstructorBiographyMutation = {
+  updateInstructorBiography?:  {
+    __typename: "InstructorBiography",
+    id: string,
+    overview: string,
+    professionalExperience?:  {
+      __typename: "ModelExperienceConnection",
+      nextToken?: string | null,
+    } | null,
+    awards?:  {
+      __typename: "ModelAwardConnection",
+      nextToken?: string | null,
+    } | null,
+    createdAt: string,
+    updatedAt: string,
+    owner?: string | null,
+  } | null,
+};
+
+export type DeleteInstructorBiographyMutationVariables = {
+  input: DeleteInstructorBiographyInput,
+  condition?: ModelInstructorBiographyConditionInput | null,
+};
+
+export type DeleteInstructorBiographyMutation = {
+  deleteInstructorBiography?:  {
+    __typename: "InstructorBiography",
+    id: string,
+    overview: string,
+    professionalExperience?:  {
+      __typename: "ModelExperienceConnection",
+      nextToken?: string | null,
+    } | null,
+    awards?:  {
+      __typename: "ModelAwardConnection",
+      nextToken?: string | null,
+    } | null,
+    createdAt: string,
+    updatedAt: string,
+    owner?: string | null,
+  } | null,
+};
+
+export type CreateExperienceMutationVariables = {
+  input: CreateExperienceInput,
+  condition?: ModelExperienceConditionInput | null,
+};
+
+export type CreateExperienceMutation = {
+  createExperience?:  {
+    __typename: "Experience",
+    id: string,
+    startDate: string,
+    endDate?: string | null,
+    isCurrent: boolean,
+    companyName: string,
+    jobTitle: string,
+    description: string,
+    createdAt: string,
+    updatedAt: string,
+    instructorBiographyProfessionalExperienceId?: string | null,
+    owner?: string | null,
+  } | null,
+};
+
+export type UpdateExperienceMutationVariables = {
+  input: UpdateExperienceInput,
+  condition?: ModelExperienceConditionInput | null,
+};
+
+export type UpdateExperienceMutation = {
+  updateExperience?:  {
+    __typename: "Experience",
+    id: string,
+    startDate: string,
+    endDate?: string | null,
+    isCurrent: boolean,
+    companyName: string,
+    jobTitle: string,
+    description: string,
+    createdAt: string,
+    updatedAt: string,
+    instructorBiographyProfessionalExperienceId?: string | null,
+    owner?: string | null,
+  } | null,
+};
+
+export type DeleteExperienceMutationVariables = {
+  input: DeleteExperienceInput,
+  condition?: ModelExperienceConditionInput | null,
+};
+
+export type DeleteExperienceMutation = {
+  deleteExperience?:  {
+    __typename: "Experience",
+    id: string,
+    startDate: string,
+    endDate?: string | null,
+    isCurrent: boolean,
+    companyName: string,
+    jobTitle: string,
+    description: string,
+    createdAt: string,
+    updatedAt: string,
+    instructorBiographyProfessionalExperienceId?: string | null,
+    owner?: string | null,
+  } | null,
+};
+
+export type CreateAwardMutationVariables = {
+  input: CreateAwardInput,
+  condition?: ModelAwardConditionInput | null,
+};
+
+export type CreateAwardMutation = {
+  createAward?:  {
+    __typename: "Award",
+    id: string,
+    awardDate: string,
+    awardSource: string,
+    description: string,
+    createdAt: string,
+    updatedAt: string,
+    instructorBiographyAwardsId?: string | null,
+    owner?: string | null,
+  } | null,
+};
+
+export type UpdateAwardMutationVariables = {
+  input: UpdateAwardInput,
+  condition?: ModelAwardConditionInput | null,
+};
+
+export type UpdateAwardMutation = {
+  updateAward?:  {
+    __typename: "Award",
+    id: string,
+    awardDate: string,
+    awardSource: string,
+    description: string,
+    createdAt: string,
+    updatedAt: string,
+    instructorBiographyAwardsId?: string | null,
+    owner?: string | null,
+  } | null,
+};
+
+export type DeleteAwardMutationVariables = {
+  input: DeleteAwardInput,
+  condition?: ModelAwardConditionInput | null,
+};
+
+export type DeleteAwardMutation = {
+  deleteAward?:  {
+    __typename: "Award",
+    id: string,
+    awardDate: string,
+    awardSource: string,
+    description: string,
+    createdAt: string,
+    updatedAt: string,
+    instructorBiographyAwardsId?: string | null,
+    owner?: string | null,
+  } | null,
+};
+
 export type GetStudentProfileQueryVariables = {
   id: string,
 };
@@ -2192,6 +2863,233 @@ export type ListEnrollmentsQuery = {
       achievements?: Array< string | null > | null,
       createdAt: string,
       updatedAt: string,
+    } | null >,
+    nextToken?: string | null,
+  } | null,
+};
+
+export type GetInstructorProfileQueryVariables = {
+  id: string,
+};
+
+export type GetInstructorProfileQuery = {
+  getInstructorProfile?:  {
+    __typename: "InstructorProfile",
+    id: string,
+    name: string,
+    email: string,
+    biography:  {
+      __typename: "InstructorBiography",
+      id: string,
+      overview: string,
+      createdAt: string,
+      updatedAt: string,
+      owner?: string | null,
+    },
+    contact:  {
+      __typename: "InstructorContact",
+      id: string,
+      phone?: string | null,
+      email?: string | null,
+      createdAt: string,
+      updatedAt: string,
+      owner?: string | null,
+    },
+    createdAt: string,
+    updatedAt: string,
+    owner?: string | null,
+  } | null,
+};
+
+export type ListInstructorProfilesQueryVariables = {
+  filter?: ModelInstructorProfileFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+};
+
+export type ListInstructorProfilesQuery = {
+  listInstructorProfiles?:  {
+    __typename: "ModelInstructorProfileConnection",
+    items:  Array< {
+      __typename: "InstructorProfile",
+      id: string,
+      name: string,
+      email: string,
+      createdAt: string,
+      updatedAt: string,
+      owner?: string | null,
+    } | null >,
+    nextToken?: string | null,
+  } | null,
+};
+
+export type GetInstructorContactQueryVariables = {
+  id: string,
+};
+
+export type GetInstructorContactQuery = {
+  getInstructorContact?:  {
+    __typename: "InstructorContact",
+    id: string,
+    phone?: string | null,
+    email?: string | null,
+    createdAt: string,
+    updatedAt: string,
+    owner?: string | null,
+  } | null,
+};
+
+export type ListInstructorContactsQueryVariables = {
+  filter?: ModelInstructorContactFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+};
+
+export type ListInstructorContactsQuery = {
+  listInstructorContacts?:  {
+    __typename: "ModelInstructorContactConnection",
+    items:  Array< {
+      __typename: "InstructorContact",
+      id: string,
+      phone?: string | null,
+      email?: string | null,
+      createdAt: string,
+      updatedAt: string,
+      owner?: string | null,
+    } | null >,
+    nextToken?: string | null,
+  } | null,
+};
+
+export type GetInstructorBiographyQueryVariables = {
+  id: string,
+};
+
+export type GetInstructorBiographyQuery = {
+  getInstructorBiography?:  {
+    __typename: "InstructorBiography",
+    id: string,
+    overview: string,
+    professionalExperience?:  {
+      __typename: "ModelExperienceConnection",
+      nextToken?: string | null,
+    } | null,
+    awards?:  {
+      __typename: "ModelAwardConnection",
+      nextToken?: string | null,
+    } | null,
+    createdAt: string,
+    updatedAt: string,
+    owner?: string | null,
+  } | null,
+};
+
+export type ListInstructorBiographiesQueryVariables = {
+  filter?: ModelInstructorBiographyFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+};
+
+export type ListInstructorBiographiesQuery = {
+  listInstructorBiographies?:  {
+    __typename: "ModelInstructorBiographyConnection",
+    items:  Array< {
+      __typename: "InstructorBiography",
+      id: string,
+      overview: string,
+      createdAt: string,
+      updatedAt: string,
+      owner?: string | null,
+    } | null >,
+    nextToken?: string | null,
+  } | null,
+};
+
+export type GetExperienceQueryVariables = {
+  id: string,
+};
+
+export type GetExperienceQuery = {
+  getExperience?:  {
+    __typename: "Experience",
+    id: string,
+    startDate: string,
+    endDate?: string | null,
+    isCurrent: boolean,
+    companyName: string,
+    jobTitle: string,
+    description: string,
+    createdAt: string,
+    updatedAt: string,
+    instructorBiographyProfessionalExperienceId?: string | null,
+    owner?: string | null,
+  } | null,
+};
+
+export type ListExperiencesQueryVariables = {
+  filter?: ModelExperienceFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+};
+
+export type ListExperiencesQuery = {
+  listExperiences?:  {
+    __typename: "ModelExperienceConnection",
+    items:  Array< {
+      __typename: "Experience",
+      id: string,
+      startDate: string,
+      endDate?: string | null,
+      isCurrent: boolean,
+      companyName: string,
+      jobTitle: string,
+      description: string,
+      createdAt: string,
+      updatedAt: string,
+      instructorBiographyProfessionalExperienceId?: string | null,
+      owner?: string | null,
+    } | null >,
+    nextToken?: string | null,
+  } | null,
+};
+
+export type GetAwardQueryVariables = {
+  id: string,
+};
+
+export type GetAwardQuery = {
+  getAward?:  {
+    __typename: "Award",
+    id: string,
+    awardDate: string,
+    awardSource: string,
+    description: string,
+    createdAt: string,
+    updatedAt: string,
+    instructorBiographyAwardsId?: string | null,
+    owner?: string | null,
+  } | null,
+};
+
+export type ListAwardsQueryVariables = {
+  filter?: ModelAwardFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+};
+
+export type ListAwardsQuery = {
+  listAwards?:  {
+    __typename: "ModelAwardConnection",
+    items:  Array< {
+      __typename: "Award",
+      id: string,
+      awardDate: string,
+      awardSource: string,
+      description: string,
+      createdAt: string,
+      updatedAt: string,
+      instructorBiographyAwardsId?: string | null,
+      owner?: string | null,
     } | null >,
     nextToken?: string | null,
   } | null,
@@ -3109,5 +4007,353 @@ export type OnDeleteEnrollmentSubscription = {
     achievements?: Array< string | null > | null,
     createdAt: string,
     updatedAt: string,
+  } | null,
+};
+
+export type OnCreateInstructorProfileSubscriptionVariables = {
+  filter?: ModelSubscriptionInstructorProfileFilterInput | null,
+  owner?: string | null,
+};
+
+export type OnCreateInstructorProfileSubscription = {
+  onCreateInstructorProfile?:  {
+    __typename: "InstructorProfile",
+    id: string,
+    name: string,
+    email: string,
+    biography:  {
+      __typename: "InstructorBiography",
+      id: string,
+      overview: string,
+      createdAt: string,
+      updatedAt: string,
+      owner?: string | null,
+    },
+    contact:  {
+      __typename: "InstructorContact",
+      id: string,
+      phone?: string | null,
+      email?: string | null,
+      createdAt: string,
+      updatedAt: string,
+      owner?: string | null,
+    },
+    createdAt: string,
+    updatedAt: string,
+    owner?: string | null,
+  } | null,
+};
+
+export type OnUpdateInstructorProfileSubscriptionVariables = {
+  filter?: ModelSubscriptionInstructorProfileFilterInput | null,
+  owner?: string | null,
+};
+
+export type OnUpdateInstructorProfileSubscription = {
+  onUpdateInstructorProfile?:  {
+    __typename: "InstructorProfile",
+    id: string,
+    name: string,
+    email: string,
+    biography:  {
+      __typename: "InstructorBiography",
+      id: string,
+      overview: string,
+      createdAt: string,
+      updatedAt: string,
+      owner?: string | null,
+    },
+    contact:  {
+      __typename: "InstructorContact",
+      id: string,
+      phone?: string | null,
+      email?: string | null,
+      createdAt: string,
+      updatedAt: string,
+      owner?: string | null,
+    },
+    createdAt: string,
+    updatedAt: string,
+    owner?: string | null,
+  } | null,
+};
+
+export type OnDeleteInstructorProfileSubscriptionVariables = {
+  filter?: ModelSubscriptionInstructorProfileFilterInput | null,
+  owner?: string | null,
+};
+
+export type OnDeleteInstructorProfileSubscription = {
+  onDeleteInstructorProfile?:  {
+    __typename: "InstructorProfile",
+    id: string,
+    name: string,
+    email: string,
+    biography:  {
+      __typename: "InstructorBiography",
+      id: string,
+      overview: string,
+      createdAt: string,
+      updatedAt: string,
+      owner?: string | null,
+    },
+    contact:  {
+      __typename: "InstructorContact",
+      id: string,
+      phone?: string | null,
+      email?: string | null,
+      createdAt: string,
+      updatedAt: string,
+      owner?: string | null,
+    },
+    createdAt: string,
+    updatedAt: string,
+    owner?: string | null,
+  } | null,
+};
+
+export type OnCreateInstructorContactSubscriptionVariables = {
+  filter?: ModelSubscriptionInstructorContactFilterInput | null,
+  owner?: string | null,
+};
+
+export type OnCreateInstructorContactSubscription = {
+  onCreateInstructorContact?:  {
+    __typename: "InstructorContact",
+    id: string,
+    phone?: string | null,
+    email?: string | null,
+    createdAt: string,
+    updatedAt: string,
+    owner?: string | null,
+  } | null,
+};
+
+export type OnUpdateInstructorContactSubscriptionVariables = {
+  filter?: ModelSubscriptionInstructorContactFilterInput | null,
+  owner?: string | null,
+};
+
+export type OnUpdateInstructorContactSubscription = {
+  onUpdateInstructorContact?:  {
+    __typename: "InstructorContact",
+    id: string,
+    phone?: string | null,
+    email?: string | null,
+    createdAt: string,
+    updatedAt: string,
+    owner?: string | null,
+  } | null,
+};
+
+export type OnDeleteInstructorContactSubscriptionVariables = {
+  filter?: ModelSubscriptionInstructorContactFilterInput | null,
+  owner?: string | null,
+};
+
+export type OnDeleteInstructorContactSubscription = {
+  onDeleteInstructorContact?:  {
+    __typename: "InstructorContact",
+    id: string,
+    phone?: string | null,
+    email?: string | null,
+    createdAt: string,
+    updatedAt: string,
+    owner?: string | null,
+  } | null,
+};
+
+export type OnCreateInstructorBiographySubscriptionVariables = {
+  filter?: ModelSubscriptionInstructorBiographyFilterInput | null,
+  owner?: string | null,
+};
+
+export type OnCreateInstructorBiographySubscription = {
+  onCreateInstructorBiography?:  {
+    __typename: "InstructorBiography",
+    id: string,
+    overview: string,
+    professionalExperience?:  {
+      __typename: "ModelExperienceConnection",
+      nextToken?: string | null,
+    } | null,
+    awards?:  {
+      __typename: "ModelAwardConnection",
+      nextToken?: string | null,
+    } | null,
+    createdAt: string,
+    updatedAt: string,
+    owner?: string | null,
+  } | null,
+};
+
+export type OnUpdateInstructorBiographySubscriptionVariables = {
+  filter?: ModelSubscriptionInstructorBiographyFilterInput | null,
+  owner?: string | null,
+};
+
+export type OnUpdateInstructorBiographySubscription = {
+  onUpdateInstructorBiography?:  {
+    __typename: "InstructorBiography",
+    id: string,
+    overview: string,
+    professionalExperience?:  {
+      __typename: "ModelExperienceConnection",
+      nextToken?: string | null,
+    } | null,
+    awards?:  {
+      __typename: "ModelAwardConnection",
+      nextToken?: string | null,
+    } | null,
+    createdAt: string,
+    updatedAt: string,
+    owner?: string | null,
+  } | null,
+};
+
+export type OnDeleteInstructorBiographySubscriptionVariables = {
+  filter?: ModelSubscriptionInstructorBiographyFilterInput | null,
+  owner?: string | null,
+};
+
+export type OnDeleteInstructorBiographySubscription = {
+  onDeleteInstructorBiography?:  {
+    __typename: "InstructorBiography",
+    id: string,
+    overview: string,
+    professionalExperience?:  {
+      __typename: "ModelExperienceConnection",
+      nextToken?: string | null,
+    } | null,
+    awards?:  {
+      __typename: "ModelAwardConnection",
+      nextToken?: string | null,
+    } | null,
+    createdAt: string,
+    updatedAt: string,
+    owner?: string | null,
+  } | null,
+};
+
+export type OnCreateExperienceSubscriptionVariables = {
+  filter?: ModelSubscriptionExperienceFilterInput | null,
+  owner?: string | null,
+};
+
+export type OnCreateExperienceSubscription = {
+  onCreateExperience?:  {
+    __typename: "Experience",
+    id: string,
+    startDate: string,
+    endDate?: string | null,
+    isCurrent: boolean,
+    companyName: string,
+    jobTitle: string,
+    description: string,
+    createdAt: string,
+    updatedAt: string,
+    instructorBiographyProfessionalExperienceId?: string | null,
+    owner?: string | null,
+  } | null,
+};
+
+export type OnUpdateExperienceSubscriptionVariables = {
+  filter?: ModelSubscriptionExperienceFilterInput | null,
+  owner?: string | null,
+};
+
+export type OnUpdateExperienceSubscription = {
+  onUpdateExperience?:  {
+    __typename: "Experience",
+    id: string,
+    startDate: string,
+    endDate?: string | null,
+    isCurrent: boolean,
+    companyName: string,
+    jobTitle: string,
+    description: string,
+    createdAt: string,
+    updatedAt: string,
+    instructorBiographyProfessionalExperienceId?: string | null,
+    owner?: string | null,
+  } | null,
+};
+
+export type OnDeleteExperienceSubscriptionVariables = {
+  filter?: ModelSubscriptionExperienceFilterInput | null,
+  owner?: string | null,
+};
+
+export type OnDeleteExperienceSubscription = {
+  onDeleteExperience?:  {
+    __typename: "Experience",
+    id: string,
+    startDate: string,
+    endDate?: string | null,
+    isCurrent: boolean,
+    companyName: string,
+    jobTitle: string,
+    description: string,
+    createdAt: string,
+    updatedAt: string,
+    instructorBiographyProfessionalExperienceId?: string | null,
+    owner?: string | null,
+  } | null,
+};
+
+export type OnCreateAwardSubscriptionVariables = {
+  filter?: ModelSubscriptionAwardFilterInput | null,
+  owner?: string | null,
+};
+
+export type OnCreateAwardSubscription = {
+  onCreateAward?:  {
+    __typename: "Award",
+    id: string,
+    awardDate: string,
+    awardSource: string,
+    description: string,
+    createdAt: string,
+    updatedAt: string,
+    instructorBiographyAwardsId?: string | null,
+    owner?: string | null,
+  } | null,
+};
+
+export type OnUpdateAwardSubscriptionVariables = {
+  filter?: ModelSubscriptionAwardFilterInput | null,
+  owner?: string | null,
+};
+
+export type OnUpdateAwardSubscription = {
+  onUpdateAward?:  {
+    __typename: "Award",
+    id: string,
+    awardDate: string,
+    awardSource: string,
+    description: string,
+    createdAt: string,
+    updatedAt: string,
+    instructorBiographyAwardsId?: string | null,
+    owner?: string | null,
+  } | null,
+};
+
+export type OnDeleteAwardSubscriptionVariables = {
+  filter?: ModelSubscriptionAwardFilterInput | null,
+  owner?: string | null,
+};
+
+export type OnDeleteAwardSubscription = {
+  onDeleteAward?:  {
+    __typename: "Award",
+    id: string,
+    awardDate: string,
+    awardSource: string,
+    description: string,
+    createdAt: string,
+    updatedAt: string,
+    instructorBiographyAwardsId?: string | null,
+    owner?: string | null,
   } | null,
 };

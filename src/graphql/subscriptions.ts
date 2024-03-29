@@ -758,3 +758,366 @@ export const onDeleteEnrollment = /* GraphQL */ `subscription OnDeleteEnrollment
   APITypes.OnDeleteEnrollmentSubscriptionVariables,
   APITypes.OnDeleteEnrollmentSubscription
 >;
+export const onCreateInstructorProfile = /* GraphQL */ `subscription OnCreateInstructorProfile(
+  $filter: ModelSubscriptionInstructorProfileFilterInput
+  $owner: String
+) {
+  onCreateInstructorProfile(filter: $filter, owner: $owner) {
+    id
+    name
+    email
+    biography {
+      id
+      overview
+      createdAt
+      updatedAt
+      owner
+      __typename
+    }
+    contact {
+      id
+      phone
+      email
+      createdAt
+      updatedAt
+      owner
+      __typename
+    }
+    createdAt
+    updatedAt
+    owner
+    __typename
+  }
+}
+` as GeneratedSubscription<
+  APITypes.OnCreateInstructorProfileSubscriptionVariables,
+  APITypes.OnCreateInstructorProfileSubscription
+>;
+export const onUpdateInstructorProfile = /* GraphQL */ `subscription OnUpdateInstructorProfile(
+  $filter: ModelSubscriptionInstructorProfileFilterInput
+  $owner: String
+) {
+  onUpdateInstructorProfile(filter: $filter, owner: $owner) {
+    id
+    name
+    email
+    biography {
+      id
+      overview
+      createdAt
+      updatedAt
+      owner
+      __typename
+    }
+    contact {
+      id
+      phone
+      email
+      createdAt
+      updatedAt
+      owner
+      __typename
+    }
+    createdAt
+    updatedAt
+    owner
+    __typename
+  }
+}
+` as GeneratedSubscription<
+  APITypes.OnUpdateInstructorProfileSubscriptionVariables,
+  APITypes.OnUpdateInstructorProfileSubscription
+>;
+export const onDeleteInstructorProfile = /* GraphQL */ `subscription OnDeleteInstructorProfile(
+  $filter: ModelSubscriptionInstructorProfileFilterInput
+  $owner: String
+) {
+  onDeleteInstructorProfile(filter: $filter, owner: $owner) {
+    id
+    name
+    email
+    biography {
+      id
+      overview
+      createdAt
+      updatedAt
+      owner
+      __typename
+    }
+    contact {
+      id
+      phone
+      email
+      createdAt
+      updatedAt
+      owner
+      __typename
+    }
+    createdAt
+    updatedAt
+    owner
+    __typename
+  }
+}
+` as GeneratedSubscription<
+  APITypes.OnDeleteInstructorProfileSubscriptionVariables,
+  APITypes.OnDeleteInstructorProfileSubscription
+>;
+export const onCreateInstructorContact = /* GraphQL */ `subscription OnCreateInstructorContact(
+  $filter: ModelSubscriptionInstructorContactFilterInput
+  $owner: String
+) {
+  onCreateInstructorContact(filter: $filter, owner: $owner) {
+    id
+    phone
+    email
+    createdAt
+    updatedAt
+    owner
+    __typename
+  }
+}
+` as GeneratedSubscription<
+  APITypes.OnCreateInstructorContactSubscriptionVariables,
+  APITypes.OnCreateInstructorContactSubscription
+>;
+export const onUpdateInstructorContact = /* GraphQL */ `subscription OnUpdateInstructorContact(
+  $filter: ModelSubscriptionInstructorContactFilterInput
+  $owner: String
+) {
+  onUpdateInstructorContact(filter: $filter, owner: $owner) {
+    id
+    phone
+    email
+    createdAt
+    updatedAt
+    owner
+    __typename
+  }
+}
+` as GeneratedSubscription<
+  APITypes.OnUpdateInstructorContactSubscriptionVariables,
+  APITypes.OnUpdateInstructorContactSubscription
+>;
+export const onDeleteInstructorContact = /* GraphQL */ `subscription OnDeleteInstructorContact(
+  $filter: ModelSubscriptionInstructorContactFilterInput
+  $owner: String
+) {
+  onDeleteInstructorContact(filter: $filter, owner: $owner) {
+    id
+    phone
+    email
+    createdAt
+    updatedAt
+    owner
+    __typename
+  }
+}
+` as GeneratedSubscription<
+  APITypes.OnDeleteInstructorContactSubscriptionVariables,
+  APITypes.OnDeleteInstructorContactSubscription
+>;
+export const onCreateInstructorBiography = /* GraphQL */ `subscription OnCreateInstructorBiography(
+  $filter: ModelSubscriptionInstructorBiographyFilterInput
+  $owner: String
+) {
+  onCreateInstructorBiography(filter: $filter, owner: $owner) {
+    id
+    overview
+    professionalExperience {
+      nextToken
+      __typename
+    }
+    awards {
+      nextToken
+      __typename
+    }
+    createdAt
+    updatedAt
+    owner
+    __typename
+  }
+}
+` as GeneratedSubscription<
+  APITypes.OnCreateInstructorBiographySubscriptionVariables,
+  APITypes.OnCreateInstructorBiographySubscription
+>;
+export const onUpdateInstructorBiography = /* GraphQL */ `subscription OnUpdateInstructorBiography(
+  $filter: ModelSubscriptionInstructorBiographyFilterInput
+  $owner: String
+) {
+  onUpdateInstructorBiography(filter: $filter, owner: $owner) {
+    id
+    overview
+    professionalExperience {
+      nextToken
+      __typename
+    }
+    awards {
+      nextToken
+      __typename
+    }
+    createdAt
+    updatedAt
+    owner
+    __typename
+  }
+}
+` as GeneratedSubscription<
+  APITypes.OnUpdateInstructorBiographySubscriptionVariables,
+  APITypes.OnUpdateInstructorBiographySubscription
+>;
+export const onDeleteInstructorBiography = /* GraphQL */ `subscription OnDeleteInstructorBiography(
+  $filter: ModelSubscriptionInstructorBiographyFilterInput
+  $owner: String
+) {
+  onDeleteInstructorBiography(filter: $filter, owner: $owner) {
+    id
+    overview
+    professionalExperience {
+      nextToken
+      __typename
+    }
+    awards {
+      nextToken
+      __typename
+    }
+    createdAt
+    updatedAt
+    owner
+    __typename
+  }
+}
+` as GeneratedSubscription<
+  APITypes.OnDeleteInstructorBiographySubscriptionVariables,
+  APITypes.OnDeleteInstructorBiographySubscription
+>;
+export const onCreateExperience = /* GraphQL */ `subscription OnCreateExperience(
+  $filter: ModelSubscriptionExperienceFilterInput
+  $owner: String
+) {
+  onCreateExperience(filter: $filter, owner: $owner) {
+    id
+    startDate
+    endDate
+    isCurrent
+    companyName
+    jobTitle
+    description
+    createdAt
+    updatedAt
+    instructorBiographyProfessionalExperienceId
+    owner
+    __typename
+  }
+}
+` as GeneratedSubscription<
+  APITypes.OnCreateExperienceSubscriptionVariables,
+  APITypes.OnCreateExperienceSubscription
+>;
+export const onUpdateExperience = /* GraphQL */ `subscription OnUpdateExperience(
+  $filter: ModelSubscriptionExperienceFilterInput
+  $owner: String
+) {
+  onUpdateExperience(filter: $filter, owner: $owner) {
+    id
+    startDate
+    endDate
+    isCurrent
+    companyName
+    jobTitle
+    description
+    createdAt
+    updatedAt
+    instructorBiographyProfessionalExperienceId
+    owner
+    __typename
+  }
+}
+` as GeneratedSubscription<
+  APITypes.OnUpdateExperienceSubscriptionVariables,
+  APITypes.OnUpdateExperienceSubscription
+>;
+export const onDeleteExperience = /* GraphQL */ `subscription OnDeleteExperience(
+  $filter: ModelSubscriptionExperienceFilterInput
+  $owner: String
+) {
+  onDeleteExperience(filter: $filter, owner: $owner) {
+    id
+    startDate
+    endDate
+    isCurrent
+    companyName
+    jobTitle
+    description
+    createdAt
+    updatedAt
+    instructorBiographyProfessionalExperienceId
+    owner
+    __typename
+  }
+}
+` as GeneratedSubscription<
+  APITypes.OnDeleteExperienceSubscriptionVariables,
+  APITypes.OnDeleteExperienceSubscription
+>;
+export const onCreateAward = /* GraphQL */ `subscription OnCreateAward(
+  $filter: ModelSubscriptionAwardFilterInput
+  $owner: String
+) {
+  onCreateAward(filter: $filter, owner: $owner) {
+    id
+    awardDate
+    awardSource
+    description
+    createdAt
+    updatedAt
+    instructorBiographyAwardsId
+    owner
+    __typename
+  }
+}
+` as GeneratedSubscription<
+  APITypes.OnCreateAwardSubscriptionVariables,
+  APITypes.OnCreateAwardSubscription
+>;
+export const onUpdateAward = /* GraphQL */ `subscription OnUpdateAward(
+  $filter: ModelSubscriptionAwardFilterInput
+  $owner: String
+) {
+  onUpdateAward(filter: $filter, owner: $owner) {
+    id
+    awardDate
+    awardSource
+    description
+    createdAt
+    updatedAt
+    instructorBiographyAwardsId
+    owner
+    __typename
+  }
+}
+` as GeneratedSubscription<
+  APITypes.OnUpdateAwardSubscriptionVariables,
+  APITypes.OnUpdateAwardSubscription
+>;
+export const onDeleteAward = /* GraphQL */ `subscription OnDeleteAward(
+  $filter: ModelSubscriptionAwardFilterInput
+  $owner: String
+) {
+  onDeleteAward(filter: $filter, owner: $owner) {
+    id
+    awardDate
+    awardSource
+    description
+    createdAt
+    updatedAt
+    instructorBiographyAwardsId
+    owner
+    __typename
+  }
+}
+` as GeneratedSubscription<
+  APITypes.OnDeleteAwardSubscriptionVariables,
+  APITypes.OnDeleteAwardSubscription
+>;
