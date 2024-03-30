@@ -1,23 +1,21 @@
 import React, { useEffect, useState } from 'react'
+import studioTheme from '@/src/style/GlobalStyle'
 import Head from 'next/head'
 import amplifyconfiguration from '../src/amplifyconfiguration.json'
-import '@aws-amplify/ui-react/styles.css'
 import { Amplify } from 'aws-amplify'
 import { ThemeProvider } from '@aws-amplify/ui-react'
-import studioTheme from '@/src/style/GlobalStyle'
-import { amplifyApiClient, checkAuthStatus } from '@/src/functions/AuthX'
 import { Header } from '@/src/components/Header'
-import { AuthProvider } from '@/src/state/AuthGlobalState'
 import { useMediaQuery, useTheme } from '@mui/material'
 import { useRouter } from 'next/router'
 import { Hub } from 'aws-amplify/utils'
-import { fetchAuthSession, getCurrentUser } from 'aws-amplify/auth'
+import { fetchAuthSession } from 'aws-amplify/auth'
 import { callAmplifyApi, getPresignedUrl } from '@/src/functions/Amplify'
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 import { downloadAvatarFromS3 } from '@/src/functions/Storage'
 import { getStudentProfile } from '@/src/graphql/queries'
 import { StudentProfile } from '@/src/API'
-//import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+
+import '@aws-amplify/ui-react/styles.css'
 
 const queryClient = new QueryClient()
 
@@ -103,40 +101,40 @@ const NCE_Education_App = ({ Component, pageProps }:any) => {
         const hubListenerCancel = Hub.listen('auth', async (data: any) => {
             switch (data.payload.event) {
                 case "signedIn":
-                    setLoggedIn(true);
+                    setLoggedIn(true)
     
                     try {
-                        const cognitoId = data.payload.data.id;
-                        const userDetails = await callAmplifyApi<StudentProfile>(getStudentProfile, { id: cognitoId });
+                        const cognitoId = data.payload.data.id
+                        const userDetails = await callAmplifyApi<StudentProfile>(getStudentProfile, { id: cognitoId })
     
                         setUserData({
                             email: data.payload.data.username,
                             cognitoID: data.payload.data.id,
                             ...userDetails,
-                        });
+                        })
                     } catch (error) {
-                        console.error('Error fetching user details:', error);
+                        console.error('Error fetching user details:', error)
                     }
-                    break;
+                    break
                 case "signedOut":
-                    setLoggedIn(false);
-                    setUserData(initialUserData);
-                    break;
+                    setLoggedIn(false)
+                    setUserData(initialUserData)
+                    break
                 default:
-                    break;
+                    break
             }
-        });
+        })
     
-        return () => hubListenerCancel(); // Correct usage to cancel the listener on effect cleanup
+        return () => hubListenerCancel()
     
-    }, []);
+    }, [])
     
 
     useEffect(()=>{
         const avatarUrlResponse = async() => {
             try{
                 if(userData.cognitoID){
-                    const avatarFileName = `user_files/${userData.cognitoID}/avatar.png`;
+                    const avatarFileName = `user_files/${userData.cognitoID}/avatar.png`
                     const imageTest = await downloadAvatarFromS3(avatarFileName)
                     let presignedUrlResponse = await getPresignedUrl(avatarFileName)
                     setAvatarUrl(presignedUrlResponse)

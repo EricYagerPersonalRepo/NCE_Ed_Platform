@@ -187,10 +187,7 @@ export const AdminNotificationsTableView = () => {
     useEffect(() => {
         const fetchNotifications = async () => {
             try {
-                const { data } = await amplifyApiClient.graphql({
-                    query: listBroadcastNotifications,
-                    variables: {},
-                })
+                const data:any = await callAmplifyApi(listBroadcastNotifications, {})
                 if (data.listBroadcastNotifications.items) {
                     setRows(data.listBroadcastNotifications.items.map(item => ({...item, id: item.id})))
                 }
