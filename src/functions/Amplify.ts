@@ -1,4 +1,6 @@
 import { getUrl } from "aws-amplify/storage";
+import { amplifyApiClient } from "./AuthX";
+import { GraphQLResult } from "aws-amplify/api";
 
 /**
  * getPresignedUrl Function - Asynchronously retrieves a presigned URL for a given filename.
@@ -69,3 +71,32 @@ export const getUrlResult = async(filename:string) => {
     return url
 }
 
+/**
+ * Simplified Amplify API call function with type safety.
+ * 
+ * @template T - The expected shape of the data returned from the GraphQL operation.
+ * @param {Function} queryFunction - The GraphQL query or mutation function.
+ * @param {object} variables - The variables object for the GraphQL operation.
+ * @returns {Promise<T>} - The result of the GraphQL call.
+ */
+export async function callAmplifyApi<T>(queryFunction: any, variables: object): Promise<T> {
+    try {
+        const response = await amplifyApiClient.graphql({
+            query: queryFunction,
+            variables,
+        }) as GraphQLResult<T>;
+
+        console.log("Amplify API Call from Amplify.ts: ", response.data)
+
+        if (!response.data) {
+            throw new Error('No data returned from GraphQL call');
+        }
+
+        return response.data;
+    } catch (error) {
+        console.error('Error calling Amplify API:', error);
+        throw error; // Rethrow the error to handle it in the calling context if needed.
+    }
+}
+
+//We're working on getting this to work in _app.tsx to return student data without having to keep calling it over and over

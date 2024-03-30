@@ -1,8 +1,15 @@
 
 import { MobileStudentProfile, WebStudentProfile } from "@/src/components/StudentProfile"
-import { amplifyApiClient } from "@/src/functions/AuthX"
-import { getStudentProfile } from "@/src/graphql/queries"
 import { useEffect, useState } from "react"
+
+const initialUserData = {
+    email: "",
+    cognitoID: "",
+    name: "",
+    darkModeEnabled: false,
+    language: "",
+    notificationsEnabled: true
+}
 
 /**
  * StudentProfile Component - Adapts the student profile view based on the device type.
@@ -18,7 +25,7 @@ import { useEffect, useState } from "react"
  * 
  * @returns {JSX.Element} - The student profile view appropriate for the current device, either mobile or desktop.
  */
-const StudentProfile = ({ isMobile, userData, avatarUrl, router }: any) => {
+const StudentProfile = ({ isMobile, userData, avatarUrl }: any) => {
   const [studentProfileData, setStudentProfileData] = useState({
       id: '',
       email: '',
@@ -33,43 +40,24 @@ const StudentProfile = ({ isMobile, userData, avatarUrl, router }: any) => {
   })
 
   useEffect(() => {
-      const studentProfileCall = async () => {
-          if (!userData.cognitoID) {
-              return
-          }
+    if(userData!==initialUserData) {
+        console.log("USER DATA: ", userData)
 
-          try {
-              console.log(`Fetching data for cognitoID: ${userData.cognitoID}`)
-              const getStudentProfileCall = await amplifyApiClient.graphql({
-                  query: getStudentProfile,
-                  variables: {
-                      id: userData.cognitoID,
-                  },
-              })
+        setStudentProfileData({
+            id: userData.id,
+            email: userData.email,
+            name: userData.name,
+        })
 
-              const { id, email, name, darkModeEnabled, language, notificationsEnabled, isAdmin } = getStudentProfileCall.data.getStudentProfile
-
-              setStudentProfileData({
-                  id,
-                  email,
-                  name,
-              })
-
-              setUserSettingsData({
-                  id, // Assuming id is the same for both studentProfile and userSettings
-                  darkModeEnabled,
-                  language,
-                  notificationsEnabled,
-                  isAdmin,
-              })
-
-          } catch (error) {
-              console.error('Error fetching and setting data:', error)
-          }
-      }
-
-      studentProfileCall()
-  }, [userData.cognitoID])
+        setUserSettingsData({
+            id: userData.id, 
+            darkModeEnabled: userData.darkModeEnabled,
+            language: userData.language,
+            notificationsEnabled: userData.notificationsEnabled,
+            isAdmin: userData.isAdmin,
+        })
+    }
+  },[userData])
 
   return isMobile ? 
       <MobileStudentProfile studentProfile={studentProfileData} userSettings={userSettingsData} /> : 

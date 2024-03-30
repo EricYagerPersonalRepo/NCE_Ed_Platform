@@ -66,7 +66,9 @@ export async function downloadAvatarFromS3(path:string) {
         });
     
         const response = await restOperation.response;
+
         console.log("RESPONSE: ", response)
+        
         return(response)
     } catch (error) {
         console.log('downloadAvatarFromS3 error: GET call failed to retrieve avatar from S3: ', error);

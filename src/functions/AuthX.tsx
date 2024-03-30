@@ -13,7 +13,7 @@ export const amplifyApiClient = generateClient()
 export const checkAuthStatus = async () => {
     try {
         const user = await getCurrentUser()
-        return !!user
+        return user
     } catch (error) {
         return false
     }
@@ -43,28 +43,6 @@ export const handleCreateStudentProfile = async (studentProfileInput:CreateStude
     }
 }
 
-// export const handleCreateInitialUserSettings = async(userID:string) => {
-//     const userSettingsInput: CreateUserSettingsInput = {
-//         id: userID,
-//         studentProfileID: userID,
-//         notificationsEnabled: true, 
-//         darkModeEnabled: false, 
-//         language: 'en',
-//         isAdmin: false,
-//     }
-
-//     try{
-//         const userSettingsCall = await amplifyApiClient.graphql({
-//             query: createUserSettings,
-//             variables: { input: userSettingsInput }
-//         })
-//         console.log("Tried to create user settings: ", userSettingsCall)
-//         return({hasUserSettings:true, userSettings:userSettingsCall})
-//     }
-//     catch(error){
-//         console.error(error)
-//     }
-// }
 /**
  * Asynchronously handles the sign-in process for a user.
  * 

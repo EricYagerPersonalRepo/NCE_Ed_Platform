@@ -3,22 +3,29 @@ import Button from '@mui/material/Button'
 import Dialog from '@mui/material/Dialog'
 import DialogActions from '@mui/material/DialogActions'
 import DialogContent from '@mui/material/DialogContent'
-import DialogContentText from '@mui/material/DialogContentText'
 import DialogTitle from '@mui/material/DialogTitle'
 import useMediaQuery from '@mui/material/useMediaQuery'
 import { useTheme } from '@mui/material/styles'
-import { Fragment, useState } from 'react'
+import { Fragment, useEffect, useState } from 'react'
 import { CourseSubject } from '@/src/API'
 import { FormControl, InputLabel, MenuItem, Select, TextField } from '@mui/material'
 import { amplifyApiClient } from '@/src/functions/AuthX'
 import { createCourse } from '@/src/graphql/mutations'
 
-const CreateNewCourseDialog = ({userData}:any) => {
+const CreateNewCourseDialog = ( { userData }:any ) => {
     const [title, setTitle] = useState('')
     const [description, setDescription] = useState('')
     const [subject, setSubject] = useState<CourseSubject | ''>('')
     const [difficulty, setDifficulty] = useState('')
     const [open, setOpen] = useState(false)
+    const [userDatum, setUserDatum] = useState({cognitoId:"",email:""})
+
+    useEffect(()=>{
+        if(userData) {
+            console.log(userData)
+            setUserDatum(userData)
+        }
+    },[userData])
 
     const theme = useTheme()
     const fullScreen = useMediaQuery(theme.breakpoints.down('md'))
@@ -113,7 +120,7 @@ const CreateNewCourseDialog = ({userData}:any) => {
                         <TextField
                             label="Creator"
                             variant="outlined"
-                            value={userData.email}
+                            value={userDatum.email}
                             disabled
                         />
                     </div>

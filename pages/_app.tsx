@@ -5,21 +5,33 @@ import '@aws-amplify/ui-react/styles.css'
 import { Amplify } from 'aws-amplify'
 import { ThemeProvider } from '@aws-amplify/ui-react'
 import studioTheme from '@/src/style/GlobalStyle'
-import { checkAuthStatus } from '@/src/functions/AuthX'
+import { amplifyApiClient, checkAuthStatus } from '@/src/functions/AuthX'
 import { Header } from '@/src/components/Header'
 import { AuthProvider } from '@/src/state/AuthGlobalState'
 import { useMediaQuery, useTheme } from '@mui/material'
 import { useRouter } from 'next/router'
 import { Hub } from 'aws-amplify/utils'
-import { getCurrentUser } from 'aws-amplify/auth'
-import { getPresignedUrl } from '@/src/functions/Amplify'
+import { fetchAuthSession, getCurrentUser } from 'aws-amplify/auth'
+import { callAmplifyApi, getPresignedUrl } from '@/src/functions/Amplify'
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { downloadAvatarFromS3 } from '@/src/functions/Storage'
+import { getStudentProfile } from '@/src/graphql/queries'
+import { StudentProfile } from '@/src/API'
 //import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
 const queryClient = new QueryClient()
 
 Amplify.configure(amplifyconfiguration, {ssr: true})
+
+const initialUserData = {
+    email: "",
+    cognitoID: "",
+    name: "",
+    darkModeEnabled: false,
+    language: "",
+    notificationsEnabled: true,
+    isAdmin: false
+}
 
 /**
  * NCE_Education_App - The main application component in _app.tsx for the NCE Education App.
@@ -41,11 +53,10 @@ Amplify.configure(amplifyconfiguration, {ssr: true})
  *                          status and theme provider wrapping the active page component with necessary props.
  */
 const NCE_Education_App = ({ Component, pageProps }:any) => {
-    
     const theme = useTheme()
     const isMobile = useMediaQuery(theme.breakpoints.down('sm'))
     const router = useRouter()
-    const [userData, setUserData] = useState({email:"", cognitoID:""})
+    const [userData, setUserData] = useState(initialUserData)
     const [loggedIn, setLoggedIn] = useState(false)
     const [avatarUrl, setAvatarUrl] = useState('')
 
@@ -60,8 +71,26 @@ const NCE_Education_App = ({ Component, pageProps }:any) => {
     useEffect(() => {
         async function validateAuthState() {
             try {
-                const isUserLoggedIn = await checkAuthStatus()
-                setLoggedIn(isUserLoggedIn)
+                const authenticationDetails = await fetchAuthSession()
+
+                if(authenticationDetails.userSub){
+                    setLoggedIn(true)
+
+                    const studentProfileCall:any = await callAmplifyApi(getStudentProfile, { id: authenticationDetails.userSub })
+
+                    const userDataResponse = {
+                        id: studentProfileCall.getStudentProfile.id,
+                        email: studentProfileCall.getStudentProfile.email,
+                        cognitoID: studentProfileCall.getStudentProfile.id,
+                        name: studentProfileCall.getStudentProfile.name,
+                        darkModeEnabled: studentProfileCall.getStudentProfile.darkModeEnabled,
+                        language: studentProfileCall.getStudentProfile.language,
+                        notificationsEnabled: studentProfileCall.getStudentProfile.notificationsEnabled,
+                        isAdmin: studentProfileCall.getStudentProfile.isAdmin
+                    }
+
+                    setUserData(userDataResponse)
+                }
             } catch (error) {
                 console.error('Failed to check authentication status:', error)
                 setLoggedIn(false)
@@ -70,55 +99,46 @@ const NCE_Education_App = ({ Component, pageProps }:any) => {
         validateAuthState()
     }, [])
 
-    useEffect(()=> {
-        const getUserData = async() =>{
-            if(loggedIn){
-                const currentUser = await getCurrentUser()
-                const userDataResponse = {
-                    email: currentUser.signInDetails?.loginId || '',
-                    cognitoID: currentUser.userId
-                }
-                
-                setUserData(userDataResponse)
-                console.log(userData)
-            }
-        }
-        getUserData()
-        
-    }, [loggedIn])
-
     useEffect(() => {
-        Hub.listen('auth', (data:any) => {
-            switch(data.payload.event){
-                case "signedIn": 
-                    setLoggedIn(true)
-                    setUserData({
-                        email:data.payload.data.username,
-                        cognitoID:data.payload.data.id
-                    })
+        const hubListenerCancel = Hub.listen('auth', async (data: any) => {
+            switch (data.payload.event) {
+                case "signedIn":
+                    setLoggedIn(true);
+    
+                    try {
+                        const cognitoId = data.payload.data.id;
+                        const userDetails = await callAmplifyApi<StudentProfile>(getStudentProfile, { id: cognitoId });
+    
+                        setUserData({
+                            email: data.payload.data.username,
+                            cognitoID: data.payload.data.id,
+                            ...userDetails,
+                        });
+                    } catch (error) {
+                        console.error('Error fetching user details:', error);
+                    }
                     break;
                 case "signedOut":
-                    setLoggedIn(false)
-                    setUserData({email:"", cognitoID:""})
+                    setLoggedIn(false);
+                    setUserData(initialUserData);
                     break;
                 default:
                     break;
             }
-        })
-    }, [])
+        });
+    
+        return () => hubListenerCancel(); // Correct usage to cancel the listener on effect cleanup
+    
+    }, []);
+    
 
     useEffect(()=>{
         const avatarUrlResponse = async() => {
             try{
-                const currentUser = await getCurrentUser();
-                
-                console.log("USER: ", currentUser)
-                if(currentUser){
-                    const avatarFileName = `user_files/${currentUser.userId}/avatar.png`;
+                if(userData.cognitoID){
+                    const avatarFileName = `user_files/${userData.cognitoID}/avatar.png`;
                     const imageTest = await downloadAvatarFromS3(avatarFileName)
-                    console.log("IMAGE TEST: ", imageTest)
                     let presignedUrlResponse = await getPresignedUrl(avatarFileName)
-                    console.log("Presigned URL: ", presignedUrlResponse)
                     setAvatarUrl(presignedUrlResponse)
                 }
             }catch(error){

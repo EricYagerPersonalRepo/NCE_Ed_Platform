@@ -3,13 +3,12 @@ import { MobileAdmin, WebAdmin } from "."
 import { NotificationType } from "@/src/API"
 import { amplifyApiClient } from "@/src/functions/AuthX"
 import { createBroadcastNotification, deleteBroadcastNotification, updateBroadcastNotification, updateStudentProfile } from "@/src/graphql/mutations"
-import { Box, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, FormControl, Grid, InputLabel, MenuItem, Select, Tab, Tabs, TextField, Typography } from "@mui/material"
+import { Alert, AlertColor, Box, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, FormControl, Grid, InputLabel, MenuItem, Select, Tab, Tabs, TextField, Typography } from "@mui/material"
 import { listBroadcastNotifications, listStudentProfiles } from "@/src/graphql/queries"
 import { DataGrid, GridActionsCellItem, GridColDef, GridRowModes, GridRowModesModel, GridRowsProp } from "@mui/x-data-grid"
-import { Delete, Edit } from "@mui/icons-material"
+import { Check, Delete, Edit } from "@mui/icons-material"
 import { TabPanel } from "../Global/Tabs"
-import { fetchAuthSession, getCurrentUser } from "aws-amplify/auth"
-import { get } from "aws-amplify/api"
+import { callAmplifyApi } from "@/src/functions/Amplify"
 
 export const RestrictedView = () => {
     return(
@@ -79,84 +78,102 @@ export const AdminNotificationsView = () => {
 }
 
 export const CreateNewNotificationView = () => {
-    const [message, setMessage] = useState('')
+    const [notificationMessage, setNotificationMessage] = useState('')
     const [title, setTitle] = useState('')
     const [type, setType] = useState<NotificationType>(NotificationType.MESSAGE)
+    const [alertOpen, setAlertOpen] = useState(false)
+    const [alertMessage, setAlertMessage] = useState("Notification Created Successfully!")
+    const [alertSeverityLevel, setAlertSeverityLevel] = useState<AlertColor>("success")
 
     const handleCreateNotification = async (event:any) => {
         event.preventDefault()
     
         try {
-            await amplifyApiClient.graphql({
-                query: createBroadcastNotification, 
-                variables: { input: 
-                    {
-                        title:title, 
-                        targetStudent: "",
-                        message:message, 
-                        type:type 
-                    }
+ 
+            const variablesDefinition =  { 
+                input: {
+                    title:title, 
+                    targetStudent: "",
+                    message: notificationMessage, 
+                    type:type 
                 }
-            })
-            alert('Notification created successfully')
-            setMessage('')
-            setType(NotificationType.MESSAGE)
+            }
+
+            const amplifyApiCall = await callAmplifyApi(createBroadcastNotification, variablesDefinition)
+
+            if(amplifyApiCall!==null){
+                setAlertOpen(true);
+                setTimeout(() => {
+                    setAlertOpen(false);
+                }, 2000)
+                setNotificationMessage('')
+                setType(NotificationType.MESSAGE)
+            }
         } catch (error) {
             console.error('Error creating notification:', error)
             alert('Failed to create notification')
         }
     }
 
+    const AlertComponent = () => {
+        return(
+            <Alert icon={<Check fontSize="inherit" />} severity={alertSeverityLevel}>{alertMessage}</Alert>
+        )
+    }
+
     return(
-        <form onSubmit={handleCreateNotification}>
-            <Grid container spacing={2}>
-                <Grid item xs={12}>
-                    <TextField
-                        fullWidth
-                        label="Title"
-                        variant="outlined"
-                        value={title}
-                        onChange={(e) => setTitle(e.target.value)}
-                        required
-                        margin="normal"
-                    />
-                </Grid>
-                <Grid item xs={12}>
-                    <TextField
-                        fullWidth
-                        label="Message"
-                        variant="outlined"
-                        value={message}
-                        onChange={(e) => setMessage(e.target.value)}
-                        required
-                        margin="normal"
-                    />
-                </Grid>
-                <Grid item xs={12}>
-                    <FormControl fullWidth margin="normal">
-                        <InputLabel>Type</InputLabel>
-                        <Select
-                            value={type}
-                            onChange={(e) => setType(e.target.value as NotificationType)}
-                            label="Type"
+        <div>
+            {alertOpen && <AlertComponent />}
+            <form onSubmit={handleCreateNotification}>
+                <Grid container spacing={2}>
+                    <Grid item xs={12}>
+                        <TextField
+                            fullWidth
+                            label="Title"
+                            variant="outlined"
+                            value={title}
+                            onChange={(e) => setTitle(e.target.value)}
                             required
-                        >
-                            {/* Map enum values to menu items */}
-                            {Object.values(NotificationType).map((typeValue) => (
-                                <MenuItem key={typeValue} value={typeValue}>
-                                    {typeValue}
-                                </MenuItem>
-                            ))}
-                        </Select>
-                    </FormControl>
+                            margin="normal"
+                        />
+                    </Grid>
+                    <Grid item xs={12}>
+                        <TextField
+                            fullWidth
+                            label="Message"
+                            variant="outlined"
+                            value={notificationMessage}
+                            onChange={(e) => setNotificationMessage(e.target.value)}
+                            required
+                            margin="normal"
+                        />
+                    </Grid>
+                    <Grid item xs={12}>
+                        <FormControl fullWidth margin="normal">
+                            <InputLabel>Type</InputLabel>
+                            <Select
+                                value={type}
+                                onChange={(e) => setType(e.target.value as NotificationType)}
+                                label="Type"
+                                required
+                            >
+                                {/* Map enum values to menu items */}
+                                {Object.values(NotificationType).map((typeValue) => (
+                                    <MenuItem key={typeValue} value={typeValue}>
+                                        {typeValue}
+                                    </MenuItem>
+                                ))}
+                            </Select>
+                        </FormControl>
+                    </Grid>
+                    <Grid item xs={12}>
+                        <Button type="submit" variant="contained" color="primary">
+                            Create Notification
+                        </Button>
+                    </Grid>
                 </Grid>
-                <Grid item xs={12}>
-                    <Button type="submit" variant="contained" color="primary">
-                        Create Notification
-                    </Button>
-                </Grid>
-            </Grid>
-        </form>
+            </form>
+        </div>
     )
 }
 
