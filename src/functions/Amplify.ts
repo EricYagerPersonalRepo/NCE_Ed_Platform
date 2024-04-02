@@ -99,4 +99,3 @@ export async function callAmplifyApi<T>(queryFunction: any, variables: object): 
     }
 }
 
-//We're working on getting this to work in _app.tsx to return student data without having to keep calling it over and over

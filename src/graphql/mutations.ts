@@ -206,6 +206,10 @@ export const createCourse = /* GraphQL */ `mutation CreateCourse(
       nextToken
       __typename
     }
+    approval {
+      nextToken
+      __typename
+    }
     createdAt
     updatedAt
     __typename
@@ -227,6 +231,10 @@ export const updateCourse = /* GraphQL */ `mutation UpdateCourse(
     difficulty
     creator
     modules {
+      nextToken
+      __typename
+    }
+    approval {
       nextToken
       __typename
     }
@@ -254,6 +262,10 @@ export const deleteCourse = /* GraphQL */ `mutation DeleteCourse(
       nextToken
       __typename
     }
+    approval {
+      nextToken
+      __typename
+    }
     createdAt
     updatedAt
     __typename
@@ -262,6 +274,63 @@ export const deleteCourse = /* GraphQL */ `mutation DeleteCourse(
 ` as GeneratedMutation<
   APITypes.DeleteCourseMutationVariables,
   APITypes.DeleteCourseMutation
+>;
+export const createCourseApproval = /* GraphQL */ `mutation CreateCourseApproval(
+  $input: CreateCourseApprovalInput!
+  $condition: ModelCourseApprovalConditionInput
+) {
+  createCourseApproval(input: $input, condition: $condition) {
+    id
+    status
+    comments
+    approvingAdmin
+    createdAt
+    updatedAt
+    courseApprovalId
+    __typename
+  }
+}
+` as GeneratedMutation<
+  APITypes.CreateCourseApprovalMutationVariables,
+  APITypes.CreateCourseApprovalMutation
+>;
+export const updateCourseApproval = /* GraphQL */ `mutation UpdateCourseApproval(
+  $input: UpdateCourseApprovalInput!
+  $condition: ModelCourseApprovalConditionInput
+) {
+  updateCourseApproval(input: $input, condition: $condition) {
+    id
+    status
+    comments
+    approvingAdmin
+    createdAt
+    updatedAt
+    courseApprovalId
+    __typename
+  }
+}
+` as GeneratedMutation<
+  APITypes.UpdateCourseApprovalMutationVariables,
+  APITypes.UpdateCourseApprovalMutation
+>;
+export const deleteCourseApproval = /* GraphQL */ `mutation DeleteCourseApproval(
+  $input: DeleteCourseApprovalInput!
+  $condition: ModelCourseApprovalConditionInput
+) {
+  deleteCourseApproval(input: $input, condition: $condition) {
+    id
+    status
+    comments
+    approvingAdmin
+    createdAt
+    updatedAt
+    courseApprovalId
+    __typename
+  }
+}
+` as GeneratedMutation<
+  APITypes.DeleteCourseApprovalMutationVariables,
+  APITypes.DeleteCourseApprovalMutation
 >;
 export const createModule = /* GraphQL */ `mutation CreateModule(
   $input: CreateModuleInput!

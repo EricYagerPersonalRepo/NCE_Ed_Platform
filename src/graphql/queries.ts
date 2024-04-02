@@ -156,6 +156,10 @@ export const getCourse = /* GraphQL */ `query GetCourse($id: ID!) {
       nextToken
       __typename
     }
+    approval {
+      nextToken
+      __typename
+    }
     createdAt
     updatedAt
     __typename
@@ -186,6 +190,46 @@ export const listCourses = /* GraphQL */ `query ListCourses(
 ` as GeneratedQuery<
   APITypes.ListCoursesQueryVariables,
   APITypes.ListCoursesQuery
+>;
+export const getCourseApproval = /* GraphQL */ `query GetCourseApproval($id: ID!) {
+  getCourseApproval(id: $id) {
+    id
+    status
+    comments
+    approvingAdmin
+    createdAt
+    updatedAt
+    courseApprovalId
+    __typename
+  }
+}
+` as GeneratedQuery<
+  APITypes.GetCourseApprovalQueryVariables,
+  APITypes.GetCourseApprovalQuery
+>;
+export const listCourseApprovals = /* GraphQL */ `query ListCourseApprovals(
+  $filter: ModelCourseApprovalFilterInput
+  $limit: Int
+  $nextToken: String
+) {
+  listCourseApprovals(filter: $filter, limit: $limit, nextToken: $nextToken) {
+    items {
+      id
+      status
+      comments
+      approvingAdmin
+      createdAt
+      updatedAt
+      courseApprovalId
+      __typename
+    }
+    nextToken
+    __typename
+  }
+}
+` as GeneratedQuery<
+  APITypes.ListCourseApprovalsQueryVariables,
+  APITypes.ListCourseApprovalsQuery
 >;
 export const getModule = /* GraphQL */ `query GetModule($id: ID!) {
   getModule(id: $id) {

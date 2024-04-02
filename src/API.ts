@@ -267,6 +267,7 @@ export type Course = {
   difficulty?: string | null,
   creator: string,
   modules?: ModelModuleConnection | null,
+  approval?: ModelCourseApprovalConnection | null,
   createdAt: string,
   updatedAt: string,
 };
@@ -374,6 +375,30 @@ export enum ExerciseType {
 }
 
 
+export type ModelCourseApprovalConnection = {
+  __typename: "ModelCourseApprovalConnection",
+  items:  Array<CourseApproval | null >,
+  nextToken?: string | null,
+};
+
+export type CourseApproval = {
+  __typename: "CourseApproval",
+  id: string,
+  status: CourseApprovalStatus,
+  comments?: string | null,
+  approvingAdmin: string,
+  createdAt: string,
+  updatedAt: string,
+  courseApprovalId?: string | null,
+};
+
+export enum CourseApprovalStatus {
+  PENDING = "PENDING",
+  APPROVED = "APPROVED",
+  DISAPPROVED = "DISAPPROVED",
+}
+
+
 export type UpdateCourseInput = {
   id: string,
   title?: string | null,
@@ -384,6 +409,41 @@ export type UpdateCourseInput = {
 };
 
 export type DeleteCourseInput = {
+  id: string,
+};
+
+export type CreateCourseApprovalInput = {
+  id?: string | null,
+  status: CourseApprovalStatus,
+  comments?: string | null,
+  approvingAdmin: string,
+  courseApprovalId?: string | null,
+};
+
+export type ModelCourseApprovalConditionInput = {
+  status?: ModelCourseApprovalStatusInput | null,
+  comments?: ModelStringInput | null,
+  approvingAdmin?: ModelIDInput | null,
+  and?: Array< ModelCourseApprovalConditionInput | null > | null,
+  or?: Array< ModelCourseApprovalConditionInput | null > | null,
+  not?: ModelCourseApprovalConditionInput | null,
+  courseApprovalId?: ModelIDInput | null,
+};
+
+export type ModelCourseApprovalStatusInput = {
+  eq?: CourseApprovalStatus | null,
+  ne?: CourseApprovalStatus | null,
+};
+
+export type UpdateCourseApprovalInput = {
+  id: string,
+  status?: CourseApprovalStatus | null,
+  comments?: string | null,
+  approvingAdmin?: string | null,
+  courseApprovalId?: string | null,
+};
+
+export type DeleteCourseApprovalInput = {
   id: string,
 };
 
@@ -891,6 +951,17 @@ export type ModelCourseConnection = {
   nextToken?: string | null,
 };
 
+export type ModelCourseApprovalFilterInput = {
+  id?: ModelIDInput | null,
+  status?: ModelCourseApprovalStatusInput | null,
+  comments?: ModelStringInput | null,
+  approvingAdmin?: ModelIDInput | null,
+  and?: Array< ModelCourseApprovalFilterInput | null > | null,
+  or?: Array< ModelCourseApprovalFilterInput | null > | null,
+  not?: ModelCourseApprovalFilterInput | null,
+  courseApprovalId?: ModelIDInput | null,
+};
+
 export type ModelModuleFilterInput = {
   id?: ModelIDInput | null,
   title?: ModelStringInput | null,
@@ -1130,6 +1201,15 @@ export type ModelSubscriptionCourseFilterInput = {
   creator?: ModelSubscriptionIDInput | null,
   and?: Array< ModelSubscriptionCourseFilterInput | null > | null,
   or?: Array< ModelSubscriptionCourseFilterInput | null > | null,
+};
+
+export type ModelSubscriptionCourseApprovalFilterInput = {
+  id?: ModelSubscriptionIDInput | null,
+  status?: ModelSubscriptionStringInput | null,
+  comments?: ModelSubscriptionStringInput | null,
+  approvingAdmin?: ModelSubscriptionIDInput | null,
+  and?: Array< ModelSubscriptionCourseApprovalFilterInput | null > | null,
+  or?: Array< ModelSubscriptionCourseApprovalFilterInput | null > | null,
 };
 
 export type ModelSubscriptionModuleFilterInput = {
@@ -1439,6 +1519,10 @@ export type CreateCourseMutation = {
       __typename: "ModelModuleConnection",
       nextToken?: string | null,
     } | null,
+    approval?:  {
+      __typename: "ModelCourseApprovalConnection",
+      nextToken?: string | null,
+    } | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -1460,6 +1544,10 @@ export type UpdateCourseMutation = {
     creator: string,
     modules?:  {
       __typename: "ModelModuleConnection",
+      nextToken?: string | null,
+    } | null,
+    approval?:  {
+      __typename: "ModelCourseApprovalConnection",
       nextToken?: string | null,
     } | null,
     createdAt: string,
@@ -1485,8 +1573,66 @@ export type DeleteCourseMutation = {
       __typename: "ModelModuleConnection",
       nextToken?: string | null,
     } | null,
+    approval?:  {
+      __typename: "ModelCourseApprovalConnection",
+      nextToken?: string | null,
+    } | null,
     createdAt: string,
     updatedAt: string,
+  } | null,
+};
+
+export type CreateCourseApprovalMutationVariables = {
+  input: CreateCourseApprovalInput,
+  condition?: ModelCourseApprovalConditionInput | null,
+};
+
+export type CreateCourseApprovalMutation = {
+  createCourseApproval?:  {
+    __typename: "CourseApproval",
+    id: string,
+    status: CourseApprovalStatus,
+    comments?: string | null,
+    approvingAdmin: string,
+    createdAt: string,
+    updatedAt: string,
+    courseApprovalId?: string | null,
+  } | null,
+};
+
+export type UpdateCourseApprovalMutationVariables = {
+  input: UpdateCourseApprovalInput,
+  condition?: ModelCourseApprovalConditionInput | null,
+};
+
+export type UpdateCourseApprovalMutation = {
+  updateCourseApproval?:  {
+    __typename: "CourseApproval",
+    id: string,
+    status: CourseApprovalStatus,
+    comments?: string | null,
+    approvingAdmin: string,
+    createdAt: string,
+    updatedAt: string,
+    courseApprovalId?: string | null,
+  } | null,
+};
+
+export type DeleteCourseApprovalMutationVariables = {
+  input: DeleteCourseApprovalInput,
+  condition?: ModelCourseApprovalConditionInput | null,
+};
+
+export type DeleteCourseApprovalMutation = {
+  deleteCourseApproval?:  {
+    __typename: "CourseApproval",
+    id: string,
+    status: CourseApprovalStatus,
+    comments?: string | null,
+    approvingAdmin: string,
+    createdAt: string,
+    updatedAt: string,
+    courseApprovalId?: string | null,
   } | null,
 };
 
@@ -2523,6 +2669,10 @@ export type GetCourseQuery = {
       __typename: "ModelModuleConnection",
       nextToken?: string | null,
     } | null,
+    approval?:  {
+      __typename: "ModelCourseApprovalConnection",
+      nextToken?: string | null,
+    } | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -2547,6 +2697,46 @@ export type ListCoursesQuery = {
       creator: string,
       createdAt: string,
       updatedAt: string,
+    } | null >,
+    nextToken?: string | null,
+  } | null,
+};
+
+export type GetCourseApprovalQueryVariables = {
+  id: string,
+};
+
+export type GetCourseApprovalQuery = {
+  getCourseApproval?:  {
+    __typename: "CourseApproval",
+    id: string,
+    status: CourseApprovalStatus,
+    comments?: string | null,
+    approvingAdmin: string,
+    createdAt: string,
+    updatedAt: string,
+    courseApprovalId?: string | null,
+  } | null,
+};
+
+export type ListCourseApprovalsQueryVariables = {
+  filter?: ModelCourseApprovalFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+};
+
+export type ListCourseApprovalsQuery = {
+  listCourseApprovals?:  {
+    __typename: "ModelCourseApprovalConnection",
+    items:  Array< {
+      __typename: "CourseApproval",
+      id: string,
+      status: CourseApprovalStatus,
+      comments?: string | null,
+      approvingAdmin: string,
+      createdAt: string,
+      updatedAt: string,
+      courseApprovalId?: string | null,
     } | null >,
     nextToken?: string | null,
   } | null,
@@ -3439,6 +3629,10 @@ export type OnCreateCourseSubscription = {
       __typename: "ModelModuleConnection",
       nextToken?: string | null,
     } | null,
+    approval?:  {
+      __typename: "ModelCourseApprovalConnection",
+      nextToken?: string | null,
+    } | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -3459,6 +3653,10 @@ export type OnUpdateCourseSubscription = {
     creator: string,
     modules?:  {
       __typename: "ModelModuleConnection",
+      nextToken?: string | null,
+    } | null,
+    approval?:  {
+      __typename: "ModelCourseApprovalConnection",
       nextToken?: string | null,
     } | null,
     createdAt: string,
@@ -3483,8 +3681,63 @@ export type OnDeleteCourseSubscription = {
       __typename: "ModelModuleConnection",
       nextToken?: string | null,
     } | null,
+    approval?:  {
+      __typename: "ModelCourseApprovalConnection",
+      nextToken?: string | null,
+    } | null,
     createdAt: string,
     updatedAt: string,
+  } | null,
+};
+
+export type OnCreateCourseApprovalSubscriptionVariables = {
+  filter?: ModelSubscriptionCourseApprovalFilterInput | null,
+};
+
+export type OnCreateCourseApprovalSubscription = {
+  onCreateCourseApproval?:  {
+    __typename: "CourseApproval",
+    id: string,
+    status: CourseApprovalStatus,
+    comments?: string | null,
+    approvingAdmin: string,
+    createdAt: string,
+    updatedAt: string,
+    courseApprovalId?: string | null,
+  } | null,
+};
+
+export type OnUpdateCourseApprovalSubscriptionVariables = {
+  filter?: ModelSubscriptionCourseApprovalFilterInput | null,
+};
+
+export type OnUpdateCourseApprovalSubscription = {
+  onUpdateCourseApproval?:  {
+    __typename: "CourseApproval",
+    id: string,
+    status: CourseApprovalStatus,
+    comments?: string | null,
+    approvingAdmin: string,
+    createdAt: string,
+    updatedAt: string,
+    courseApprovalId?: string | null,
+  } | null,
+};
+
+export type OnDeleteCourseApprovalSubscriptionVariables = {
+  filter?: ModelSubscriptionCourseApprovalFilterInput | null,
+};
+
+export type OnDeleteCourseApprovalSubscription = {
+  onDeleteCourseApproval?:  {
+    __typename: "CourseApproval",
+    id: string,
+    status: CourseApprovalStatus,
+    comments?: string | null,
+    approvingAdmin: string,
+    createdAt: string,
+    updatedAt: string,
+    courseApprovalId?: string | null,
   } | null,
 };
 

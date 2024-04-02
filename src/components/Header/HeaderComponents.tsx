@@ -198,7 +198,7 @@ export const UserAccountButtons_Web = ({ userID, avatarUrl }: any) => {
 
     const fetchNotifications = async () => {
         try {
-            const { newNotificationsCount, notificationsPayload }:any = await getBroadcastNotificationsQuery(userID)
+            const { newNotificationsCount, notificationsPayload }:any = await getBroadcastNotificationsQuery()
             console.log("notifications count: ", newNotificationsCount)
             setNotifications(notificationsPayload)
             console.log("Notifications Payload: ", notificationsPayload)

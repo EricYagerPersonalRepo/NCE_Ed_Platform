@@ -124,7 +124,7 @@ export const CreateNewNotificationView = () => {
     return(
         <div>
             {alertOpen && <AlertComponent />}
-            <form onSubmit={handleCreateNotification}>
+            <form onSubmit={ handleCreateNotification }>
                 <Grid container spacing={2}>
                     <Grid item xs={12}>
                         <TextField
@@ -207,13 +207,9 @@ export const AdminNotificationsTableView = () => {
     const processRowUpdate = async(newRow:any) => {
         if(editedRow) {
             try {
-                await amplifyApiClient.graphql({
-                    query: updateBroadcastNotification,
-                    variables: { input: { id: newRow.id, title:newRow.title, message:newRow.message } },
-                })
-
+                const variables = { input: { id: newRow.id, title:newRow.title, message:newRow.message } }
+                await callAmplifyApi(updateBroadcastNotification, variables)
                 setRows((prevRows) => prevRows.map((row) => (row.id === editedRow.id ? editedRow : row)))
-
             } catch (error) {
                 console.error("Error updating notification:", error)
                 throw new Error('The row update failed, reverting changes')
@@ -259,16 +255,13 @@ export const AdminNotificationsTableView = () => {
 
     const handleDelete = async(id:any) => {
         try{
-            const deleteNotification = await amplifyApiClient.graphql({
-                query: deleteBroadcastNotification,
-                variables: { input: { id: id } },
-            })
+            const variables= { input: { id: id } }
+            const deleteNotification = await callAmplifyApi(updateBroadcastNotification, variables)
             deleteNotification && setRows(rows.filter(row => row.id !== id))
         }catch(error){
             console.error(error)
         }
     }
-    
 
     return (
         <>

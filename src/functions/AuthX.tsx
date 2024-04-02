@@ -19,8 +19,6 @@ export const checkAuthStatus = async () => {
     }
 }
 
-
-
 /**
  * Asynchronously creates a student profile in the system.
  * 

@@ -197,6 +197,10 @@ export const onCreateCourse = /* GraphQL */ `subscription OnCreateCourse($filter
       nextToken
       __typename
     }
+    approval {
+      nextToken
+      __typename
+    }
     createdAt
     updatedAt
     __typename
@@ -215,6 +219,10 @@ export const onUpdateCourse = /* GraphQL */ `subscription OnUpdateCourse($filter
     difficulty
     creator
     modules {
+      nextToken
+      __typename
+    }
+    approval {
       nextToken
       __typename
     }
@@ -239,6 +247,10 @@ export const onDeleteCourse = /* GraphQL */ `subscription OnDeleteCourse($filter
       nextToken
       __typename
     }
+    approval {
+      nextToken
+      __typename
+    }
     createdAt
     updatedAt
     __typename
@@ -247,6 +259,60 @@ export const onDeleteCourse = /* GraphQL */ `subscription OnDeleteCourse($filter
 ` as GeneratedSubscription<
   APITypes.OnDeleteCourseSubscriptionVariables,
   APITypes.OnDeleteCourseSubscription
+>;
+export const onCreateCourseApproval = /* GraphQL */ `subscription OnCreateCourseApproval(
+  $filter: ModelSubscriptionCourseApprovalFilterInput
+) {
+  onCreateCourseApproval(filter: $filter) {
+    id
+    status
+    comments
+    approvingAdmin
+    createdAt
+    updatedAt
+    courseApprovalId
+    __typename
+  }
+}
+` as GeneratedSubscription<
+  APITypes.OnCreateCourseApprovalSubscriptionVariables,
+  APITypes.OnCreateCourseApprovalSubscription
+>;
+export const onUpdateCourseApproval = /* GraphQL */ `subscription OnUpdateCourseApproval(
+  $filter: ModelSubscriptionCourseApprovalFilterInput
+) {
+  onUpdateCourseApproval(filter: $filter) {
+    id
+    status
+    comments
+    approvingAdmin
+    createdAt
+    updatedAt
+    courseApprovalId
+    __typename
+  }
+}
+` as GeneratedSubscription<
+  APITypes.OnUpdateCourseApprovalSubscriptionVariables,
+  APITypes.OnUpdateCourseApprovalSubscription
+>;
+export const onDeleteCourseApproval = /* GraphQL */ `subscription OnDeleteCourseApproval(
+  $filter: ModelSubscriptionCourseApprovalFilterInput
+) {
+  onDeleteCourseApproval(filter: $filter) {
+    id
+    status
+    comments
+    approvingAdmin
+    createdAt
+    updatedAt
+    courseApprovalId
+    __typename
+  }
+}
+` as GeneratedSubscription<
+  APITypes.OnDeleteCourseApprovalSubscriptionVariables,
+  APITypes.OnDeleteCourseApprovalSubscription
 >;
 export const onCreateModule = /* GraphQL */ `subscription OnCreateModule($filter: ModelSubscriptionModuleFilterInput) {
   onCreateModule(filter: $filter) {

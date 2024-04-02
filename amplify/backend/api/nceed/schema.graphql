@@ -73,6 +73,25 @@ type Course
   difficulty: String
   creator: ID! @index
   modules: [Module] @hasMany
+  approval: [CourseApproval] @hasMany
+}
+
+type CourseApproval
+@model
+@auth(rules: [
+  { allow: groups, groups: ["Admins"], operations: [create, update, delete, read] }
+  { allow: groups, groups: ["Instructors"], operations: [ read ] }
+]){
+  id: ID!
+  status: CourseApprovalStatus!
+  comments: String
+  approvingAdmin: ID!
+}
+
+enum CourseApprovalStatus {
+  PENDING
+  APPROVED
+  DISAPPROVED
 }
 
 type Module 

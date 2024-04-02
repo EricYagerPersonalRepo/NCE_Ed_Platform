@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import CreateNewCourseDialog from '@/src/components/Instructor/Components';
+import { InstructorDashboard } from '@/src/components/Instructor/Components';
 
 const CourseManagement = ({ userData }) => {
     const [userDatum, setUserDatum] = useState({})
@@ -12,7 +12,7 @@ const CourseManagement = ({ userData }) => {
     },[userData])
 
     return (
-        <CreateNewCourseDialog userData={userDatum} />
+        <InstructorDashboard userData={userDatum} />
     );
 };
 

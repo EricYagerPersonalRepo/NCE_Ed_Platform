@@ -8,6 +8,8 @@ export { default as AwardCreateForm } from "./AwardCreateForm";
 export { default as AwardUpdateForm } from "./AwardUpdateForm";
 export { default as BroadcastNotificationCreateForm } from "./BroadcastNotificationCreateForm";
 export { default as BroadcastNotificationUpdateForm } from "./BroadcastNotificationUpdateForm";
+export { default as CourseApprovalCreateForm } from "./CourseApprovalCreateForm";
+export { default as CourseApprovalUpdateForm } from "./CourseApprovalUpdateForm";
 export { default as CourseCreateForm } from "./CourseCreateForm";
 export { default as CourseUpdateForm } from "./CourseUpdateForm";
 export { default as EnrollmentCreateForm } from "./EnrollmentCreateForm";

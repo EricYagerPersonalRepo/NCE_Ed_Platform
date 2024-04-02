@@ -41,7 +41,6 @@ export async function handleSignUpCall(username:any, password:any){
     }
 }
 
-
 export async function handleSignUp(signUpHooks:SignUpHooksProps) {
     const username = signUpHooks.username
     const password = signUpHooks.password
