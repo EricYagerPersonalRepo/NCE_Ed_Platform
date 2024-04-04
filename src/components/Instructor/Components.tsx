@@ -8,19 +8,34 @@ import useMediaQuery from '@mui/material/useMediaQuery'
 import { useTheme } from '@mui/material/styles'
 import { Fragment, useEffect, useState } from 'react'
 import { CourseApprovalStatus, CourseSubject, CreateCourseApprovalInput, CreateCourseApprovalMutation, CreateCourseMutation } from '@/src/API'
-import { ButtonBase, Chip, FormControl, InputLabel, MenuItem, Select, TextField } from '@mui/material'
-import { amplifyApiClient } from '@/src/functions/AuthX'
+import { Box, ButtonBase, Chip, FormControl, InputLabel, MenuItem, Select, TextField } from '@mui/material'
 import { createCourse, createCourseApproval } from '@/src/graphql/mutations'
 import { Drawer, List, ListItem, ListItemText, Collapse, Typography, Grid } from '@mui/material'
 import { ExpandLess, ExpandMore } from '@mui/icons-material'
 import { callAmplifyApi } from '@/src/functions/Amplify'
 import { customListCourses } from '@/src/custom-amplify-graphql-queries'
+import { DrawerStyle } from '@/src/style/Components'
 
 export const InstructorDashboard = ({ userData }: any) => {
-    const [open, setOpen] = useState(false)
+    const [currentCourseView, setCurrentCourseView] = useState("")
     const [userDatum, setUserDatum] = useState({cognitoId:"",email:""})
     const [userCourses, setUserCourses] = useState([])
-    const [currentCourseView, setCurrentCourseView] = useState("")
+    const [currentCourseObject, setCurrentCourseObject ] = useState({
+        id: "",
+        approval: {},
+        createdAt: "",
+        creator: "",
+        description: "",
+        difficulty: "",
+        modules: {},
+        subject: "",
+        title: "",
+        updatedAt: "",
+    })
+
+    const getCurrentCourse = () => {
+        return userCourses.find(course => course.id === currentCourseView);
+    }
    
     useEffect(()=>{
         if(userData) {
@@ -34,6 +49,28 @@ export const InstructorDashboard = ({ userData }: any) => {
             callListCourses()
         }
     },[userData])
+
+    useEffect(()=>{
+        const currentCourse = getCurrentCourse()
+        currentCourse!==undefined && setCurrentCourseObject(currentCourse)
+    },[ currentCourseView ])
+
+    return (
+        <Grid container spacing={1}>
+            <Grid item xs={2}>
+                <InstructorSideDrawer userData={userDatum} setCurrentCourseView={setCurrentCourseView} />
+            </Grid>
+            <Grid item xs={10}>
+                <CourseDashboard CurrentCourse={currentCourseObject} />
+            </Grid>
+        </Grid>
+    )
+}
+
+export const InstructorSideDrawer = ({userData, setCurrentCourseView}:any) => {
+    const [open, setOpen] = useState(true)
+    const [userDatum, setUserDatum] = useState({cognitoId:"",email:""})
+    const [userCourses, setUserCourses] = useState([])
 
     const handleClick = () => {
         setOpen(!open)
@@ -56,94 +93,115 @@ export const InstructorDashboard = ({ userData }: any) => {
         return <Chip label={status} color={getStatusColor()} />;
     }
 
-    return (
+    useEffect(()=>{
+        if(userData) {
+            console.log(userData)
+            setUserDatum(userData)
+            const callListCourses = async() => {
+                const response:any = await callAmplifyApi(customListCourses, {})
+                setUserCourses(response.listCourses.items)
+            }
+            callListCourses()
+        }
+    },[userData])
 
-        <Grid container spacing={1}>
-            <Grid item xs={2}>
-                <Drawer
-                    variant="permanent"
-                    sx={{
-                        width: 240,
-                        flexShrink: 0,
-                        '& .MuiDrawer-paper': {
-                            width: 240,
-                            boxSizing: 'border-box',
-                        },
-                    }}
-                >
-                    <List component="nav" aria-labelledby="nested-list-subheader">
-                        <ListItem>
-                            <NewCourseDialog userData={userDatum} />
-                        </ListItem>
-                        <ListItem button onClick={handleClick}>
-                            <ListItemText primary="Course Management" />
-                            {open ? <ExpandLess /> : <ExpandMore />}
-                        </ListItem>
-                        <Collapse in={open} timeout="auto" unmountOnExit>
-                            <List component="div" disablePadding>
-                                {userCourses.map(course => (
-                                    <ButtonBase key={course.id} component="div" style={{ width: '100%'}} onClick={()=>setCurrentCourseView(course.id)}>
-                                        <ListItem sx={{ pl: 4 }} key={course.id}>
-                                            <ListItemText 
-                                                primary={
-                                                    <Fragment>
-                                                        <Typography component="span" variant="body2" sx={{ fontWeight: 'bold' }}>
-                                                            {course.title}
-                                                        </Typography>
-                                                        {}
-                                                        {' - '}
-                                                        <StatusBadge status={course.approval.items[0].status} />
-                                                    </Fragment>
-                                                } 
-                                            />
-                                        </ListItem>
-                                    </ButtonBase>
-                                ))}
-                            </List>
-                        </Collapse>
-                        {/* Add more items here */}
-                    </List>
-                </Drawer>
+    return(
+        <Box sx={{ display: 'flex' }}>
+            <Drawer variant="permanent" sx={DrawerStyle(240)}>
+                <List component="nav" aria-labelledby="nested-list-subheader">
+                    <ListItem>
+                        <NewCourseDialog userData={userDatum} />
+                    </ListItem>
+                    <ListItem button onClick={handleClick}>
+                        <ListItemText primary="Course Management" />
+                        {open ? <ExpandLess /> : <ExpandMore />}
+                    </ListItem>
+                    <Collapse in={open} timeout="auto" unmountOnExit>
+                        <List component="div" disablePadding>
+                            {userCourses.map(course => (
+                                <ButtonBase key={course.id} component="div" style={{ width: '100%'}} onClick={()=>setCurrentCourseView(course.id)}>
+                                    <ListItem sx={{ pl: 4 }} key={course.id}>
+                                        <ListItemText 
+                                            primary={
+                                                <Fragment>
+                                                    <Typography component="span" variant="body2" sx={{ fontWeight: 'bold' }}>
+                                                        {course.title}
+                                                    </Typography>
+                                                    {}
+                                                    {' - '}
+                                                    <StatusBadge status={course.approval.items[0].status} />
+                                                </Fragment>
+                                            } 
+                                        />
+                                    </ListItem>
+                                </ButtonBase>
+                            ))}
+                        </List>
+                    </Collapse>
+                    {/* Add more items here */}
+                </List>
+            </Drawer>
+        </Box>
+    )
+}
+
+export const CourseDashboard = ({CurrentCourse}) => {
+    const [currentCourseObject, setCurrentCourseObject ] = useState({
+        id: "",
+        approval: {},
+        createdAt: "",
+        creator: "",
+        description: "",
+        difficulty: "",
+        modules: {},
+        subject: "",
+        title: "",
+        updatedAt: "",
+    })
+
+    useEffect(()=>{
+        if(CurrentCourse) {
+            setCurrentCourseObject(CurrentCourse)
+        }
+    },[CurrentCourse])
+
+    return(
+        <main style={{ flexGrow: 1, padding: 3 }}>
+            <Typography variant="h6">Dashboard - { currentCourseObject.title }</Typography>
+            <Grid container spacing={3}>
+                <Grid item xs={12}>
+                    <Typography variant="h5">Main Page Header</Typography>
+                </Grid>
+                <Grid item xs={4}>
+                    {/* Placeholder for Graph */}
+                    <Typography>Graph 1</Typography>
+                </Grid>
+                <Grid item xs={4}>
+                    {/* Placeholder for Graph */}
+                    <Typography>Graph 2</Typography>
+                </Grid>
+                <Grid item xs={4}>
+                    {/* Placeholder for Graph */}
+                    <Typography>Graph 3</Typography>
+                </Grid>
+                <Grid item xs={3}>
+                    {/* Placeholder for Course Metadata */}
+                    <Typography>Course 1</Typography>
+                </Grid>
+                <Grid item xs={3}>
+                    {/* Placeholder for Course Metadata */}
+                    <Typography>Course 2</Typography>
+                </Grid>
+                <Grid item xs={3}>
+                    {/* Placeholder for Course Metadata */}
+                    <Typography>Course 3</Typography>
+                </Grid>
+                <Grid item xs={3}>
+                    {/* Placeholder for Course Metadata */}
+                    <Typography>Course 4</Typography>
+                </Grid>
             </Grid>
-            <Grid item xs={10}>
-                <main style={{ flexGrow: 1, padding: 3 }}>
-                    <Typography variant="h6">Dashboard - {currentCourseView}</Typography>
-                    <Grid container spacing={3}>
-                        <Grid item xs={12}>
-                            <Typography variant="h5">Main Page Header</Typography>
-                        </Grid>
-                        <Grid item xs={4}>
-                            {/* Placeholder for Graph */}
-                            <Typography>Graph 1</Typography>
-                        </Grid>
-                        <Grid item xs={4}>
-                            {/* Placeholder for Graph */}
-                            <Typography>Graph 2</Typography>
-                        </Grid>
-                        <Grid item xs={4}>
-                            {/* Placeholder for Graph */}
-                            <Typography>Graph 3</Typography>
-                        </Grid>
-                        <Grid item xs={3}>
-                            {/* Placeholder for Course Metadata */}
-                            <Typography>Course 1</Typography>
-                        </Grid>
-                        <Grid item xs={3}>
-                            {/* Placeholder for Course Metadata */}
-                            <Typography>Course 2</Typography>
-                        </Grid>
-                        <Grid item xs={3}>
-                            {/* Placeholder for Course Metadata */}
-                            <Typography>Course 3</Typography>
-                        </Grid>
-                        <Grid item xs={3}>
-                            {/* Placeholder for Course Metadata */}
-                            <Typography>Course 4</Typography>
-                        </Grid>
-                    </Grid>
-                </main>
-            </Grid>
-        </Grid>
+        </main>
     )
 }
 
@@ -154,23 +212,9 @@ export const NewCourseDialog = ({userData}) => {
     const [difficulty, setDifficulty] = useState('')
     const [open, setOpen] = useState(false)
     const [userDatum, setUserDatum] = useState({cognitoId:"",email:""})
-    const [userCourses, setUserCourses] = useState([{
-        __typename: "Course",
-        createdAt: "",
-        descrption: "", 
-        difficulty: "",
-        id: "",
-        subject: "",
-        title: "",
-        updatedAt: "",
-        modules: {}
-    }])
 
     useEffect(()=>{
-        if(userData) {
-            console.log(userData)
-            setUserDatum(userData)
-        }
+        if(userData) { setUserDatum(userData) }
     },[userData])
 
     const theme = useTheme()
@@ -194,7 +238,9 @@ export const NewCourseDialog = ({userData}) => {
                         approvingAdmin: " ",
                     }
                 }
+                
                 const createNewCourseApproval:CreateCourseApprovalMutation = await callAmplifyApi(createCourseApproval, createNewCourseApprovalVariables)
+                
                 if(createNewCourseApproval.createCourseApproval.id){  
                     console.log("NEW APPROVAL CREATED: ", createNewCourseApproval)
                     handleClose()
@@ -216,7 +262,7 @@ export const NewCourseDialog = ({userData}) => {
 
     return(
         <Fragment>
-            <Button variant="outlined" onClick={handleClickOpen}>
+            <Button variant="contained" onClick={handleClickOpen} color="primary" sx={{color:"white", bgcolor:"primary"}}>
                 Create New Course
             </Button>
             <Dialog

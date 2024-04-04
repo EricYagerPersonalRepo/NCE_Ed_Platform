@@ -7,3 +7,11 @@ export const DialogStyle = {
     p: 4,
     outline: '0px solid transparent',
 };
+
+export const DrawerStyle = (drawerWidth) => {
+    return({
+        width: drawerWidth,
+        flexShrink: 0,
+        [`& .MuiDrawer-paper`]: { width: drawerWidth, boxSizing: 'border-box', top: '140px' }
+    })
+}

@@ -3,12 +3,13 @@ import { MobileAdmin, WebAdmin } from "."
 import { NotificationType } from "@/src/API"
 import { amplifyApiClient } from "@/src/functions/AuthX"
 import { createBroadcastNotification, deleteBroadcastNotification, updateBroadcastNotification, updateStudentProfile } from "@/src/graphql/mutations"
-import { Alert, AlertColor, Box, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, FormControl, Grid, InputLabel, MenuItem, Select, Tab, Tabs, TextField, Typography } from "@mui/material"
+import { Alert, AlertColor, Box, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, FormControl, FormControlLabel, Grid, IconButton, InputLabel, MenuItem, Radio, RadioGroup, Select, Tab, Tabs, TextField, Typography } from "@mui/material"
 import { listBroadcastNotifications, listStudentProfiles } from "@/src/graphql/queries"
 import { DataGrid, GridActionsCellItem, GridColDef, GridRowModes, GridRowModesModel, GridRowsProp } from "@mui/x-data-grid"
-import { Check, Delete, Edit } from "@mui/icons-material"
+import { Add, Check, Delete, Edit } from "@mui/icons-material"
 import { TabPanel } from "../Global/Tabs"
-import { callAmplifyApi } from "@/src/functions/Amplify"
+import { addToAdminGroup, callAmplifyApi } from "@/src/functions/Amplify"
+import { customListCourses } from "@/src/custom-amplify-graphql-queries"
 
 export const RestrictedView = () => {
     return(
@@ -74,6 +75,147 @@ export const AdminNotificationsView = () => {
                 <AdminNotificationsTableView />
             </TabPanel>
         </Box>
+    )
+}
+
+export const AdminCoursesView = () => {
+    const [rows, setRows] = useState<GridRowsProp>([])
+    const [rowModesModel, setRowModesModel] = useState<GridRowModesModel>({})
+    const [userUpdateDialogOpen, setUserUpdateDialogOpen] = useState(false)
+    const [editedRow, setEditedRow] = useState<any>({})
+
+
+    useEffect(() => {
+        const fetchCourses = async () => {
+            try {
+                const data:any = await callAmplifyApi(customListCourses, {})
+                if (data.listCourses.items) {
+                    setRows(data.listCourses.items.map(item => ({...item, id: item.id})))
+                }
+            } catch (error) {
+                console.error('Error fetching notifications:', error)
+            }
+        }
+        fetchCourses()
+    }, [])
+    
+    const handleRowEditStop = (event:any, reason:any) => {
+        if (reason === 'rowFocusOut') {
+            event.defaultMuiPrevented = true
+        }
+    }
+
+    const processRowUpdate = async(newRow:any) => {
+        if(editedRow) {
+            try {
+                const variables = { input: { id: newRow.id, title:newRow.title, message:newRow.message } }
+                await callAmplifyApi(updateBroadcastNotification, variables)
+                setRows((prevRows) => prevRows.map((row) => (row.id === editedRow.id ? editedRow : row)))
+            } catch (error) {
+                console.error("Error updating notification:", error)
+                throw new Error('The row update failed, reverting changes')
+            }
+        }
+
+        setUserUpdateDialogOpen(false)
+        setEditedRow({})
+    }
+
+    const processRowUpdateError = (error:any) => {
+        console.error("processRowUpdateError: ", error)
+    }
+    
+    const confirmRowUpdate = (newRow:any) => {
+        const originalRow = rows.find(row => row.id === newRow.id)
+        setEditedRow({originalRow, newRow})
+        setUserUpdateDialogOpen(true)
+    }
+
+    const columns: GridColDef[] = [
+        { field: 'title', headerName: 'Title', flex: 1, editable: true },
+        { field: 'createdAt', headerName: 'Date Created', flex: 5, editable: true },
+
+
+
+        {
+            field: 'actions',
+            type: 'actions',
+            headerName: 'Actions',
+            width: 100,
+            getActions: (params) => [
+                <GridActionsCellItem
+                    icon={<Edit />}
+                    label="Edit"
+                    onClick={() => setRowModesModel({...rowModesModel, [params.id]: { mode: GridRowModes.Edit }})}
+                />,
+                <GridActionsCellItem
+                    icon={<Delete />}
+                    label="Delete"
+                    onClick={() => handleDelete(params.id)}
+                />,
+            ],
+        },
+    ]
+
+    const handleDelete = async(id:any) => {
+        try{
+            const variables= { input: { id: id } }
+            const deleteNotification = await callAmplifyApi(updateBroadcastNotification, variables)
+            deleteNotification && setRows(rows.filter(row => row.id !== id))
+        }catch(error){
+            console.error(error)
+        }
+    }
+
+    return (
+        <>
+            <Box sx={{ height: 500, width: '100%' }}>
+                <DataGrid
+                    rows={rows}
+                    columns={columns}
+                    editMode="row"
+                    rowModesModel={rowModesModel}
+                    onRowModesModelChange={setRowModesModel}
+                    onRowEditStop={handleRowEditStop}
+                    processRowUpdate={confirmRowUpdate}
+                    onProcessRowUpdateError={(error)=>processRowUpdateError(error)}
+                    initialState={{
+                        pagination: { paginationModel: { pageSize: 5 } },
+                    }}
+                    pageSizeOptions = {[5, 10, 25]}
+                />
+            </Box>
+            <Dialog
+                open={userUpdateDialogOpen}
+                onClose={() => setUserUpdateDialogOpen(false)}
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description"
+            >
+                <DialogTitle id="alert-dialog-title">{"Confirm Changes"}</DialogTitle>
+                <DialogContent>
+                    <DialogContentText id="alert-dialog-description">
+                        Are you sure you want to save these changes?
+                        <br/>
+                        <strong>Changes:</strong>
+                        {editedRow.newRow && editedRow.originalRow && Object.keys(editedRow.newRow).map((key) => {
+                            if (editedRow.newRow[key] !== editedRow.originalRow[key]) {
+                                return (
+                                    <div key={key}>
+                                        {key}: {editedRow.originalRow[key]} <strong>-</strong> {editedRow.newRow[key]}
+                                    </div>
+                                )
+                            }
+                            return null
+                        })}
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={() => setUserUpdateDialogOpen(false)}>Cancel</Button>
+                    <Button onClick={() => processRowUpdate(editedRow.newRow)} autoFocus>Confirm</Button>
+                </DialogActions>
+            </Dialog>
+
+        </>
     )
 }
 
@@ -180,7 +322,7 @@ export const CreateNewNotificationView = () => {
 export const AdminNotificationsTableView = () => {
     const [rows, setRows] = useState<GridRowsProp>([])
     const [rowModesModel, setRowModesModel] = useState<GridRowModesModel>({})
-    const [openDialog, setOpenDialog] = useState(false)
+    const [userUpdateDialogOpen, setUserUpdateDialogOpen] = useState(false)
     const [editedRow, setEditedRow] = useState<any>({})
 
 
@@ -216,7 +358,7 @@ export const AdminNotificationsTableView = () => {
             }
         }
 
-        setOpenDialog(false)
+        setUserUpdateDialogOpen(false)
         setEditedRow({})
     }
 
@@ -227,7 +369,7 @@ export const AdminNotificationsTableView = () => {
     const confirmRowUpdate = (newRow:any) => {
         const originalRow = rows.find(row => row.id === newRow.id)
         setEditedRow({originalRow, newRow})
-        setOpenDialog(true)
+        setUserUpdateDialogOpen(true)
     }
 
     const columns: GridColDef[] = [
@@ -282,8 +424,8 @@ export const AdminNotificationsTableView = () => {
                 />
             </Box>
             <Dialog
-                open={openDialog}
-                onClose={() => setOpenDialog(false)}
+                open={userUpdateDialogOpen}
+                onClose={() => setUserUpdateDialogOpen(false)}
                 aria-labelledby="alert-dialog-title"
                 aria-describedby="alert-dialog-description"
             >
@@ -306,7 +448,7 @@ export const AdminNotificationsTableView = () => {
                     </DialogContentText>
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={() => setOpenDialog(false)}>Cancel</Button>
+                    <Button onClick={() => setUserUpdateDialogOpen(false)}>Cancel</Button>
                     <Button onClick={() => processRowUpdate(editedRow.newRow)} autoFocus>Confirm</Button>
                 </DialogActions>
             </Dialog>
@@ -318,8 +460,11 @@ export const AdminNotificationsTableView = () => {
 export const AdminUsersView = () => {
     const [rows, setRows] = useState<GridRowsProp>([])
     const [rowModesModel, setRowModesModel] = useState<GridRowModesModel>({})
-    const [openDialog, setOpenDialog] = useState(false)
+    const [userUpdateDialogOpen, setUserUpdateDialogOpen] = useState(false)
     const [editedRow, setEditedRow] = useState<any>({})
+    const [userGroupUpdateDialogOpen, setUserGroupUpdateDialogOpen] = useState(false)
+    const [targetUser, setTargetUser] = useState({targetUser: "", groups:""})
+    const [newGroupName, setNewGroupName] = useState("")
 
     useEffect(() => {
         async function fetchUserGroups(username) {
@@ -399,7 +544,7 @@ export const AdminUsersView = () => {
             }
         }
 
-        setOpenDialog(false)
+        setUserUpdateDialogOpen(false)
         setEditedRow({})
     }
 
@@ -410,16 +555,67 @@ export const AdminUsersView = () => {
     const confirmRowUpdate = (newRow:any) => {
         const originalRow = rows.find(row => row.id === newRow.id)
         setEditedRow({ originalRow, newRow })
-        setOpenDialog(true)
+        setUserUpdateDialogOpen(true)
+    }
+
+    const openHandleGroupUpdateDialog = async(userID:string, groups:string) => {
+        console.log("GROUPS FROM CLICK: ", groups)
+        setTargetUser({groups: groups, targetUser: userID})
+        setUserGroupUpdateDialogOpen(true)
+    }
+    const handleAddUserToAdminGroupSubmit = async() => {
+        console.log("Calling API with: ", targetUser)
+        async function addUserToAdminGroupCall(username, group) {
+            try{
+                const response = await fetch('/api/addUserToAdminGroup', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ 
+                        username: username,
+                        group: group
+                    }),
+                })
+                const data = await response.json()
+                console.log("DATA: ", data.Data.$metadata.httpStatusCode)
+
+                return(data)
+            }
+            catch(error) {
+                return({error: error})
+            }
+        }
+        if(targetUser.targetUser!==""){
+            const apiCall = await addUserToAdminGroupCall(targetUser.targetUser, newGroupName)
+            if(apiCall.Data.$metadata.httpStatusCode===200){
+                setUserGroupUpdateDialogOpen(false)
+            }
+        } 
     }
 
     const columns: GridColDef[] = [
-        { field: 'id', headerName: 'ID', flex: 1, editable: false },
         { field: 'name', headerName: 'Name', flex: 1, editable: true },
         { field: 'email', headerName: 'Email', flex: 1, editable: true},
-        { field: 'birthdate', headerName: 'Birthdate', flex: 1, editable: true},
         { field: 'status', headerName: 'Status', flex: 1, editable: true },
-        { field: 'groups', headerName: 'Groups', flex: 1, editable: false },
+        { 
+            field: 'groups', 
+            headerName: 'Groups', 
+            flex: 1, 
+            editable: false,
+            renderCell: (params) => (
+                <div>
+                    {params.value}
+                    <IconButton
+                        size="small"
+                        aria-label="add"
+                        onClick={() => openHandleGroupUpdateDialog(String(params.id), params.value)}
+                    >
+                        <Add fontSize="small" />
+                    </IconButton>
+                </div>
+            ),
+        },
         {
             field: 'actions',
             type: 'actions',
@@ -455,8 +651,8 @@ export const AdminUsersView = () => {
             />
         </Box>
         <Dialog
-            open={openDialog}
-            onClose={() => setOpenDialog(false)}
+            open={userUpdateDialogOpen}
+            onClose={() => setUserUpdateDialogOpen(false)}
             aria-labelledby="alert-dialog-title"
             aria-describedby="alert-dialog-description"
         >
@@ -480,10 +676,46 @@ export const AdminUsersView = () => {
                 </DialogContentText>
             </DialogContent>
             <DialogActions>
-                <Button onClick={() => setOpenDialog(false)}>Cancel</Button>
+                <Button onClick={() => setUserUpdateDialogOpen(false)}>Cancel</Button>
                 <Button onClick={() => processRowUpdate(editedRow.newRow)} autoFocus>Confirm</Button>
+            </DialogActions>
+        </Dialog>
+
+        <Dialog
+            open={userGroupUpdateDialogOpen}
+            onClose={() => setUserGroupUpdateDialogOpen(false)}
+            aria-labelledby="alert-dialog-title"
+            aria-describedby="alert-dialog-description"
+        >
+            <DialogTitle id="alert-dialog-title">{"Confirm Changes"}</DialogTitle>
+            <DialogContent>
+                <DialogContentText id="alert-dialog-description">
+                    Group Assignment
+                </DialogContentText>
+                <RadioGroup
+                    aria-label="user-group"
+                    defaultValue=""
+                    name="user-group-radio-buttons-group"
+                    onChange={(event) => setNewGroupName(event.target.value)}
+                >
+                    {["Students", "Instructors", "Admins"].map((group) => (
+                        <FormControlLabel
+                            key={group}
+                            value={group}
+                            control={<Radio />}
+                            label={group}
+                            disabled={targetUser.groups.includes(group)}
+                        />
+                    ))}
+                </RadioGroup>
+            </DialogContent>
+            <DialogActions>
+                <Button onClick={() => setUserGroupUpdateDialogOpen(false)}>Cancel</Button>
+                <Button onClick={() => handleAddUserToAdminGroupSubmit()} autoFocus>Confirm</Button>
             </DialogActions>
         </Dialog>
     </>
     )
 }
+
+

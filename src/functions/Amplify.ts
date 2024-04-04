@@ -1,6 +1,8 @@
 import { getUrl } from "aws-amplify/storage";
 import { amplifyApiClient } from "./AuthX";
-import { GraphQLResult } from "aws-amplify/api";
+import { GraphQLResult, post } from "aws-amplify/api";
+import { fetchAuthSession } from "aws-amplify/auth";
+import { AdminAddUserToGroupCommand, CognitoIdentityProviderClient } from "@aws-sdk/client-cognito-identity-provider";
 
 /**
  * getPresignedUrl Function - Asynchronously retrieves a presigned URL for a given filename.
@@ -99,3 +101,18 @@ export async function callAmplifyApi<T>(queryFunction: any, variables: object): 
     }
 }
 
+export async function addToAdminGroup(username) { 
+    let apiName = 'AdminQueries';
+    let path = '/addUserToGroup';
+    let options = {
+        body: {
+            "username" : {username},
+            "groupname": "Editors"
+        }, 
+        headers: {
+            'Content-Type' : 'application/json',
+            Authorization: `${(await fetchAuthSession()).tokens.accessToken.payload}`
+        } 
+    }
+    return post({apiName, path, options});
+}

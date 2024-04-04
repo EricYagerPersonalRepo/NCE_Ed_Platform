@@ -77,7 +77,7 @@
         "nceed07f38101PostConfirmation": {
           "GROUP": "Students",
           "deploymentBucketName": "amplify-nceed-dev-60353-deployment",
-          "s3Key": "amplify-builds/nceed07f38101PostConfirmation-78594632566350443330-build.zip"
+          "s3Key": "amplify-builds/nceed07f38101PostConfirmation-446a324b706e6e316255-build.zip"
         },
         "AdminQueries6e804d46": {
           "deploymentBucketName": "amplify-nceed-dev-60353-deployment",

@@ -6,5 +6,9 @@
   {
     "groupName": "Students",
     "precedence": 2
+  },
+  {
+    "groupName": "Instructors",
+    "precedence": 3
   }
 ]

@@ -1,12 +1,16 @@
 import { Notifications, People, School } from "@mui/icons-material";
-import { Box, Drawer, List, ListItem, ListItemButton, ListItemIcon, ListItemText } from "@mui/material";
-import { useState } from "react";
-import { AdminNotificationsView, AdminUsersView } from "./AdminComponents";
-
-const drawerWidth = 240
+import { Badge, Box, Drawer, List, ListItem, ListItemButton, ListItemIcon, ListItemText } from "@mui/material";
+import { useEffect, useState } from "react";
+import { AdminCoursesView, AdminNotificationsView, AdminUsersView } from "./AdminComponents";
+import { DrawerStyle } from "@/src/style/Components";
+import { callAmplifyApi } from "@/src/functions/Amplify";
+import { customListCourses } from "@/src/custom-amplify-graphql-queries";
+import { ListPendingCourses } from "@/src/custom-amplify-graphql-queries/ListCourses";
 
 const WebAdministrativeView = () => {
     const [activeView, setActiveView] = useState('Notifications');
+    const [courses, setCourses] = useState([])
+    const [numberOfPendingCourses, setNumberOfPendingCourses] = useState(0)
 
     const renderActiveView = () => {
         switch (activeView) {
@@ -14,30 +18,40 @@ const WebAdministrativeView = () => {
                 return <AdminNotificationsView />;
             case 'Users':
                 return <AdminUsersView />;
-            case 'Courses':
-                return <div>Courses View</div>;
+            case 'Course Management':
+                return <AdminCoursesView />;
             default:
                 return <div>Unknown View</div>;
         }
     }
 
+    useEffect(()=>{
+            const callListCourses = async() => {
+                const response:any = await callAmplifyApi(ListPendingCourses, {})
+                console.log("List Courses Response: ", response.listCourseApprovals.items.length)
+                setCourses(response.listCourseApprovals.items)
+                setNumberOfPendingCourses(response.listCourseApprovals.items.length)
+            }
+            callListCourses()
+    },[])
+
     return (
         <Box sx={{ display: 'flex' }}>
             <Drawer
                 variant="permanent"
-                sx={{
-                    width: drawerWidth,
-                    flexShrink: 0,
-                    [`& .MuiDrawer-paper`]: { width: drawerWidth, boxSizing: 'border-box', top: '140px' }
-                }}
+                sx={DrawerStyle(240)}
             >
                 <List>
-                    {['Notifications', 'Users', 'Courses'].map((text, index) => (
+                    {['Notifications', 'Users', 'Course Management'].map((text, index) => (
                         <ListItemButton key={text} onClick={()=>setActiveView(text)}>
                             <ListItemIcon>
                                 {index === 0 && <Notifications />}
                                 {index === 1 && <People />}
-                                {index === 2 && <School />}
+                                {index === 2 && (
+                                    <Badge badgeContent={numberOfPendingCourses} color="secondary">
+                                        <School />
+                                    </Badge>
+                                )}
                             </ListItemIcon>
                             <ListItemText primary={text} />
                         </ListItemButton>
