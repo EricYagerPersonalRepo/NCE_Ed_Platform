@@ -16,6 +16,8 @@ export const customListCourses = /* GraphQL */ `query CustomListCourses(
             }
             approval {
                 items {
+                    id
+                    courseApprovalId
                     approvingAdmin
                     comments
                     createdAt

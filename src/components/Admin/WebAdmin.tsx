@@ -1,27 +1,30 @@
-import { Notifications, People, School } from "@mui/icons-material";
-import { Badge, Box, Drawer, List, ListItem, ListItemButton, ListItemIcon, ListItemText } from "@mui/material";
-import { useEffect, useState } from "react";
-import { AdminCoursesView, AdminNotificationsView, AdminUsersView } from "./AdminComponents";
-import { DrawerStyle } from "@/src/style/Components";
-import { callAmplifyApi } from "@/src/functions/Amplify";
-import { customListCourses } from "@/src/custom-amplify-graphql-queries";
-import { ListPendingCourses } from "@/src/custom-amplify-graphql-queries/ListCourses";
+import { Notifications, People, School } from "@mui/icons-material"
+import { Badge, Box, Drawer, List, ListItem, ListItemButton, ListItemIcon, ListItemText } from "@mui/material"
+import { useEffect, useState } from "react"
+import { AdminCoursesView, AdminNotificationsView, AdminUsersView } from "./AdminComponents"
+import { DrawerStyle } from "@/src/style/Components"
+import { callAmplifyApi } from "@/src/functions/Amplify"
+import { ListPendingCourses } from "@/src/custom-amplify-graphql-queries/ListCourses"
 
 const WebAdministrativeView = () => {
-    const [activeView, setActiveView] = useState('Notifications');
+    const [activeView, setActiveView] = useState('Notifications')
     const [courses, setCourses] = useState([])
     const [numberOfPendingCourses, setNumberOfPendingCourses] = useState(0)
 
     const renderActiveView = () => {
         switch (activeView) {
             case 'Notifications':
-                return <AdminNotificationsView />;
+                window.location.hash="editNotifications"
+                return <AdminNotificationsView />
             case 'Users':
-                return <AdminUsersView />;
+                window.location.hash="editUsers"
+                return <AdminUsersView />
             case 'Course Management':
-                return <AdminCoursesView />;
+                window.location.hash="editCourses"
+                return <AdminCoursesView />
             default:
-                return <div>Unknown View</div>;
+                window.location.hash = ""
+                return <div>Unknown View</div>
         }
     }
 
@@ -34,6 +37,35 @@ const WebAdministrativeView = () => {
             }
             callListCourses()
     },[])
+
+    useEffect(() => {
+        const handleHashChange = () => {
+            const hash = window.location.hash
+            switch(hash) {
+                case "#editNotifications":
+                    setActiveView('Notifications')
+                    break
+                case "#editUsers":
+                    setActiveView('Users')
+                    break
+                case "#editCourses":
+                    setActiveView('Course Management')
+                    break
+                default:
+                    setActiveView('Notifications')
+                    break
+            }
+        }
+
+        // Call once on mount to set initial state based on current hash
+        handleHashChange()
+
+        // Listen for hash changes
+        window.addEventListener('hashchange', handleHashChange)
+
+        // Cleanup listener on component unmount
+        return () => window.removeEventListener('hashchange', handleHashChange)
+    }, []) 
 
     return (
         <Box sx={{ display: 'flex' }}>
@@ -65,7 +97,7 @@ const WebAdministrativeView = () => {
                 {renderActiveView()}
             </Box>
         </Box>
-    );
+    )
 }
 
 export default WebAdministrativeView

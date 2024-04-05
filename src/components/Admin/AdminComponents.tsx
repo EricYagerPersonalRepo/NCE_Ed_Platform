@@ -1,15 +1,16 @@
 import { useEffect, useState } from "react"
 import { MobileAdmin, WebAdmin } from "."
-import { NotificationType } from "@/src/API"
+import { CourseApprovalStatus, CreateCourseApprovalInput, CreateCourseApprovalMutation, NotificationType, UpdateCourseApprovalInput, UpdateCourseInput } from "@/src/API"
 import { amplifyApiClient } from "@/src/functions/AuthX"
-import { createBroadcastNotification, deleteBroadcastNotification, updateBroadcastNotification, updateStudentProfile } from "@/src/graphql/mutations"
-import { Alert, AlertColor, Box, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, FormControl, FormControlLabel, Grid, IconButton, InputLabel, MenuItem, Radio, RadioGroup, Select, Tab, Tabs, TextField, Typography } from "@mui/material"
-import { listBroadcastNotifications, listStudentProfiles } from "@/src/graphql/queries"
+import { createBroadcastNotification, createCourseApproval, deleteBroadcastNotification, updateBroadcastNotification, updateCourse, updateCourseApproval, updateStudentProfile } from "@/src/graphql/mutations"
+import { Alert, AlertColor, Box, Button, Chip, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, FormControl, FormControlLabel, Grid, IconButton, InputLabel, MenuItem, Radio, RadioGroup, Select, Tab, Tabs, TextField } from "@mui/material"
+import { listBroadcastNotifications, listCourseApprovals, listStudentProfiles } from "@/src/graphql/queries"
 import { DataGrid, GridActionsCellItem, GridColDef, GridRowModes, GridRowModesModel, GridRowsProp } from "@mui/x-data-grid"
 import { Add, Check, Delete, Edit } from "@mui/icons-material"
 import { TabPanel } from "../Global/Tabs"
 import { addToAdminGroup, callAmplifyApi } from "@/src/functions/Amplify"
 import { customListCourses } from "@/src/custom-amplify-graphql-queries"
+import { Router } from "next/router"
 
 export const RestrictedView = () => {
     return(
@@ -55,9 +56,8 @@ export const AdminNotificationsView = () => {
             case 1:
                 window.location.hash = "editnotifications"
                 break
-            // Add more cases as needed for additional tabs
             default:
-                window.location.hash = "" // Clear the hash if it's not one of the known values
+                window.location.hash = ""
                 break
         }
     }
@@ -81,21 +81,32 @@ export const AdminNotificationsView = () => {
 export const AdminCoursesView = () => {
     const [rows, setRows] = useState<GridRowsProp>([])
     const [rowModesModel, setRowModesModel] = useState<GridRowModesModel>({})
-    const [userUpdateDialogOpen, setUserUpdateDialogOpen] = useState(false)
-    const [editedRow, setEditedRow] = useState<any>({})
+    const [courseApprovalUpdateDialogOpen, setCourseApprovalUpdateDialogOpen] = useState(false)
+    const [editingCourse, setEditingCourse] = useState({
+        courseApprovalId: "",
+        status: CourseApprovalStatus.PENDING,
+        comments: "",
+        approvingAdmin: "test",
+    })
 
+    const fetchCourses = async () => {
+        try {
+            const data:any = await callAmplifyApi(customListCourses, {})
+            console.log("COURSE DATA: ", data)
+            if (data.listCourses.items) {
+                const rowsWithApprovalStatus = data.listCourses.items.map(item => {
+                    const sortedApprovals = item.approval.items.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+                    const mostRecentApprovalStatus = sortedApprovals.length > 0 ? sortedApprovals[0].status : 'No Status'
+                    return { ...item, approval: mostRecentApprovalStatus, courseApprovalID: sortedApprovals[0].courseApprovalId, id: item.id }
+                })
+                setRows(rowsWithApprovalStatus)
+            }
+        } catch (error) {
+            console.error('Error fetching courses:', error)
+        }
+    }
 
     useEffect(() => {
-        const fetchCourses = async () => {
-            try {
-                const data:any = await callAmplifyApi(customListCourses, {})
-                if (data.listCourses.items) {
-                    setRows(data.listCourses.items.map(item => ({...item, id: item.id})))
-                }
-            } catch (error) {
-                console.error('Error fetching notifications:', error)
-            }
-        }
         fetchCourses()
     }, [])
     
@@ -105,67 +116,74 @@ export const AdminCoursesView = () => {
         }
     }
 
-    const processRowUpdate = async(newRow:any) => {
-        if(editedRow) {
-            try {
-                const variables = { input: { id: newRow.id, title:newRow.title, message:newRow.message } }
-                await callAmplifyApi(updateBroadcastNotification, variables)
-                setRows((prevRows) => prevRows.map((row) => (row.id === editedRow.id ? editedRow : row)))
-            } catch (error) {
-                console.error("Error updating notification:", error)
-                throw new Error('The row update failed, reverting changes')
-            }
+    const createCourseHandler = async() => {
+        const CreateCourseVariables:CreateCourseApprovalInput = editingCourse
+        let createCourseCall:CreateCourseApprovalMutation = await callAmplifyApi(createCourseApproval, {input: CreateCourseVariables})
+        if(createCourseCall.createCourseApproval.id){
+            console.log(":)")
+            setCourseApprovalUpdateDialogOpen(false)
+            fetchCourses()
+
+        } else{
+            console.log(":(")
         }
-
-        setUserUpdateDialogOpen(false)
-        setEditedRow({})
     }
 
-    const processRowUpdateError = (error:any) => {
-        console.error("processRowUpdateError: ", error)
-    }
-    
-    const confirmRowUpdate = (newRow:any) => {
-        const originalRow = rows.find(row => row.id === newRow.id)
-        setEditedRow({originalRow, newRow})
-        setUserUpdateDialogOpen(true)
+    const handleStatusChange = (event: any) => {
+        const statusValue = event.target.value as CourseApprovalStatus
+        setEditingCourse({ ...editingCourse, status: statusValue })
     }
 
     const columns: GridColDef[] = [
-        { field: 'title', headerName: 'Title', flex: 1, editable: true },
-        { field: 'createdAt', headerName: 'Date Created', flex: 5, editable: true },
-
-
-
+        { field: 'title', headerName: 'Title', flex: 3.5, editable: true },
+        { field: 'createdAt', headerName: 'Date Created', flex: 3.5, editable: true },
+        { field: 'subject', headerName: 'Subject', flex: 5, editable: true},
+        { field: 'difficulty', headerName: 'Difficulty', flex: 3, editable: true},
         {
-            field: 'actions',
-            type: 'actions',
-            headerName: 'Actions',
-            width: 100,
-            getActions: (params) => [
-                <GridActionsCellItem
-                    icon={<Edit />}
-                    label="Edit"
-                    onClick={() => setRowModesModel({...rowModesModel, [params.id]: { mode: GridRowModes.Edit }})}
-                />,
-                <GridActionsCellItem
-                    icon={<Delete />}
-                    label="Delete"
-                    onClick={() => handleDelete(params.id)}
-                />,
-            ],
-        },
+            field: 'approval',
+            headerName: 'Approval Status',
+            flex: 4,
+            renderCell: (params) => {
+                let color: 'default' | 'primary' | 'secondary' | 'error' | 'info' | 'success' | 'warning' = 'default'
+                switch (params.value) {
+                    case 'PENDING':
+                        color = 'secondary'
+                        break
+                    case 'APPROVED':
+                        color = 'success'
+                        break
+                    case 'DISAPPROVED':
+                        color = 'warning'
+                        break
+                    default:
+                        color = 'default'
+                }
+            
+                return (
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                        <Chip label={params.value} color={color} sx={{width:"125px"}} />
+                        <IconButton
+                            size="small"
+                            onClick={() => {
+                                setEditingCourse(
+                                    {
+                                        courseApprovalId: String(params.row.courseApprovalID),
+                                        status: params.row.approval,
+                                        comments: String(params.row.comments),
+                                        approvingAdmin: "",
+                                    }
+                                )
+                                setCourseApprovalUpdateDialogOpen(true) 
+                            }}
+                        >
+                            <Edit fontSize="small" />
+                        </IconButton>
+                    </div>
+                )
+            },
+        }
     ]
 
-    const handleDelete = async(id:any) => {
-        try{
-            const variables= { input: { id: id } }
-            const deleteNotification = await callAmplifyApi(updateBroadcastNotification, variables)
-            deleteNotification && setRows(rows.filter(row => row.id !== id))
-        }catch(error){
-            console.error(error)
-        }
-    }
 
     return (
         <>
@@ -177,8 +195,6 @@ export const AdminCoursesView = () => {
                     rowModesModel={rowModesModel}
                     onRowModesModelChange={setRowModesModel}
                     onRowEditStop={handleRowEditStop}
-                    processRowUpdate={confirmRowUpdate}
-                    onProcessRowUpdateError={(error)=>processRowUpdateError(error)}
                     initialState={{
                         pagination: { paginationModel: { pageSize: 5 } },
                     }}
@@ -186,35 +202,53 @@ export const AdminCoursesView = () => {
                 />
             </Box>
             <Dialog
-                open={userUpdateDialogOpen}
-                onClose={() => setUserUpdateDialogOpen(false)}
+                open={courseApprovalUpdateDialogOpen}
+                onClose={() => setCourseApprovalUpdateDialogOpen(false)}
                 aria-labelledby="alert-dialog-title"
                 aria-describedby="alert-dialog-description"
             >
                 <DialogTitle id="alert-dialog-title">{"Confirm Changes"}</DialogTitle>
                 <DialogContent>
-                    <DialogContentText id="alert-dialog-description">
-                        Are you sure you want to save these changes?
-                        <br/>
-                        <strong>Changes:</strong>
-                        {editedRow.newRow && editedRow.originalRow && Object.keys(editedRow.newRow).map((key) => {
-                            if (editedRow.newRow[key] !== editedRow.originalRow[key]) {
-                                return (
-                                    <div key={key}>
-                                        {key}: {editedRow.originalRow[key]} <strong>-</strong> {editedRow.newRow[key]}
-                                    </div>
-                                )
-                            }
-                            return null
-                        })}
-                    </DialogContentText>
+                    <FormControl fullWidth margin="normal">
+                        <InputLabel id="status-select-label">Status</InputLabel>
+                        <Select
+                            labelId="status-select-label"
+                            id="status-select"
+                            value={editingCourse.status}
+                            label="Status"
+                            onChange={(event) => handleStatusChange(event)}//setEditingCourse({...editingCourse, status: event.target.value})}
+                        >
+                            <MenuItem value="PENDING">Pending</MenuItem>
+                            <MenuItem value="APPROVED">Approved</MenuItem>
+                            <MenuItem value="DISAPPROVED">Disapproved</MenuItem>
+                        </Select>
+                    </FormControl>
+                    <TextField
+                        margin="dense"
+                        id="comments"
+                        label="Comments"
+                        type="text"
+                        fullWidth
+                        multiline
+                        rows={4}
+                        value={editingCourse.comments}
+                        onChange={(e) => setEditingCourse({...editingCourse, comments: e.target.value})}
+                    />
+                    <TextField
+                        margin="dense"
+                        id="approvingAdmin"
+                        label="Approving Admin"
+                        type="text"
+                        fullWidth
+                        value={editingCourse.approvingAdmin}
+                        onChange={(e) => setEditingCourse({...editingCourse, approvingAdmin: e.target.value})}
+                    />
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={() => setUserUpdateDialogOpen(false)}>Cancel</Button>
-                    <Button onClick={() => processRowUpdate(editedRow.newRow)} autoFocus>Confirm</Button>
+                    <Button onClick={() => setCourseApprovalUpdateDialogOpen(false)}>Cancel</Button>
+                    <Button onClick={() => createCourseHandler()} autoFocus>Confirm</Button>
                 </DialogActions>
             </Dialog>
-
         </>
     )
 }
@@ -244,9 +278,9 @@ export const CreateNewNotificationView = () => {
             const amplifyApiCall = await callAmplifyApi(createBroadcastNotification, variablesDefinition)
 
             if(amplifyApiCall!==null){
-                setAlertOpen(true);
+                setAlertOpen(true)
                 setTimeout(() => {
-                    setAlertOpen(false);
+                    setAlertOpen(false)
                 }, 2000)
                 setNotificationMessage('')
                 setType(NotificationType.MESSAGE)
@@ -493,7 +527,7 @@ export const AdminUsersView = () => {
                             console.log("GROUPS FOR USER: ", groupsForUser.Data)
                             try{
                                 if(!groupsForUser.Data.Error) {
-                                    return { ...profile, groups: groupsForUser.Data};
+                                    return { ...profile, groups: groupsForUser.Data}
                                 }else{
                                     return {...profile, groups: []}
                                 }
@@ -502,14 +536,14 @@ export const AdminUsersView = () => {
                             }
                         })
                     )
-                    const validProfilesWithGroups = profilesWithGroups.filter(Boolean);
+                    const validProfilesWithGroups = profilesWithGroups.filter(Boolean)
                     setRows(validProfilesWithGroups.map(profile => ({
                         id: profile.id,
                         name: profile.name,
                         email: profile.email,
                         status: profile.status,
                         groups: profile.groups.join(', ')
-                    })));
+                    })))
                                     }
                 
             } catch (error) {
@@ -626,7 +660,7 @@ export const AdminUsersView = () => {
                     icon={<Edit />}
                     label="Edit"
                     onClick={() => setRowModesModel({...rowModesModel, [params.id]: { mode: GridRowModes.Edit }})}
-                />,
+                />
             ],
         },
     ]
