@@ -18,6 +18,10 @@ export const getStudentProfile = /* GraphQL */ `query GetStudentProfile($id: ID!
     darkModeEnabled
     language
     isAdmin
+    enrollments {
+      nextToken
+      __typename
+    }
     createdAt
     updatedAt
     owner
@@ -190,6 +194,50 @@ export const listCourses = /* GraphQL */ `query ListCourses(
 ` as GeneratedQuery<
   APITypes.ListCoursesQueryVariables,
   APITypes.ListCoursesQuery
+>;
+export const getEnrollment = /* GraphQL */ `query GetEnrollment($id: ID!) {
+  getEnrollment(id: $id) {
+    id
+    userID
+    courseID
+    progress
+    completed
+    achievements
+    createdAt
+    updatedAt
+    studentProfileEnrollmentsId
+    __typename
+  }
+}
+` as GeneratedQuery<
+  APITypes.GetEnrollmentQueryVariables,
+  APITypes.GetEnrollmentQuery
+>;
+export const listEnrollments = /* GraphQL */ `query ListEnrollments(
+  $filter: ModelEnrollmentFilterInput
+  $limit: Int
+  $nextToken: String
+) {
+  listEnrollments(filter: $filter, limit: $limit, nextToken: $nextToken) {
+    items {
+      id
+      userID
+      courseID
+      progress
+      completed
+      achievements
+      createdAt
+      updatedAt
+      studentProfileEnrollmentsId
+      __typename
+    }
+    nextToken
+    __typename
+  }
+}
+` as GeneratedQuery<
+  APITypes.ListEnrollmentsQueryVariables,
+  APITypes.ListEnrollmentsQuery
 >;
 export const getCourseApproval = /* GraphQL */ `query GetCourseApproval($id: ID!) {
   getCourseApproval(id: $id) {
@@ -496,48 +544,6 @@ export const listQuestions = /* GraphQL */ `query ListQuestions(
   APITypes.ListQuestionsQueryVariables,
   APITypes.ListQuestionsQuery
 >;
-export const getEnrollment = /* GraphQL */ `query GetEnrollment($id: ID!) {
-  getEnrollment(id: $id) {
-    id
-    userID
-    courseID
-    progress
-    completed
-    achievements
-    createdAt
-    updatedAt
-    __typename
-  }
-}
-` as GeneratedQuery<
-  APITypes.GetEnrollmentQueryVariables,
-  APITypes.GetEnrollmentQuery
->;
-export const listEnrollments = /* GraphQL */ `query ListEnrollments(
-  $filter: ModelEnrollmentFilterInput
-  $limit: Int
-  $nextToken: String
-) {
-  listEnrollments(filter: $filter, limit: $limit, nextToken: $nextToken) {
-    items {
-      id
-      userID
-      courseID
-      progress
-      completed
-      achievements
-      createdAt
-      updatedAt
-      __typename
-    }
-    nextToken
-    __typename
-  }
-}
-` as GeneratedQuery<
-  APITypes.ListEnrollmentsQueryVariables,
-  APITypes.ListEnrollmentsQuery
->;
 export const getInstructorProfile = /* GraphQL */ `query GetInstructorProfile($id: ID!) {
   getInstructorProfile(id: $id) {
     id
@@ -548,6 +554,7 @@ export const getInstructorProfile = /* GraphQL */ `query GetInstructorProfile($i
       overview
       createdAt
       updatedAt
+      instructorBiographyInstructorId
       owner
       __typename
     }
@@ -557,11 +564,14 @@ export const getInstructorProfile = /* GraphQL */ `query GetInstructorProfile($i
       email
       createdAt
       updatedAt
+      instructorContactInstructorIDId
       owner
       __typename
     }
     createdAt
     updatedAt
+    instructorProfileBiographyId
+    instructorProfileContactId
     owner
     __typename
   }
@@ -586,6 +596,8 @@ export const listInstructorProfiles = /* GraphQL */ `query ListInstructorProfile
       email
       createdAt
       updatedAt
+      instructorProfileBiographyId
+      instructorProfileContactId
       owner
       __typename
     }
@@ -597,13 +609,86 @@ export const listInstructorProfiles = /* GraphQL */ `query ListInstructorProfile
   APITypes.ListInstructorProfilesQueryVariables,
   APITypes.ListInstructorProfilesQuery
 >;
+export const getInstructorBiography = /* GraphQL */ `query GetInstructorBiography($id: ID!) {
+  getInstructorBiography(id: $id) {
+    id
+    overview
+    professionalExperience {
+      nextToken
+      __typename
+    }
+    awards {
+      nextToken
+      __typename
+    }
+    instructor {
+      id
+      name
+      email
+      createdAt
+      updatedAt
+      instructorProfileBiographyId
+      instructorProfileContactId
+      owner
+      __typename
+    }
+    createdAt
+    updatedAt
+    instructorBiographyInstructorId
+    owner
+    __typename
+  }
+}
+` as GeneratedQuery<
+  APITypes.GetInstructorBiographyQueryVariables,
+  APITypes.GetInstructorBiographyQuery
+>;
+export const listInstructorBiographies = /* GraphQL */ `query ListInstructorBiographies(
+  $filter: ModelInstructorBiographyFilterInput
+  $limit: Int
+  $nextToken: String
+) {
+  listInstructorBiographies(
+    filter: $filter
+    limit: $limit
+    nextToken: $nextToken
+  ) {
+    items {
+      id
+      overview
+      createdAt
+      updatedAt
+      instructorBiographyInstructorId
+      owner
+      __typename
+    }
+    nextToken
+    __typename
+  }
+}
+` as GeneratedQuery<
+  APITypes.ListInstructorBiographiesQueryVariables,
+  APITypes.ListInstructorBiographiesQuery
+>;
 export const getInstructorContact = /* GraphQL */ `query GetInstructorContact($id: ID!) {
   getInstructorContact(id: $id) {
     id
     phone
     email
+    instructorID {
+      id
+      name
+      email
+      createdAt
+      updatedAt
+      instructorProfileBiographyId
+      instructorProfileContactId
+      owner
+      __typename
+    }
     createdAt
     updatedAt
+    instructorContactInstructorIDId
     owner
     __typename
   }
@@ -628,6 +713,7 @@ export const listInstructorContacts = /* GraphQL */ `query ListInstructorContact
       email
       createdAt
       updatedAt
+      instructorContactInstructorIDId
       owner
       __typename
     }
@@ -638,54 +724,6 @@ export const listInstructorContacts = /* GraphQL */ `query ListInstructorContact
 ` as GeneratedQuery<
   APITypes.ListInstructorContactsQueryVariables,
   APITypes.ListInstructorContactsQuery
->;
-export const getInstructorBiography = /* GraphQL */ `query GetInstructorBiography($id: ID!) {
-  getInstructorBiography(id: $id) {
-    id
-    overview
-    professionalExperience {
-      nextToken
-      __typename
-    }
-    awards {
-      nextToken
-      __typename
-    }
-    createdAt
-    updatedAt
-    owner
-    __typename
-  }
-}
-` as GeneratedQuery<
-  APITypes.GetInstructorBiographyQueryVariables,
-  APITypes.GetInstructorBiographyQuery
->;
-export const listInstructorBiographies = /* GraphQL */ `query ListInstructorBiographies(
-  $filter: ModelInstructorBiographyFilterInput
-  $limit: Int
-  $nextToken: String
-) {
-  listInstructorBiographies(
-    filter: $filter
-    limit: $limit
-    nextToken: $nextToken
-  ) {
-    items {
-      id
-      overview
-      createdAt
-      updatedAt
-      owner
-      __typename
-    }
-    nextToken
-    __typename
-  }
-}
-` as GeneratedQuery<
-  APITypes.ListInstructorBiographiesQueryVariables,
-  APITypes.ListInstructorBiographiesQuery
 >;
 export const getExperience = /* GraphQL */ `query GetExperience($id: ID!) {
   getExperience(id: $id) {

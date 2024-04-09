@@ -12,7 +12,7 @@ import { Box, ButtonBase, Chip, FormControl, InputLabel, MenuItem, Select, TextF
 import { createCourse, createCourseApproval } from '@/src/graphql/mutations'
 import { Drawer, List, ListItem, ListItemText, Collapse, Typography, Grid } from '@mui/material'
 import { ExpandLess, ExpandMore } from '@mui/icons-material'
-import { callAmplifyApi } from '@/src/functions/Amplify'
+import { callAmplifyApi, fetchCoursesForDataGrid } from '@/src/functions/Amplify'
 import { customListCourses } from '@/src/custom-amplify-graphql-queries'
 import { DrawerStyle } from '@/src/style/Components'
 
@@ -57,10 +57,10 @@ export const InstructorDashboard = ({ userData }: any) => {
 
     return (
         <Grid container spacing={1}>
-            <Grid item xs={2}>
+            <Grid item xs={2.5}>
                 <InstructorSideDrawer userData={userDatum} setCurrentCourseView={setCurrentCourseView} />
             </Grid>
-            <Grid item xs={10}>
+            <Grid item xs={9.5}>
                 <CourseDashboard CurrentCourse={currentCourseObject} />
             </Grid>
         </Grid>
@@ -98,8 +98,9 @@ export const InstructorSideDrawer = ({userData, setCurrentCourseView}:any) => {
             console.log(userData)
             setUserDatum(userData)
             const callListCourses = async() => {
-                const response:any = await callAmplifyApi(customListCourses, {})
-                setUserCourses(response.listCourses.items)
+                const response:any = await fetchCoursesForDataGrid()//callAmplifyApi(customListCourses, {})
+                console.log("RESPONSE IN INSTRUCTOR VIEW: ", response)
+                setUserCourses(response)
             }
             callListCourses()
         }
@@ -107,12 +108,12 @@ export const InstructorSideDrawer = ({userData, setCurrentCourseView}:any) => {
 
     return(
         <Box sx={{ display: 'flex' }}>
-            <Drawer variant="permanent" sx={DrawerStyle(240)}>
+            <Drawer variant="permanent" sx={DrawerStyle(340)}>
                 <List component="nav" aria-labelledby="nested-list-subheader">
                     <ListItem>
                         <NewCourseDialog userData={userDatum} />
                     </ListItem>
-                    <ListItem button onClick={handleClick}>
+                    <ListItem onClick={handleClick}>
                         <ListItemText primary="Course Management" />
                         {open ? <ExpandLess /> : <ExpandMore />}
                     </ListItem>
@@ -123,22 +124,23 @@ export const InstructorSideDrawer = ({userData, setCurrentCourseView}:any) => {
                                     <ListItem sx={{ pl: 4 }} key={course.id}>
                                         <ListItemText 
                                             primary={
-                                                <Fragment>
-                                                    <Typography component="span" variant="body2" sx={{ fontWeight: 'bold' }}>
-                                                        {course.title}
-                                                    </Typography>
-                                                    {}
-                                                    {' - '}
-                                                    <StatusBadge status={course.approval.items[0].status} />
-                                                </Fragment>
+                                                <Grid container spacing={2} alignItems="center">
+                                                    <Grid item xs={6}>
+                                                        <Typography component="span" variant="body2" sx={{ fontWeight: 'bold' }}>
+                                                            {course.title}
+                                                        </Typography>
+                                                    </Grid>
+                                                    <Grid item xs={6}>
+                                                        <StatusBadge status={course.approval} />
+                                                    </Grid>
+                                                </Grid>
                                             } 
                                         />
                                     </ListItem>
-                                </ButtonBase>
+                                                                    </ButtonBase>
                             ))}
                         </List>
                     </Collapse>
-                    {/* Add more items here */}
                 </List>
             </Drawer>
         </Box>
@@ -230,7 +232,6 @@ export const NewCourseDialog = ({userData}) => {
             const createNewCourse:CreateCourseMutation = await callAmplifyApi(createCourse, variables)
 
             if(createNewCourse.createCourse.id){
-                console.log("NEW COURSE CREATED: ", createNewCourse)
                 const createNewCourseApprovalVariables = {
                     input: {
                         courseApprovalId: createNewCourse.createCourse.id,
@@ -242,7 +243,6 @@ export const NewCourseDialog = ({userData}) => {
                 const createNewCourseApproval:CreateCourseApprovalMutation = await callAmplifyApi(createCourseApproval, createNewCourseApprovalVariables)
                 
                 if(createNewCourseApproval.createCourseApproval.id){  
-                    console.log("NEW APPROVAL CREATED: ", createNewCourseApproval)
                     handleClose()
                 }
             }
@@ -262,7 +262,7 @@ export const NewCourseDialog = ({userData}) => {
 
     return(
         <Fragment>
-            <Button variant="contained" onClick={handleClickOpen} color="primary" sx={{color:"white", bgcolor:"primary"}}>
+            <Button variant="contained" onClick={handleClickOpen} color="primary" sx={{color:"white", bgcolor:"primary", width:"100%"}}>
                 Create New Course
             </Button>
             <Dialog

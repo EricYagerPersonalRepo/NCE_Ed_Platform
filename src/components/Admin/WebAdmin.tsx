@@ -3,7 +3,7 @@ import { Badge, Box, Drawer, List, ListItem, ListItemButton, ListItemIcon, ListI
 import { useEffect, useState } from "react"
 import { AdminCoursesView, AdminNotificationsView, AdminUsersView } from "./AdminComponents"
 import { DrawerStyle } from "@/src/style/Components"
-import { callAmplifyApi } from "@/src/functions/Amplify"
+import { callAmplifyApi, fetchCourseStatusCounts } from "@/src/functions/Amplify"
 import { ListPendingCourses } from "@/src/custom-amplify-graphql-queries/ListCourses"
 
 const WebAdministrativeView = () => {
@@ -30,10 +30,8 @@ const WebAdministrativeView = () => {
 
     useEffect(()=>{
             const callListCourses = async() => {
-                const response:any = await callAmplifyApi(ListPendingCourses, {})
-                console.log("List Courses Response: ", response.listCourseApprovals.items.length)
-                setCourses(response.listCourseApprovals.items)
-                setNumberOfPendingCourses(response.listCourseApprovals.items.length)
+                const response:any = await fetchCourseStatusCounts()
+                setNumberOfPendingCourses(response.pending)
             }
             callListCourses()
     },[])
@@ -56,14 +54,8 @@ const WebAdministrativeView = () => {
                     break
             }
         }
-
-        // Call once on mount to set initial state based on current hash
         handleHashChange()
-
-        // Listen for hash changes
         window.addEventListener('hashchange', handleHashChange)
-
-        // Cleanup listener on component unmount
         return () => window.removeEventListener('hashchange', handleHashChange)
     }, []) 
 

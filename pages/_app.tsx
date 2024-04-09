@@ -135,8 +135,10 @@ const NCE_Education_App = ({ Component, pageProps }:any) => {
             try{
                 if(userData.cognitoID){
                     const avatarFileName = `user_files/${userData.cognitoID}/avatar.png`
-                    const imageTest = await downloadAvatarFromS3(avatarFileName)
+                    // const imageTest = await downloadAvatarFromS3(avatarFileName)
+                    // console.log("IMAGE TEST IN _APP: ", imageTest)
                     let presignedUrlResponse = await getPresignedUrl(avatarFileName)
+                    console.log("URL: ", presignedUrlResponse)
                     setAvatarUrl(presignedUrlResponse)
                 }
             }catch(error){

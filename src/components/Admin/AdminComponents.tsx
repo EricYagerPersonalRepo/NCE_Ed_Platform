@@ -8,7 +8,7 @@ import { listBroadcastNotifications, listCourseApprovals, listStudentProfiles } 
 import { DataGrid, GridActionsCellItem, GridColDef, GridRowModes, GridRowModesModel, GridRowsProp } from "@mui/x-data-grid"
 import { Add, Check, Delete, Edit } from "@mui/icons-material"
 import { TabPanel } from "../Global/Tabs"
-import { addToAdminGroup, callAmplifyApi } from "@/src/functions/Amplify"
+import { addToAdminGroup, callAmplifyApi, fetchCoursesForDataGrid } from "@/src/functions/Amplify"
 import { customListCourses } from "@/src/custom-amplify-graphql-queries"
 import { Router } from "next/router"
 
@@ -89,25 +89,12 @@ export const AdminCoursesView = () => {
         approvingAdmin: "test",
     })
 
-    const fetchCourses = async () => {
-        try {
-            const data:any = await callAmplifyApi(customListCourses, {})
-            console.log("COURSE DATA: ", data)
-            if (data.listCourses.items) {
-                const rowsWithApprovalStatus = data.listCourses.items.map(item => {
-                    const sortedApprovals = item.approval.items.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
-                    const mostRecentApprovalStatus = sortedApprovals.length > 0 ? sortedApprovals[0].status : 'No Status'
-                    return { ...item, approval: mostRecentApprovalStatus, courseApprovalID: sortedApprovals[0].courseApprovalId, id: item.id }
-                })
-                setRows(rowsWithApprovalStatus)
-            }
-        } catch (error) {
-            console.error('Error fetching courses:', error)
-        }
-    }
-
     useEffect(() => {
-        fetchCourses()
+        const loadCourses = async () => {
+            const coursePayload = await fetchCoursesForDataGrid()
+            setRows(coursePayload)
+        }
+        loadCourses()
     }, [])
     
     const handleRowEditStop = (event:any, reason:any) => {
@@ -120,12 +107,12 @@ export const AdminCoursesView = () => {
         const CreateCourseVariables:CreateCourseApprovalInput = editingCourse
         let createCourseCall:CreateCourseApprovalMutation = await callAmplifyApi(createCourseApproval, {input: CreateCourseVariables})
         if(createCourseCall.createCourseApproval.id){
-            console.log(":)")
             setCourseApprovalUpdateDialogOpen(false)
-            fetchCourses()
+            const coursePayload = await fetchCoursesForDataGrid()
+            setRows(coursePayload)
 
         } else{
-            console.log(":(")
+            console.error("No course update detected")
         }
     }
 

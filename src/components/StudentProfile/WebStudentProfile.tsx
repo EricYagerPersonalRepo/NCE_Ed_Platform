@@ -41,6 +41,7 @@ const WebStudentProfile = ({ userID, avatarUrl, studentProfile, userSettings }) 
     }
 
     useEffect(() => {
+        console.log("PROFILE: ", studentProfile)
         if(studentProfile && userSettings){
             setStudentProfileData(studentProfile)
             setUserSettingsData(userSettings)

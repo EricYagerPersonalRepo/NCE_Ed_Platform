@@ -94,9 +94,29 @@ export type StudentProfile = {
   darkModeEnabled: boolean,
   language: string,
   isAdmin: boolean,
+  enrollments?: ModelEnrollmentConnection | null,
   createdAt: string,
   updatedAt: string,
   owner?: string | null,
+};
+
+export type ModelEnrollmentConnection = {
+  __typename: "ModelEnrollmentConnection",
+  items:  Array<Enrollment | null >,
+  nextToken?: string | null,
+};
+
+export type Enrollment = {
+  __typename: "Enrollment",
+  id: string,
+  userID: string,
+  courseID: string,
+  progress?: number | null,
+  completed?: boolean | null,
+  achievements?: Array< string | null > | null,
+  createdAt: string,
+  updatedAt: string,
+  studentProfileEnrollmentsId?: string | null,
 };
 
 export type UpdateStudentProfileInput = {
@@ -412,6 +432,54 @@ export type DeleteCourseInput = {
   id: string,
 };
 
+export type CreateEnrollmentInput = {
+  id?: string | null,
+  userID: string,
+  courseID: string,
+  progress?: number | null,
+  completed?: boolean | null,
+  achievements?: Array< string | null > | null,
+  studentProfileEnrollmentsId?: string | null,
+};
+
+export type ModelEnrollmentConditionInput = {
+  userID?: ModelIDInput | null,
+  courseID?: ModelIDInput | null,
+  progress?: ModelFloatInput | null,
+  completed?: ModelBooleanInput | null,
+  achievements?: ModelStringInput | null,
+  and?: Array< ModelEnrollmentConditionInput | null > | null,
+  or?: Array< ModelEnrollmentConditionInput | null > | null,
+  not?: ModelEnrollmentConditionInput | null,
+  studentProfileEnrollmentsId?: ModelIDInput | null,
+};
+
+export type ModelFloatInput = {
+  ne?: number | null,
+  eq?: number | null,
+  le?: number | null,
+  lt?: number | null,
+  ge?: number | null,
+  gt?: number | null,
+  between?: Array< number | null > | null,
+  attributeExists?: boolean | null,
+  attributeType?: ModelAttributeTypes | null,
+};
+
+export type UpdateEnrollmentInput = {
+  id: string,
+  userID?: string | null,
+  courseID?: string | null,
+  progress?: number | null,
+  completed?: boolean | null,
+  achievements?: Array< string | null > | null,
+  studentProfileEnrollmentsId?: string | null,
+};
+
+export type DeleteEnrollmentInput = {
+  id: string,
+};
+
 export type CreateCourseApprovalInput = {
   id?: string | null,
   status: CourseApprovalStatus,
@@ -611,67 +679,12 @@ export type DeleteQuestionInput = {
   id: string,
 };
 
-export type CreateEnrollmentInput = {
-  id?: string | null,
-  userID: string,
-  courseID: string,
-  progress?: number | null,
-  completed?: boolean | null,
-  achievements?: Array< string | null > | null,
-};
-
-export type ModelEnrollmentConditionInput = {
-  userID?: ModelIDInput | null,
-  courseID?: ModelIDInput | null,
-  progress?: ModelFloatInput | null,
-  completed?: ModelBooleanInput | null,
-  achievements?: ModelStringInput | null,
-  and?: Array< ModelEnrollmentConditionInput | null > | null,
-  or?: Array< ModelEnrollmentConditionInput | null > | null,
-  not?: ModelEnrollmentConditionInput | null,
-};
-
-export type ModelFloatInput = {
-  ne?: number | null,
-  eq?: number | null,
-  le?: number | null,
-  lt?: number | null,
-  ge?: number | null,
-  gt?: number | null,
-  between?: Array< number | null > | null,
-  attributeExists?: boolean | null,
-  attributeType?: ModelAttributeTypes | null,
-};
-
-export type Enrollment = {
-  __typename: "Enrollment",
-  id: string,
-  userID: string,
-  courseID: string,
-  progress?: number | null,
-  completed?: boolean | null,
-  achievements?: Array< string | null > | null,
-  createdAt: string,
-  updatedAt: string,
-};
-
-export type UpdateEnrollmentInput = {
-  id: string,
-  userID?: string | null,
-  courseID?: string | null,
-  progress?: number | null,
-  completed?: boolean | null,
-  achievements?: Array< string | null > | null,
-};
-
-export type DeleteEnrollmentInput = {
-  id: string,
-};
-
 export type CreateInstructorProfileInput = {
   id?: string | null,
   name: string,
   email: string,
+  instructorProfileBiographyId: string,
+  instructorProfileContactId: string,
 };
 
 export type ModelInstructorProfileConditionInput = {
@@ -680,6 +693,8 @@ export type ModelInstructorProfileConditionInput = {
   and?: Array< ModelInstructorProfileConditionInput | null > | null,
   or?: Array< ModelInstructorProfileConditionInput | null > | null,
   not?: ModelInstructorProfileConditionInput | null,
+  instructorProfileBiographyId?: ModelIDInput | null,
+  instructorProfileContactId?: ModelIDInput | null,
 };
 
 export type InstructorProfile = {
@@ -691,6 +706,8 @@ export type InstructorProfile = {
   contact: InstructorContact,
   createdAt: string,
   updatedAt: string,
+  instructorProfileBiographyId: string,
+  instructorProfileContactId: string,
   owner?: string | null,
 };
 
@@ -700,8 +717,10 @@ export type InstructorBiography = {
   overview: string,
   professionalExperience?: ModelExperienceConnection | null,
   awards?: ModelAwardConnection | null,
+  instructor: InstructorProfile,
   createdAt: string,
   updatedAt: string,
+  instructorBiographyInstructorId: string,
   owner?: string | null,
 };
 
@@ -749,8 +768,10 @@ export type InstructorContact = {
   id: string,
   phone?: string | null,
   email?: string | null,
+  instructorID: InstructorProfile,
   createdAt: string,
   updatedAt: string,
+  instructorContactInstructorIDId: string,
   owner?: string | null,
 };
 
@@ -758,9 +779,35 @@ export type UpdateInstructorProfileInput = {
   id: string,
   name?: string | null,
   email?: string | null,
+  instructorProfileBiographyId?: string | null,
+  instructorProfileContactId?: string | null,
 };
 
 export type DeleteInstructorProfileInput = {
+  id: string,
+};
+
+export type CreateInstructorBiographyInput = {
+  id?: string | null,
+  overview: string,
+  instructorBiographyInstructorId: string,
+};
+
+export type ModelInstructorBiographyConditionInput = {
+  overview?: ModelStringInput | null,
+  and?: Array< ModelInstructorBiographyConditionInput | null > | null,
+  or?: Array< ModelInstructorBiographyConditionInput | null > | null,
+  not?: ModelInstructorBiographyConditionInput | null,
+  instructorBiographyInstructorId?: ModelIDInput | null,
+};
+
+export type UpdateInstructorBiographyInput = {
+  id: string,
+  overview?: string | null,
+  instructorBiographyInstructorId?: string | null,
+};
+
+export type DeleteInstructorBiographyInput = {
   id: string,
 };
 
@@ -768,6 +815,7 @@ export type CreateInstructorContactInput = {
   id?: string | null,
   phone?: string | null,
   email?: string | null,
+  instructorContactInstructorIDId: string,
 };
 
 export type ModelInstructorContactConditionInput = {
@@ -776,36 +824,17 @@ export type ModelInstructorContactConditionInput = {
   and?: Array< ModelInstructorContactConditionInput | null > | null,
   or?: Array< ModelInstructorContactConditionInput | null > | null,
   not?: ModelInstructorContactConditionInput | null,
+  instructorContactInstructorIDId?: ModelIDInput | null,
 };
 
 export type UpdateInstructorContactInput = {
   id: string,
   phone?: string | null,
   email?: string | null,
+  instructorContactInstructorIDId?: string | null,
 };
 
 export type DeleteInstructorContactInput = {
-  id: string,
-};
-
-export type CreateInstructorBiographyInput = {
-  id?: string | null,
-  overview: string,
-};
-
-export type ModelInstructorBiographyConditionInput = {
-  overview?: ModelStringInput | null,
-  and?: Array< ModelInstructorBiographyConditionInput | null > | null,
-  or?: Array< ModelInstructorBiographyConditionInput | null > | null,
-  not?: ModelInstructorBiographyConditionInput | null,
-};
-
-export type UpdateInstructorBiographyInput = {
-  id: string,
-  overview?: string | null,
-};
-
-export type DeleteInstructorBiographyInput = {
   id: string,
 };
 
@@ -951,6 +980,19 @@ export type ModelCourseConnection = {
   nextToken?: string | null,
 };
 
+export type ModelEnrollmentFilterInput = {
+  id?: ModelIDInput | null,
+  userID?: ModelIDInput | null,
+  courseID?: ModelIDInput | null,
+  progress?: ModelFloatInput | null,
+  completed?: ModelBooleanInput | null,
+  achievements?: ModelStringInput | null,
+  and?: Array< ModelEnrollmentFilterInput | null > | null,
+  or?: Array< ModelEnrollmentFilterInput | null > | null,
+  not?: ModelEnrollmentFilterInput | null,
+  studentProfileEnrollmentsId?: ModelIDInput | null,
+};
+
 export type ModelCourseApprovalFilterInput = {
   id?: ModelIDInput | null,
   status?: ModelCourseApprovalStatusInput | null,
@@ -1020,24 +1062,6 @@ export type ModelQuestionFilterInput = {
   quizQuestionsId?: ModelIDInput | null,
 };
 
-export type ModelEnrollmentFilterInput = {
-  id?: ModelIDInput | null,
-  userID?: ModelIDInput | null,
-  courseID?: ModelIDInput | null,
-  progress?: ModelFloatInput | null,
-  completed?: ModelBooleanInput | null,
-  achievements?: ModelStringInput | null,
-  and?: Array< ModelEnrollmentFilterInput | null > | null,
-  or?: Array< ModelEnrollmentFilterInput | null > | null,
-  not?: ModelEnrollmentFilterInput | null,
-};
-
-export type ModelEnrollmentConnection = {
-  __typename: "ModelEnrollmentConnection",
-  items:  Array<Enrollment | null >,
-  nextToken?: string | null,
-};
-
 export type ModelInstructorProfileFilterInput = {
   id?: ModelIDInput | null,
   name?: ModelStringInput | null,
@@ -1045,11 +1069,28 @@ export type ModelInstructorProfileFilterInput = {
   and?: Array< ModelInstructorProfileFilterInput | null > | null,
   or?: Array< ModelInstructorProfileFilterInput | null > | null,
   not?: ModelInstructorProfileFilterInput | null,
+  instructorProfileBiographyId?: ModelIDInput | null,
+  instructorProfileContactId?: ModelIDInput | null,
 };
 
 export type ModelInstructorProfileConnection = {
   __typename: "ModelInstructorProfileConnection",
   items:  Array<InstructorProfile | null >,
+  nextToken?: string | null,
+};
+
+export type ModelInstructorBiographyFilterInput = {
+  id?: ModelIDInput | null,
+  overview?: ModelStringInput | null,
+  and?: Array< ModelInstructorBiographyFilterInput | null > | null,
+  or?: Array< ModelInstructorBiographyFilterInput | null > | null,
+  not?: ModelInstructorBiographyFilterInput | null,
+  instructorBiographyInstructorId?: ModelIDInput | null,
+};
+
+export type ModelInstructorBiographyConnection = {
+  __typename: "ModelInstructorBiographyConnection",
+  items:  Array<InstructorBiography | null >,
   nextToken?: string | null,
 };
 
@@ -1060,25 +1101,12 @@ export type ModelInstructorContactFilterInput = {
   and?: Array< ModelInstructorContactFilterInput | null > | null,
   or?: Array< ModelInstructorContactFilterInput | null > | null,
   not?: ModelInstructorContactFilterInput | null,
+  instructorContactInstructorIDId?: ModelIDInput | null,
 };
 
 export type ModelInstructorContactConnection = {
   __typename: "ModelInstructorContactConnection",
   items:  Array<InstructorContact | null >,
-  nextToken?: string | null,
-};
-
-export type ModelInstructorBiographyFilterInput = {
-  id?: ModelIDInput | null,
-  overview?: ModelStringInput | null,
-  and?: Array< ModelInstructorBiographyFilterInput | null > | null,
-  or?: Array< ModelInstructorBiographyFilterInput | null > | null,
-  not?: ModelInstructorBiographyFilterInput | null,
-};
-
-export type ModelInstructorBiographyConnection = {
-  __typename: "ModelInstructorBiographyConnection",
-  items:  Array<InstructorBiography | null >,
   nextToken?: string | null,
 };
 
@@ -1203,6 +1231,29 @@ export type ModelSubscriptionCourseFilterInput = {
   or?: Array< ModelSubscriptionCourseFilterInput | null > | null,
 };
 
+export type ModelSubscriptionEnrollmentFilterInput = {
+  id?: ModelSubscriptionIDInput | null,
+  userID?: ModelSubscriptionIDInput | null,
+  courseID?: ModelSubscriptionIDInput | null,
+  progress?: ModelSubscriptionFloatInput | null,
+  completed?: ModelSubscriptionBooleanInput | null,
+  achievements?: ModelSubscriptionStringInput | null,
+  and?: Array< ModelSubscriptionEnrollmentFilterInput | null > | null,
+  or?: Array< ModelSubscriptionEnrollmentFilterInput | null > | null,
+};
+
+export type ModelSubscriptionFloatInput = {
+  ne?: number | null,
+  eq?: number | null,
+  le?: number | null,
+  lt?: number | null,
+  ge?: number | null,
+  gt?: number | null,
+  between?: Array< number | null > | null,
+  in?: Array< number | null > | null,
+  notIn?: Array< number | null > | null,
+};
+
 export type ModelSubscriptionCourseApprovalFilterInput = {
   id?: ModelSubscriptionIDInput | null,
   status?: ModelSubscriptionStringInput | null,
@@ -1260,29 +1311,6 @@ export type ModelSubscriptionQuestionFilterInput = {
   or?: Array< ModelSubscriptionQuestionFilterInput | null > | null,
 };
 
-export type ModelSubscriptionEnrollmentFilterInput = {
-  id?: ModelSubscriptionIDInput | null,
-  userID?: ModelSubscriptionIDInput | null,
-  courseID?: ModelSubscriptionIDInput | null,
-  progress?: ModelSubscriptionFloatInput | null,
-  completed?: ModelSubscriptionBooleanInput | null,
-  achievements?: ModelSubscriptionStringInput | null,
-  and?: Array< ModelSubscriptionEnrollmentFilterInput | null > | null,
-  or?: Array< ModelSubscriptionEnrollmentFilterInput | null > | null,
-};
-
-export type ModelSubscriptionFloatInput = {
-  ne?: number | null,
-  eq?: number | null,
-  le?: number | null,
-  lt?: number | null,
-  ge?: number | null,
-  gt?: number | null,
-  between?: Array< number | null > | null,
-  in?: Array< number | null > | null,
-  notIn?: Array< number | null > | null,
-};
-
 export type ModelSubscriptionInstructorProfileFilterInput = {
   id?: ModelSubscriptionIDInput | null,
   name?: ModelSubscriptionStringInput | null,
@@ -1291,19 +1319,19 @@ export type ModelSubscriptionInstructorProfileFilterInput = {
   or?: Array< ModelSubscriptionInstructorProfileFilterInput | null > | null,
 };
 
+export type ModelSubscriptionInstructorBiographyFilterInput = {
+  id?: ModelSubscriptionIDInput | null,
+  overview?: ModelSubscriptionStringInput | null,
+  and?: Array< ModelSubscriptionInstructorBiographyFilterInput | null > | null,
+  or?: Array< ModelSubscriptionInstructorBiographyFilterInput | null > | null,
+};
+
 export type ModelSubscriptionInstructorContactFilterInput = {
   id?: ModelSubscriptionIDInput | null,
   phone?: ModelSubscriptionStringInput | null,
   email?: ModelSubscriptionStringInput | null,
   and?: Array< ModelSubscriptionInstructorContactFilterInput | null > | null,
   or?: Array< ModelSubscriptionInstructorContactFilterInput | null > | null,
-};
-
-export type ModelSubscriptionInstructorBiographyFilterInput = {
-  id?: ModelSubscriptionIDInput | null,
-  overview?: ModelSubscriptionStringInput | null,
-  and?: Array< ModelSubscriptionInstructorBiographyFilterInput | null > | null,
-  or?: Array< ModelSubscriptionInstructorBiographyFilterInput | null > | null,
 };
 
 export type ModelSubscriptionExperienceFilterInput = {
@@ -1343,6 +1371,10 @@ export type CreateStudentProfileMutation = {
     darkModeEnabled: boolean,
     language: string,
     isAdmin: boolean,
+    enrollments?:  {
+      __typename: "ModelEnrollmentConnection",
+      nextToken?: string | null,
+    } | null,
     createdAt: string,
     updatedAt: string,
     owner?: string | null,
@@ -1365,6 +1397,10 @@ export type UpdateStudentProfileMutation = {
     darkModeEnabled: boolean,
     language: string,
     isAdmin: boolean,
+    enrollments?:  {
+      __typename: "ModelEnrollmentConnection",
+      nextToken?: string | null,
+    } | null,
     createdAt: string,
     updatedAt: string,
     owner?: string | null,
@@ -1387,6 +1423,10 @@ export type DeleteStudentProfileMutation = {
     darkModeEnabled: boolean,
     language: string,
     isAdmin: boolean,
+    enrollments?:  {
+      __typename: "ModelEnrollmentConnection",
+      nextToken?: string | null,
+    } | null,
     createdAt: string,
     updatedAt: string,
     owner?: string | null,
@@ -1579,6 +1619,66 @@ export type DeleteCourseMutation = {
     } | null,
     createdAt: string,
     updatedAt: string,
+  } | null,
+};
+
+export type CreateEnrollmentMutationVariables = {
+  input: CreateEnrollmentInput,
+  condition?: ModelEnrollmentConditionInput | null,
+};
+
+export type CreateEnrollmentMutation = {
+  createEnrollment?:  {
+    __typename: "Enrollment",
+    id: string,
+    userID: string,
+    courseID: string,
+    progress?: number | null,
+    completed?: boolean | null,
+    achievements?: Array< string | null > | null,
+    createdAt: string,
+    updatedAt: string,
+    studentProfileEnrollmentsId?: string | null,
+  } | null,
+};
+
+export type UpdateEnrollmentMutationVariables = {
+  input: UpdateEnrollmentInput,
+  condition?: ModelEnrollmentConditionInput | null,
+};
+
+export type UpdateEnrollmentMutation = {
+  updateEnrollment?:  {
+    __typename: "Enrollment",
+    id: string,
+    userID: string,
+    courseID: string,
+    progress?: number | null,
+    completed?: boolean | null,
+    achievements?: Array< string | null > | null,
+    createdAt: string,
+    updatedAt: string,
+    studentProfileEnrollmentsId?: string | null,
+  } | null,
+};
+
+export type DeleteEnrollmentMutationVariables = {
+  input: DeleteEnrollmentInput,
+  condition?: ModelEnrollmentConditionInput | null,
+};
+
+export type DeleteEnrollmentMutation = {
+  deleteEnrollment?:  {
+    __typename: "Enrollment",
+    id: string,
+    userID: string,
+    courseID: string,
+    progress?: number | null,
+    completed?: boolean | null,
+    achievements?: Array< string | null > | null,
+    createdAt: string,
+    updatedAt: string,
+    studentProfileEnrollmentsId?: string | null,
   } | null,
 };
 
@@ -2119,63 +2219,6 @@ export type DeleteQuestionMutation = {
   } | null,
 };
 
-export type CreateEnrollmentMutationVariables = {
-  input: CreateEnrollmentInput,
-  condition?: ModelEnrollmentConditionInput | null,
-};
-
-export type CreateEnrollmentMutation = {
-  createEnrollment?:  {
-    __typename: "Enrollment",
-    id: string,
-    userID: string,
-    courseID: string,
-    progress?: number | null,
-    completed?: boolean | null,
-    achievements?: Array< string | null > | null,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type UpdateEnrollmentMutationVariables = {
-  input: UpdateEnrollmentInput,
-  condition?: ModelEnrollmentConditionInput | null,
-};
-
-export type UpdateEnrollmentMutation = {
-  updateEnrollment?:  {
-    __typename: "Enrollment",
-    id: string,
-    userID: string,
-    courseID: string,
-    progress?: number | null,
-    completed?: boolean | null,
-    achievements?: Array< string | null > | null,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type DeleteEnrollmentMutationVariables = {
-  input: DeleteEnrollmentInput,
-  condition?: ModelEnrollmentConditionInput | null,
-};
-
-export type DeleteEnrollmentMutation = {
-  deleteEnrollment?:  {
-    __typename: "Enrollment",
-    id: string,
-    userID: string,
-    courseID: string,
-    progress?: number | null,
-    completed?: boolean | null,
-    achievements?: Array< string | null > | null,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
 export type CreateInstructorProfileMutationVariables = {
   input: CreateInstructorProfileInput,
   condition?: ModelInstructorProfileConditionInput | null,
@@ -2193,6 +2236,7 @@ export type CreateInstructorProfileMutation = {
       overview: string,
       createdAt: string,
       updatedAt: string,
+      instructorBiographyInstructorId: string,
       owner?: string | null,
     },
     contact:  {
@@ -2202,10 +2246,13 @@ export type CreateInstructorProfileMutation = {
       email?: string | null,
       createdAt: string,
       updatedAt: string,
+      instructorContactInstructorIDId: string,
       owner?: string | null,
     },
     createdAt: string,
     updatedAt: string,
+    instructorProfileBiographyId: string,
+    instructorProfileContactId: string,
     owner?: string | null,
   } | null,
 };
@@ -2227,6 +2274,7 @@ export type UpdateInstructorProfileMutation = {
       overview: string,
       createdAt: string,
       updatedAt: string,
+      instructorBiographyInstructorId: string,
       owner?: string | null,
     },
     contact:  {
@@ -2236,10 +2284,13 @@ export type UpdateInstructorProfileMutation = {
       email?: string | null,
       createdAt: string,
       updatedAt: string,
+      instructorContactInstructorIDId: string,
       owner?: string | null,
     },
     createdAt: string,
     updatedAt: string,
+    instructorProfileBiographyId: string,
+    instructorProfileContactId: string,
     owner?: string | null,
   } | null,
 };
@@ -2261,6 +2312,7 @@ export type DeleteInstructorProfileMutation = {
       overview: string,
       createdAt: string,
       updatedAt: string,
+      instructorBiographyInstructorId: string,
       owner?: string | null,
     },
     contact:  {
@@ -2270,61 +2322,13 @@ export type DeleteInstructorProfileMutation = {
       email?: string | null,
       createdAt: string,
       updatedAt: string,
+      instructorContactInstructorIDId: string,
       owner?: string | null,
     },
     createdAt: string,
     updatedAt: string,
-    owner?: string | null,
-  } | null,
-};
-
-export type CreateInstructorContactMutationVariables = {
-  input: CreateInstructorContactInput,
-  condition?: ModelInstructorContactConditionInput | null,
-};
-
-export type CreateInstructorContactMutation = {
-  createInstructorContact?:  {
-    __typename: "InstructorContact",
-    id: string,
-    phone?: string | null,
-    email?: string | null,
-    createdAt: string,
-    updatedAt: string,
-    owner?: string | null,
-  } | null,
-};
-
-export type UpdateInstructorContactMutationVariables = {
-  input: UpdateInstructorContactInput,
-  condition?: ModelInstructorContactConditionInput | null,
-};
-
-export type UpdateInstructorContactMutation = {
-  updateInstructorContact?:  {
-    __typename: "InstructorContact",
-    id: string,
-    phone?: string | null,
-    email?: string | null,
-    createdAt: string,
-    updatedAt: string,
-    owner?: string | null,
-  } | null,
-};
-
-export type DeleteInstructorContactMutationVariables = {
-  input: DeleteInstructorContactInput,
-  condition?: ModelInstructorContactConditionInput | null,
-};
-
-export type DeleteInstructorContactMutation = {
-  deleteInstructorContact?:  {
-    __typename: "InstructorContact",
-    id: string,
-    phone?: string | null,
-    email?: string | null,
-    createdAt: string,
-    updatedAt: string,
+    instructorProfileBiographyId: string,
+    instructorProfileContactId: string,
     owner?: string | null,
   } | null,
 };
@@ -2347,8 +2351,20 @@ export type CreateInstructorBiographyMutation = {
       __typename: "ModelAwardConnection",
       nextToken?: string | null,
     } | null,
+    instructor:  {
+      __typename: "InstructorProfile",
+      id: string,
+      name: string,
+      email: string,
+      createdAt: string,
+      updatedAt: string,
+      instructorProfileBiographyId: string,
+      instructorProfileContactId: string,
+      owner?: string | null,
+    },
     createdAt: string,
     updatedAt: string,
+    instructorBiographyInstructorId: string,
     owner?: string | null,
   } | null,
 };
@@ -2371,8 +2387,20 @@ export type UpdateInstructorBiographyMutation = {
       __typename: "ModelAwardConnection",
       nextToken?: string | null,
     } | null,
+    instructor:  {
+      __typename: "InstructorProfile",
+      id: string,
+      name: string,
+      email: string,
+      createdAt: string,
+      updatedAt: string,
+      instructorProfileBiographyId: string,
+      instructorProfileContactId: string,
+      owner?: string | null,
+    },
     createdAt: string,
     updatedAt: string,
+    instructorBiographyInstructorId: string,
     owner?: string | null,
   } | null,
 };
@@ -2395,8 +2423,107 @@ export type DeleteInstructorBiographyMutation = {
       __typename: "ModelAwardConnection",
       nextToken?: string | null,
     } | null,
+    instructor:  {
+      __typename: "InstructorProfile",
+      id: string,
+      name: string,
+      email: string,
+      createdAt: string,
+      updatedAt: string,
+      instructorProfileBiographyId: string,
+      instructorProfileContactId: string,
+      owner?: string | null,
+    },
     createdAt: string,
     updatedAt: string,
+    instructorBiographyInstructorId: string,
+    owner?: string | null,
+  } | null,
+};
+
+export type CreateInstructorContactMutationVariables = {
+  input: CreateInstructorContactInput,
+  condition?: ModelInstructorContactConditionInput | null,
+};
+
+export type CreateInstructorContactMutation = {
+  createInstructorContact?:  {
+    __typename: "InstructorContact",
+    id: string,
+    phone?: string | null,
+    email?: string | null,
+    instructorID:  {
+      __typename: "InstructorProfile",
+      id: string,
+      name: string,
+      email: string,
+      createdAt: string,
+      updatedAt: string,
+      instructorProfileBiographyId: string,
+      instructorProfileContactId: string,
+      owner?: string | null,
+    },
+    createdAt: string,
+    updatedAt: string,
+    instructorContactInstructorIDId: string,
+    owner?: string | null,
+  } | null,
+};
+
+export type UpdateInstructorContactMutationVariables = {
+  input: UpdateInstructorContactInput,
+  condition?: ModelInstructorContactConditionInput | null,
+};
+
+export type UpdateInstructorContactMutation = {
+  updateInstructorContact?:  {
+    __typename: "InstructorContact",
+    id: string,
+    phone?: string | null,
+    email?: string | null,
+    instructorID:  {
+      __typename: "InstructorProfile",
+      id: string,
+      name: string,
+      email: string,
+      createdAt: string,
+      updatedAt: string,
+      instructorProfileBiographyId: string,
+      instructorProfileContactId: string,
+      owner?: string | null,
+    },
+    createdAt: string,
+    updatedAt: string,
+    instructorContactInstructorIDId: string,
+    owner?: string | null,
+  } | null,
+};
+
+export type DeleteInstructorContactMutationVariables = {
+  input: DeleteInstructorContactInput,
+  condition?: ModelInstructorContactConditionInput | null,
+};
+
+export type DeleteInstructorContactMutation = {
+  deleteInstructorContact?:  {
+    __typename: "InstructorContact",
+    id: string,
+    phone?: string | null,
+    email?: string | null,
+    instructorID:  {
+      __typename: "InstructorProfile",
+      id: string,
+      name: string,
+      email: string,
+      createdAt: string,
+      updatedAt: string,
+      instructorProfileBiographyId: string,
+      instructorProfileContactId: string,
+      owner?: string | null,
+    },
+    createdAt: string,
+    updatedAt: string,
+    instructorContactInstructorIDId: string,
     owner?: string | null,
   } | null,
 };
@@ -2539,6 +2666,10 @@ export type GetStudentProfileQuery = {
     darkModeEnabled: boolean,
     language: string,
     isAdmin: boolean,
+    enrollments?:  {
+      __typename: "ModelEnrollmentConnection",
+      nextToken?: string | null,
+    } | null,
     createdAt: string,
     updatedAt: string,
     owner?: string | null,
@@ -2697,6 +2828,50 @@ export type ListCoursesQuery = {
       creator: string,
       createdAt: string,
       updatedAt: string,
+    } | null >,
+    nextToken?: string | null,
+  } | null,
+};
+
+export type GetEnrollmentQueryVariables = {
+  id: string,
+};
+
+export type GetEnrollmentQuery = {
+  getEnrollment?:  {
+    __typename: "Enrollment",
+    id: string,
+    userID: string,
+    courseID: string,
+    progress?: number | null,
+    completed?: boolean | null,
+    achievements?: Array< string | null > | null,
+    createdAt: string,
+    updatedAt: string,
+    studentProfileEnrollmentsId?: string | null,
+  } | null,
+};
+
+export type ListEnrollmentsQueryVariables = {
+  filter?: ModelEnrollmentFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+};
+
+export type ListEnrollmentsQuery = {
+  listEnrollments?:  {
+    __typename: "ModelEnrollmentConnection",
+    items:  Array< {
+      __typename: "Enrollment",
+      id: string,
+      userID: string,
+      courseID: string,
+      progress?: number | null,
+      completed?: boolean | null,
+      achievements?: Array< string | null > | null,
+      createdAt: string,
+      updatedAt: string,
+      studentProfileEnrollmentsId?: string | null,
     } | null >,
     nextToken?: string | null,
   } | null,
@@ -3016,48 +3191,6 @@ export type ListQuestionsQuery = {
   } | null,
 };
 
-export type GetEnrollmentQueryVariables = {
-  id: string,
-};
-
-export type GetEnrollmentQuery = {
-  getEnrollment?:  {
-    __typename: "Enrollment",
-    id: string,
-    userID: string,
-    courseID: string,
-    progress?: number | null,
-    completed?: boolean | null,
-    achievements?: Array< string | null > | null,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type ListEnrollmentsQueryVariables = {
-  filter?: ModelEnrollmentFilterInput | null,
-  limit?: number | null,
-  nextToken?: string | null,
-};
-
-export type ListEnrollmentsQuery = {
-  listEnrollments?:  {
-    __typename: "ModelEnrollmentConnection",
-    items:  Array< {
-      __typename: "Enrollment",
-      id: string,
-      userID: string,
-      courseID: string,
-      progress?: number | null,
-      completed?: boolean | null,
-      achievements?: Array< string | null > | null,
-      createdAt: string,
-      updatedAt: string,
-    } | null >,
-    nextToken?: string | null,
-  } | null,
-};
-
 export type GetInstructorProfileQueryVariables = {
   id: string,
 };
@@ -3074,6 +3207,7 @@ export type GetInstructorProfileQuery = {
       overview: string,
       createdAt: string,
       updatedAt: string,
+      instructorBiographyInstructorId: string,
       owner?: string | null,
     },
     contact:  {
@@ -3083,10 +3217,13 @@ export type GetInstructorProfileQuery = {
       email?: string | null,
       createdAt: string,
       updatedAt: string,
+      instructorContactInstructorIDId: string,
       owner?: string | null,
     },
     createdAt: string,
     updatedAt: string,
+    instructorProfileBiographyId: string,
+    instructorProfileContactId: string,
     owner?: string | null,
   } | null,
 };
@@ -3107,44 +3244,8 @@ export type ListInstructorProfilesQuery = {
       email: string,
       createdAt: string,
       updatedAt: string,
-      owner?: string | null,
-    } | null >,
-    nextToken?: string | null,
-  } | null,
-};
-
-export type GetInstructorContactQueryVariables = {
-  id: string,
-};
-
-export type GetInstructorContactQuery = {
-  getInstructorContact?:  {
-    __typename: "InstructorContact",
-    id: string,
-    phone?: string | null,
-    email?: string | null,
-    createdAt: string,
-    updatedAt: string,
-    owner?: string | null,
-  } | null,
-};
-
-export type ListInstructorContactsQueryVariables = {
-  filter?: ModelInstructorContactFilterInput | null,
-  limit?: number | null,
-  nextToken?: string | null,
-};
-
-export type ListInstructorContactsQuery = {
-  listInstructorContacts?:  {
-    __typename: "ModelInstructorContactConnection",
-    items:  Array< {
-      __typename: "InstructorContact",
-      id: string,
-      phone?: string | null,
-      email?: string | null,
-      createdAt: string,
-      updatedAt: string,
+      instructorProfileBiographyId: string,
+      instructorProfileContactId: string,
       owner?: string | null,
     } | null >,
     nextToken?: string | null,
@@ -3168,8 +3269,20 @@ export type GetInstructorBiographyQuery = {
       __typename: "ModelAwardConnection",
       nextToken?: string | null,
     } | null,
+    instructor:  {
+      __typename: "InstructorProfile",
+      id: string,
+      name: string,
+      email: string,
+      createdAt: string,
+      updatedAt: string,
+      instructorProfileBiographyId: string,
+      instructorProfileContactId: string,
+      owner?: string | null,
+    },
     createdAt: string,
     updatedAt: string,
+    instructorBiographyInstructorId: string,
     owner?: string | null,
   } | null,
 };
@@ -3189,6 +3302,58 @@ export type ListInstructorBiographiesQuery = {
       overview: string,
       createdAt: string,
       updatedAt: string,
+      instructorBiographyInstructorId: string,
+      owner?: string | null,
+    } | null >,
+    nextToken?: string | null,
+  } | null,
+};
+
+export type GetInstructorContactQueryVariables = {
+  id: string,
+};
+
+export type GetInstructorContactQuery = {
+  getInstructorContact?:  {
+    __typename: "InstructorContact",
+    id: string,
+    phone?: string | null,
+    email?: string | null,
+    instructorID:  {
+      __typename: "InstructorProfile",
+      id: string,
+      name: string,
+      email: string,
+      createdAt: string,
+      updatedAt: string,
+      instructorProfileBiographyId: string,
+      instructorProfileContactId: string,
+      owner?: string | null,
+    },
+    createdAt: string,
+    updatedAt: string,
+    instructorContactInstructorIDId: string,
+    owner?: string | null,
+  } | null,
+};
+
+export type ListInstructorContactsQueryVariables = {
+  filter?: ModelInstructorContactFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+};
+
+export type ListInstructorContactsQuery = {
+  listInstructorContacts?:  {
+    __typename: "ModelInstructorContactConnection",
+    items:  Array< {
+      __typename: "InstructorContact",
+      id: string,
+      phone?: string | null,
+      email?: string | null,
+      createdAt: string,
+      updatedAt: string,
+      instructorContactInstructorIDId: string,
       owner?: string | null,
     } | null >,
     nextToken?: string | null,
@@ -3460,6 +3625,10 @@ export type OnCreateStudentProfileSubscription = {
     darkModeEnabled: boolean,
     language: string,
     isAdmin: boolean,
+    enrollments?:  {
+      __typename: "ModelEnrollmentConnection",
+      nextToken?: string | null,
+    } | null,
     createdAt: string,
     updatedAt: string,
     owner?: string | null,
@@ -3482,6 +3651,10 @@ export type OnUpdateStudentProfileSubscription = {
     darkModeEnabled: boolean,
     language: string,
     isAdmin: boolean,
+    enrollments?:  {
+      __typename: "ModelEnrollmentConnection",
+      nextToken?: string | null,
+    } | null,
     createdAt: string,
     updatedAt: string,
     owner?: string | null,
@@ -3504,6 +3677,10 @@ export type OnDeleteStudentProfileSubscription = {
     darkModeEnabled: boolean,
     language: string,
     isAdmin: boolean,
+    enrollments?:  {
+      __typename: "ModelEnrollmentConnection",
+      nextToken?: string | null,
+    } | null,
     createdAt: string,
     updatedAt: string,
     owner?: string | null,
@@ -3687,6 +3864,63 @@ export type OnDeleteCourseSubscription = {
     } | null,
     createdAt: string,
     updatedAt: string,
+  } | null,
+};
+
+export type OnCreateEnrollmentSubscriptionVariables = {
+  filter?: ModelSubscriptionEnrollmentFilterInput | null,
+};
+
+export type OnCreateEnrollmentSubscription = {
+  onCreateEnrollment?:  {
+    __typename: "Enrollment",
+    id: string,
+    userID: string,
+    courseID: string,
+    progress?: number | null,
+    completed?: boolean | null,
+    achievements?: Array< string | null > | null,
+    createdAt: string,
+    updatedAt: string,
+    studentProfileEnrollmentsId?: string | null,
+  } | null,
+};
+
+export type OnUpdateEnrollmentSubscriptionVariables = {
+  filter?: ModelSubscriptionEnrollmentFilterInput | null,
+};
+
+export type OnUpdateEnrollmentSubscription = {
+  onUpdateEnrollment?:  {
+    __typename: "Enrollment",
+    id: string,
+    userID: string,
+    courseID: string,
+    progress?: number | null,
+    completed?: boolean | null,
+    achievements?: Array< string | null > | null,
+    createdAt: string,
+    updatedAt: string,
+    studentProfileEnrollmentsId?: string | null,
+  } | null,
+};
+
+export type OnDeleteEnrollmentSubscriptionVariables = {
+  filter?: ModelSubscriptionEnrollmentFilterInput | null,
+};
+
+export type OnDeleteEnrollmentSubscription = {
+  onDeleteEnrollment?:  {
+    __typename: "Enrollment",
+    id: string,
+    userID: string,
+    courseID: string,
+    progress?: number | null,
+    completed?: boolean | null,
+    achievements?: Array< string | null > | null,
+    createdAt: string,
+    updatedAt: string,
+    studentProfileEnrollmentsId?: string | null,
   } | null,
 };
 
@@ -4209,60 +4443,6 @@ export type OnDeleteQuestionSubscription = {
   } | null,
 };
 
-export type OnCreateEnrollmentSubscriptionVariables = {
-  filter?: ModelSubscriptionEnrollmentFilterInput | null,
-};
-
-export type OnCreateEnrollmentSubscription = {
-  onCreateEnrollment?:  {
-    __typename: "Enrollment",
-    id: string,
-    userID: string,
-    courseID: string,
-    progress?: number | null,
-    completed?: boolean | null,
-    achievements?: Array< string | null > | null,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type OnUpdateEnrollmentSubscriptionVariables = {
-  filter?: ModelSubscriptionEnrollmentFilterInput | null,
-};
-
-export type OnUpdateEnrollmentSubscription = {
-  onUpdateEnrollment?:  {
-    __typename: "Enrollment",
-    id: string,
-    userID: string,
-    courseID: string,
-    progress?: number | null,
-    completed?: boolean | null,
-    achievements?: Array< string | null > | null,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type OnDeleteEnrollmentSubscriptionVariables = {
-  filter?: ModelSubscriptionEnrollmentFilterInput | null,
-};
-
-export type OnDeleteEnrollmentSubscription = {
-  onDeleteEnrollment?:  {
-    __typename: "Enrollment",
-    id: string,
-    userID: string,
-    courseID: string,
-    progress?: number | null,
-    completed?: boolean | null,
-    achievements?: Array< string | null > | null,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
 export type OnCreateInstructorProfileSubscriptionVariables = {
   filter?: ModelSubscriptionInstructorProfileFilterInput | null,
   owner?: string | null,
@@ -4280,6 +4460,7 @@ export type OnCreateInstructorProfileSubscription = {
       overview: string,
       createdAt: string,
       updatedAt: string,
+      instructorBiographyInstructorId: string,
       owner?: string | null,
     },
     contact:  {
@@ -4289,10 +4470,13 @@ export type OnCreateInstructorProfileSubscription = {
       email?: string | null,
       createdAt: string,
       updatedAt: string,
+      instructorContactInstructorIDId: string,
       owner?: string | null,
     },
     createdAt: string,
     updatedAt: string,
+    instructorProfileBiographyId: string,
+    instructorProfileContactId: string,
     owner?: string | null,
   } | null,
 };
@@ -4314,6 +4498,7 @@ export type OnUpdateInstructorProfileSubscription = {
       overview: string,
       createdAt: string,
       updatedAt: string,
+      instructorBiographyInstructorId: string,
       owner?: string | null,
     },
     contact:  {
@@ -4323,10 +4508,13 @@ export type OnUpdateInstructorProfileSubscription = {
       email?: string | null,
       createdAt: string,
       updatedAt: string,
+      instructorContactInstructorIDId: string,
       owner?: string | null,
     },
     createdAt: string,
     updatedAt: string,
+    instructorProfileBiographyId: string,
+    instructorProfileContactId: string,
     owner?: string | null,
   } | null,
 };
@@ -4348,6 +4536,7 @@ export type OnDeleteInstructorProfileSubscription = {
       overview: string,
       createdAt: string,
       updatedAt: string,
+      instructorBiographyInstructorId: string,
       owner?: string | null,
     },
     contact:  {
@@ -4357,61 +4546,13 @@ export type OnDeleteInstructorProfileSubscription = {
       email?: string | null,
       createdAt: string,
       updatedAt: string,
+      instructorContactInstructorIDId: string,
       owner?: string | null,
     },
     createdAt: string,
     updatedAt: string,
-    owner?: string | null,
-  } | null,
-};
-
-export type OnCreateInstructorContactSubscriptionVariables = {
-  filter?: ModelSubscriptionInstructorContactFilterInput | null,
-  owner?: string | null,
-};
-
-export type OnCreateInstructorContactSubscription = {
-  onCreateInstructorContact?:  {
-    __typename: "InstructorContact",
-    id: string,
-    phone?: string | null,
-    email?: string | null,
-    createdAt: string,
-    updatedAt: string,
-    owner?: string | null,
-  } | null,
-};
-
-export type OnUpdateInstructorContactSubscriptionVariables = {
-  filter?: ModelSubscriptionInstructorContactFilterInput | null,
-  owner?: string | null,
-};
-
-export type OnUpdateInstructorContactSubscription = {
-  onUpdateInstructorContact?:  {
-    __typename: "InstructorContact",
-    id: string,
-    phone?: string | null,
-    email?: string | null,
-    createdAt: string,
-    updatedAt: string,
-    owner?: string | null,
-  } | null,
-};
-
-export type OnDeleteInstructorContactSubscriptionVariables = {
-  filter?: ModelSubscriptionInstructorContactFilterInput | null,
-  owner?: string | null,
-};
-
-export type OnDeleteInstructorContactSubscription = {
-  onDeleteInstructorContact?:  {
-    __typename: "InstructorContact",
-    id: string,
-    phone?: string | null,
-    email?: string | null,
-    createdAt: string,
-    updatedAt: string,
+    instructorProfileBiographyId: string,
+    instructorProfileContactId: string,
     owner?: string | null,
   } | null,
 };
@@ -4434,8 +4575,20 @@ export type OnCreateInstructorBiographySubscription = {
       __typename: "ModelAwardConnection",
       nextToken?: string | null,
     } | null,
+    instructor:  {
+      __typename: "InstructorProfile",
+      id: string,
+      name: string,
+      email: string,
+      createdAt: string,
+      updatedAt: string,
+      instructorProfileBiographyId: string,
+      instructorProfileContactId: string,
+      owner?: string | null,
+    },
     createdAt: string,
     updatedAt: string,
+    instructorBiographyInstructorId: string,
     owner?: string | null,
   } | null,
 };
@@ -4458,8 +4611,20 @@ export type OnUpdateInstructorBiographySubscription = {
       __typename: "ModelAwardConnection",
       nextToken?: string | null,
     } | null,
+    instructor:  {
+      __typename: "InstructorProfile",
+      id: string,
+      name: string,
+      email: string,
+      createdAt: string,
+      updatedAt: string,
+      instructorProfileBiographyId: string,
+      instructorProfileContactId: string,
+      owner?: string | null,
+    },
     createdAt: string,
     updatedAt: string,
+    instructorBiographyInstructorId: string,
     owner?: string | null,
   } | null,
 };
@@ -4482,8 +4647,107 @@ export type OnDeleteInstructorBiographySubscription = {
       __typename: "ModelAwardConnection",
       nextToken?: string | null,
     } | null,
+    instructor:  {
+      __typename: "InstructorProfile",
+      id: string,
+      name: string,
+      email: string,
+      createdAt: string,
+      updatedAt: string,
+      instructorProfileBiographyId: string,
+      instructorProfileContactId: string,
+      owner?: string | null,
+    },
     createdAt: string,
     updatedAt: string,
+    instructorBiographyInstructorId: string,
+    owner?: string | null,
+  } | null,
+};
+
+export type OnCreateInstructorContactSubscriptionVariables = {
+  filter?: ModelSubscriptionInstructorContactFilterInput | null,
+  owner?: string | null,
+};
+
+export type OnCreateInstructorContactSubscription = {
+  onCreateInstructorContact?:  {
+    __typename: "InstructorContact",
+    id: string,
+    phone?: string | null,
+    email?: string | null,
+    instructorID:  {
+      __typename: "InstructorProfile",
+      id: string,
+      name: string,
+      email: string,
+      createdAt: string,
+      updatedAt: string,
+      instructorProfileBiographyId: string,
+      instructorProfileContactId: string,
+      owner?: string | null,
+    },
+    createdAt: string,
+    updatedAt: string,
+    instructorContactInstructorIDId: string,
+    owner?: string | null,
+  } | null,
+};
+
+export type OnUpdateInstructorContactSubscriptionVariables = {
+  filter?: ModelSubscriptionInstructorContactFilterInput | null,
+  owner?: string | null,
+};
+
+export type OnUpdateInstructorContactSubscription = {
+  onUpdateInstructorContact?:  {
+    __typename: "InstructorContact",
+    id: string,
+    phone?: string | null,
+    email?: string | null,
+    instructorID:  {
+      __typename: "InstructorProfile",
+      id: string,
+      name: string,
+      email: string,
+      createdAt: string,
+      updatedAt: string,
+      instructorProfileBiographyId: string,
+      instructorProfileContactId: string,
+      owner?: string | null,
+    },
+    createdAt: string,
+    updatedAt: string,
+    instructorContactInstructorIDId: string,
+    owner?: string | null,
+  } | null,
+};
+
+export type OnDeleteInstructorContactSubscriptionVariables = {
+  filter?: ModelSubscriptionInstructorContactFilterInput | null,
+  owner?: string | null,
+};
+
+export type OnDeleteInstructorContactSubscription = {
+  onDeleteInstructorContact?:  {
+    __typename: "InstructorContact",
+    id: string,
+    phone?: string | null,
+    email?: string | null,
+    instructorID:  {
+      __typename: "InstructorProfile",
+      id: string,
+      name: string,
+      email: string,
+      createdAt: string,
+      updatedAt: string,
+      instructorProfileBiographyId: string,
+      instructorProfileContactId: string,
+      owner?: string | null,
+    },
+    createdAt: string,
+    updatedAt: string,
+    instructorContactInstructorIDId: string,
     owner?: string | null,
   } | null,
 };

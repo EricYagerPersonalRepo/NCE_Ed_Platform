@@ -21,6 +21,10 @@ export const createStudentProfile = /* GraphQL */ `mutation CreateStudentProfile
     darkModeEnabled
     language
     isAdmin
+    enrollments {
+      nextToken
+      __typename
+    }
     createdAt
     updatedAt
     owner
@@ -44,6 +48,10 @@ export const updateStudentProfile = /* GraphQL */ `mutation UpdateStudentProfile
     darkModeEnabled
     language
     isAdmin
+    enrollments {
+      nextToken
+      __typename
+    }
     createdAt
     updatedAt
     owner
@@ -67,6 +75,10 @@ export const deleteStudentProfile = /* GraphQL */ `mutation DeleteStudentProfile
     darkModeEnabled
     language
     isAdmin
+    enrollments {
+      nextToken
+      __typename
+    }
     createdAt
     updatedAt
     owner
@@ -274,6 +286,69 @@ export const deleteCourse = /* GraphQL */ `mutation DeleteCourse(
 ` as GeneratedMutation<
   APITypes.DeleteCourseMutationVariables,
   APITypes.DeleteCourseMutation
+>;
+export const createEnrollment = /* GraphQL */ `mutation CreateEnrollment(
+  $input: CreateEnrollmentInput!
+  $condition: ModelEnrollmentConditionInput
+) {
+  createEnrollment(input: $input, condition: $condition) {
+    id
+    userID
+    courseID
+    progress
+    completed
+    achievements
+    createdAt
+    updatedAt
+    studentProfileEnrollmentsId
+    __typename
+  }
+}
+` as GeneratedMutation<
+  APITypes.CreateEnrollmentMutationVariables,
+  APITypes.CreateEnrollmentMutation
+>;
+export const updateEnrollment = /* GraphQL */ `mutation UpdateEnrollment(
+  $input: UpdateEnrollmentInput!
+  $condition: ModelEnrollmentConditionInput
+) {
+  updateEnrollment(input: $input, condition: $condition) {
+    id
+    userID
+    courseID
+    progress
+    completed
+    achievements
+    createdAt
+    updatedAt
+    studentProfileEnrollmentsId
+    __typename
+  }
+}
+` as GeneratedMutation<
+  APITypes.UpdateEnrollmentMutationVariables,
+  APITypes.UpdateEnrollmentMutation
+>;
+export const deleteEnrollment = /* GraphQL */ `mutation DeleteEnrollment(
+  $input: DeleteEnrollmentInput!
+  $condition: ModelEnrollmentConditionInput
+) {
+  deleteEnrollment(input: $input, condition: $condition) {
+    id
+    userID
+    courseID
+    progress
+    completed
+    achievements
+    createdAt
+    updatedAt
+    studentProfileEnrollmentsId
+    __typename
+  }
+}
+` as GeneratedMutation<
+  APITypes.DeleteEnrollmentMutationVariables,
+  APITypes.DeleteEnrollmentMutation
 >;
 export const createCourseApproval = /* GraphQL */ `mutation CreateCourseApproval(
   $input: CreateCourseApprovalInput!
@@ -830,66 +905,6 @@ export const deleteQuestion = /* GraphQL */ `mutation DeleteQuestion(
   APITypes.DeleteQuestionMutationVariables,
   APITypes.DeleteQuestionMutation
 >;
-export const createEnrollment = /* GraphQL */ `mutation CreateEnrollment(
-  $input: CreateEnrollmentInput!
-  $condition: ModelEnrollmentConditionInput
-) {
-  createEnrollment(input: $input, condition: $condition) {
-    id
-    userID
-    courseID
-    progress
-    completed
-    achievements
-    createdAt
-    updatedAt
-    __typename
-  }
-}
-` as GeneratedMutation<
-  APITypes.CreateEnrollmentMutationVariables,
-  APITypes.CreateEnrollmentMutation
->;
-export const updateEnrollment = /* GraphQL */ `mutation UpdateEnrollment(
-  $input: UpdateEnrollmentInput!
-  $condition: ModelEnrollmentConditionInput
-) {
-  updateEnrollment(input: $input, condition: $condition) {
-    id
-    userID
-    courseID
-    progress
-    completed
-    achievements
-    createdAt
-    updatedAt
-    __typename
-  }
-}
-` as GeneratedMutation<
-  APITypes.UpdateEnrollmentMutationVariables,
-  APITypes.UpdateEnrollmentMutation
->;
-export const deleteEnrollment = /* GraphQL */ `mutation DeleteEnrollment(
-  $input: DeleteEnrollmentInput!
-  $condition: ModelEnrollmentConditionInput
-) {
-  deleteEnrollment(input: $input, condition: $condition) {
-    id
-    userID
-    courseID
-    progress
-    completed
-    achievements
-    createdAt
-    updatedAt
-    __typename
-  }
-}
-` as GeneratedMutation<
-  APITypes.DeleteEnrollmentMutationVariables,
-  APITypes.DeleteEnrollmentMutation
->;
 export const createInstructorProfile = /* GraphQL */ `mutation CreateInstructorProfile(
   $input: CreateInstructorProfileInput!
   $condition: ModelInstructorProfileConditionInput
@@ -903,6 +918,7 @@ export const createInstructorProfile = /* GraphQL */ `mutation CreateInstructorP
       overview
       createdAt
       updatedAt
+      instructorBiographyInstructorId
       owner
       __typename
     }
@@ -912,11 +928,14 @@ export const createInstructorProfile = /* GraphQL */ `mutation CreateInstructorP
       email
       createdAt
       updatedAt
+      instructorContactInstructorIDId
       owner
       __typename
     }
     createdAt
     updatedAt
+    instructorProfileBiographyId
+    instructorProfileContactId
     owner
     __typename
   }
@@ -938,6 +957,7 @@ export const updateInstructorProfile = /* GraphQL */ `mutation UpdateInstructorP
       overview
       createdAt
       updatedAt
+      instructorBiographyInstructorId
       owner
       __typename
     }
@@ -947,11 +967,14 @@ export const updateInstructorProfile = /* GraphQL */ `mutation UpdateInstructorP
       email
       createdAt
       updatedAt
+      instructorContactInstructorIDId
       owner
       __typename
     }
     createdAt
     updatedAt
+    instructorProfileBiographyId
+    instructorProfileContactId
     owner
     __typename
   }
@@ -973,6 +996,7 @@ export const deleteInstructorProfile = /* GraphQL */ `mutation DeleteInstructorP
       overview
       createdAt
       updatedAt
+      instructorBiographyInstructorId
       owner
       __typename
     }
@@ -982,11 +1006,14 @@ export const deleteInstructorProfile = /* GraphQL */ `mutation DeleteInstructorP
       email
       createdAt
       updatedAt
+      instructorContactInstructorIDId
       owner
       __typename
     }
     createdAt
     updatedAt
+    instructorProfileBiographyId
+    instructorProfileContactId
     owner
     __typename
   }
@@ -994,60 +1021,6 @@ export const deleteInstructorProfile = /* GraphQL */ `mutation DeleteInstructorP
 ` as GeneratedMutation<
   APITypes.DeleteInstructorProfileMutationVariables,
   APITypes.DeleteInstructorProfileMutation
->;
-export const createInstructorContact = /* GraphQL */ `mutation CreateInstructorContact(
-  $input: CreateInstructorContactInput!
-  $condition: ModelInstructorContactConditionInput
-) {
-  createInstructorContact(input: $input, condition: $condition) {
-    id
-    phone
-    email
-    createdAt
-    updatedAt
-    owner
-    __typename
-  }
-}
-` as GeneratedMutation<
-  APITypes.CreateInstructorContactMutationVariables,
-  APITypes.CreateInstructorContactMutation
->;
-export const updateInstructorContact = /* GraphQL */ `mutation UpdateInstructorContact(
-  $input: UpdateInstructorContactInput!
-  $condition: ModelInstructorContactConditionInput
-) {
-  updateInstructorContact(input: $input, condition: $condition) {
-    id
-    phone
-    email
-    createdAt
-    updatedAt
-    owner
-    __typename
-  }
-}
-` as GeneratedMutation<
-  APITypes.UpdateInstructorContactMutationVariables,
-  APITypes.UpdateInstructorContactMutation
->;
-export const deleteInstructorContact = /* GraphQL */ `mutation DeleteInstructorContact(
-  $input: DeleteInstructorContactInput!
-  $condition: ModelInstructorContactConditionInput
-) {
-  deleteInstructorContact(input: $input, condition: $condition) {
-    id
-    phone
-    email
-    createdAt
-    updatedAt
-    owner
-    __typename
-  }
-}
-` as GeneratedMutation<
-  APITypes.DeleteInstructorContactMutationVariables,
-  APITypes.DeleteInstructorContactMutation
 >;
 export const createInstructorBiography = /* GraphQL */ `mutation CreateInstructorBiography(
   $input: CreateInstructorBiographyInput!
@@ -1064,8 +1037,20 @@ export const createInstructorBiography = /* GraphQL */ `mutation CreateInstructo
       nextToken
       __typename
     }
+    instructor {
+      id
+      name
+      email
+      createdAt
+      updatedAt
+      instructorProfileBiographyId
+      instructorProfileContactId
+      owner
+      __typename
+    }
     createdAt
     updatedAt
+    instructorBiographyInstructorId
     owner
     __typename
   }
@@ -1089,8 +1074,20 @@ export const updateInstructorBiography = /* GraphQL */ `mutation UpdateInstructo
       nextToken
       __typename
     }
+    instructor {
+      id
+      name
+      email
+      createdAt
+      updatedAt
+      instructorProfileBiographyId
+      instructorProfileContactId
+      owner
+      __typename
+    }
     createdAt
     updatedAt
+    instructorBiographyInstructorId
     owner
     __typename
   }
@@ -1114,8 +1111,20 @@ export const deleteInstructorBiography = /* GraphQL */ `mutation DeleteInstructo
       nextToken
       __typename
     }
+    instructor {
+      id
+      name
+      email
+      createdAt
+      updatedAt
+      instructorProfileBiographyId
+      instructorProfileContactId
+      owner
+      __typename
+    }
     createdAt
     updatedAt
+    instructorBiographyInstructorId
     owner
     __typename
   }
@@ -1123,6 +1132,96 @@ export const deleteInstructorBiography = /* GraphQL */ `mutation DeleteInstructo
 ` as GeneratedMutation<
   APITypes.DeleteInstructorBiographyMutationVariables,
   APITypes.DeleteInstructorBiographyMutation
+>;
+export const createInstructorContact = /* GraphQL */ `mutation CreateInstructorContact(
+  $input: CreateInstructorContactInput!
+  $condition: ModelInstructorContactConditionInput
+) {
+  createInstructorContact(input: $input, condition: $condition) {
+    id
+    phone
+    email
+    instructorID {
+      id
+      name
+      email
+      createdAt
+      updatedAt
+      instructorProfileBiographyId
+      instructorProfileContactId
+      owner
+      __typename
+    }
+    createdAt
+    updatedAt
+    instructorContactInstructorIDId
+    owner
+    __typename
+  }
+}
+` as GeneratedMutation<
+  APITypes.CreateInstructorContactMutationVariables,
+  APITypes.CreateInstructorContactMutation
+>;
+export const updateInstructorContact = /* GraphQL */ `mutation UpdateInstructorContact(
+  $input: UpdateInstructorContactInput!
+  $condition: ModelInstructorContactConditionInput
+) {
+  updateInstructorContact(input: $input, condition: $condition) {
+    id
+    phone
+    email
+    instructorID {
+      id
+      name
+      email
+      createdAt
+      updatedAt
+      instructorProfileBiographyId
+      instructorProfileContactId
+      owner
+      __typename
+    }
+    createdAt
+    updatedAt
+    instructorContactInstructorIDId
+    owner
+    __typename
+  }
+}
+` as GeneratedMutation<
+  APITypes.UpdateInstructorContactMutationVariables,
+  APITypes.UpdateInstructorContactMutation
+>;
+export const deleteInstructorContact = /* GraphQL */ `mutation DeleteInstructorContact(
+  $input: DeleteInstructorContactInput!
+  $condition: ModelInstructorContactConditionInput
+) {
+  deleteInstructorContact(input: $input, condition: $condition) {
+    id
+    phone
+    email
+    instructorID {
+      id
+      name
+      email
+      createdAt
+      updatedAt
+      instructorProfileBiographyId
+      instructorProfileContactId
+      owner
+      __typename
+    }
+    createdAt
+    updatedAt
+    instructorContactInstructorIDId
+    owner
+    __typename
+  }
+}
+` as GeneratedMutation<
+  APITypes.DeleteInstructorContactMutationVariables,
+  APITypes.DeleteInstructorContactMutation
 >;
 export const createExperience = /* GraphQL */ `mutation CreateExperience(
   $input: CreateExperienceInput!

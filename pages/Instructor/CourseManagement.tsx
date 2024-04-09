@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { InstructorDashboard } from '@/src/components/Instructor/Components';
+import React, { useEffect, useState } from 'react'
+import { InstructorDashboard } from '@/src/components/Instructor/Components'
 
 const CourseManagement = ({ userData }) => {
     const [userDatum, setUserDatum] = useState({})
@@ -13,7 +13,7 @@ const CourseManagement = ({ userData }) => {
 
     return (
         <InstructorDashboard userData={userDatum} />
-    );
-};
+    )
+}
 
-export default CourseManagement;
+export default CourseManagement

@@ -3,6 +3,7 @@ import { amplifyApiClient } from "./AuthX";
 import { GraphQLResult, post } from "aws-amplify/api";
 import { fetchAuthSession } from "aws-amplify/auth";
 import { AdminAddUserToGroupCommand, CognitoIdentityProviderClient } from "@aws-sdk/client-cognito-identity-provider";
+import { customListCourses } from "../custom-amplify-graphql-queries";
 
 /**
  * getPresignedUrl Function - Asynchronously retrieves a presigned URL for a given filename.
@@ -88,8 +89,6 @@ export async function callAmplifyApi<T>(queryFunction: any, variables: object): 
             variables,
         }) as GraphQLResult<T>;
 
-        console.log("Amplify API Call from Amplify.ts: ", response.data)
-
         if (!response.data) {
             throw new Error('No data returned from GraphQL call');
         }
@@ -115,4 +114,54 @@ export async function addToAdminGroup(username) {
         } 
     }
     return post({apiName, path, options});
+}
+
+export const fetchCoursesForDataGrid = async () => {
+    try {
+        const data:any = await callAmplifyApi(customListCourses, {})
+        if (data.listCourses.items) {
+            const rowsWithApprovalStatus = data.listCourses.items.map(item => {
+                const sortedApprovals = item.approval.items.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+                const mostRecentApprovalStatus = sortedApprovals.length > 0 ? sortedApprovals[0].status : 'No Status'
+                return { ...item, approval: mostRecentApprovalStatus, courseApprovalID: sortedApprovals[0].courseApprovalId, id: item.id }
+            })
+            return rowsWithApprovalStatus
+        }
+    } catch (error) {
+        console.error('Error fetching courses:', error)
+        return []
+    }
+}
+export const fetchCourseStatusCounts = async () => {
+    let pendingCount = 0
+    let approvedCount = 0
+    let disapprovedCount = 0
+    try {
+        const data:any = await callAmplifyApi(customListCourses, {})
+        if (data.listCourses.items) {
+            data.listCourses.items.map(item => {
+                const sortedApprovals = item.approval.items.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+                const mostRecentApprovalStatus = sortedApprovals.length > 0 ? sortedApprovals[0].status : 'No Status'
+                console.log("most recent: ", mostRecentApprovalStatus)
+                switch(mostRecentApprovalStatus) {
+                    case "PENDING": 
+                        pendingCount++
+                        break;
+                    case "APPROVED":
+                        approvedCount++
+                        break;
+                    case "DISAPPROVED": 
+                        disapprovedCount++
+                        break;
+                    default:
+                        break;
+                }
+            })
+            console.log(pendingCount)
+            return {approved: approvedCount, disapproved: disapprovedCount, pending: pendingCount}
+        }
+    } catch (error) {
+        console.error('Error fetching courses:', error)
+        return []
+    }
 }
